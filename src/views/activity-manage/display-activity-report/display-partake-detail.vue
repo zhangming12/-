@@ -1,0 +1,623 @@
+<style lang="less" scoped>
+@import "../../../config/index.less";
+.box {
+  width: 100%;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  padding: 30px 20px;
+  padding-bottom: 0;
+  background: #fff;
+}
+.ivu-table-row {
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(0px);
+}
+
+//搜索条件 时间控件
+.ivu-date-picker {
+  display: block;
+}
+//搜索条件 radio按钮
+.ivu-radio-wrapper {
+  margin-right: 30px;
+}
+.searchBox {
+  overflow: hidden;
+  .search_btn {
+    float: left;
+    width: 50px;
+    padding: 5px 14px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .search_icon {
+    float: left;
+    padding: 5px 10px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
+</style>
+<template>
+  <div id="Main">
+      <!-- <h2 class="Title">陈列活动上传明细</h2> -->
+      <div class="box">
+            <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+                <Row>
+                    <Col span="21">
+                        <Row>
+                          <Col span="16"> 
+                            <Form-item label="上传时间:" required>
+                              <Row>
+                                  <Col span="11">
+                                      <Form-item prop="queryStartTime">
+                                        <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
+                                      </Form-item>
+                                  </Col>
+                                  <Col span="2" style="text-align: center;">至</Col>
+                                  <Col span="11">
+                                      <Form-item prop="queryEndTime">
+                                          <data-range placeholder="结束时间" hour="24:00" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
+                                      </Form-item>
+                                  </Col>
+                              </Row>
+                            </Form-item>
+                          </Col>
+                          <Col span="8"> 
+                            <Form-item label="品牌名称:" required>
+                                <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
+                                </Select> 
+                            </Form-item>
+                          </Col>
+                          <Col span="24">
+                              <Row>
+                                <Col span="8"> 
+                                <Form-item label="活动包名:" prop="groupId" required>
+                                    <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
+                                        <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
+                                    </Select>
+                                </Form-item>
+                                  
+                                  
+                                </Col>
+                                <Col span="8"> 
+                                <Form-item label="陈列活动:">                             
+                                  <Select v-model="formData.activityId" placeholder="请选择" clearable>
+                                    <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
+                                  </Select> 
+                                </Form-item>
+                                  
+                                  
+                                </Col>
+                                <Col span="8">
+                                  <Form-item label="区域:">
+                                    <Cascader :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
+                                  </Form-item>
+                                </Col>
+                              </Row>
+                          </Col>
+                        
+                        </Row>
+                    </Col>
+                    <Col span='2' offset="1" style="margin-top:20px">
+                        <div class="searchBox">
+                          <Button @click="submit('form')" class="btn-search  search_btn" type="primary">查询</Button>
+                          <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
+                <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button>
+                          </div>
+                    </Col>
+                </Row>
+                <transition name="fade">
+                  <Row v-if="showQuery">
+                    <Col span='7'>
+                      <Form-item label="审核状态:">
+                          <Select v-model="formData.checkStatus" clearable>
+                              <Option value="0">审核中</Option>
+                              <Option value="1">视频通过</Option>
+                              <Option value="2">审核不通过</Option>
+                              <Option value="3">退回需重传</Option>
+                          </Select>
+                      </Form-item>
+                      <Form-item label="店铺ID:" >
+                                      <Input v-model.trim="formData.storeId" placeholder="请输入店铺ID"></Input>
+                                  </Form-item>
+                    </Col>
+                    <Col span='7'>
+                      <Form-item label="发放状态:">
+                          <Select v-model="formData.winStatus" clearable>
+                              <Option value="4">通过已发放</Option>
+                              <Option value="4040">未达发放要求</Option>
+                              <!-- <Option value="4040">未达发放要求</Option> -->
+                          </Select>
+                      </Form-item>
+                  
+                    </Col>
+                    <Col span='7'>
+                      <Form-item label="客户编号:" >
+                          <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
+                      </Form-item>
+                    </Col>
+                  </Row>
+                </transition>
+            </Form>
+      </div>
+      <div class="box" style="margin-top: 15px;padding-bottom:20px">
+        <div class="contentTop">
+
+            <Button @click="exportExcel" class="btn-right"  icon="ios-download-outline"  type="primary">导出</Button>
+        </div>
+        <Table :columns="columns" :data="pageData" disabled-hover></Table>
+        <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+            </div>
+        </div>
+      </div>
+  </div>
+</template>
+
+<script>
+import area from "../../../config/china_code_data.js";
+
+import {
+  dispalyShowStatus,
+  dispalyExamineSuggesteStatus,
+  displayParketCheckStatus
+} from "@/util/ENUMS.js";
+import dataRange from "../../../components/data-rang.vue";
+
+import {
+  EDFAULT_STARTTIME,
+  EDFAULT_ENDTIME,
+  EDFAULT_TOMORROW
+} from "@/util/index.js"; //搜索条件默认时间
+import {
+  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
+  typeQueryActivityGroupVOByBrandId //根据活动包名ID获取陈列活动列表
+} from "@/api/common.js";
+import { displayApplyDetail } from "@/api/activity-manage/display-activity-manage.js"; //api
+import { getDisplayActivityListDoQuery } from "@/api/common.js";
+export default {
+  name: "display-partake-detail-keepAlive",
+  data() {
+    const that = this;
+    const validateStart = (rule, value, callback) => {
+      // 验证开始时间
+      if (value == "") {
+        callback(new Error("请输入开始时间"));
+      } else {
+        if (this.formData.queryEndTime !== "") {
+          // 对结束时间单独验证
+          this.$refs.form.validateField("queryEndTime");
+        }
+        callback();
+      }
+    };
+    const validateEnd = (rule, value, callback) => {
+      // 验证结束时间
+
+      if (value == "") {
+        callback(new Error("请输入结束时间"));
+      } else {
+        const str = new Date(this.formData.queryStartTime).getTime();
+        const end = new Date(value).getTime();
+        if (end < str) {
+          // 判断开始时间是否大于结束时间
+          callback(new Error("开始时间大于结束时间"));
+        } else {
+          callback();
+        }
+      }
+    };
+    return {
+      showQuery: false,
+      start: {
+        time: "",
+        hour: ""
+      },
+      end: {
+        time: EDFAULT_ENDTIME,
+        hour: "24:00"
+      },
+      groupList: [],
+      formData: {
+        queryStartTime: EDFAULT_STARTTIME,
+        queryEndTime: EDFAULT_ENDTIME,
+        brandId: "",
+        groupId: "",
+        activityId: "",
+        storeId: "",
+        checkStatus: "",
+        winStatus: "",
+        joinCode: "",
+        areaCode: []
+      },
+      page: 1,
+      pageNum: 0,
+      rule: {
+        queryStartTime: [{ validator: validateStart }],
+        queryEndTime: [{ validator: validateEnd }]
+      },
+      columns: [
+        {
+          title: "序号",
+          type: "index",
+          width: 70,
+          align: "center"
+        },
+        {
+          title: "活动包名",
+          key: "groupName",
+          width: 150,
+          align: "center"
+        },
+        {
+          title: "视频上传渠道",
+          key: "radioChannel",
+          width: 150,
+          align: "center",
+          render: (h, params) => {
+            let obj = {
+              main: "门店", //店主
+              staff: "门店", //店员
+              worker: "业务员" //店主
+            };
+            return h("div", obj[params.row.radioChannel]);
+          }
+        },
+        {
+          title: "上传时间",
+          key: "uploadTime",
+          width: 150,
+          align: "center",
+          render: (h, params) => {
+            return h("div", that.Global.createTime(params.row.uploadTime));
+          }
+        },
+        {
+          title: "陈列周期",
+          key: "createTime",
+          width: 160,
+          align: "center",
+          render: (h, params) => {
+            return h(
+              "div",
+              that.Global.formatYear(params.row.startTime) +
+                "至" +
+                that.Global.formatYear(params.row.endTime)
+            );
+          }
+        },
+        {
+          title: "店铺ID",
+          key: "storeId",
+          width: 120,
+          align: "center"
+        },
+        {
+          title: "客户编号",
+          width: 100,
+          key: "joinCode",
+          align: "center"
+        },
+        {
+          title: "店名",
+          width: 100,
+          key: "storeName",
+          align: "center"
+        },
+
+        {
+          title: "省",
+          width: 100,
+          key: "province",
+          align: "center"
+        },
+        {
+          title: "市",
+          width: 100,
+          key: "city",
+          align: "center"
+        },
+        {
+          title: "区",
+          width: 100,
+          key: "area",
+          align: "center"
+        },
+        {
+          title: "地址",
+          width: 120,
+          key: "address",
+          align: "center"
+        },
+        {
+          title: "陈列活动",
+          key: "activityName",
+          width: 130,
+          align: "center"
+        },
+        {
+          title: "分组名称",
+          key: "displayGroup",
+          width: 120,
+          align: "center"
+        },
+
+        {
+          title: "发放折扣",
+          width: 120,
+          key: "show",
+          align: "center"
+        },
+        {
+          title: "审核意见",
+          key: "checkStatus",
+          width: 120,
+          align: "center",
+          render: (h, params) => {
+            return h("div", displayParketCheckStatus[params.row.checkStatus]);
+          }
+        },
+        {
+          title: "格式",
+          key: "fileType",
+          width: 120,
+          align: "center",
+          render: (h, params) => {
+            let str = "";
+            if (params.row.fileType == "radio") {
+              str = "视频";
+            } else if (params.row.fileType == "image") {
+              str = "图片";
+            }
+            return h("div", str);
+          }
+        },
+        {
+          title: "发放状态",
+          key: "winStatus",
+          width: 120,
+          align: "center",
+          render: (h, params) => {
+            let str = "";
+            switch (params.row.winStatus) {
+              case 0:
+                str = "待清算";
+                break;
+              case 1010:
+                str = "已清算";
+                break;
+              case 4:
+                str = "已发奖";
+                break;
+              case 4040:
+                str = "不符合发放要求";
+                break;
+              default:
+                str = "";
+                break;
+            }
+            return h("div", str);
+            // return h("div",displayParketCheckStatus[params.row.winStatus]);
+          }
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 150,
+          fixed: "right",
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      let { id, activityId, storeId } = params.row;
+                      let queryParams = {
+                        id,
+                        activityId,
+                        storeId,
+                        displayActCategory: "partake",
+                        displayBackType: "C"
+                      };
+                      this.$router.push({
+                        path: "/displayResultOneEdit",
+                        query: queryParams
+                      });
+                    }
+                  }
+                },
+                "查看"
+              )
+            ]);
+          }
+        }
+      ],
+      pageData: [],
+      areaData: area,
+      brandList: [],
+      activityList: []
+    };
+  },
+  components: { dataRange },
+  created() {
+    this.Global.doPostNoLoading(
+      "condition/queryBrands.json",
+      { date: 7, activityType: 3, scope: "a" },
+      res => {
+        this.brandList = [];
+        Object.entries(res).forEach(item => {
+          this.brandList.push({ id: Number(item[0]), brandName: item[1] });
+        });
+        if (this.brandList && this.brandList.length) {
+          this.formData.brandId = this.brandList[0].id;
+          this.changeValue(this.formData.brandId);
+        }
+      }
+    );
+  },
+  methods: {
+    startTimeChange(value) {
+      this.start.hour = value.hour;
+      this.start.time = value.time;
+      if (value.hour == "24:00") {
+        return;
+      }
+      this.formData.queryStartTime = this.Global.setHoursData(
+        value.time,
+        value.hour
+      );
+    },
+    getActivityList(value) {
+      this.activityList = [];
+      this.formData.activityId = "";
+      if (!value) return;
+      this.Global.doPostNoLoading(
+        "condition/queryActivity.json",
+        { date: 7, activityType: 3, scope: "a", groupId: value },
+        res => {
+          Object.entries(res).forEach(item => {
+            this.activityList.push({ id: Number(item[0]), name: item[1] });
+          });
+        }
+      );
+    },
+    endTimeChange(value) {
+      this.end.hour = value.hour;
+      this.end.time = value.time;
+      if (value.hour == "24:00") {
+        return;
+      }
+      this.formData.queryEndTime = this.Global.setHoursData(
+        value.time,
+        value.hour
+      );
+    },
+    formateTime(time) {
+      return new Date(Number(time)).pattern("yyyy-MM-dd-hh");
+    },
+    submit(name) {
+      if (!this.formData.queryStartTime) {
+        this.$Message.error("请输入查询起始时间");
+        return false;
+      }
+
+      if (!this.formData.queryEndTime) {
+        this.$Message.error("请输入查询截止时间");
+        return false;
+      }
+      if (!this.formData.brandId) {
+        this.$Message.error("品牌不能为空");
+        return false;
+      }
+      if (!this.formData.groupId) {
+        this.$Message.error("活动包名不能为空");
+        return false;
+      }
+      // if (!this.formData.activityId) {
+      //   this.$Message.error("活动不能为空");
+      //   return false;
+      // }
+
+      this.init(1, 10);
+    },
+    changePage(size) {
+      this.init(size, 10);
+    },
+    init(currentPage, pageSize) {
+      var data = this.Global.JsonChange(this.formData);
+      data["queryStartTime"] = this.Global.createTime(
+        this.formData.queryStartTime
+      );
+      if (this.start.hour == "24:00") {
+        data["queryStartTime"] = this.Global.setHoursData(
+          this.start.time,
+          this.start.hour
+        );
+      }
+
+      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
+      if (this.end.hour == "24:00") {
+        data["queryEndTime"] = this.Global.setHoursData(
+          this.end.time,
+          this.end.hour
+        );
+      }
+      data["currentPage"] = currentPage;
+      data["pageSize"] = pageSize;
+      this.Global.deleteEmptyProperty(data);
+      displayApplyDetail(data).then(res => {
+        if (res.status == 1) {
+          this.pageNum = res.data.items;
+          this.pageData = res.data.datalist;
+          this.page = res.data.page;
+        }
+      });
+    },
+    exportExcel() {
+      var data = this.Global.JsonChange(this.formData);
+      data["queryStartTime"] = this.Global.createTime(
+        this.formData.queryStartTime
+      );
+      if (this.start.hour == "24:00") {
+        data["queryStartTime"] = this.Global.setHoursData(
+          this.start.time,
+          this.start.hour
+        );
+      }
+
+      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
+      if (this.end.hour == "24:00") {
+        data["queryEndTime"] = this.Global.setHoursData(
+          this.end.time,
+          this.end.hour
+        );
+      }
+      this.Global.deleteEmptyProperty(data);
+      var url = this.Global.getExportUrl(
+        "display/displayApplyStoreDetailExport.json",
+        data
+      );
+      window.open(url);
+    },
+
+    changeValue(value) {
+      this.groupList = [];
+      this.formData.groupId = "";
+      if (!value) return;
+      this.Global.doPostNoLoading(
+        "condition/queryGroup.json",
+        { date: 7, activityType: 3, scope: "a", brandId: value },
+        res => {
+          Object.entries(res).forEach(item => {
+            this.groupList.push({ id: Number(item[0]), groupName: item[1] });
+          });
+          if (this.groupList && this.groupList.length) {
+            this.formData.groupId = this.groupList[0].id;
+            this.getActivityList(this.formData.groupId);
+          }
+        }
+      );
+    },
+    handleEdit() {
+      this.$router.push({
+        path: "/displayReward-edit",
+        query: { type: "edit" }
+      });
+    }
+  }
+};
+</script>
+
+

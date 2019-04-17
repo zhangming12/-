@@ -1,0 +1,438 @@
+<style lang="less" scoped>
+@import "../../config/index.less";
+#Main {
+  height: 100%;
+}
+.main-container {
+  position: relative;
+  min-height: 100%;
+  background: #ffffff;
+  padding-bottom: 60px;
+  .page-box {
+    overflow: hidden;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+}
+.form {
+  position: relative;
+  display: flex;
+  .container {
+    width: 35%;
+    margin: auto;
+    .w18 {
+      width: 50%;
+    }
+  }
+}
+.contentTop {
+  height: 40px;
+  line-height: 40px;
+  margin-bottom: 0;
+}
+.ivu-table-row {
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(0px);
+}
+.table-box {
+  padding: 0 10px;
+  position: relative;
+  .numColor {
+    color: @primary-color;
+  }
+}
+
+//搜索条件 时间控件
+.ivu-date-picker {
+  display: block;
+}
+//搜索条件 radio按钮
+.ivu-radio-wrapper {
+  margin-right: 30px;
+}
+.searchBox {
+  overflow: hidden;
+  .search-left,
+  .search-right {
+    width: 50%;
+  }
+  .search-left {
+    button {
+      outline: none;
+      border: none;
+      width: 60px;
+      height: 30px;
+      line-height: 30px;
+      background: #ffffff;
+      margin-left: 8px;
+      cursor: pointer;
+      color: @primary-color;
+    }
+  }
+  .search-right {
+    img {
+      cursor: pointer;
+      margin-left: 10px;
+    }
+  }
+}
+.myModal {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  .modal-main {
+    box-sizing: border-box;
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+    h3 {
+      text-align: center;
+      font-size: 14px;
+    }
+    .modal-table {
+      max-height: 500px;
+      overflow-y: auto;
+      margin-top: 10px;
+      .modal-table-top {
+        overflow: hidden;
+        height: 30px;
+        line-height: 30px;
+        .numColor {
+          color: @primary-color;
+        }
+      }
+    }
+  }
+}
+.ivu-input {
+  text-align: center !important;
+}
+</style>
+<template>
+  <div id="Main">
+      <!-- <h2 class="Title">扫码活动配置(活动)</h2> -->
+      <div class="main-container">
+        <div class="table-box box">
+            <div class="contentTop">
+              <span class="btn-left">此表共包含<span class='numColor'>{{pageNum}}</span>条数据</span>
+              
+              <!-- <addNewBtn class="btn-right ml20" @btnClick="addNewActivity" /> -->
+              <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
+            </div>
+            <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+            
+        </div>
+        <div class="page-box">
+          <div style="float: right;">
+            <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+          </div>
+        </div>
+      </div>
+      
+      <myModal class="myModal"
+          @close="closeModal"
+          :modal="myModalisShow">
+        <div slot="main" class="modal-main">
+          <h3>近一周导出历史</h3>
+          <div class="modal-table">
+            <div class="modal-table-top">
+              <span class="btn-left">此表共包含<span class='numColor'>100</span>条数据</span>
+            </div>
+            <Table :columns="columns" :data="pageData" disabled-hover></Table>
+          </div>
+        </div>
+      </myModal>
+  </div>
+</template>
+
+<script>
+import { queryDisPlayApplyAudit } from "@/api/activity-manage/display-apply-examine.js"; //api
+import dataRange from "../../components/data-rang.vue";
+import exportBtn from "../../components/Button/export-btn.vue";
+import addNewBtn from "../../components/Button/addNew-btn.vue";
+import myModal from "../../components/Modal/my-modal.vue";
+
+import {
+  EDFAULT_STARTTIME,
+  EDFAULT_ENDTIME,
+  EDFAULT_TOMORROW
+} from "@/util/index.js"; //搜索条件默认时间
+import {
+  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
+  typeQueryActivityGroupVOByBrandId, //根据活动包名ID获取陈列活动列表
+  queryOrganizationDictList //查询四级组织数据
+} from "@/api/common.js";
+import { displayApplyDetail } from "@/api/activity-manage/display-activity-manage.js"; //api
+import { getDisplayActivityListDoQuery } from "@/api/common.js";
+export default {
+  name: "scan-activity-configure-activity",
+
+  data() {
+    return {
+      myModalisShow: false,
+      formData: {
+        brandId: "",
+        status: ""
+      },
+      brandId: "",
+      groupId: "",
+      page: 1,
+      pageNum: 0,
+      rule: {},
+      columns1: [
+        {
+          title: "序号",
+          type: "index",
+          minWidth: 70,
+          align: "center"
+        },
+        {
+          title: "品牌",
+          key: "brandName",
+          minWidth: 160,
+          align: "center",
+          tooltip: true
+        },
+        {
+          title: "活动包名",
+          key: "groupName",
+          minWidth: 150,
+          align: "center",
+          tooltip: true
+        },
+        {
+          title: "活动名称",
+          key: "name",
+          minWidth: 150,
+          align: "center",
+          tooltip: true
+        },
+        {
+          title: "活动时间",
+          minWidth: 160,
+          key: "summary",
+          align: "center",
+          tooltip: true
+        },
+        {
+          title: "活动状态",
+          minWidth: 100,
+          key: "showStatus",
+          align: "center",
+          tooltip: true,
+          render: (h, params) => {
+            let arr = ["", "未开始", "进行中", "已结束"];
+            return h("div", arr[params.row.showStatus]);
+          }
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 150,
+          align: "center",
+          render: (h, params) => {
+            let buttonDom = [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "text",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      let queryParams = {
+                        id: params.row.id,
+                        groupId: this.groupId,
+                        brandId: this.brandId,
+                        type: "look"
+                      };
+
+                      this.$router.push({
+                        path: "/scanActivityConfigure",
+                        query: queryParams
+                      });
+                    }
+                  }
+                },
+                "详情"
+              )
+              //   h(
+              //     "Button",
+              //     {
+              //       props: {
+              //         type: "text",
+              //         size: "small"
+              //       },
+              //       style: {
+              //         marginRight: "5px"
+              //       },
+              //       on: {
+              //         click: () => {
+              //           let queryParams = {
+              //             id: params.row.id,
+              //             brandId:this.brandId,
+              //             groupId:this.groupId,
+              //             type: "modify"
+              //           };
+
+              //           this.$router.push({
+              //             path: "/scanActivityConfigure",
+              //             query: queryParams
+              //           });
+              //         }
+              //       }
+              //     },
+              //     "修改"
+              //   )
+            ];
+            return h("div", buttonDom);
+          }
+        }
+      ],
+      columns: [
+        {
+          title: "时间",
+          type: "index",
+          minWidth: 140,
+          align: "center"
+        },
+        {
+          title: "文件名",
+          key: "groupName",
+          minWidth: 140,
+          align: "center"
+        },
+        {
+          title: "状态",
+          key: "uploadTime",
+          minWidth: 80,
+          align: "center",
+          render: (h, params) => {
+            return h("div", this.Global.createTime(params.row.uploadTime));
+          }
+        },
+        {
+          title: "操作",
+          key: "action",
+          minWidth: 100,
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "text",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      let { id } = params.row;
+                      let queryParams = {
+                        id,
+                        activityId,
+                        storeId,
+                        displayActCategory: "partake",
+                        displayBackType: "C"
+                      };
+                      this.$router.push({
+                        path: "/displayResultOneEdit",
+                        query: queryParams
+                      });
+                    }
+                  }
+                },
+                "查看"
+              )
+            ]);
+          }
+        }
+      ],
+      pageData: [],
+      brandList: [],
+      activityList: []
+    };
+  },
+  components: { dataRange, exportBtn, myModal, addNewBtn },
+  created() {
+    this.groupId = this.$route.query.groupId;
+    this.brandId = this.$route.query.brandId;
+    if (this.groupId) {
+      this.Global.doPost(
+        "activityMaintain/getActivityList.json",
+        { groupId: this.groupId },
+        res => {
+          console.log(res);
+          this.pageData = res.datalist;
+          this.pageNum = res.items;
+          this.page = res.page;
+        }
+      );
+    }
+  },
+  methods: {
+    closeModal() {
+      this.myModalisShow = false;
+    },
+    // 新建活动
+    addNewActivity() {
+      this.$router.push({
+        path: "/scanActivityConfigure",
+        query: {
+          type: "add",
+          groupId: this.groupId,
+          brandId: this.brandId
+        }
+      });
+    },
+    showDetail() {
+      this.myModalisShow = true;
+    },
+    formateTime(time) {
+      return new Date(Number(time)).pattern("yyyy-MM-dd-hh");
+    },
+    submit(name) {
+      if (!this.formData.brandId) {
+        this.$Message.error("品牌不能为空");
+        return false;
+      }
+      this.page = 1;
+      this.init(this.page, 10);
+    },
+    changePage(size) {
+      this.init(size, 10);
+    },
+    init(currentPage, pageSize) {
+      this.pageNum = 0;
+      var data = this.Global.JsonChange(this.formData);
+      data["currentPage"] = currentPage;
+      data["pageSize"] = pageSize;
+      this.Global.deleteEmptyProperty(data);
+      this.Global.doPost("", data, res => {
+        console.log(res);
+      });
+    },
+    exportExcel() {
+      var data = this.Global.JsonChange(this.formData);
+      this.Global.deleteEmptyProperty(data);
+      var url = this.Global.getExportUrl(
+        "uploadReport/organizationUploadDetailExport.json",
+        data
+      );
+      window.open(url);
+    }
+  }
+};
+</script>
+
+

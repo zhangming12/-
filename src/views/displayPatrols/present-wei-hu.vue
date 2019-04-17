@@ -1,0 +1,1198 @@
+<style lang="less" scoped>
+@import "../../config/index.less";
+
+.box {
+  width: 100%;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  padding: 20px 20px 0;
+  background: #fff;
+  overflow: hidden;
+}
+.activity-content-group-box {
+  transition: all 0.2s;
+  // border: 1px solid #cccccc;
+  padding: 10px;
+}
+.ivu-table-row {
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(0px);
+}
+.ivu-date-picker {
+  display: block;
+}
+
+.imgBox {
+  width: 100%;
+  position: relative;
+  .changeImg {
+    width: 100%;
+    img {
+      display: block;
+      width: 105px;
+      height: 85px;
+    }
+  }
+}
+#imgVideo {
+  clear: both;
+  height: 180px;
+  margin-top: 40px;
+  overflow: hidden;
+}
+.numberInput {
+  border: 1px solid #dddee1;
+  width: 100%;
+  height: 32px;
+  line-height: 32px;
+  padding: 0 0 0 7px;
+  text-align: left;
+  outline: 0;
+  -moz-appearance: textfield;
+  color: #666;
+  border-radius: 4px;
+  transition: all 0.2s linear;
+}
+.textbox {
+  overflow: hidden;
+  min-height: 200px;
+  div:first-child {
+    float: left;
+    width: 10%;
+    text-align: right;
+    padding-right: 10px;
+  }
+  div:last-child {
+    float: left;
+    width: 90%;
+  }
+}
+.sku {
+  i {
+    font-style: normal;
+  }
+}
+.sku.issku {
+  color: #ff830b;
+  i {
+    color: #3254ff;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+.groupList {
+  height: auto;
+  .title {
+    border-left: 3px solid #ff8a23;
+    font-size: 14px;
+    font-weight: bold;
+    padding-left: 10px;
+    line-height: 16px;
+    margin-bottom: 20px;
+  }
+  .activityBox {
+    height: auto;
+    .activityTitle {
+      height: 40px;
+      line-height: 40px;
+      background-color: @tablehead-color;
+      .titMain {
+        width: 100%;
+        height: 40px;
+        text-align: center;
+        line-height: 40px;
+        font-size: 12px;
+        // color: white;
+        font-weight: bold;
+      }
+    }
+    .activityContent {
+      // height: 40px;
+      transition: all 0.2s;
+      line-height: 40px;
+      .ContentMain {
+        width: 100%;
+        min-height: 40px;
+        text-align: center;
+        line-height: 40px;
+        font-size: 12px;
+
+        .btn {
+          padding: 3px 7px;
+          border-radius: 0;
+        }
+        .border-right {
+          border-right: 1px solid #e5e5e5;
+        }
+        .skuandmust {
+          border: none;
+          outline: none;
+        }
+      }
+    }
+    .defaultWord {
+      text-align: center;
+      height: 40px;
+      line-height: 40px;
+      font-size: 12px;
+    }
+    .createNewAct {
+      margin: 20px 0;
+    }
+  }
+}
+#textarea {
+  display: block;
+  outline: none;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  width: 100%;
+  text-indent: 10px;
+  min-height: 190px;
+}
+#textarea::-webkit-input-placeholder {
+  color: #c5c8ce;
+}
+#textarea:-moz-placeholder {
+  color: #c5c8ce;
+}
+#textarea::-moz-placeholder {
+  color: #c5c8ce;
+}
+#textarea:-ms-input-placeholder {
+  color: #c5c8ce;
+}
+.numColor {
+  color: @primary-color;
+}
+.changeBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 170px;
+  p {
+    line-height: 20px;
+    font-size: 12px;
+  }
+}
+</style>
+
+<template>
+  <div id="Main">
+    <div class="box">
+      <div class="groupList">
+        <div class="title">分组管理</div>
+        <div class="contentTop">
+          <span class="btn-left">此表共包含
+            <span class="numColor">{{ presentList.length }}</span> 条数据
+          </span>
+          <addBtn class="btn-right" @btnClick="addGroup"/>
+        </div>
+        <div class="activityBox">
+          <div class="activityTitle">
+            <Row>
+              <Col span="8">
+                <div class="titMain">分组名称</div>
+              </Col>
+              <Col span="8">
+                <div class="titMain">分组别名</div>
+              </Col>
+              <Col span="8">
+                <div class="titMain">操作</div>
+              </Col>
+            </Row>
+          </div>
+          <div v-if="presentList.length" class="activityContent">
+            <div
+              v-for="(item ,index) in presentList"
+              :key="index"
+              style="border-bottom:1px solid #e5e5e5;"
+            >
+              <Row>
+                <Col span="8">
+                  <div class="ContentMain" style="padding:0 10px;">
+                    <Input
+                      required
+                      v-if="item.isModify"
+                      :readonly="type == 'look'|| item.type == 'look'"
+                      style="width:100%;"
+                      v-model.trim="item.activityTag"
+                      placeholder="请输入分组名称"
+                    ></Input>
+                    <span v-else>{{ item.activityTag }}</span>
+                  </div>
+                </Col>
+                <Col span="8">
+                  <div class="ContentMain" style="padding:0 10px;">
+                    <Input
+                      v-if="item.isModify"
+                      :readonly="type == 'look'|| item.type == 'look'"
+                      style="width:100%;"
+                      v-model.trim="item.name"
+                      placeholder="请输入分组别名"
+                    ></Input>
+                    <span v-else>{{ item.name }}</span>
+                  </div>
+                </Col>
+                <Col span="8">
+                  <div class="ContentMain btnBox">
+                    <Button
+                      type="text"
+                      class="btn border-right"
+                      v-if="!item.isModify"
+                      id="success"
+                      @click="modifyGroup(index)"
+                    >修改</Button>
+                    <!-- <Button
+                      type="text"
+                      class="btn border-right"
+                      v-if="!item.isModify"
+                      id="fail"
+                      @click="deleteGroup(index)"
+                    >删除</Button> -->
+                    <Button
+                      type="text"
+                      class="btn"
+                      v-if="!item.isModify"
+                      id="primary"
+                      @click="lookDetail(index)"
+                    >详情</Button>
+
+                    <Button
+                      type="text"
+                      class="btn"
+                      :class="item.isModify && item.type !='look'?'border-right':''"
+                      v-if="item.isModify"
+                      id="success"
+                      @click="cancel(index)"
+                    >取消</Button>
+                    <Button
+                      type="text"
+                      class="btn"
+                      id="primary"
+                      v-if="item.isModify && item.type !='look'"
+                      @click="saveGroup(index)"
+                    >保存</Button>
+                  </div>
+                </Col>
+              </Row>
+              <div class="activity-content-group-box" :id="'ref' + index" v-if="item.showMore">
+                <Form :label-width="88">
+                  <Row>
+                    <Col span="10">
+                      <Form-item label="陈列折扣:" required>
+                        <Select
+                          :disabled="type == 'look'|| item.type == 'look'"
+                          v-model="item.presentType"
+                          placeholder="请选择陈列奖励类型"
+                          @on-change="prizeChange"
+                        >
+                          <Option :value="1">实物折扣</Option>
+                          <Option :value="2">现金红包</Option>
+                          <Option :value="0">电子劵</Option>
+                        </Select>
+                      </Form-item>
+                      <Form-item label="奖励有效期:" :label-width="100" required>
+                        <Row>
+                          <Col span="6">
+                            <Form-item prop="endTime">
+                              <Date-picker
+                                :disabled="type == 'look' || item.type == 'look'"
+                                type="date"
+                                placeholder="选择时间"
+                                v-model="item.endWinTime"
+                              ></Date-picker>
+                            </Form-item>
+                          </Col>
+                          <Col span="4" offset="1">
+                            <Form-item prop="startTime">
+                              <Select
+                                placeholder="时间"
+                                :disabled="type == 'look' || item.type == 'look'"
+                                v-model="item.endHour"
+                              >
+                                <Option
+                                  :value="item.dataTime"
+                                  :key="item.dataTime"
+                                  v-for="item in dataList"
+                                >{{item.dataTime}}</Option>
+                              </Select>
+                            </Form-item>
+                          </Col>
+                        </Row>
+                      </Form-item>
+                    </Col>
+                    <Col span="10" offset="2">
+                      <Form-item v-if="isSku == 1" label :label-width="30">
+                        <!-- isSku -->
+                        <span class="sku" :class="isSku?'issku':''">
+                          <i @click="openSKU(index,$event)">设置SKU</i>
+                        </span>
+                      </Form-item>
+                      <Form-item required label="奖项:">
+                        <!-- 实物奖励 -->
+                        <div v-if="item.presentType == 1">
+                          <Row>
+                            <Col span="8" style="margin-bottom: 0;">
+                              <Select
+                                :disabled="type == 'look'|| item.type == 'look'"
+                                style="width:100%;margin-bottom: 0;"
+                                v-model="item.goodsId"
+                                placeholder="请选择奖项"
+                                clearable
+                              >
+                                <Option
+                                  :value="val.id"
+                                  v-for="(val,indexInd) in jiangpinList"
+                                  :key="indexInd"
+                                >{{ val.name }}</Option>
+                              </Select>
+                            </Col>
+                            <Col
+                              span="5"
+                              style="height: 32px;line-height: 32px;margin-bottom: 0;"
+                              offset="1"
+                            >
+                              <input
+                                :readonly="type == 'look'|| item.type == 'look'"
+                                type="number"
+                                min="1"
+                                max="4999.99"
+                                class="numberInput"
+                                v-model="item.minAmount"
+                              >
+                            </Col>
+                            <Col span="2" style="margin-bottom: 0;text-align:center;">至</Col>
+                            <Col span="5" style="height: 32px;line-height: 32px;margin-bottom: 0;">
+                              <input
+                                :readonly="type == 'look'|| item.type == 'look'"
+                                type="number"
+                                min="1"
+                                max="4999.99"
+                                class="numberInput"
+                                v-model="item.maxAmount"
+                              >
+                            </Col>
+                            <Col span="3" style="margin-bottom: 0;text-align:center;">份</Col>
+                          </Row>
+                        </div>
+                        <!-- 电子劵 -->
+                        <div v-else-if="item.presentType == 0">
+                          <Row>
+                            <Col span="8" style="margin-bottom: 0;">
+                              <Select
+                                :disabled="type == 'look'|| item.type == 'look'"
+                                style="width:100%;margin-bottom: 0;"
+                                v-model="item.goodsId"
+                                placeholder="请选择奖项"
+                                clearable
+                              >
+                                <Option
+                                  :value="val.id"
+                                  v-for="(val,indexInd) in jiangpinList"
+                                  :key="indexInd"
+                                >{{ val.name }}</Option>
+                              </Select>
+                            </Col>
+                            <Col
+                              span="5"
+                              style="height: 32px;line-height: 32px;margin-bottom: 0;"
+                              offset="1"
+                            >
+                              <input
+                                :readonly="type == 'look'|| item.type == 'look'"
+                                type="number"
+                                min="1"
+                                max="4999.99"
+                                class="numberInput"
+                                v-model="item.minAmount"
+                              >
+                            </Col>
+                            <Col span="2" style="margin-bottom: 0;text-align:center;">至</Col>
+                            <Col span="5" style="height: 32px;line-height: 32px;margin-bottom: 0;">
+                              <input
+                                :readonly="type == 'look'|| item.type == 'look'"
+                                type="number"
+                                min="1"
+                                max="4999.99"
+                                class="numberInput"
+                                v-model="item.maxAmount"
+                              >
+                            </Col>
+                            <Col span="3" style="margin-bottom: 0;text-align:center;">份</Col>
+                          </Row>
+                        </div>
+                        <!-- 现金红包 -->
+                        <div v-else>
+                          <Row>
+                            <Col span="6" style="margin-bottom: 0;">
+                              <input
+                                :disabled="type == 'look'|| item.type == 'look'"
+                                type="number"
+                                min="1"
+                                max="4999.99"
+                                class="numberInput"
+                                v-model="item.minAmount"
+                              >
+                            </Col>
+                            <Col
+                              span="3"
+                              style="height: 32px;line-height: 32px;margin-bottom: 0;text-align:center;"
+                            >至</Col>
+                            <Col span="6" style="margin-bottom: 0;">
+                              <input
+                                :disabled="type == 'look'|| item.type == 'look'"
+                                type="number"
+                                min="1"
+                                max="4999.99"
+                                class="numberInput"
+                                v-model="item.maxAmount"
+                              >
+                            </Col>
+                          </Row>
+                        </div>
+                      </Form-item>
+                    </Col>
+                  </Row>
+                </Form>
+
+                <div class="textbox">
+                  <div>
+                    <p>陈列规则及</p>
+                    <p>陈列要求:</p>
+                  </div>
+                  <div>
+                    <textarea
+                      :readonly="type == 'look'|| item.type == 'look'"
+                      v-model.trim="item.content"
+                      placeholder="请输入陈列规则,陈列要求"
+                      id="textarea"
+                    ></textarea>
+                  </div>
+                </div>
+                <!-- 新增审核规则 -->
+                <div class="textbox">
+                  <div>
+                    <p>审核规则:</p>
+                  </div>
+                  <div>
+                    <textarea
+                      :readonly="type == 'look'|| item.type == 'look'"
+                      v-model.trim="item.auditPolicy"
+                      placeholder="请输入审核规则"
+                      id="textarea"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div id="imgVideo">
+                  <Row>
+                    <Col span="8">
+                      <Row>
+                        <Col span="9">
+                          <div class="changeBtn">
+                            <Upload
+                              action="https://hbrand.oss-cn-hangzhou.aliyuncs.com"
+                              :data="upData"
+                              :before-upload="beforeUpload"
+                              :on-success="logoUrlUpload"
+                              :show-upload-list="false"
+                              :format="['jpg','jpeg','png']"
+                              :on-format-error="handleFormatError"
+                            >
+                              <p>陈列效果图:</p>
+                              <p>(710*400)</p>
+                              <Button
+                                v-if="type != 'look'|| item.type != 'look'"
+                                :disabled="type =='look' || item.type == 'look'"
+                                @click="getIndex(index)"
+                                type="primary"
+                              >重新上传</Button>
+                            </Upload>
+                          </div>
+                        </Col>
+                        <Col span="13">
+                          <div class="imgBox">
+                            <div class="changeImg">
+                              <img
+                                :src="presentList[index].imageUrl"
+                                alt
+                                v-if="presentList[index].imageUrl"
+                                style="width:200px;height:170px;display:block;"
+                              >
+                              <img
+                                src="../../assets/image/imgBg.png"
+                                alt
+                                v-else
+                                style="width:200px;height:170px;display:block;"
+                              >
+                            </div>
+                          </div>
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col span="8">
+                      <Row>
+                        <Col span="9">
+                          <div class="changeBtn">
+                            <Upload
+                              action="https://hbrand.oss-cn-hangzhou.aliyuncs.com"
+                              :data="upData"
+                              :before-upload="beforeUploadVideo"
+                              :on-success="videoUpload"
+                              :show-upload-list="false"
+                              :format="['mp4','wmv']"
+                              :on-format-error="handleViedoFormatError"
+                            >
+                              <p>陈列小视频:</p>
+                              <Button
+                                v-if="type != 'look'|| item.type != 'look'"
+                                :disabled="type =='look' || item.type == 'look'"
+                                @click="getIndex(index)"
+                                type="primary"
+                              >重新上传</Button>
+                            </Upload>
+                          </div>
+                        </Col>
+                        <Col span="13">
+                          <div class="imgBox">
+                            <div class="changeImg">
+                              <video
+                                controls
+                                v-if="presentList[index].radioUrl"
+                                :src="presentList[index].radioUrl"
+                                style="width:200px;height:170px;display:block;"
+                              ></video>
+                              <img
+                                src="../../assets/image/imgBg.png"
+                                alt
+                                v-else
+                                style="width:200px;height:170px;display:block;"
+                              >
+                            </div>
+                          </div>
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col span="8">
+                      <Row>
+                        <Col span="9">
+                          <div class="changeBtn">
+                            <Upload
+                              action="https://hbrand.oss-cn-hangzhou.aliyuncs.com"
+                              :data="upData"
+                              :before-upload="beforeUploadImage"
+                              :on-success="logoUrlUploadImage"
+                              :show-upload-list="false"
+                              :format="['jpg','jpeg','png']"
+                              :on-format-error="handleFormatError"
+                            >
+                              <p>上传提醒图:</p>
+                              <p>(建议宽度不超过800)</p>
+                              <Button
+                                v-if="type != 'look'|| item.type != 'look'"
+                                :disabled="type =='look' || item.type == 'look'"
+                                @click="getIndex(index)"
+                                type="primary"
+                              >重新上传</Button>
+                            </Upload>
+                          </div>
+                        </Col>
+                        <Col span="13">
+                          <div class="imgBox">
+                            <div class="changeImg">
+                              <img
+                                :src="presentList[index].pictureUrl"
+                                alt
+                                v-if="presentList[index].pictureUrl"
+                                style="width:200px;height:170px;display:block;"
+                              >
+                              <img
+                                src="../../assets/image/imgBg.png"
+                                alt
+                                v-else
+                                style="width:200px;height:170px;display:block;"
+                              >
+                            </div>
+                          </div>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="defaultWord" v-else>该活动下暂无分组</div>
+          <!-- <div class="createNewAct">
+                  <Button type="primary" @click="addGroup">新建分组</Button>
+          </div>-->
+        </div>
+      </div>
+    </div>
+    <Modal v-model="skuIsShow" width="1000" style="height:600px;" id="skuContainer">
+      <h3 slot="header" style="text-align:center;">SKU设置</h3>
+      <skuModel
+        :arecoredSkuList="recoredSkuList"
+        :aid="aid"
+        :gid="gid"
+        :brandId="brandId"
+        :type="presentList[ind]&&presentList[ind].type?presentList[ind].type:''"
+        @getData="getSkuSetData"
+      ></skuModel>
+      <div slot="footer" style="text-align:center;display:none;"></div>
+    </Modal>
+  </div>
+</template>
+
+<script>
+import skuModel from "../activity-statistics-C/setting-SKU.vue";
+import upData from "@/assets/js/upload.js";
+import { getDisplayActivityListDoQuery } from "@/api/common.js";
+import PROJECT_CONFIG from "@/util/config.js";
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
+import index from "vue";
+import addBtn from "@/components/Button/addNew-btn.vue";
+import qs from "qs";
+export default {
+  data() {
+    const validateStart = (rule, value, callback) => {
+      // 验证开始时间
+      if (value == "") {
+        callback(new Error("请输入开始时间"));
+      } else {
+        if (this.formData.endTime !== "") {
+          // 对结束时间单独验证
+          this.$refs.form.validateField("endTime");
+        }
+        callback();
+      }
+    };
+    const validateEnd = (rule, value, callback) => {
+      // 验证结束时间
+
+      if (value == "") {
+        callback(new Error("请输入结束时间"));
+      } else {
+        const str = new Date(this.formData.startTime).getTime();
+        const end = new Date(value).getTime();
+        if (end < str) {
+          // 判断开始时间是否大于结束时间
+          callback(new Error("开始时间大于结束时间"));
+        } else {
+          callback();
+        }
+      }
+    };
+    return {
+      imageTimeStr: "",
+      imageTimeStr1:"",
+      videoTimeStr: "",
+      isSku: "",
+      aid: "",
+      gid: "",
+      skuIsShow: false,
+      dataList: [],
+      checkedList: [],
+      checkedNames: [],
+      n: 1,
+      jiangpinList: [],
+      brandId: "",
+      groupId: "",
+      id: "", //活动ID
+      presentList: [],
+      type: "",
+      upData: upData,
+      notifyImg: "",
+      activityImg: "",
+      bizAreaList: [],
+      activityIndex: 0,
+      ind: null, //分组下标
+      displayActivityData: [],
+      skuSettingData: {},
+      recoredSkuList: {}
+    };
+  },
+  mounted() {
+    let sku = document.getElementById("skuContainer");
+    sku.style.display = "none";
+  },
+  components: {
+    skuModel,
+    addBtn
+  },
+  created() {
+    let str = ":00";
+    for (let i = 0; i <= 24; i++) {
+      let time = i < 10 ? "0" + i : i;
+      time += str;
+      this.dataList.push({ dataTime: time });
+    }
+    this.type = this.$route.query.type;
+    this.groupId = this.$route.query.groupId;
+    this.brandId = this.$route.query.brandId;
+    this.id = this.$route.query.id; //活动ID
+    this.isSku = this.$route.query.isSku;
+    // if (type) {
+    // this.type = type;
+    // }
+    // if (this.id) {
+    this.activityDetail(this.id);
+    // }
+    //获取实物折扣列表
+    // this.Global.doPost(
+
+    //   "goodsInfo/queryWithPage.json",
+    //   {
+    //     status: 1,
+    //     type: 1
+    //   },
+    //   res => {
+    //     this.jiangpinList = res.datalist;
+    //   }
+    // );
+  },
+  beforeDestroy() {
+    // window.sessionStorage.removeItem("skuList");
+  },
+  watch: {
+    skuIsShow(val) {
+      let sku = document.getElementById("skuContainer");
+      if (val) {
+        sku.style.display = "block";
+      } else {
+        sku.style.display = "none";
+        this.recoredSkuList = {};
+        this.aid = "";
+        this.gid = "";
+      }
+    }
+  },
+  methods: {
+    prizeChange(val, flag) {
+      console.log(val);
+      this.presentList[this.ind].presentType = val;
+      if (val == 2) {
+        return;
+      }
+
+      if (!flag) {
+        this.presentList[this.ind].goodsId = "";
+      }
+      this.Global.doPost(
+        "goodsInfo/queryByBrandAndType.json",
+        {
+          brandId: this.brandId,
+          type: val
+        },
+        res => {
+          this.jiangpinList = res;
+        }
+      );
+    },
+    getIndex(index) {
+      this.ind = index;
+    },
+    //删除分组
+    deleteGroup(index) {
+      this.ind = index;
+      this.$Modal.confirm({
+        title: "警告",
+        content: "确定删除该分组？",
+        onOk: () => {
+          if (!this.presentList[index].id) {
+            this.presentList.splice(index, 1);
+            this.$Message.success("删除成功");
+          } else {
+            this.Global.doPost(
+              "displayYxtg/deleteActivityPresentInfo.json",
+              { id: this.presentList[index].id },
+              res => {
+                this.$Message.success("删除成功");
+                this.activityDetail(this.id);
+              }
+            );
+          }
+        }
+      });
+    },
+    //取消
+    cancel(index) {
+      this.ind = index;
+      this.presentList[index].isModify = false;
+      //新建时取消
+      if (!this.presentList[index].id) {
+        this.presentList.splice(index, 1);
+      } else {
+        //修改时取消
+        if (this.compareData(index)) {
+          this.activityDetail(this.id);
+          this.presentList[index].type = "";
+        }
+      }
+    },
+    compareData() {
+      return true;
+    },
+    //修改分组
+    modifyGroup(index) {
+      this.ind = index;
+      this.closeMoreOpen("add");
+      if (this.presentList[index].id) {
+        this.presentList[index].type = "modify";
+      } else {
+        this.presentList[index].type = "add";
+      }
+      this.getGroupDetail(this.presentList[index].id, index, "modify");
+    },
+    //查看详情
+    lookDetail(index) {
+      this.ind = index;
+      this.closeMoreOpen("add");
+      this.getGroupDetail(this.presentList[index].id, index, "look");
+    },
+    //获取分组详情
+    getGroupDetail(id, index, type) {
+      this.Global.doPost(
+        "displayYxtg/getPresentInfoDetails.json",
+        { id },
+        res => {
+          console.log(res);
+          this.presentList[index]["activityTag"] = res["activityTag"];
+          this.presentList[index]["content"] = res.content;
+          this.presentList[index]["auditPolicy"] = res.auditPolicy;
+          this.presentList[index]["endWinTime"] = this.Global.createTime(
+            res.endWinTime
+          );
+          this.presentList[index]["endHour"] = this.Global.createTime(
+            res.endWinTime
+          ).slice(11, 16);
+          this.presentList[index]["goodsId"] = res.goodsId;
+          this.presentList[index]["maxAmount"] = res.maxAmount;
+          this.presentList[index]["minAmount"] = res.minAmount;
+          this.presentList[index]["presentType"] = res.presentType;
+          this.prizeChange(res.presentType, true);
+          // this.presentList[index]["pictureUrl"] = res.pictureUrl;
+          this.presentList[index]["imageUrl"] = res.imageUrl;
+          this.presentList[index]["pictureUrl"] = res.pictureUrl;
+          
+          this.presentList[index]["radioUrl"] = res.radioUrl;
+          this.presentList[index]["id"] = res.id;
+          this.presentList[index]["isModify"] = true;
+          this.presentList[index]["showMore"] = true;
+          this.presentList[index]["type"] = type;
+          console.log(this.presentList[index]);
+          if (this.isSku == 1) {
+            let str = `b${this.brandId}a${this.id}g${res.id}`;
+            let skuList = [];
+            res.skuList.forEach(item => {
+              skuList.push({ id: item });
+            });
+            this.skuSettingData[str] = {
+              recoredSkuList: skuList,
+              skuNumberRule: res.skuLimit,
+              skuRule: res.skuRule
+            };
+            console.log(this.skuSettingData);
+          }
+        }
+      );
+    },
+    //保存分组
+    saveGroup(index) {
+      this.ind = index;
+      this.init(index);
+    },
+    //新增分组
+    addGroup() {
+      let flag = true;
+      for (let i = 0; i < this.presentList.length; i++) {
+        if (!this.presentList[i].id && this.presentList.length) {
+          flag = false;
+          this.$Modal.confirm({
+            title: "警告",
+            content: "是否放弃保存新建分组？",
+            onOk: () => {
+              this.presentList.splice(i, 1);
+              this.presentList.push({
+                activityTag: "", //分组名称
+                name: "", //分组别名
+                presentType: "", //奖励类型
+                endWinTime: "",
+                endHour: "24:00",
+                id: "", //分组Id
+                goodsId: "",
+                imageUrl: "",
+                pictureUrl:"",
+                // pictureUrl: "",
+                radioUrl: "",
+                content: null,
+                minAmount: null,
+                maxAmount: null,
+                totalQuantity: null,
+                content: "",
+                isModify: true,
+                showMore: true,
+                type: "add"
+              });
+            },
+            onCancel: () => {
+              return false;
+            }
+          });
+        }
+      }
+      if (flag) {
+        this.closeMoreOpen("add");
+        this.presentList.push({
+          activityTag: "", //分组名称
+          name: "", //分组别名
+          presentType: "", //奖励类型
+          endWinTime: "",
+          endHour: "24:00",
+          id: "", //分组Id
+          goodsId: "",
+          imageUrl: "",
+          pictureUrl: "",
+          radioUrl: "",
+          content: null,
+          minAmount: null,
+          maxAmount: null,
+          totalQuantity: null,
+          content: "",
+          isModify: true,
+          showMore: true,
+          type: "add"
+        });
+        this.ind = this.presentList.length - 1;
+      }
+    },
+    getSkuSetData(val) {
+      this.skuIsShow = false;
+      if (val == "close") {
+        return false;
+      }
+      this.skuSettingData[val[0]] = val[1];
+    },
+    //开启SKU
+    openSKU(index, e) {
+      this.getIndex(index);
+      this.gid = this.presentList[index].id
+        ? this.presentList[index].id
+        : index;
+      this.aid = this.id;
+      let str = `b${this.brandId}a${this.aid}g${this.gid}`;
+      if (this.skuSettingData[str]) {
+        this.recoredSkuList = this.skuSettingData[str];
+      }
+      this.skuIsShow = true;
+    },
+    beforeUpload(res) {
+      // this.upData["key"] = "ecuda/image/" + res.name;
+      this.imageTimeStr = Date.now();
+      this.upData["key"] = "ecuda/image/" + this.imageTimeStr + res.name;
+      return this.checkImageWH(res, 710, 400);
+    },
+    beforeUploadImage(res) {
+      this.imageTimeStr1 = Date.now();
+      this.upData["key"] = "ecuda/image/" + this.imageTimeStr1 + res.name;
+      // return this.checkImageWH(res, 710, 400);
+    },
+    beforeUploadVideo(res) {
+      this.videoTimeStr = Date.now()
+      this.upData["key"] = "ecuda/image/" + this.videoTimeStr + res.name;
+      // return this.checkImageWH(res, 700, 240);
+    },
+    logoUrlUpload(response, file, fileList) {
+      this.presentList[this.ind].imageUrl =
+        PROJECT_CONFIG.ossServer +
+        "ecuda/image/" +
+        this.imageTimeStr +
+        file.name;
+      this.$set(this.presentList, this.ind, this.presentList[this.ind]);
+    },
+    logoUrlUploadImage(response, file, fileList) {
+      this.presentList[this.ind].pictureUrl =
+        PROJECT_CONFIG.ossServer +
+        "ecuda/image/" +
+        this.imageTimeStr1 +
+        file.name;
+      this.$set(this.presentList, this.ind, this.presentList[this.ind]);
+    },
+    checkImageWH(file, width, height) {
+      let self = this;
+      return new Promise(function(resolve, reject) {
+        let filereader = new FileReader();
+        filereader.onload = e => {
+          let src = e.target.result;
+          const image = new Image();
+          image.onload = function() {
+            if (
+              (width && this.width != width) ||
+              (height && this.height != height)
+            ) {
+              self.$Notice.info({
+                title: `请上传宽为${width},高为${height}的图片"`
+              });
+              reject();
+            } else {
+              resolve();
+            }
+          };
+          image.onerror = reject;
+          image.src = src;
+        };
+        filereader.readAsDataURL(file);
+      });
+    },
+    // bacLogoUrlUpload(response, file, fileList) {
+    //   this.presentList[this.ind].pictureUrl =
+    //     PROJECT_CONFIG.ossServer + "ecuda/image/" + file.name;
+    //   this.$set(this.presentList, this.ind, this.presentList[this.ind]);
+    // },
+    videoUpload(response, file, fileList) {
+      //陈列效果视频
+      this.presentList[this.ind].radioUrl =
+        PROJECT_CONFIG.ossServer + "ecuda/image/" + this.videoTimeStr + file.name;
+      this.$set(this.presentList, this.ind, this.presentList[this.ind]);
+    },
+    handleFormatError(file) {
+      this.$Notice.warning({
+        title: "文件格式不正确",
+        desc:
+          "文件 " + file.name + " 格式不正确，请上传 jpg 或 png 格式的图片。"
+      });
+    },
+    handleViedoFormatError(file) {
+      this.$Notice.warning({
+        title: "文件格式不正确",
+        desc:
+          "文件 " + file.name + " 格式不正确，请上传 MP4 或 wmv 格式的视频。"
+      });
+    },
+    getTimeStrape() {
+      return new Date().getTime();
+    },
+    closeMoreOpen(index) {
+      for (let i = 0; i < this.presentList.length; i++) {
+        this.presentList[i].showMore = false;
+        this.presentList[i].isModify = false;
+        if (index == i) {
+          this.presentList[i].showMore = true;
+        }
+      }
+    },
+    activityDetail(id) {
+      if (id) {
+        this.Global.doPost("displayYxtg/getPresentList.json", { id }, res => {
+          console.log(res);
+          this.presentList = [];
+          if (res && res.length) {
+            for (let i = 0; i < res.length; i++) {
+              let obj = {};
+              obj["id"] = res[i].id;
+              obj["activityTag"] = res[i].activityTag;
+              obj["isModify"] = false;
+              obj["showMore"] = false;
+              obj["type"] = "";
+              this.presentList.push(obj);
+              console.log(this.presentList);
+            }
+          }
+        });
+      } else {
+        this.$Message.error("该活动下暂无分组");
+      }
+    },
+    init(index) {
+      var obj1 = {};
+      let id = "";
+      if (this.presentList[index].id) {
+        id = this.presentList[index].id;
+      } else {
+        id = index;
+      }
+      var bb = `b${this.brandId}a${this.id}g${id}`;
+      if (this.isSku == 1 && this.skuSettingData[bb]) {
+        obj1["skuLimit"] = this.skuSettingData[bb].skuNumberRule;
+        obj1["skuRule"] = this.skuSettingData[bb].skuRule;
+        if (
+          this.skuSettingData[bb].recoredSkuList &&
+          this.skuSettingData[bb].recoredSkuList.length
+        ) {
+          let sArr = [];
+          for (
+            let x = 0;
+            x < this.skuSettingData[bb].recoredSkuList.length;
+            x++
+          ) {
+            sArr.push(this.skuSettingData[bb].recoredSkuList[x].id);
+          }
+          obj1["skuList"] = sArr;
+        }
+      }
+      obj1["activityId"] = this.id;
+      // obj1["id"] = this.presentList[index].id;
+
+      // obj1["activityTag"] = this.presentList[index].activityTag;
+      obj1["activityTag"] = encodeURI(this.presentList[index].activityTag);
+      obj1["endWinTime"] = this.Global.setHoursData(
+        this.presentList[index].endWinTime,
+        this.presentList[index].endHour
+      );
+      // obj1["content"] = this.transformText(this.presentList[index].content);
+      obj1["content"] = encodeURI(
+        this.transformText(this.presentList[index].content)
+      );
+      obj1["auditPolicy"] = this.transformText(
+        this.presentList[index].auditPolicy
+      );
+      obj1["pictureUrl"] = this.presentList[index].pictureUrl;
+      obj1["imageUrl"] = this.presentList[index].imageUrl;
+      obj1["radioUrl"] = this.presentList[index].radioUrl;
+      obj1["presentType"] = this.presentList[index].presentType;
+      obj1["minAmount"] = this.presentList[index].minAmount;
+      obj1["maxAmount"] = this.presentList[index].maxAmount;
+      if (
+        this.presentList[index].presentType == 1 ||
+        this.presentList[index].presentType == 0
+      ) {
+        obj1["goodsId"] = this.presentList[index].goodsId;
+      }
+      var api;
+      obj1["activityType"] = 6;
+      if (this.presentList[index].type == "add") {
+        api = "displayYxtg/saveActivityPresentInfo.json";
+        // obj1['activityType'] = 6;
+      } else {
+        api = "displayYxtg/updateActivityPresentInfo.json";
+        obj1["id"] = this.presentList[index].id;
+      }
+      this.Global.doPost(api, obj1, res => {
+        this.$Message.success("成功");
+        this.activityDetail(this.id);
+      });
+    },
+    goBack() {
+      this.$router.push({ path: "/displayReward" });
+    },
+    transforRuleText(str) {
+      let index = str.indexOf("||");
+      if (index != -1) {
+        str = str.split("||").join("|");
+      }
+      return str.replace(/\|/g, "\r\n");
+    },
+    transformText(str) {
+      if (str) {
+        str = str.replace(/\n/g, "|");
+        let index = str.indexOf("|陈列要求");
+        if (index != -1) {
+          str = str.split("|陈列要求").join("||陈列要求");
+        }
+        return str;
+      }
+    }
+  }
+};
+</script>

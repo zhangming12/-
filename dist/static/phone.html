@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="">
+</head>
+<style>
+    *
+    {
+        margin: 0;
+        padding: 0;
+    }
+    html,body{
+        height: 100%;
+    }
+    #div1
+    {
+        width: 100%;
+        height: 300px;
+        background: #CCC;
+        position: relative;
+    }
+    #div2,#div3
+    {
+        width: 100px;
+        height: 100px;
+        background: green;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+    #div3 {
+        background: red;
+    }
+    </style>
+    
+<body>
+        <div id="div1">
+                <div id="div2">helloworld</div>
+                <div id="div3">helloworld</div>
+        </div>
+        
+</body>
+<script src="./js/drag.js"></script>
+<script>
+var oDiv1 = document.getElementById('div1');
+var oDiv2 = document.getElementById('div2');       
+var oDiv3 = document.getElementById('div3');       
+Drag(oDiv1,oDiv2,function(left,top){
+    console.log(left,top)
+})
+Drag(oDiv1,oDiv3,function(left,top){
+    console.log(left,top)
+})
+</script>
+<script src='http://cdn.bootcss.com/vue/2.1.8/vue.min.js'></script>
+<script>    
+    // var a = new Vue({
+    //     el: '#a',
+    //     data() {
+    //         return{
+    //             a: 123
+    //         }
+    //     },
+    //     created () {
+    //         console.log(parent)
+    //         this.setContent(window.parent.window._item);
+    //     },
+    //     methods: {
+    //         setContent: function (item) {
+    //             console.log(item)
+    //             this.a = item;
+    //         }
+    //     }
+    // })
+    // console.log(a)
+</script>
+</html>
