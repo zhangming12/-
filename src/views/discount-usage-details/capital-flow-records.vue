@@ -237,6 +237,15 @@
                   <Input v-model.trim="formData.userId" placeholder="用户ID"></Input>
                 </Form-item>
               </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input
+                    :disabled="!joinCodeDis"
+                    v-model.trim="formData.joinCode"
+                    placeholder="客户编号"
+                  ></Input>
+                </Form-item>
+              </div>
             </div>
           </transition>
         </Form>
@@ -360,12 +369,6 @@ export default {
           showMore: false,
           width: 150
         },
-        // {
-        //   title: "子活动分组",
-        //   key: "activityTag",
-        //   align: "center",
-        //   tooltip: true
-        // },
         {
           title: "领取/记账流水",
           key: "wxTradeNo",
@@ -416,6 +419,13 @@ export default {
           title: "用户ID",
           key: "userId",
           align: "center",
+          tooltip: true,
+          width: 120
+        },
+        {
+          title: "客户编号",
+          key: "joinCode",
+          align: "center",
           tooltip: true
         },
         {
@@ -434,13 +444,15 @@ export default {
           title: "类型",
           key: "bizCode",
           align: "center",
-          tooltip: true
+          tooltip: true,
+          width: 100
         },
         {
           title: "收支余额",
           key: "winAmount",
           align: "center",
-          tooltip: true
+          tooltip: true,
+          width: 100
         },
         {
           title: "账户结余",
@@ -676,6 +688,13 @@ export default {
       }
     }
   },
+  computed: {
+    joinCodeDis() {
+      let type = this.formData.activityType;
+      if (type != "all" && type != 3) this.$set(this.formData, "joinCode", "");
+      return type == "all" || type == 3 || !type;
+    }
+  },
   methods: {
     showHistory() {
       this.historyShow = true;
@@ -819,6 +838,7 @@ export default {
 
       if (
         !this.formData.userId &&
+        !this.formData.joinCode &&
         this.judgeTimeIsOver(data["queryStartTime"], data["queryEndTime"], 31)
       ) {
         this.timeModalShow = true;

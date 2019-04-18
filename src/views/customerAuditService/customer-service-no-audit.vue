@@ -194,7 +194,7 @@
             </div>
             <div class="btn-left w18">
               <Form-item prop="activityId" required>
-                <Select v-model="formData.activityId" placeholder="子活动名*" clearable>
+                <Select v-model="formData.activityId" placeholder="子活动名" clearable>
                   <Option
                     :value="item.id"
                     v-for="(item,index) in activityList"
@@ -481,18 +481,18 @@ export default {
       this.init();
     },
     submit() {
-      if (!this.formData.brandId) {
-        this.$Message.info("请选择品牌");
-        return false;
-      }
-      if (!this.formData.groupId) {
-        this.$Message.info("请选择活动");
-        return false;
-      }
       this.page = 1;
       this.init();
     },
     init() {
+      if (!this.formData.brandId) {
+        this.$Message.info("品牌不能为空");
+        return false;
+      }
+      if (!this.formData.groupId) {
+        this.$Message.info("活动包不能为空");
+        return false;
+      }
       let data = {
         brandId: this.formData.brandId,
         activityId: this.formData.activityId,

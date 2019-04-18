@@ -77,56 +77,67 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">导入记录</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" class="form" :model="formData" :label-width="10" :rules="rule">
-              <div class="container">
-                <div class="btn-left w18">
-                  <Form-item  required>
-                    <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item  required>
-                      <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range> 
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item  required>
-                      <Select v-model="formData.userType" placeholder="导入类型" clearable>
-                          <Option :value="item.name" v-for="(item,index) in importTypeList" :key="index">{{ item.name }}</Option>
-                      </Select> 
-                  </Form-item>
-                </div>
-                
+    <!-- <h2 class="Title">导入记录</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" class="form" :model="formData" :label-width="10" :rules="rule">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required>
+                <data-range
+                  @dataChange="startTimeChange"
+                  hour="00:00"
+                  :time="formData.queryStartTime"
+                  start
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <data-range
+                  hour="24:00"
+                  placeholder="结束时间"
+                  @dataChange="endTimeChange"
+                  :time="formData.queryEndTime"
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <Select v-model="formData.userType" placeholder="导入类型" clearable>
+                  <Option
+                    :value="item.name"
+                    v-for="(item,index) in importTypeList"
+                    :key="index"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+          </div>
+          <div class="btn-left w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
               </div>
-              <div class="btn-left w10">
-                  <div class="searchBox">
-                    <div class="btn-right search-right" @click="submit('form')">
-                      <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                    </div>
-                  </div>
-                </div>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              
-              <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
-              <!-- <Button type="text" class="btn-right ml20" @click="refresh">刷新</Button> -->
-              <refreshBtn class="btn-right" @click.native="refresh"/>
             </div>
-            <Table ref="table" :columns="columns1" :data="pageData" disabled-hover></Table>
-            
-        </div>
-        <div class="page-box">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-            </div>
-        </div>
-            <!-- <img src="../../assets/image/edit.png" alt=""> -->
+          </div>
+        </Form>
       </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
+          <!-- <Button type="text" class="btn-right ml20" @click="refresh">刷新</Button> -->
+          <refreshBtn class="btn-right" @click.native="refresh"/>
+        </div>
+        <Table ref="table" :columns="columns1" :data="pageData" disabled-hover></Table>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
+      <!-- <img src="../../assets/image/edit.png" alt=""> -->
+    </div>
   </div>
 </template>
 
@@ -137,7 +148,7 @@ import detailBtn from "../../components/Button/detail-btn.vue";
 import myModal from "../../components/Modal/my-modal.vue";
 import importBtn from "../../components/Button/import-btn.vue";
 import refreshBtn from "@/components/Button/refresh-btn.vue";
-import DEV_CONFIG from '@/util/config.js';
+import DEV_CONFIG from "@/util/config.js";
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
@@ -145,7 +156,7 @@ import {
 } from "@/util/index.js"; //搜索条件默认时间
 const image = require("../../assets/image/edit.png");
 export default {
-  name:"import-record-keepAlive",
+  name: "import-record-keepAlive",
 
   data() {
     const validateStart = (rule, value, callback) => {
@@ -215,6 +226,9 @@ export default {
         },
         {
           name: "品牌角色信息导入"
+        },
+        {
+          name: "清算修改导入"
         }
       ],
       columns1: [
@@ -351,7 +365,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      let url = DEV_CONFIG.downloadServer + params.row.filePath
+                      let url = DEV_CONFIG.downloadServer + params.row.filePath;
                       // let url = this.Global.getExportUrl(
                       //   "downloadFile.json",
                       //   params.row.clientType
@@ -370,7 +384,14 @@ export default {
       pageData: []
     };
   },
-  components: { dataRange, exportBtn, detailBtn, myModal, importBtn,refreshBtn },
+  components: {
+    dataRange,
+    exportBtn,
+    detailBtn,
+    myModal,
+    importBtn,
+    refreshBtn
+  },
   created() {},
   watch: {},
   methods: {

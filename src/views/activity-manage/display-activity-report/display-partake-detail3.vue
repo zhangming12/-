@@ -41,120 +41,151 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">河北中粮陈列上传明细</h2> -->
-      <div class="box">
-            
-            <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-                <Row>
-                    <Col span="21">
-                        <Row>
-                          <Col span="16"> 
-                            <Form-item label="上传时间:" required>
-                              <Row>
-                                  <Col span="11">
-                                      <Form-item prop="queryStartTime">
-                                        <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                                      </Form-item>
-                                  </Col>
-                                  <Col span="2" style="text-align: center;">至</Col>
-                                  <Col span="11">
-                                      <Form-item prop="queryEndTime">
-                                          <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                                      </Form-item>
-                                  </Col>
-                              </Row>
-                            </Form-item>
-                          </Col>
-                          <Col span="8"> 
-                            <Form-item label="品牌名称:" required>
-                                <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
-                                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                                </Select> 
-                            </Form-item>
-                          </Col>
-                          <Col span="24">
-                              <Row>
-                                <Col span="8"> 
-                                  <Form-item label="活动包名:" prop="groupId" required>
-                                      <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
-                                          <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                                      </Select>
-                                  </Form-item>
-                                  
-                                  
-                                </Col>
-                                <Col span="8"> 
-                                  <Form-item label="陈列活动:" >                             
-                                      <Select v-model="formData.activityId" placeholder="请选择" clearable>
-                                          <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                                      </Select> 
-                                  </Form-item>
-                                  
-                                  
-                                </Col>
-                                <Col span="8">
-                                  <Form-item label="区域:">
-                                      <Cascader :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
-                                  </Form-item>
-                                  
-                                  
-                                </Col>
-                              </Row>
-                          </Col>
-                        
-                        </Row>
-                    </Col>
-                    <Col span='2' offset="1">
-                        <div class="searchBox">
-                          <Button @click="submit('form')" class="btn-search  search_btn" type="primary">查询</Button>
-                          <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
-                <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button>
-                           </div>
-                    </Col>
-                </Row>
-                <transition name="fade">
-                  <Row v-if="showQuery">
-                    <Col span='7'>
-                      <Form-item label="审核状态:">
-                          <Select v-model="formData.checkStatus" clearable>
-                              <Option value="0">审核中</Option>
-                              <Option value="1">视频通过</Option>
-                              <Option value="2">审核不通过</Option>
-                              <Option value="3">退回需重传</Option>
-                          </Select>
-                      </Form-item>
-                      <Form-item label="店铺ID:" >
-                          <Input v-model.trim="formData.storeId" placeholder="请输入店铺ID"></Input>
+    <!-- <h2 class="Title">河北中粮陈列上传明细</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+        <Row>
+          <Col span="21">
+            <Row>
+              <Col span="16">
+                <Form-item label="上传时间:" required>
+                  <Row>
+                    <Col span="11">
+                      <Form-item prop="queryStartTime">
+                        <data-range
+                          @dataChange="startTimeChange"
+                          hour="00:00"
+                          :time="formData.queryStartTime"
+                          start
+                        ></data-range>
                       </Form-item>
                     </Col>
-                    <Col span='7'>
-                      <Form-item label="发放状态:">
-                          <Select v-model="formData.winStatus" clearable>
-                              <Option value="4">通过已发放</Option>
-                              <Option value="4040">未达发放要求</Option>
-                          </Select>
-                      </Form-item>
-                    </Col>
-                    <Col span='7'>
-                      <Form-item label="客户编号:" >
-                          <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
+                    <Col span="2" style="text-align: center;">至</Col>
+                    <Col span="11">
+                      <Form-item prop="queryEndTime">
+                        <data-range
+                          hour="24:00"
+                          placeholder="结束时间"
+                          @dataChange="endTimeChange"
+                          :time="formData.queryEndTime"
+                        ></data-range>
                       </Form-item>
                     </Col>
                   </Row>
-                </transition>
-            </Form>
-      </div>
-      <div class="box" style="margin-top: 15px;padding-bottom:20px">
-        <div class="contentTop">
-            <Button @click="exportExcel" class="btn-right"  icon="ios-download-outline"  type="primary">导出</Button>
-        </div>
-        <Table :columns="columns" :data="pageData" disabled-hover></Table>
-        <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+                </Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="品牌名称:" required>
+                  <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in brandList"
+                      :key="index"
+                    >{{ item.brandName }}</Option>
+                  </Select>
+                </Form-item>
+              </Col>
+              <Col span="24">
+                <Row>
+                  <Col span="8">
+                    <Form-item label="活动包名:" prop="groupId" required>
+                      <Select
+                        v-model="formData.groupId"
+                        placeholder="请选择"
+                        @on-change="getActivityList"
+                        clearable
+                      >
+                        <Option
+                          :value="item.id"
+                          v-for="(item,index) in groupList"
+                          :key="index"
+                        >{{ item.groupName }}</Option>
+                      </Select>
+                    </Form-item>
+                  </Col>
+                  <Col span="8">
+                    <Form-item label="陈列活动:">
+                      <Select v-model="formData.activityId" placeholder="请选择" clearable>
+                        <Option
+                          :value="item.id"
+                          v-for="(item,index) in activityList"
+                          :key="index"
+                        >{{ item.name }}</Option>
+                      </Select>
+                    </Form-item>
+                  </Col>
+                  <Col span="8">
+                    <Form-item label="区域:">
+                      <Cascader :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
+                    </Form-item>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Col>
+          <Col span="2" offset="1">
+            <div class="searchBox">
+              <Button @click="submit('form')" class="btn-search search_btn" type="primary">查询</Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-up"
+                v-if="showQuery"
+              ></Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-down"
+                v-else
+              ></Button>
             </div>
+          </Col>
+        </Row>
+        <transition name="fade">
+          <Row v-if="showQuery">
+            <Col span="7">
+              <Form-item label="审核状态:">
+                <Select v-model="formData.checkStatus" clearable>
+                  <Option value="0">审核中</Option>
+                  <Option value="1">视频通过</Option>
+                  <Option value="2">审核不通过</Option>
+                  <Option value="3">退回需重传</Option>
+                </Select>
+              </Form-item>
+              <Form-item label="店铺ID:">
+                <Input v-model.trim="formData.storeId" placeholder="请输入店铺ID"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="发放状态:">
+                <Select v-model="formData.winStatus" clearable>
+                  <Option value="4">通过已发放</Option>
+                  <Option value="4040">未达发放要求</Option>
+                </Select>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="客户编号:">
+                <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
+              </Form-item>
+            </Col>
+          </Row>
+        </transition>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;padding-bottom:20px">
+      <div class="contentTop">
+        <Button @click="exportExcel" class="btn-right" icon="ios-download-outline" type="primary">导出</Button>
+      </div>
+      <Table :columns="columns" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -182,7 +213,7 @@ import {
   typeQueryActivityGroupVOByBrandId //根据活动包名ID获取陈列活动列表
 } from "@/api/common.js";
 export default {
-  name:"display-partake-detail3-keepAlive",
+  name: "display-partake-detail3-keepAlive",
   data() {
     const that = this;
     const validateStart = (rule, value, callback) => {
@@ -281,6 +312,12 @@ export default {
           title: "客户编号",
           width: 100,
           key: "joinCode",
+          align: "center"
+        },
+        {
+          title: "渠道",
+          width: 100,
+          key: "bapChannel",
           align: "center"
         },
         {
@@ -383,7 +420,7 @@ export default {
             return h("div", displayParketCheckStatus[params.row.checkStatus]);
           }
         },
-         {
+        {
           title: "格式",
           key: "fileType",
           width: 120,

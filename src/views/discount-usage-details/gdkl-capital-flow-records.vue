@@ -128,144 +128,185 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">折扣发放明细(陈列)</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" :model="formData" :label-width="10">
-              <div class="container">
-                    <div class="btn-left w18">
-                        <Form-item required prop="brandId">
-                            <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue" clearable>
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item  prop="queryStartTime" required>
-                            <data-range placeholder="领取/记账开始时间" @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item  prop="queryEndTime" required>
-                            <data-range hour="24:00" placeholder="领取/记账结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item  prop="groupId" required>
-                            <Select v-model="formData.activityType" placeholder="资金流向*"  clearable>
-                                <Option :value="item.id" :key="index" v-for="(item,index) in activityTypeList">{{item.name}}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item  prop="groupId" required>
-                            <Select v-model="formData.groupId" placeholder="活动名称" @on-change="getActivityList" clearable>
-                                <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    
-                    
-                    
-                    <div class="btn-left w10">
-                        <div class="searchBox">
-                            <div class="btn-left search-left" @click="showQuery=!showQuery">
-                            <button type="button">
-                                {{showQuery?'收起':'更多'}}
-                                <Icon type="ios-arrow-down" size="14" style="margin-top:-2px;" v-if="!showQuery"/>
-                                <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
-                            </button>
-                            </div>
-                            <div class="btn-right search-right" @click="submit('search')">
-                            <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                            </div>
-                        </div>
-                    </div>
-              </div>
-              <transition name="fade">
-                <div class="container" v-if="showQuery">
-                  <div class="btn-left w18">
-                        <Form-item required prop="activityId">
-                            <Select v-model="formData.activityId" placeholder="子活动名" clearable>
-                                <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                  
-                  <div class="btn-left w18">
-                    <Form-item required>
-                        <Input v-model.trim="formData.userId" placeholder="用户ID"></Input>
-                    </Form-item>
-                  </div>
-                  
-                  
-                  
+    <!-- <h2 class="Title">折扣发放明细(陈列)</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required prop="brandId">
+                <Select
+                  v-model="formData.brandId"
+                  placeholder="品牌名称"
+                  @on-change="changeValue"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="queryStartTime" required>
+                <data-range
+                  placeholder="领取/记账开始时间"
+                  @dataChange="startTimeChange"
+                  hour="00:00"
+                  :time="formData.queryStartTime"
+                  start
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="queryEndTime" required>
+                <data-range
+                  hour="24:00"
+                  placeholder="领取/记账结束时间"
+                  @dataChange="endTimeChange"
+                  :time="formData.queryEndTime"
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="groupId" required>
+                <Select v-model="formData.activityType" placeholder="资金流向*" clearable>
+                  <Option
+                    :value="item.id"
+                    :key="index"
+                    v-for="(item,index) in activityTypeList"
+                  >{{item.name}}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="groupId" required>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="活动名称"
+                  @on-change="getActivityList"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in groupList"
+                    :key="index"
+                  >{{ item.groupName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+
+            <div class="btn-left w10">
+              <div class="searchBox">
+                <div class="btn-left search-left" @click="showQuery=!showQuery">
+                  <button type="button">
+                    {{showQuery?'收起':'更多'}}
+                    <Icon
+                      type="ios-arrow-down"
+                      size="14"
+                      style="margin-top:-2px;"
+                      v-if="!showQuery"
+                    />
+                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
+                  </button>
                 </div>
-              </transition>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">共查询到 <span class='numColor'>{{pageNum}}</span> 条记录</span>
-              
-              <exportBtn  class="btn-right" @btnClick="submit('export')" title="导出"/>
-              <exportBtn  class="btn-right" @btnClick="myModalisShow = true" title="导出暂存"/>
+                <div class="btn-right search-right" @click="submit('search')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+                </div>
+              </div>
             </div>
-            <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" ></hhTable>
-            
-        </div>
-        <div class="page-box">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+          </div>
+          <transition name="fade">
+            <div class="container" v-if="showQuery">
+              <div class="btn-left w18">
+                <Form-item required prop="activityId">
+                  <Select v-model="formData.activityId" placeholder="子活动名" clearable>
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in activityList"
+                      :key="index"
+                    >{{ item.name }}</Option>
+                  </Select>
+                </Form-item>
+              </div>
+
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input v-model.trim="formData.userId" placeholder="用户ID"></Input>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input
+                    :disabled="!joinCodeDis"
+                    v-model.trim="formData.joinCode"
+                    placeholder="客户编号"
+                  ></Input>
+                </Form-item>
+              </div>
             </div>
+          </transition>
+        </Form>
+      </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            共查询到
+            <span class="numColor">{{pageNum}}</span> 条记录
+          </span>
+
+          <exportBtn class="btn-right" @btnClick="submit('export')" title="导出"/>
+          <exportBtn class="btn-right" @btnClick="myModalisShow = true" title="导出暂存"/>
+        </div>
+        <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      
-      <!-- 导入导出历史 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="myModalisShow"
-            width=800>
-          <div slot="main" class="modal-main">
-            <!-- <h3>近一周导出历史</h3> -->
-            <div class="modal-table" style="margin-top:0;">
-              <div class="modal-table-top">
-                <span class="btn-left"><Icon type="md-alert" size="22" style="margin-right:5px;" />生成的数据报表可在【导出暂存】中保留7天,过期自动删除</span>
-                <refreshBtn @click.native="queryhistoryData" class="btn-right"/>
-              </div>
-              <!-- <hhTable :columns="columns" :pageData="historyData"  disabled-hover></hhTable> -->
-              <Table :columns="columns" :data="historyData"  disabled-hover></Table>
-            </div>
-          </div>
-       </myModal>
+    </div>
 
-       <!-- 时间溢出弹窗 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="timeModalShow">
-          <div slot="main" class="modal-main">
-            <h3>提示</h3>
-            <div class="modal-table">
-                <!-- <p style="text-align:center;">{{ str }}的范围超过31天，请缩小查询范围或者前往【历史数据】中下载历史数据</p> -->
-                <p style="text-align:center;">查询的范围超过31天，请缩小查询范围或者【导出】查看</p>
-            </div>
-            <div class="maintain-footer">
-                <Button @click="closeModal" type="text">知道了</Button>
-                <Button @click="goToHistory" style="color:#ff8a34;" type="text">导出</Button>
-            </div>
+    <!-- 导入导出历史 -->
+    <myModal class="myModal" @close="closeModal" :modal="myModalisShow" width="800">
+      <div slot="main" class="modal-main">
+        <!-- <h3>近一周导出历史</h3> -->
+        <div class="modal-table" style="margin-top:0;">
+          <div class="modal-table-top">
+            <span class="btn-left">
+              <Icon type="md-alert" size="22" style="margin-right:5px;"/>生成的数据报表可在【导出暂存】中保留7天,过期自动删除
+            </span>
+            <refreshBtn @click.native="queryhistoryData" class="btn-right"/>
           </div>
-       </myModal>
+          <!-- <hhTable :columns="columns" :pageData="historyData"  disabled-hover></hhTable> -->
+          <Table :columns="columns" :data="historyData" disabled-hover></Table>
+        </div>
+      </div>
+    </myModal>
 
-       <!-- 历史数据 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="historyShow"
-            width=800>
-          <div slot="main" class="modal-main" style="padding:0;">
-            <yearSelect :yearDataList="yearMonthData" />
-          </div>
-       </myModal>
+    <!-- 时间溢出弹窗 -->
+    <myModal class="myModal" @close="closeModal" :modal="timeModalShow">
+      <div slot="main" class="modal-main">
+        <h3>提示</h3>
+        <div class="modal-table">
+          <!-- <p style="text-align:center;">{{ str }}的范围超过31天，请缩小查询范围或者前往【历史数据】中下载历史数据</p> -->
+          <p style="text-align:center;">查询的范围超过31天，请缩小查询范围或者【导出】查看</p>
+        </div>
+        <div class="maintain-footer">
+          <Button @click="closeModal" type="text">知道了</Button>
+          <Button @click="goToHistory" style="color:#ff8a34;" type="text">导出</Button>
+        </div>
+      </div>
+    </myModal>
 
+    <!-- 历史数据 -->
+    <myModal class="myModal" @close="closeModal" :modal="historyShow" width="800">
+      <div slot="main" class="modal-main" style="padding:0;">
+        <yearSelect :yearDataList="yearMonthData"/>
+      </div>
+    </myModal>
   </div>
 </template>
 
@@ -355,7 +396,7 @@ export default {
           title: "店铺名称",
           key: "storeName",
           showMore: false
-        },
+        }
       ], // 展示更多的时候的数据
       myModalisShow: false,
       columns1: [
@@ -386,6 +427,13 @@ export default {
           title: "用户ID",
           key: "userId",
           align: "center",
+          tooltip: true,
+          width: 120
+        },
+        {
+          title: "客户编号",
+          key: "joinCode",
+          align: "center",
           tooltip: true
         },
         {
@@ -404,13 +452,15 @@ export default {
           title: "类型",
           key: "bizCode",
           align: "center",
-          tooltip: true
+          tooltip: true,
+          width: 100
         },
         {
           title: "收支余额",
           key: "winAmount",
           align: "center",
-          tooltip: true
+          tooltip: true,
+          width: 100
         },
         {
           title: "账户结余",
@@ -527,11 +577,11 @@ export default {
             if (params.row.result == "Down") {
               str = "已完成";
               color = "#19be6b";
-            } else if(params.row.result == "Fail"){
+            } else if (params.row.result == "Fail") {
               str = "数据量过大";
               color = "red";
-            }else{
-              str = "生成中"
+            } else {
+              str = "生成中";
             }
             return h(
               "div",
@@ -595,26 +645,26 @@ export default {
       ],
       pageData: [],
       brandList: [
-          {
-            brandName:"全部",
-            id:"1,11,15,26"
-          },
-          {
-            brandName:"广东太古粤西",
-            id:"1"
-          },
-          {
-            brandName:"广东太古粤东（扫码)",
-            id:"11"
-          },
-          {
-            brandName:"广东太古粤东（陈列）",
-            id:"15"
-          },
-          {
-            brandName:"粤西太古可乐（巡拍）",
-            id:"26"
-          },
+        {
+          brandName: "全部",
+          id: "1,11,15,26"
+        },
+        {
+          brandName: "广东太古粤西",
+          id: "1"
+        },
+        {
+          brandName: "广东太古粤东（扫码)",
+          id: "11"
+        },
+        {
+          brandName: "广东太古粤东（陈列）",
+          id: "15"
+        },
+        {
+          brandName: "粤西太古可乐（巡拍）",
+          id: "26"
+        }
       ],
       activityList: [],
       historyData: [],
@@ -643,6 +693,13 @@ export default {
   },
   created() {
     this.changeValue(this.formData.brandId);
+  },
+  computed: {
+    joinCodeDis() {
+      let type = this.formData.activityType;
+      if (type != "all" && type != 3) this.$set(this.formData, "joinCode", "");
+      return type == "all" || type == 3 || !type;
+    }
   },
   watch: {
     myModalisShow(val) {
@@ -778,15 +835,15 @@ export default {
 
       this.str = "查询";
       var data = this.Global.JsonChange(this.formData);
-      let arr = this.formData.brandId.split(',');
-      let brandIds = arr.map(item => parseInt(item,10))
+      let arr = this.formData.brandId.split(",");
+      let brandIds = arr.map(item => parseInt(item, 10));
       let queryType = 2;
       // queryType 1 全部  2 单个的
-      if(brandIds.length > 1){
-        queryType = 1
+      if (brandIds.length > 1) {
+        queryType = 1;
       }
-      data['queryType'] = queryType
-      delete data['brandId']
+      data["queryType"] = queryType;
+      delete data["brandId"];
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
@@ -807,6 +864,7 @@ export default {
 
       if (
         !this.formData.userId &&
+        !this.formData.joinCode &&
         this.judgeTimeIsOver(data["queryStartTime"], data["queryEndTime"], 31)
       ) {
         this.timeModalShow = true;
@@ -816,7 +874,7 @@ export default {
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
       this.Global.deleteEmptyProperty(data);
-      data['brandIds'] = brandIds
+      data["brandIds"] = brandIds;
 
       if (data["activityType"] == "all") {
         delete data["activityType"];
@@ -889,17 +947,17 @@ export default {
           this.end.hour
         );
       }
-      let arr = this.formData.brandId.split(',');
-      let brandIds = arr.map(item => parseInt(item,10))
+      let arr = this.formData.brandId.split(",");
+      let brandIds = arr.map(item => parseInt(item, 10));
       let queryType = 2;
       // queryType 1 全部  2 单个的
-      if(brandIds.length > 1){
-        queryType = 1
+      if (brandIds.length > 1) {
+        queryType = 1;
       }
-      data['queryType'] = queryType
-      delete data['brandId']
+      data["queryType"] = queryType;
+      delete data["brandId"];
       this.Global.deleteEmptyProperty(data);
-      data['brandIds'] = brandIds
+      data["brandIds"] = brandIds;
       if (data["activityType"] == "all") {
         delete data["activityType"];
       }
@@ -912,17 +970,17 @@ export default {
       this.groupList = [];
       this.formData.groupId = "";
       if (!value) return;
-      let arr = value.split(',');
-      let brandIds = arr.map(item => parseInt(item,10))
+      let arr = value.split(",");
+      let brandIds = arr.map(item => parseInt(item, 10));
       let queryType = 2;
       // queryType 1 全部  2 单个的
-      if(brandIds.length > 1){
-        queryType = 1
+      if (brandIds.length > 1) {
+        queryType = 1;
       }
       //查询活动包
       this.Global.doPostNoLoading(
         "condition/queryActivityGroupByBrandId.json",
-        { date: 7, activityType: 1, scope: "a", brandIds,queryType },
+        { date: 7, activityType: 1, scope: "a", brandIds, queryType },
         res => {
           this.groupList = res;
         }

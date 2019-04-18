@@ -78,7 +78,7 @@
   overflow: hidden;
   .title {
     display: inline-block;
-    float: left;
+    // float: left;
     height: 120px;
     line-height: 120px;
   }
@@ -118,7 +118,6 @@
   overflow: hidden;
   .title {
     display: inline-block;
-    float: left;
     height: 228px;
     line-height: 228px;
   }
@@ -155,13 +154,11 @@
   overflow: hidden;
   .title {
     width: 110px;
-    float: left;
     display: inline-block;
     height: 30px;
     line-height: 30px;
   }
   #examine-left {
-    //float: left;
     width: 100%;
     .ivu-radio-group-vertical .ivu-radio-wrapper {
       display: inline;
@@ -170,7 +167,6 @@
   }
 
   #examine-right {
-    //float: left;
     margin: 4px;
     margin-top: 10px;
     margin-left: 20px;

@@ -630,6 +630,19 @@ let util = {
         }
         return o;
     },
+    // checkTime(sTime, eTime) {
+    //     if (sTime && eTime) {
+    //         if (this.strToTime(sTime) >= this.strToTime(eTime)) {
+    //             return false
+    //         }
+    //         return true
+    //     } else {
+    //         return false
+    //     }
+    // },
+    // strToTime(str) {
+
+    // },
     ENUMS: {
         goodsType: {
             '0': '电子券',
