@@ -259,10 +259,10 @@
 
 <script>
 import { queryDisPlayApplyAudit } from "@/api/activity-manage/display-apply-examine.js"; //api
-import dataRange from "../../components/data-rang.vue";
-import exportBtn from "../../components/Button/export-btn.vue";
-import addNewBtn from "../../components/Button/addNew-btn.vue";
-import myModal from "../../components/Modal/my-modal.vue";
+import dataRange from "@/components/data-rang.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
+import addNewBtn from "@/components/Button/addNew-btn.vue";
+import myModal from "@/components/Modal/my-modal.vue";
 import hhTable from "@/components/table/table.vue";
 import upData from "@/assets/js/upload.js";
 import PROJECT_CONFIG from "@/util/config.js";
@@ -270,15 +270,11 @@ import E from "wangeditor";
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
 import {
-  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
-  typeQueryActivityGroupVOByBrandId, //根据活动包名ID获取陈列活动列表
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
-import { displayApplyDetail } from "@/api/activity-manage/display-activity-manage.js"; //api
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
   name: "discount-manage-keepAlive",
   data() {

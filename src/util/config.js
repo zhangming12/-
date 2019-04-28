@@ -146,7 +146,7 @@ if (RUNTIME_ENVIRONMENT === "TEST") {
         // 'dataServer': 'http://192.168.1.169:8080/pms-web/', //荣杰
         // 'dataServer': 'http://192.168.1.162:8080/pms-web/',//西鲁
         // 'dataServer': 'http://192.168.1.106:8080/pms-web/', //柯田会
-        // 'dataServer': 'http://192.168.1.142:8090/pms-web/', //张权
+        // 'dataServer': 'http://192.168.1.142:9090/pms-web/', //张权
         // 'dataServer': 'http://192.168.1.134:8080/pms-web/', //刘慧芳
         'downloadServer': 'http://112.124.18.48:8090',
         'ossServer': 'https://hbrand.oss-cn-hangzhou.aliyuncs.com/',

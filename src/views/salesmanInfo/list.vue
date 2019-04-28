@@ -52,183 +52,192 @@
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">员工信息</h2> -->
-        <div class="box">
-            <Form ref="form" :model="formData" :label-width="88" :rules="rules" >
-                <Row >
-                    <Col span='7'>
-                        <Form-item label='品牌名称:' prop='brandId'>
-                           <Select v-model="formData.brandId" placeholder="请选择">
-                              <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>
-                        <Form-item label='销售路线:' prop='salesRoute'>
-                            <Input v-model='formData.salesRoute' placeholder="请输入销售路线"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col span='7'> 
-                        <Form-item label='业代姓名:' prop='workerName'>
-                            <Input v-model='formData.workerName' placeholder="请输入业代姓名"></Input>
-                        </Form-item>
-                        <Form-item label='账号状态:'>
-                           <Radio-group v-model="formData.status">
-                                <Radio label=''>全部</Radio>
-                                <Radio label='0'>锁定</Radio>
-                                <Radio label='1'>解锁</Radio>
-                            </Radio-group>
-                        </Form-item>
-                    </Col>
-                    <Col span='7'>
-                        <Form-item label='手机号码:' prop='phone'>
-                            <Input v-model='formData.phone' placeholder="请输入手机号码"></Input>
-                        </Form-item>
-                        <Form-item label='状态:' prop='bindStatus'>
-                           <Radio-group v-model="formData.bindStatus">
-                                <Radio label=''>全部</Radio>
-                                <Radio label='1'>已绑定</Radio>
-                                <Radio label='0'>未绑定</Radio>
-                            </Radio-group>
-                        </Form-item>
-                    </Col>
-                    <Col span='2' offset='1' style="margin-top:28px;"> 
-                        <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
-                    </Col>
-                </Row>
-            </Form>           
-        </div>
-        <div class="box" style='margin-top: 15px;overflow: hidden;'>
-            <div class='contentTop'>
-                <Button class="btn-export" icon="ios-download-outline" @click="exportExcel" type="primary">导出</Button>
-                <Button @click="imortModel" class="btn-export" icon="android-add" type="info">导入</Button>
-                <div class='demo' @click='dowland'> 
-                    <Icon type="ios-paper-outline" size='14' color='#ff8a34'></Icon>
-                    <span>下载模版</span>
-                </div>
-            </div>
-            <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-            <div style="margin: 10px;overflow: hidden">
-                <div style="float: right;">
-                    <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-                </div>
-            </div>
-        </div>
-        <Modal
-            title="确定解绑该业务员？"
-            v-model="showUnlock"
-            @on-ok="userBind"
-            class-name="vertical-center-modal">
-             <Form :model="formItem" :label-width="90">
-                 <FormItem label="姓名">
-                    <Input v-model="formItem.workerName"></Input>
-                </FormItem>
-                <FormItem label="手机号">
-                    <Input v-model="formItem.phone"></Input>
-                </FormItem>
-            </Form>
-        </Modal>
-        <Modal
-          v-model="changeSaleRouteIsShow">
-          <h2 v-if="saleRouteData.oldSaleRoute" style="text-align:center;">更改销售路线</h2>
-          <h2 v-else style="text-align:center;">设置销售路线</h2>
-          <i-Form>
-            <Form-item label="原销售路线" v-if="saleRouteData.oldSaleRoute">
-                <Input :readonly='saleRouteData.oldSaleRoute' v-model="saleRouteData.oldSaleRoute"></Input>
-            </Form-item>
-            <Form-item label="新销售路线">
-                <Input v-model="saleRouteData.newSaleRoute"></Input>
-            </Form-item>
-          </i-Form>
-          <div slot="footer">
-            <i-button type="text" @click="cancel">取消</i-button>
-            <i-button type="success" @click="sureChangeSaleRoute($event)">确定</i-button>
-          </div>
-        </Modal>
-        <Modal
-          v-model="changeMessage">
-          <h2 style="text-align:center;">修改信息</h2>
-          <i-Form ref="checkMes" :label-width='75' :rules="ruleInline">
-            <Form-item label="品牌名称:">
-              {{changeMessageData.brandName}}
-            </Form-item>
-            <Form-item label="员工ID:">
-              {{changeMessageData.workerId}}
-            </Form-item>
-            <Form-item label="员工姓名:" prop="workerName">
-                <Input v-model="changeMessageData.workerName"></Input>
-            </Form-item>
-            <Form-item label="员工编号:" prop="salesRoute">
-                <Input v-model="changeMessageData.salesRoute"></Input>
-            </Form-item>
-            <Form-item label="员工类型:" prop="userType">
-                <Select v-model="changeMessageData.userType" placeholder="请选择">
-                  <!-- <Option value="P">平台</Option> -->
-                  <Option value="PI">巡检员</Option>
-                  <Option value="W">品牌业务员</Option>
-                  <Option value="C">C端客户</Option>
-                  <Option value="DM">主任</Option>
-                  <Option value="LM">配送员</Option>
-                  <Option value="CL">公司领导</Option>
-                  <Option value="ES">内部员工</Option>
-                  <Option value="FS">工厂员工</Option>
-                  <Option value="HX">核销员</Option>
-                  <Option value="M">经销商</Option>
-                  <Option value="Z">公仔</Option>
+  <div id="Main">
+    <!-- <h2 class="Title">员工信息</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88" :rules="rules">
+        <Row>
+          <Col span="7">
+            <Form-item label="品牌名称:" prop="brandId">
+              <Select v-model="formData.brandId" placeholder="请选择">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
               </Select>
             </Form-item>
+            <Form-item label="销售路线:" prop="salesRoute">
+              <Input v-model="formData.salesRoute" placeholder="请输入销售路线"></Input>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="业代姓名:" prop="workerName">
+              <Input v-model="formData.workerName" placeholder="请输入业代姓名"></Input>
+            </Form-item>
+            <Form-item label="账号状态:">
+              <Radio-group v-model="formData.status">
+                <Radio label>全部</Radio>
+                <Radio label="0">锁定</Radio>
+                <Radio label="1">解锁</Radio>
+              </Radio-group>
+            </Form-item>
+          </Col>
+          <Col span="7">
             <Form-item label="手机号码:" prop="phone">
-                <Input v-model="changeMessageData.phone"></Input>
+              <Input v-model="formData.phone" placeholder="请输入手机号码"></Input>
             </Form-item>
-          </i-Form>
-          <div slot="footer" style="text-align:center;">
-            <i-button type="text" @click="cancel">取消</i-button>
-            <i-button type="success" @click="sureChangeMessageList('checkMes')">确定</i-button>
-          </div>
-        </Modal>
-        <Modal
-          v-model="importShow">
-          <h2 style="text-align:center;">上传参与业代名单</h2>
-          <i-Form>
-            <Form-item label='品牌名称:' prop='brandId' :label-width='72'>
-              <Select v-model="importModelData.brandId" placeholder="请选择">
-                  <Option :value="item.id" v-for="(item,index) in importModelData.brandList" :key="index">{{ item.brandName }}</Option>
-              </Select>
+            <Form-item label="状态:" prop="bindStatus">
+              <Radio-group v-model="formData.bindStatus">
+                <Radio label>全部</Radio>
+                <Radio label="1">已绑定</Radio>
+                <Radio label="0">未绑定</Radio>
+              </Radio-group>
             </Form-item>
-            <Form-item label='员工类型:' prop='userType' :label-width='72'>
-              <Select v-model="importModelData.userType" placeholder="请选择">
-                  <!-- <Option value="P">平台</Option> -->
-                  <Option value="PI">巡检员</Option>
-                  <Option value="W">品牌业务员</Option>
-                  <Option value="C">C端客户</Option>
-                  <Option value="DM">主任</Option>
-                  <Option value="LM">配送员</Option>
-                  <Option value="CL">公司领导</Option>
-                  <Option value="ES">内部员工</Option>
-                  <Option value="FS">工厂员工</Option>
-                  <Option value="HX">核销员</Option>
-                  <Option value="M">经销商</Option>
-                  <Option value="Z">公仔</Option>
-              </Select>
-            </Form-item>
-            <div class='upDate' style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;">
-                <Upload :action="url" 
-                  :show-upload-list=false
-                  :on-success='handleSuccess'
-                  :on-error='handleError'
-                  >
-                  <Icon type="ios-folder" size='14' color='#53a3f4'></Icon>
-                  {{ uploadText }}
-                </Upload>
-                
-            </div>
-            
-          </i-Form>
-          <div slot="footer" style="text-align:center;">
-            <i-button type="text" @click="cancel">取消</i-button>
-            <i-button type="success" @click="uploadExcel">确定</i-button>
-          </div>
-        </Modal>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:28px;">
+            <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
+          </Col>
+        </Row>
+      </Form>
     </div>
+    <div class="box" style="margin-top: 15px;overflow: hidden;">
+      <div class="contentTop">
+        <Button
+          class="btn-export"
+          icon="ios-download-outline"
+          @click="exportExcel"
+          type="primary"
+        >导出</Button>
+        <Button @click="imortModel" class="btn-export" icon="android-add" type="info">导入</Button>
+        <div class="demo" @click="dowland">
+          <Icon type="ios-paper-outline" size="14" color="#ff8a34"></Icon>
+          <span>下载模版</span>
+        </div>
+      </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
+    </div>
+    <Modal
+      title="确定解绑该业务员？"
+      v-model="showUnlock"
+      @on-ok="userBind"
+      class-name="vertical-center-modal"
+    >
+      <Form :model="formItem" :label-width="90">
+        <FormItem label="姓名">
+          <Input v-model="formItem.workerName"></Input>
+        </FormItem>
+        <FormItem label="手机号">
+          <Input v-model="formItem.phone"></Input>
+        </FormItem>
+      </Form>
+    </Modal>
+    <Modal v-model="changeSaleRouteIsShow">
+      <h2 v-if="saleRouteData.oldSaleRoute" style="text-align:center;">更改销售路线</h2>
+      <h2 v-else style="text-align:center;">设置销售路线</h2>
+      <i-Form>
+        <Form-item label="原销售路线" v-if="saleRouteData.oldSaleRoute">
+          <Input :readonly="saleRouteData.oldSaleRoute" v-model="saleRouteData.oldSaleRoute"></Input>
+        </Form-item>
+        <Form-item label="新销售路线">
+          <Input v-model="saleRouteData.newSaleRoute"></Input>
+        </Form-item>
+      </i-Form>
+      <div slot="footer">
+        <i-button type="text" @click="cancel">取消</i-button>
+        <i-button type="success" @click="sureChangeSaleRoute($event)">确定</i-button>
+      </div>
+    </Modal>
+    <Modal v-model="changeMessage">
+      <h2 style="text-align:center;">修改信息</h2>
+      <i-Form ref="checkMes" :label-width="75" :rules="ruleInline">
+        <Form-item label="品牌名称:">{{changeMessageData.brandName}}</Form-item>
+        <Form-item label="员工ID:">{{changeMessageData.workerId}}</Form-item>
+        <Form-item label="员工姓名:" prop="workerName">
+          <Input v-model="changeMessageData.workerName"></Input>
+        </Form-item>
+        <Form-item label="员工编号:" prop="salesRoute">
+          <Input v-model="changeMessageData.salesRoute"></Input>
+        </Form-item>
+        <Form-item label="员工类型:" prop="userType">
+          <Select v-model="changeMessageData.userType" placeholder="请选择">
+            <!-- <Option value="P">平台</Option> -->
+            <Option value="PI">巡检员</Option>
+            <Option value="W">品牌业务员</Option>
+            <Option value="C">C端客户</Option>
+            <Option value="DM">主任</Option>
+            <Option value="LM">配送员</Option>
+            <Option value="CL">公司领导</Option>
+            <Option value="ES">内部员工</Option>
+            <Option value="FS">工厂员工</Option>
+            <Option value="HX">核销员</Option>
+            <Option value="M">经销商</Option>
+            <Option value="Z">公仔</Option>
+          </Select>
+        </Form-item>
+        <Form-item label="手机号码:" prop="phone">
+          <Input v-model="changeMessageData.phone"></Input>
+        </Form-item>
+      </i-Form>
+      <div slot="footer" style="text-align:center;">
+        <i-button type="text" @click="cancel">取消</i-button>
+        <i-button type="success" @click="sureChangeMessageList('checkMes')">确定</i-button>
+      </div>
+    </Modal>
+    <Modal v-model="importShow">
+      <h2 style="text-align:center;">上传参与业代名单</h2>
+      <i-Form>
+        <Form-item label="品牌名称:" prop="brandId" :label-width="72">
+          <Select v-model="importModelData.brandId" placeholder="请选择">
+            <Option
+              :value="item.id"
+              v-for="(item,index) in importModelData.brandList"
+              :key="index"
+            >{{ item.brandName }}</Option>
+          </Select>
+        </Form-item>
+        <Form-item label="员工类型:" prop="userType" :label-width="72">
+          <Select v-model="importModelData.userType" placeholder="请选择">
+            <!-- <Option value="P">平台</Option> -->
+            <Option value="PI">巡检员</Option>
+            <Option value="W">品牌业务员</Option>
+            <Option value="C">C端客户</Option>
+            <Option value="DM">主任</Option>
+            <Option value="LM">配送员</Option>
+            <Option value="CL">公司领导</Option>
+            <Option value="ES">内部员工</Option>
+            <Option value="FS">工厂员工</Option>
+            <Option value="HX">核销员</Option>
+            <Option value="M">经销商</Option>
+            <Option value="Z">公仔</Option>
+          </Select>
+        </Form-item>
+        <div
+          class="upDate"
+          style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;"
+        >
+          <Upload
+            :action="url"
+            :show-upload-list="false"
+            :on-success="handleSuccess"
+            :on-error="handleError"
+          >
+            <Icon type="ios-folder" size="14" color="#53a3f4"></Icon>
+            {{ uploadText }}
+          </Upload>
+        </div>
+      </i-Form>
+      <div slot="footer" style="text-align:center;">
+        <i-button type="text" @click="cancel">取消</i-button>
+        <i-button type="success" @click="uploadExcel">确定</i-button>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -238,7 +247,6 @@ export default {
   name: "list-keepAlive",
 
   data() {
-    const that = this;
     const validatePhone = (rule, value, callback) => {
       // 验证手机号码
       if (value == "") {
@@ -397,8 +405,8 @@ export default {
                       this.$Modal.confirm({
                         title: "警告",
                         content: "确定删除该业务员？",
-                        onOk: function() {
-                          that.userBlack(
+                        onOk: () => {
+                          this.userBlack(
                             params.row.brandId,
                             params.row.workerId
                           );
@@ -459,7 +467,7 @@ export default {
                         this.$Modal.confirm({
                           title: "警告",
                           content: "确定锁定该业务员？",
-                          onOk: function() {
+                          onOk: () => {
                             let sendData = {
                               workerId: params.row.workerId,
                               status: 0,
@@ -467,7 +475,7 @@ export default {
                             };
                             workerUpdateStatus(sendData).then(res => {
                               if (res && res.status == 1) {
-                                that.init();
+                                this.init();
                               }
                             });
                           }
@@ -492,7 +500,7 @@ export default {
                         this.$Modal.confirm({
                           title: "警告",
                           content: "确定解锁该业务员？",
-                          onOk: function() {
+                          onOk: () => {
                             let sendData = {
                               workerId: params.row.workerId,
                               status: 1,
@@ -500,7 +508,7 @@ export default {
                             };
                             workerUpdateStatus(sendData).then(res => {
                               if (res && res.status == 1) {
-                                that.init();
+                                this.init();
                               }
                             });
                           }

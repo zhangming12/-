@@ -40,33 +40,6 @@
 .ivu-radio-wrapper {
   margin-right: 30px;
 }
-.searchBox {
-  overflow: hidden;
-  .search-left,
-  .search-right {
-    width: 48%;
-  }
-  .search-left {
-    button {
-      outline: none;
-      border: none;
-      width: 60px;
-      height: 30px;
-      line-height: 30px;
-      background: #ffffff;
-      margin-left: 8px;
-      cursor: pointer;
-      color: @primary-color;
-    }
-  }
-  .search-right {
-    width: 52%;
-    img {
-      cursor: pointer;
-      margin-left: 6px;
-    }
-  }
-}
 .myModal {
   position: absolute;
   width: 100%;
@@ -155,59 +128,71 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">停售日志</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" class="form" :model="formData" :label-width="10">
-              <div class="container">
-                <div class="btn-left w18">
-                  <Form-item required>
-                    <Select v-model="formData.brandId" placeholder="品牌名称*">
-                        <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                    </Select>
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item  required>
-                      <Input placeholder="用户ID" clearable v-model.trim="formData.storeId"></Input>
-                  </Form-item>
-                </div>
-                
-                <div class="btn-left w18">
-                  <Form-item >
-                      <Input placeholder="客户编号" clearable v-model.trim="formData.joinCode"></Input>
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item  prop="queryStartTime">
-                      <DatePicker v-model="formData.queryTime" type="daterange" split-panels placeholder="查询时间" style="width: 200px"></DatePicker>
-                  </Form-item>
-                </div>
-                
-              </div>
-              <div class="btn-left w10">
-                  <div class="searchBox">
-                    <div class="btn-right search-right" @click="submit">
-                      <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                    </div>
-                  </div>
-                </div>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">此表共包含<span class='numColor'>{{ pageNum }}</span>条数据</span>
-              <exportBtn  class="btn-right" @btnClick="exportExcel" />
+    <!-- <h2 class="Title">停售日志</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" class="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required>
+                <Select v-model="formData.brandId" placeholder="品牌名称*">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
             </div>
-            <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
-        </div>
-        <div class="page-box">
-          <div style="float: right;">
-            <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+            <div class="btn-left w18">
+              <Form-item required>
+                <Input placeholder="用户ID" clearable v-model.trim="formData.storeId"></Input>
+              </Form-item>
+            </div>
+
+            <div class="btn-left w18">
+              <Form-item>
+                <Input placeholder="客户编号" clearable v-model.trim="formData.joinCode"></Input>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="queryStartTime">
+                <DatePicker
+                  v-model="formData.queryTime"
+                  type="daterange"
+                  split-panels
+                  placeholder="查询时间"
+                  style="width: 200px"
+                ></DatePicker>
+              </Form-item>
+            </div>
           </div>
-        </div>
-        <fieldNameDes/>
+          <div class="btn-left w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+              </div>
+            </div>
+          </div>
+        </Form>
       </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            此表共包含
+            <span class="numColor">{{ pageNum }}</span>条数据
+          </span>
+          <exportBtn class="btn-right" @btnClick="exportExcel"/>
+        </div>
+        <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
+      <fieldNameDes/>
+    </div>
   </div>
 </template>
 
@@ -216,11 +201,7 @@ import fieldNameDes from "@/components/field-name-description.vue";
 import hhTable from "@/components/table/table.vue";
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
   name: "stop-log",
   data() {
@@ -228,9 +209,9 @@ export default {
       noneStatus: false,
       formData: {
         queryTime: [EDFAULT_STARTTIME, EDFAULT_ENDTIME],
-        brandId:""
+        brandId: ""
       },
-      brandList:[],
+      brandList: [],
       page: 1,
       pageNum: 0,
       pageSize: 10,
@@ -306,9 +287,9 @@ export default {
   },
   methods: {
     submit() {
-      if(!this.formData.brandId){
-        this.$Message.error("请选择品牌")
-        return false
+      if (!this.formData.brandId) {
+        this.$Message.error("请选择品牌");
+        return false;
       }
       if (
         !this.formData.storeId &&

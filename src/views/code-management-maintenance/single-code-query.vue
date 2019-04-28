@@ -128,89 +128,71 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">单码使用查询</h2> -->
+  <div id="Main">
+    <!-- <h2 class="Title">单码使用查询</h2> -->
     <div class="main-container">
       <div class="box">
         <Form ref="form" :model="formData" :label-width="85">
           <Row>
             <Col span="10">
               <Form-item label="二维码:" prop="qrSeqNo">
-                  <i-input v-model.trim="formData.qrSeqNo" placeholder="请输入二维码"></i-input>
+                <i-input v-model.trim="formData.qrSeqNo" placeholder="请输入二维码"></i-input>
               </Form-item>
             </Col>
             <Col span="10">
               <Form-item label="明码:" prop="memo">
-                  <i-input v-model.trim="formData.memo" placeholder="请输入明码"></i-input>
+                <i-input v-model.trim="formData.memo" placeholder="请输入明码"></i-input>
               </Form-item>
             </Col>
-            <Col span='2' offset="1">
-                <Button @click="submit" class="btn-search  search_btn" type="primary">查询</Button>
+            <Col span="2" offset="1">
+              <Button @click="submit" class="btn-search search_btn" type="primary">查询</Button>
             </Col>
           </Row>
         </Form>
       </div>
       <div class="box tableBox">
-          <h3>基本信息</h3>
-          <Form :label-width="85">
-            <Row>
-              <Col span="6">
-                <Form-item label="品牌名称:">
-                  {{baseInformationData.brandName}}
-                </Form-item>
-                <Form-item label="码包号:">
-                  {{baseInformationData.packageNo}}
-                </Form-item>
-
-              </Col>
-              <Col span="6">
-                  <Form-item label="活动包名:">
-                    {{baseInformationData.groupName}}
-                  </Form-item>
-                  <Form-item label="生成时间:">
-                    <span v-if="baseInformationData.createTime">{{baseInformationData.createTime }}</span>
-                  </Form-item>
-
-              </Col>
-              <Col span="6">
-                  <Form-item label="活动名称:">
-                    {{baseInformationData.activityName}}
-                  </Form-item>
-                  <Form-item label="激活时间:">
-                    <span v-if="baseInformationData.activateTime">{{baseInformationData.activateTime }}</span>
-                  </Form-item>
-
-              </Col>
-              <Col span="6">
-                  <Form-item label="二维码状态:">
-                    {{baseInformationData.usableStatus | statusFilter}}
-                  </Form-item>
-                  <Form-item label="流水线:">
-                    {{baseInformationData.pipeLine}}
-                  </Form-item>
-
-              </Col>
-            </Row>
-          </Form>
+        <h3>基本信息</h3>
+        <Form :label-width="85">
+          <Row>
+            <Col span="6">
+              <Form-item label="品牌名称:">{{baseInformationData.brandName}}</Form-item>
+              <Form-item label="码包号:">{{baseInformationData.packageNo}}</Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="活动包名:">{{baseInformationData.groupName}}</Form-item>
+              <Form-item label="生成时间:">
+                <span v-if="baseInformationData.createTime">{{baseInformationData.createTime }}</span>
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="活动名称:">{{baseInformationData.activityName}}</Form-item>
+              <Form-item label="激活时间:">
+                <span v-if="baseInformationData.activateTime">{{baseInformationData.activateTime }}</span>
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="二维码状态:">{{baseInformationData.usableStatus | statusFilter}}</Form-item>
+              <Form-item label="流水线:">{{baseInformationData.pipeLine}}</Form-item>
+            </Col>
+          </Row>
+        </Form>
       </div>
       <div class="box tableBox">
         <h3>使用记录</h3>
-        <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable> 
+        <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
       </div>
     </div>
-	</div>
+  </div>
 </template>
 
 <script>
-import { monitorRecord } from "@/util/ENUMS.js";
 import hhTable from "@/components/table/table.vue";
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
-  name:"single-code-query-keepAlive",
+  name: "single-code-query-keepAlive",
 
   data() {
     return {
-      noneStatus:false,
+      noneStatus: false,
       baseInformationData: {},
       formData: {
         qrSeqNo: "", //二维码

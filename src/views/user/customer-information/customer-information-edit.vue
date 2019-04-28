@@ -51,42 +51,50 @@ footer {
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">修改</h2> -->
-        <div class="box">
-            <Form ref="form" :model="formData" :label-width="88">
-                <Row>
-                    <Col span="10">
-                        <Form-item label="店铺名称" prop="storeName"  >
-                            <Input v-model="formData.storeName" placeholder="请输入..."></Input>
-                        </Form-item>
-                        <Form-item label="省市区" >
-                            <!-- <div @click='handleshowTree' class='area'>{{areaName}}</div> -->
-                            <div class='area'  v-if="isAreaShow" @click="showCascader">{{AreaProvince}}/{{AreaCity}}/{{AreaArea}}</div>
-                            <Cascader :data="areaArrayList" v-else v-model="formData.areaCode" :load-data="loadData" change-on-select></Cascader>
-
-                        </Form-item>
-                    </Col>
-                    <Col span="10" offset="1">
-                        <Form-item label="姓名" >
-                            <Input v-model="formData.name" placeholder="请输入..."></Input>
-                        </Form-item>
-                        <Form-item label="地址" >
-                            <Input v-model='formData.address'></Input>
-                        </Form-item>
-                    </Col>
-
-                </Row>
-            </Form>           
-            <footer>
-                <Button type="primary"  @click='goBack'>返回</Button>
-                <Button type="success"  @click="submit('form')" style="margin-left:24px">保存</Button>
-            </footer>
-        </div> 
-        <!-- 省市区三级联动组件 -->
-        <!-- <city-select :formAreaCode="formAreaCode" :isShowTree="isShowTree" 
-        @sendCityTreeCode="sendCityTreeCode" @sendCityTreeStatus="sendCityTreeStatus"></city-select>     -->
+  <div id="Main">
+    <!-- <h2 class="Title">修改</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88">
+        <Row>
+          <Col span="10">
+            <Form-item label="店铺名称" prop="storeName">
+              <Input v-model="formData.storeName" placeholder="请输入..."></Input>
+            </Form-item>
+            <Form-item label="省市区">
+              <!-- <div @click='handleshowTree' class='area'>{{areaName}}</div> -->
+              <div
+                class="area"
+                v-if="isAreaShow"
+                @click="showCascader"
+              >{{AreaProvince}}/{{AreaCity}}/{{AreaArea}}</div>
+              <Cascader
+                :data="areaArrayList"
+                v-else
+                v-model="formData.areaCode"
+                :load-data="loadData"
+                change-on-select
+              ></Cascader>
+            </Form-item>
+          </Col>
+          <Col span="10" offset="1">
+            <Form-item label="姓名">
+              <Input v-model="formData.name" placeholder="请输入..."></Input>
+            </Form-item>
+            <Form-item label="地址">
+              <Input v-model="formData.address"></Input>
+            </Form-item>
+          </Col>
+        </Row>
+      </Form>
+      <footer>
+        <Button type="primary" @click="goBack">返回</Button>
+        <Button type="success" @click="submit('form')" style="margin-left:24px">保存</Button>
+      </footer>
     </div>
+    <!-- 省市区三级联动组件 -->
+    <!-- <city-select :formAreaCode="formAreaCode" :isShowTree="isShowTree" 
+    @sendCityTreeCode="sendCityTreeCode" @sendCityTreeStatus="sendCityTreeStatus"></city-select>-->
+  </div>
 </template>
 
 <script>
@@ -127,7 +135,6 @@ export default {
     citySelect
   },
   data() {
-    const that = this
     return {
       formData: {
         storeName: "",
@@ -222,16 +229,15 @@ export default {
     showCascader() {
       this.isAreaShow = false;
     },
-    activityDetail: function(id) {
-      var that = this;
+    activityDetail(id) {
       var newDate = new Date();
       if (id) {
-        this.Global.doPost("goodsInfo/getGoodsInfo.json", id, function(res) {
-          that.formData["name"] = res.name;
-          that.formData["memo"] = res.memo;
-          that.formData["startTime"] = newDate.setTime(res.startTime);
-          that.formData["endTime"] = newDate.setTime(res.endTime);
-          that.notifyImg = res.url;
+        this.Global.doPost("goodsInfo/getGoodsInfo.json", id, res => {
+          this.formData["name"] = res.name;
+          this.formData["memo"] = res.memo;
+          this.formData["startTime"] = newDate.setTime(res.startTime);
+          this.formData["endTime"] = newDate.setTime(res.endTime);
+          this.notifyImg = res.url;
         });
       } else {
         this.$Message.error("请在活动列表重新选择");
@@ -246,13 +252,12 @@ export default {
         }
       });
     },
-    init: function() {
-      var that = this;
+    init() {
       var data = this.Global.JsonChange(this.formData);
 
       this.Global.deleteEmptyProperty(data);
-      this.Global.doPost("store/modifyStoreInfo.json", data, function(res) {
-        that.$router.push("/customerInformate");
+      this.Global.doPost("store/modifyStoreInfo.json", data, res => {
+        this.$router.push("/customerInformate");
       });
     },
     goBack: function() {

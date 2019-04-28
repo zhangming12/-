@@ -376,7 +376,7 @@ import imageLook from "@/components/imgLook/img-look.vue";
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
 import { displayParketCheckStatus } from "@/util/ENUMS.js";
 

@@ -20,79 +20,88 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">陈列追踪统计</h2> -->
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-                <Row>
-                    <Col span="12">                        
-                        <Form-item label="上传时间" required prop="queryTime">
-                            <!-- <DatePicker  v-model="formData.queryTime" placeholder="选择日期跟时间" type="datetimerange" ></DatePicker> -->
-                            <Row>
-                                <Col span="11">
-                                    <Form-item prop="queryStartTime">
-                                    <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                                    </Form-item>
-                                </Col>
-                                <Col span="2" style="text-align: center;">至</Col>
-                                <Col span="11">
-                                    <Form-item prop="queryEndTime">
-                                        <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                                    </Form-item>
-                                </Col>
-                            </Row>
-                        </Form-item>
-                        <Form-item label="陈列活动" prop="brandId" required >
-                             <Select v-model="formData.activityId" placeholder="请选择" @on-change="changeActivity">
-                                <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                            </Select> 
-                        </Form-item>
-                    </Col>
-                    <Col span="8" offset="1">
-                        <Form-item label="品牌名称" required>
-                            <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select> 
-                        </Form-item>
-                    </Col>
-                    <Col span='2' offset="1" style="margin-top:24px">
-                        <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
-                    </Col>
-                </Row>
-            </Form>
+    <!-- <h2 class="Title">陈列追踪统计</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+        <Row>
+          <Col span="12">
+            <Form-item label="上传时间" required prop="queryTime">
+              <!-- <DatePicker  v-model="formData.queryTime" placeholder="选择日期跟时间" type="datetimerange" ></DatePicker> -->
+              <Row>
+                <Col span="11">
+                  <Form-item prop="queryStartTime">
+                    <data-range
+                      @dataChange="startTimeChange"
+                      hour="00:00"
+                      :time="formData.queryStartTime"
+                      start
+                    ></data-range>
+                  </Form-item>
+                </Col>
+                <Col span="2" style="text-align: center;">至</Col>
+                <Col span="11">
+                  <Form-item prop="queryEndTime">
+                    <data-range
+                      hour="24:00"
+                      placeholder="结束时间"
+                      @dataChange="endTimeChange"
+                      :time="formData.queryEndTime"
+                    ></data-range>
+                  </Form-item>
+                </Col>
+              </Row>
+            </Form-item>
+            <Form-item label="陈列活动" prop="brandId" required>
+              <Select v-model="formData.activityId" placeholder="请选择" @on-change="changeActivity">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="8" offset="1">
+            <Form-item label="品牌名称" required>
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:24px">
+            <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;padding-bottom:20px">
+      <div class="contentTop">
+        <Button @click="exportExcel" class="btn-right" icon="ios-download-outline" type="primary">导出</Button>
       </div>
-      <div class="box" style="margin-top: 15px;padding-bottom:20px">
-        <div class="contentTop">
-
-            <Button @click="exportExcel" class="btn-right"  icon="ios-download-outline"  type="primary">导出</Button>
-        </div>
-        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-        <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-            </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { dispalyShowStatus } from "@/util/ENUMS.js";
-import dataRange from "../../../components/data-rang.vue";
+import dataRange from "@/components/data-rang.vue";
 
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
-import {
-  displayTrackStatisticsForPeriod
-} from "@/api/activity-manage/display-activity-manage.js";
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
+import { displayTrackStatisticsForPeriod } from "@/api/activity-manage/display-activity-manage.js";
 import { getActivityListDoQuery } from "@/api/common.js";
 import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
-  name:"displayt-rack-statistics-keepAlive",
+  name: "displayt-rack-statistics-keepAlive",
   data() {
-    const that = this;
     return {
       start: {
         time: "",
@@ -165,55 +174,24 @@ export default {
           key: "applyRate",
           align: "center"
         }
-        // {
-        //     title: '上传用户数',
-        //     key: 'uploadCount',
-        //     align: 'center',
-        // },
-        // {
-        //     title: '上传达成率',
-        //     key: 'uploadRate',
-        //     align: 'center'
-
-        // },
-        // {
-        //     title: '合格用户数',
-        //     key: 'auditCount',
-        //     align: 'center',
-        // },
-        // {
-        //     title: '合格达成率',
-        //     key: 'auditRate',
-        //     align: 'center',
-        // },
-        // {
-        //     title: '不合格用户数',
-        //     key: 'notpassCount',
-        //     align: 'center',
-        // },
       ],
       pageData: [],
       brandList: [],
       activityList: []
     };
   },
-  components: {dataRange},
-  created: function() {
-    var that = this;
+  components: { dataRange },
+  created() {
     this.columns1 = this.columns1.concat(this.defaultList);
-    this.Global.doPostNoLoading(
-      "condition/queryBrands.json",
-      {},
-      res => {
-        this.brandList = [];
-        Object.entries(res).forEach(item => {
-          this.brandList.push({ id: Number(item[0]), brandName: item[1] });
-        });
-        if (this.brandList && this.brandList.length) {
-          this.formData.brandId = this.brandList[0].id;
-        }
+    this.Global.doPostNoLoading("condition/queryBrands.json", {}, res => {
+      this.brandList = [];
+      Object.entries(res).forEach(item => {
+        this.brandList.push({ id: Number(item[0]), brandName: item[1] });
+      });
+      if (this.brandList && this.brandList.length) {
+        this.formData.brandId = this.brandList[0].id;
       }
-    );
+    });
   },
   methods: {
     submit: function(name) {
@@ -241,18 +219,16 @@ export default {
       if (value.hour == "24:00") {
         return;
       }
-      this.formData.queryEndTime = this.Global.setHoursData(value.time, value.hour);
+      this.formData.queryEndTime = this.Global.setHoursData(
+        value.time,
+        value.hour
+      );
     },
     changePage: function(size) {
       this.init(size, 10);
     },
-    init: function(currentPage, pageSize) {
-      var that = this;
+    init(currentPage, pageSize) {
       var data = this.Global.JsonChange(this.formData);
-    //   data["queryStartTime"] = this.Global.createTime(
-    //     this.formData.queryTime[0]
-    //   );
-    //   data["queryEndTime"] = this.Global.createTime(this.formData.queryTime[1]);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
@@ -276,7 +252,6 @@ export default {
       data["pageSize"] = pageSize;
       displayTrackStatisticsForPeriod(data).then(res => {
         if (res.status == 1) {
-          
           this.pageNum = res.data.items;
           this.pageData = res.data;
           this.page = res.data.page;
@@ -290,7 +265,7 @@ export default {
             maxPeriodsArr.push(res.data[i].maxPeriods);
           }
           let maxPeriods = Math.max.apply(Math, maxPeriodsArr); //列表中最长的周期
-          
+
           let groupAreaInfoList = res.data[0].periodDateMap;
           if (groupAreaInfoList) {
             for (var i = 0; i < maxPeriods; i++) {
@@ -322,7 +297,7 @@ export default {
                   align: "center"
                 }
               ];
-              
+
               this.columns1 = this.columns1.concat(arr);
             }
 
@@ -352,13 +327,8 @@ export default {
         }
       });
     },
-    exportExcel: function() {
-      var that = this;
+    exportExcel() {
       var data = this.Global.JsonChange(this.formData);
-    //   data["queryStartTime"] = this.Global.createTime(
-    //     this.formData.queryTime[0]
-    //   );
-    //   data["queryEndTime"] = this.Global.createTime(this.formData.queryTime[1]);
       this.Global.deleteEmptyProperty(data);
 
       data["queryStartTime"] = this.Global.createTime(
@@ -379,15 +349,14 @@ export default {
         );
       }
       delete data["queryTime"];
-      
+
       var url = this.Global.getExportUrl(
         "report/displayTrackStatisticsForPeriodExport.json",
         data
       );
       window.open(url);
     },
-    changeValue: function(value) {
-      var that = this;
+    changeValue(value) {
       this.activityList = [];
       let brandList = this.brandList;
       for (var i = 0; i < brandList.length; i++) {

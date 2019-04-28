@@ -445,10 +445,10 @@ ul li {
 
 <script>
 import echarts from "echarts";
-import myModal from "../../../components/Modal/my-modal.vue";
-import warnBtn from "../../../components/Button/warn-btn.vue";
-import lookBtn from "../../../components/Button/look-btn.vue";
-import exportBtn from "../../../components/Button/export-btn.vue";
+import myModal from "@/components/Modal/my-modal.vue";
+import warnBtn from "@/components/Button/warn-btn.vue";
+import lookBtn from "@/components/Button/look-btn.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
 export default {
   name: "account-keepAlive",
   data() {

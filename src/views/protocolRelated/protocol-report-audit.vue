@@ -68,7 +68,6 @@
   overflow: hidden;
   .title {
     display: inline-block;
-    float: left;
     height: 120px;
     line-height: 120px;
   }
@@ -108,7 +107,6 @@
   overflow: hidden;
   .title {
     display: inline-block;
-    float: left;
     height: 228px;
     line-height: 228px;
   }
@@ -145,13 +143,11 @@
   overflow: hidden;
   .title {
     width: 110px;
-    float: left;
     display: inline-block;
     height: 30px;
     line-height: 30px;
   }
   #examine-left {
-    //float: left;
     width: 100%;
     .ivu-radio-group-vertical .ivu-radio-wrapper {
       display: inline;
@@ -225,173 +221,180 @@ textarea.ivu-input {
 </style>
 
 <template>
-    <div id="Main">
-      <!-- <h3>协议查报审核</h3> -->
-        <div class="box">
-            <!-- 店铺信息 -->
-            <Form :model="formData" label-position="left" :label-width="90">
-            <div class="form-title">基本信息</div>
-            <div id="shopInfor">
-                <div class='child'>                     
-                    <Row>
-                        <Col span="6">
-                            <FormItem label="客户编号：">  
-                                <span>{{formData.joinCode}}</span>
-                            </FormItem>                                                                                                                                                   
-                        </Col>
-                        <Col span="6"  >
-                            <FormItem label="客户姓名：">
-                                <span>{{formData.name }}</span>
-                            </FormItem>                                                                                                                                              
-                        </Col>
-                        <Col span="6">
-                            <FormItem label="营业部：">  
-                                <span>{{formData.busiDept}}</span>
-                            </FormItem>                                                                                                                          
-                        </Col>
-                        <Col span="6"  >                            
-                            <FormItem label="销售大区：">
-                                <span>{{formData.salesRegion}}</span>
-                            </FormItem>                                                                                           
-                        </Col>                                                                 
-                        <Col span="6"  >
-                            <FormItem label="门店名称：">
-                                <span>{{formData.storeName}}</span>
-                            </FormItem>                            
-                        </Col> 
-                        <Col span="6"  >                            
-                            <FormItem label="客户电话：">
-                                <span>{{formData.phone | phoneFormat}}</span>
-                            </FormItem> 
-                        </Col>   
-                        <Col span="12"  >
-                            <FormItem label="地址详情：">
-                                <span>{{formData.address}}</span>
-                            </FormItem>                             
-                        </Col> 
-                        <Col span="6"  >
-                            <FormItem label="地域性质：">
-                                <span>{{formData.regionProp}}</span>
-                            </FormItem> 
-                            <FormItem label="客户状态：">
-                                <span>{{formData.storeStatus | protocolStoreStatusFilters}}</span>
-                            </FormItem>                                                          
-                        </Col> 
-                        <Col span="6"  >
-                            <FormItem label="客户性质：">
-                                <span>{{formData.storeNature}}</span>
-                            </FormItem>   
-                            <FormItem label="销售线路号：">
-                                <span>{{formData.salesRoute}}</span>
-                            </FormItem>                                                      
-                        </Col> 
-                        <Col span="6"  >
-                            <FormItem label="BAP渠道：">
-                                <span>{{formData.bapChannel}}</span>
-                            </FormItem> 
-                            <FormItem label="业代姓名：">
-                                <span>{{formData.workerName}}</span>
-                            </FormItem>                                                         
-                        </Col> 
-                        <Col span="6"  >
-                            <FormItem label="子渠道：">
-                                <span>{{formData.subChannel}}</span>
-                            </FormItem> 
-                            <FormItem label="业代手机：">
-                                <span>{{formData.workerPhone | phoneFormat}}</span>
-                            </FormItem>                                                        
-                        </Col> 
-                        <Col span="6" offset="6">
-                            <div id="imgBox">
-                                <div class="changeImg">
-                                    <img :src="storeImage" v-if="storeImage">
-                                    <img src="../../assets/image/imgBg.png"  v-else>
-                                </div>
-                            </div>
-                            <span class="img-span">门头照</span>
-                        </Col>
-                        <Col span="6">
-                            <div id="container" style="margin-right: 20px;">
-                            </div>
-                            <span class="img-span">定位</span>
-                        </Col>
-                        <!-- </Col>                                                                                                             -->
-                    </Row>                    
+  <div id="Main">
+    <!-- <h3>协议查报审核</h3> -->
+    <div class="box">
+      <!-- 店铺信息 -->
+      <Form :model="formData" label-position="left" :label-width="90">
+        <div class="form-title">基本信息</div>
+        <div id="shopInfor">
+          <div class="child">
+            <Row>
+              <Col span="6">
+                <FormItem label="客户编号：">
+                  <span>{{formData.joinCode}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="客户姓名：">
+                  <span>{{formData.name }}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="营业部：">
+                  <span>{{formData.busiDept}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="销售大区：">
+                  <span>{{formData.salesRegion}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="门店名称：">
+                  <span>{{formData.storeName}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="客户电话：">
+                  <span>{{formData.phone | phoneFormat}}</span>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="地址详情：">
+                  <span>{{formData.address}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="地域性质：">
+                  <span>{{formData.regionProp}}</span>
+                </FormItem>
+                <FormItem label="客户状态：">
+                  <span>{{formData.storeStatus | protocolStoreStatusFilters}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="客户性质：">
+                  <span>{{formData.storeNature}}</span>
+                </FormItem>
+                <FormItem label="销售线路号：">
+                  <span>{{formData.salesRoute}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="BAP渠道：">
+                  <span>{{formData.bapChannel}}</span>
+                </FormItem>
+                <FormItem label="业代姓名：">
+                  <span>{{formData.workerName}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="子渠道：">
+                  <span>{{formData.subChannel}}</span>
+                </FormItem>
+                <FormItem label="业代手机：">
+                  <span>{{formData.workerPhone | phoneFormat}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6" offset="6">
+                <div id="imgBox">
+                  <div class="changeImg">
+                    <img :src="storeImage" v-if="storeImage">
+                    <img src="../../assets/image/imgBg.png" v-else>
+                  </div>
                 </div>
-            </div>
-            <div class="form-title">协议内容</div>
-            <div id="shopInfor">
-                <div class='child'>                     
-                    <Row>
-                        <Col span="6">
-                            <FormItem label="签约属性：">  
-                                <span>{{formData.signAttr}}</span>
-                            </FormItem>                                                                                                                                                                                         
-                        </Col>
-                        <Col span="6"  >
-                            <FormItem label="协议类型：">
-                                <span>{{formData.protClass}}</span>
-                            </FormItem>                                                                                                                                                                                      
-                        </Col>
-                        <Col span="6">
-                            <FormItem label="冷饮设备：">  
-                                <span>{{formData.isCorpFreezer | protocolCorpFreezerFilters}}</span>                                
-                            </FormItem>                                                                                              
-                        </Col>
-                        <Col span="6"  >
-                            <FormItem label="考核冰柜：">
-                                <span>{{formData.checkFreezer | protocolCheckFreezerFilters}}</span>
-                            </FormItem>                                                               
-                        </Col> 
-                        <Col span="6"  >
-                            <FormItem label="汽水授权销售：" :label-width="100">
-                                <span>{{formData.isSodaSales | protocolIsSodaSalesFilters}}</span>
-                            </FormItem>                                                               
-                        </Col> 
-                        <Col span="18">
-                            <FormItem label="折扣门槛：" :label-width="80">
-                                <span>{{awardPremise}}</span>
-                            </FormItem>                                                               
-                        </Col>                                                                                                         
-                        <Col span="12" style="padding-top: 10px;">
-                            <div class="contentBox">
-                                <div class="contentTitle">
-                                    <div>三项协议：</div>
-                                    <div>(合计：<span class="color-orange">4</span>项)</div>                                    
-                                </div>
-                                <div class="contentDesc">
-                                    <div class="heightBox" style="height: 98px;">
-                                        <div v-for="(value, key, index) in protContentsContent" :key="index">{{value.indexNum}}：{{value.itemValue}}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <FormItem label="外卖平台：" :label-width="100">                                   
-                                <div class="heightBox" style="height: 44px;line-height: 42px;">
-                                    <div>{{ takeoutPlatform }}</div>
-                                </div>
-                            </FormItem> 
-                            <FormItem label="必备SKU数：" :label-width="100">                                   
-                                <div class="heightBox" style="height: 96px;line-height: 25px;">{{skuTarget}}</div>
-                            </FormItem>
-                            <FormItem label="备注：" :label-width="100">                                   
-                                <div class="heightBox" style="height: 100px;">
-                                    <div>{{memo}}</div>
-                                </div>
-                            </FormItem>                                                                                                 
-                        </Col> 
-                        <Col span="12" style="padding-top: 10px;">
-                            <FormItem label="二次陈列：" :label-width="100">                                   
-                                <div class="heightBox" style="height: 44px;line-height: 42px;">
-                                    <div>{{secondDisplay}}</div>
-                                </div>
-                            </FormItem> 
-                            <FormItem label="纯悦割箱数：" :label-width="100">                                   
-                                <div class="heightBox" style="height: 44px;line-height: 42px;">                                    
-                                    <div><span class="color-orange">{{iceDewNum}}</span>组</div>
-                                </div>
-                            </FormItem> 
-                           
-                            <!-- <div class="contentBox">
+                <span class="img-span">门头照</span>
+              </Col>
+              <Col span="6">
+                <div id="container" style="margin-right: 20px;"></div>
+                <span class="img-span">定位</span>
+              </Col>
+              <!-- </Col>                                                                                                             -->
+            </Row>
+          </div>
+        </div>
+        <div class="form-title">协议内容</div>
+        <div id="shopInfor">
+          <div class="child">
+            <Row>
+              <Col span="6">
+                <FormItem label="签约属性：">
+                  <span>{{formData.signAttr}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="协议类型：">
+                  <span>{{formData.protClass}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="冷饮设备：">
+                  <span>{{formData.isCorpFreezer | protocolCorpFreezerFilters}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="考核冰柜：">
+                  <span>{{formData.checkFreezer | protocolCheckFreezerFilters}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="汽水授权销售：" :label-width="100">
+                  <span>{{formData.isSodaSales | protocolIsSodaSalesFilters}}</span>
+                </FormItem>
+              </Col>
+              <Col span="18">
+                <FormItem label="折扣门槛：" :label-width="80">
+                  <span>{{awardPremise}}</span>
+                </FormItem>
+              </Col>
+              <Col span="12" style="padding-top: 10px;">
+                <div class="contentBox">
+                  <div class="contentTitle">
+                    <div>三项协议：</div>
+                    <div>
+                      (合计：
+                      <span class="color-orange">4</span>项)
+                    </div>
+                  </div>
+                  <div class="contentDesc">
+                    <div class="heightBox" style="height: 98px;">
+                      <div
+                        v-for="(value, key, index) in protContentsContent"
+                        :key="index"
+                      >{{value.indexNum}}：{{value.itemValue}}</div>
+                    </div>
+                  </div>
+                </div>
+                <FormItem label="外卖平台：" :label-width="100">
+                  <div class="heightBox" style="height: 44px;line-height: 42px;">
+                    <div>{{ takeoutPlatform }}</div>
+                  </div>
+                </FormItem>
+                <FormItem label="必备SKU数：" :label-width="100">
+                  <div class="heightBox" style="height: 96px;line-height: 25px;">{{skuTarget}}</div>
+                </FormItem>
+                <FormItem label="备注：" :label-width="100">
+                  <div class="heightBox" style="height: 100px;">
+                    <div>{{memo}}</div>
+                  </div>
+                </FormItem>
+              </Col>
+              <Col span="12" style="padding-top: 10px;">
+                <FormItem label="二次陈列：" :label-width="100">
+                  <div class="heightBox" style="height: 44px;line-height: 42px;">
+                    <div>{{secondDisplay}}</div>
+                  </div>
+                </FormItem>
+                <FormItem label="纯悦割箱数：" :label-width="100">
+                  <div class="heightBox" style="height: 44px;line-height: 42px;">
+                    <div>
+                      <span class="color-orange">{{iceDewNum}}</span>组
+                    </div>
+                  </div>
+                </FormItem>
+
+                <!-- <div class="contentBox">
                                 <div class="contentTitle">
                                     <div>月销售目标：</div>
                                     <div>(非水分品类)</div>
@@ -402,69 +405,76 @@ textarea.ivu-input {
                                         <div v-for="(value, key, index) in salesTargetsGoods" :key="index">{{key | salesTargetsGoodsFilters}}：<span class="color-orange">{{value}}</span>  </div>                                        
                                     </div>
                                 </div>
-                            </div>                              -->
-                            <div class="contentBox">
-                                <div class="contentTitle">
-                                    <div>奖励产品：</div>                                   
-                                    <div>( 合计 )</div>                                    
-                                </div>
-                                <div class="contentDesc">
-                                    <div class="heightBox" style="height: 114px;">
-                                        <div v-for="(item, index) in signPresentList" :key="index">{{item.goodsName}}：<span class="color-orange">{{item.quantity}}</span>{{ item.unit }}</div>
-                                    </div>
-                                </div>
-                            </div>                                                                                            
-                        </Col>                                                       
-                    </Row>                    
-                </div>
-            </div>             
-            </Form>
-            <!-- 陈列视频 -->
-            <Row>
-                <Col span="12">                     
-                    <!-- 审核意见 -->
-                    <div class="form-title">审核意见</div>
-                    <div id="examine">
-                        <div>
-                            <span class="title"  style="width: 115px;">当前状态：</span>
-                            <div id="examine-left"  style="height: 30px;line-height: 30px;">
-                                待审核
-                            </div>  
-                        </div>
-                        <div v-show="examineStatus !== 'look'">
-                            <span class="title" >审核状态：</span>
-                            <div id="examine-left">
-                                <RadioGroup v-model="signCheckStatus" vertical class="radio">
-                                    <Radio label="1001">审核通过</Radio>
-                                    <Radio label="3">退回重签</Radio>
-                                    <Radio label="2">不通过</Radio>
-                                </RadioGroup>
-                            </div>  
-                        </div>
-                                                                                              
-                        <div id="displayMemo">
-                            <span  style="width: 115px;">审核意见：</span>
-                            <Input v-model="checkMessage" type="textarea" placeholder="请填写审核意见" :autosize="{minRows: 2,maxRows: 7}" style="width:380px"></Input>
-                        </div>
+                </div>-->
+                <div class="contentBox">
+                  <div class="contentTitle">
+                    <div>奖励产品：</div>
+                    <div>( 合计 )</div>
+                  </div>
+                  <div class="contentDesc">
+                    <div class="heightBox" style="height: 114px;">
+                      <div v-for="(item, index) in signPresentList" :key="index">
+                        {{item.goodsName}}：
+                        <span class="color-orange">{{item.quantity}}</span>
+                        {{ item.unit }}
+                      </div>
                     </div>
-                </Col>                 
-            </Row>    
-            <footer>
-                <Button type="success" class="btn-back" @click="handleBack">返回</Button>
-                <Button type="primary" class="btn-back" v-show="examineStatus !== 'look'" @click="handlelevelExamine" style="margin-left:30px;">确定</Button>
-            </footer>            
-        </div>    
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </div>
+      </Form>
+      <!-- 陈列视频 -->
+      <Row>
+        <Col span="12">
+          <!-- 审核意见 -->
+          <div class="form-title">审核意见</div>
+          <div id="examine">
+            <div>
+              <span class="title" style="width: 115px;">当前状态：</span>
+              <div id="examine-left" style="height: 30px;line-height: 30px;">待审核</div>
+            </div>
+            <div v-show="examineStatus !== 'look'">
+              <span class="title">审核状态：</span>
+              <div id="examine-left">
+                <RadioGroup v-model="signCheckStatus" vertical class="radio">
+                  <Radio label="1001">审核通过</Radio>
+                  <Radio label="3">退回重签</Radio>
+                  <Radio label="2">不通过</Radio>
+                </RadioGroup>
+              </div>
+            </div>
+
+            <div id="displayMemo">
+              <span style="width: 115px;">审核意见：</span>
+              <Input
+                v-model="checkMessage"
+                type="textarea"
+                placeholder="请填写审核意见"
+                :autosize="{minRows: 2,maxRows: 7}"
+                style="width:380px"
+              ></Input>
+            </div>
+          </div>
+        </Col>
+      </Row>
+      <footer>
+        <Button type="success" class="btn-back" @click="handleBack">返回</Button>
+        <Button
+          type="primary"
+          class="btn-back"
+          v-show="examineStatus !== 'look'"
+          @click="handlelevelExamine"
+          style="margin-left:30px;"
+        >确定</Button>
+      </footer>
     </div>
+  </div>
 </template>
 
 <script>
-// import BMap from 'BMap';
-import {
-  getBrandStoreSignDetialInfo,
-  brandStoreSignFirstAudit,
-  brandStoreSignSecondAudit
-} from "@/api/yellow-gold-protocol/protocol-examine.js";
-
 import {
   protocolCheckFreezer, //冷饮设备
   protocolCorpFreezer, //考核冰柜
@@ -479,7 +489,6 @@ export default {
   name: "protocol-report-examine",
 
   data() {
-    const that = this;
     return {
       vertical: 0,
       examineType: null,
@@ -488,7 +497,7 @@ export default {
       currentState: "", //当前状态
       signCheckStatus: "", //审核状态
       checkMessage: "", //意见反馈
-      takeoutPlatform:"",//外卖平台
+      takeoutPlatform: "", //外卖平台
       protContentsContent: null, //三项协议内容
       protContentsCount: null, //三项协议项数量
       displaySignSkuRuleContent: null, //SKU铺货目标
@@ -572,8 +581,7 @@ export default {
                 res.skuTarget && res.skuTarget.replace(/\|/g, "，"); //客户货架排面及SKU数
               this.memo = res.remarks;
               this.secondDisplay =
-                res.protContentsModel["secondDisplay"] ||
-                "无";
+                res.protContentsModel["secondDisplay"] || "无";
               //外卖平台
               this.takeoutPlatform =
                 res.protContentsModel["meal"] ||
@@ -587,14 +595,14 @@ export default {
               }
               this.displayRequire =
                 res.displayRequire && res.displayRequire.replace(/\|/g, "，"); //第一陈列集中位置
-              
+
               //奖励产品
-              if(res.awardsDisplay && res.awardsDisplay.length){
+              if (res.awardsDisplay && res.awardsDisplay.length) {
                 this.signPresentList = res.awardsDisplay;
-              }else{
-                this.signPresentCount = []
+              } else {
+                this.signPresentCount = [];
               }
-              
+
               this.currentState = res.checkStatus; //当前状态
               // this.checkMessage = res.checkMessage; //审核意见
               this.awardPremise = res.awardPremiseMap.message; //奖励门槛

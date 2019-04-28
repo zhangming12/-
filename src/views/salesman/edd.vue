@@ -215,199 +215,213 @@ footer {
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">新建&修改</h2> -->
-        <div class="box">
-            <Form ref="form" :model="formData" :label-width="80" :rules="rule">
-                <Row>
-                    <Col span="10">
-                    <Form-item label="活动时间" required>
-                        <Row>
-                            <Col span="11">
-                            <Form-item prop="startTime">
-                                <Date-picker type="datetime" placeholder="选择时间" v-model="formData.startTime" style="width: 100%;"></Date-picker>
-                            </Form-item>
-                            </Col>
-                            <Col span="2" style="text-align: center">至</Col>
-                            <Col span="11">
-                            <Form-item prop="endTime">
-                                <Date-picker type="datetime" placeholder="选择时间" v-model="formData.endTime" style="width: 100%;"></Date-picker>
-                            </Form-item>
-                            </Col>
-                        </Row>
-                    </Form-item>
-                    <Form-item label="活动区域" prop="areaCode">
-                        <!-- <Cascader :data="areaData" v-model="formData.areaCode"></Cascader> -->
-                        <!-- <Input icon="ios-gear-outline" v-model='areaName' readonly @click='showTree'></Input> -->
-                        <div @click='showTree' class='area'>{{areaName}}</div>
-                    </Form-item>
-                    <Form-item label="活动样式" prop='pageUrl'>
-                        <Input icon="ios-gear-outline" v-model='formData.pageUrl'></Input>
-                    </Form-item>
-                    <!-- <Form-item label="公众号URL">
+  <div id="Main">
+    <!-- <h2 class="Title">新建&修改</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="80" :rules="rule">
+        <Row>
+          <Col span="10">
+            <Form-item label="活动时间" required>
+              <Row>
+                <Col span="11">
+                  <Form-item prop="startTime">
+                    <Date-picker
+                      type="datetime"
+                      placeholder="选择时间"
+                      v-model="formData.startTime"
+                      style="width: 100%;"
+                    ></Date-picker>
+                  </Form-item>
+                </Col>
+                <Col span="2" style="text-align: center">至</Col>
+                <Col span="11">
+                  <Form-item prop="endTime">
+                    <Date-picker
+                      type="datetime"
+                      placeholder="选择时间"
+                      v-model="formData.endTime"
+                      style="width: 100%;"
+                    ></Date-picker>
+                  </Form-item>
+                </Col>
+              </Row>
+            </Form-item>
+            <Form-item label="活动区域" prop="areaCode">
+              <!-- <Cascader :data="areaData" v-model="formData.areaCode"></Cascader> -->
+              <!-- <Input icon="ios-gear-outline" v-model='areaName' readonly @click='showTree'></Input> -->
+              <div @click="showTree" class="area">{{areaName}}</div>
+            </Form-item>
+            <Form-item label="活动样式" prop="pageUrl">
+              <Input icon="ios-gear-outline" v-model="formData.pageUrl"></Input>
+            </Form-item>
+            <!-- <Form-item label="公众号URL">
                         <Input icon="ios-gear-outline"></Input>
-                    </Form-item> -->
-                    <Form-item :label-width="1">
-                        <div id="imgBox">
-                            <span>通知消息图片</span>
-                            <div class="changeImg">
-                                <img :src="notifyImg" alt="" v-if="notifyImg">
-                                <img src="../../assets/image/imgBg.png" alt="" v-else>
-                            </div>
-                            <Upload action="https://hbrand.oss-cn-hangzhou.aliyuncs.com" 
-                            style="transform:translateX(40px)"
-                            :data="upData" 
-                            :before-upload="beforeUpload2" 
-                            :on-success="notifyUpload" 
-                            :show-upload-list="false"
-                            :format="['jpg','jpeg','png']"
-                            :on-format-error="handleFormatError">
-                                <Button type="primary">重新上传</Button>
-                                <span style="color:#ff8a34">（建议尺寸：210*170px）</span>
-                            </Upload>
-                        </div>
-                    </Form-item>
-                    </Col>
-                    <Col span="10" offset="2">
-                     <Form-item label="品牌名称" prop="brandId">
-                        <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
-                            <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                        </Select>
-                    </Form-item>
-                    <Form-item label="活动名称" prop="name">
-                        <Input v-model='formData.name'></Input>
-                    </Form-item>
-                    <Form-item label="小程序URL" prop='detailUrl'>
-                        <Input icon="ios-gear-outline" v-model='formData.detailUrl'></Input>
-                    </Form-item>
-                    <!-- <Form-item>
+            </Form-item>-->
+            <Form-item :label-width="1">
+              <div id="imgBox">
+                <span>通知消息图片</span>
+                <div class="changeImg">
+                  <img :src="notifyImg" alt v-if="notifyImg">
+                  <img src="../../assets/image/imgBg.png" alt v-else>
+                </div>
+                <Upload
+                  action="https://hbrand.oss-cn-hangzhou.aliyuncs.com"
+                  style="transform:translateX(40px)"
+                  :data="upData"
+                  :before-upload="beforeUpload2"
+                  :on-success="notifyUpload"
+                  :show-upload-list="false"
+                  :format="['jpg','jpeg','png']"
+                  :on-format-error="handleFormatError"
+                >
+                  <Button type="primary">重新上传</Button>
+                  <span style="color:#ff8a34">（建议尺寸：210*170px）</span>
+                </Upload>
+              </div>
+            </Form-item>
+          </Col>
+          <Col span="10" offset="2">
+            <Form-item label="品牌名称" prop="brandId">
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="活动名称" prop="name">
+              <Input v-model="formData.name"></Input>
+            </Form-item>
+            <Form-item label="小程序URL" prop="detailUrl">
+              <Input icon="ios-gear-outline" v-model="formData.detailUrl"></Input>
+            </Form-item>
+            <!-- <Form-item>
                         <Input style="visibility:hidden"></Input>
-                    </Form-item> -->
-                    <Form-item :label-width="1">
-                        <div id="imgBox">
-                            <span>活动查看列表</span>
-                            <div class="changeImg">
-                                <img :src="activityImg" alt="" v-if="activityImg">
-                                <img src="../../assets/image/imgBg.png" alt="" v-else>
-                            </div>
-                            <Upload action="https://hbrand.oss-cn-hangzhou.aliyuncs.com" 
-                            style="transform:translateX(40px)"
-                            :data="upData" 
-                            :before-upload="beforeUpload" 
-                            :on-success="activityUpload" 
-                            :show-upload-list="false"
-                            :format="['jpg','jpeg','png']"
-                            :on-format-error="handleFormatError">
-                                <Button type="primary">重新上传</Button>
-                                <span style="color:#ff8a34">（建议尺寸：210*170px）</span>
-                            </Upload>
-                        </div>
-                    </Form-item>
-                    </Col>
-                </Row>
-            </Form>
-            <!-- 规则 -->
-            <div id="rules">
-                <div class="rulesTitle">
-                    <span style="width: 80px;">最小奖</span>
-                    <span style="width: 98px;">类型</span>
-                    <span style="width: 96px;">奖项</span>
-                    <span style="width: 94px;">数量</span>
-                    <span style="width: 88px;">概率</span>
-                    <span style="width: 90px;">活动总量</span>
-                    <span style="width: 90px;">单ID上限/日</span>
-                    <!-- <span>单ID上限/周</span> -->
-                    <span style="width: 90px;">单ID上限</span>
-                    <span style="width: 90px;">通知消息</span>
-                    <span style="width: 120px;">URL</span>
+            </Form-item>-->
+            <Form-item :label-width="1">
+              <div id="imgBox">
+                <span>活动查看列表</span>
+                <div class="changeImg">
+                  <img :src="activityImg" alt v-if="activityImg">
+                  <img src="../../assets/image/imgBg.png" alt v-else>
                 </div>
-                <!-- 规则 -->
-                <div id="rulesList">
-                    <div class="rulesItem">
-                        <RadioGroup v-model="vertical" vertical class="radio">
-                            <Radio :label="index" v-for="(item,index) in list" :key="index">
-                                {{item}}
-                            </Radio>
-                        </RadioGroup>
-                        <div class="rulesBox" >
-                            <div class="rulesChild" v-for="(item,index) in list" :key="index">
-                                <select style="width:100px" id='presentType' @change="handlePresent">
-                                    <option value="0">电子券</option>
-                                    <option value="1">实物</option>
-                                    <option value="2">红包</option>
-                                </select>
-                                
-                                <!-- <Input class="rulesInput" size="small"></Input> -->
-                                <select style="width:100px" id='goodsId'>
-                                    <option :value="item.id" v-for="(item,index) in redGoodsList" :key='index'>{{ item.name }}/</option>
-                                </select>
-                                <input type="text" class="ivu-input" id="quantity">
-                                <input type="text" class="ivu-input" id="rate">
-                                <input type="text" class="ivu-input" id="totalQuantity">
-                                <input type="text" class="ivu-input" id="userLimit">
-                        
-                                <input type="text" class="ivu-input" id="dailyLimit">
-                                <input type="text" class="ivu-input" id="notifyContent">
-                                <input type="text" class="ivu-input" style="width: 120px;" id="notifyDetailUrl">
-                                <div @click="addRules" class="rulesBtn" v-if="index == 0">
-                                    <Icon type="plus-circled" size="25"></Icon>
-                                </div>
-                                <div v-else @click="delRules(index)" class="rulesBtn">
-                                    <Icon type="trash-a" size="25"></Icon>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- 区域外奖项 -->
-            <div id="outArea">
-                <RadioGroup v-model="outArea" vertical class="radio">
-                    <Radio label="">
-                        非活动区域不中奖
-                    </Radio>
-                    <Radio label="min">
-                        非活动区域中最小奖
-                    </Radio>
-                </RadioGroup>
-                <div class='outInput'>
-                    <input type="text" class="ivu-input" v-model='notifyMessage'>
-                </div>
-            </div>
-            <!-- 限制条件 -->
-            <div id='limit'>
-                <div class='child'>
-                    <span>单ID上限/日</span>
-                    <div class='Input'>
-                        <input type="text" class="ivu-input" v-model='dailyLimit'>
-                    </div>  
-                    
-                </div>
-                <div class='child'>
-                    <span>单ID上限/周</span>
-                    <div class='Input'>
-                        <input type="text" class="ivu-input" v-model='weekLimit'>
-                    </div> 
-                </div>
-                <div class='child'>
-                    <span>单ID上限/总</span>
-                    <div class='Input'>
-                        <input type="text" class="ivu-input" v-model='userLimit'>
-                    </div> 
-                </div>
-            </div>
-            <footer>
-                <Button type="primary" @click='goBack'>取消</Button>
-                <Button type="success" @click="submit('form')" class="btn-next">下一步</Button>
-            </footer>
+                <Upload
+                  action="https://hbrand.oss-cn-hangzhou.aliyuncs.com"
+                  style="transform:translateX(40px)"
+                  :data="upData"
+                  :before-upload="beforeUpload"
+                  :on-success="activityUpload"
+                  :show-upload-list="false"
+                  :format="['jpg','jpeg','png']"
+                  :on-format-error="handleFormatError"
+                >
+                  <Button type="primary">重新上传</Button>
+                  <span style="color:#ff8a34">（建议尺寸：210*170px）</span>
+                </Upload>
+              </div>
+            </Form-item>
+          </Col>
+        </Row>
+      </Form>
+      <!-- 规则 -->
+      <div id="rules">
+        <div class="rulesTitle">
+          <span style="width: 80px;">最小奖</span>
+          <span style="width: 98px;">类型</span>
+          <span style="width: 96px;">奖项</span>
+          <span style="width: 94px;">数量</span>
+          <span style="width: 88px;">概率</span>
+          <span style="width: 90px;">活动总量</span>
+          <span style="width: 90px;">单ID上限/日</span>
+          <!-- <span>单ID上限/周</span> -->
+          <span style="width: 90px;">单ID上限</span>
+          <span style="width: 90px;">通知消息</span>
+          <span style="width: 120px;">URL</span>
         </div>
-        <Modal v-model='treeShow' @on-ok="areaList">
-            <div style='height: 400px; overflow-y:auto;'>
-                <Tree :data="areaData" ref='tree' multiple show-checkbox></Tree>
+        <!-- 规则 -->
+        <div id="rulesList">
+          <div class="rulesItem">
+            <RadioGroup v-model="vertical" vertical class="radio">
+              <Radio :label="index" v-for="(item,index) in list" :key="index">{{item}}</Radio>
+            </RadioGroup>
+            <div class="rulesBox">
+              <div class="rulesChild" v-for="(item,index) in list" :key="index">
+                <select style="width:100px" id="presentType" @change="handlePresent">
+                  <option value="0">电子券</option>
+                  <option value="1">实物</option>
+                  <option value="2">红包</option>
+                </select>
+
+                <!-- <Input class="rulesInput" size="small"></Input> -->
+                <select style="width:100px" id="goodsId">
+                  <option
+                    :value="item.id"
+                    v-for="(item,index) in redGoodsList"
+                    :key="index"
+                  >{{ item.name }}/</option>
+                </select>
+                <input type="text" class="ivu-input" id="quantity">
+                <input type="text" class="ivu-input" id="rate">
+                <input type="text" class="ivu-input" id="totalQuantity">
+                <input type="text" class="ivu-input" id="userLimit">
+
+                <input type="text" class="ivu-input" id="dailyLimit">
+                <input type="text" class="ivu-input" id="notifyContent">
+                <input type="text" class="ivu-input" style="width: 120px;" id="notifyDetailUrl">
+                <div @click="addRules" class="rulesBtn" v-if="index == 0">
+                  <Icon type="plus-circled" size="25"></Icon>
+                </div>
+                <div v-else @click="delRules(index)" class="rulesBtn">
+                  <Icon type="trash-a" size="25"></Icon>
+                </div>
+              </div>
             </div>
-        </Modal>
-        
+          </div>
+        </div>
+      </div>
+      <!-- 区域外奖项 -->
+      <div id="outArea">
+        <RadioGroup v-model="outArea" vertical class="radio">
+          <Radio label>非活动区域不中奖</Radio>
+          <Radio label="min">非活动区域中最小奖</Radio>
+        </RadioGroup>
+        <div class="outInput">
+          <input type="text" class="ivu-input" v-model="notifyMessage">
+        </div>
+      </div>
+      <!-- 限制条件 -->
+      <div id="limit">
+        <div class="child">
+          <span>单ID上限/日</span>
+          <div class="Input">
+            <input type="text" class="ivu-input" v-model="dailyLimit">
+          </div>
+        </div>
+        <div class="child">
+          <span>单ID上限/周</span>
+          <div class="Input">
+            <input type="text" class="ivu-input" v-model="weekLimit">
+          </div>
+        </div>
+        <div class="child">
+          <span>单ID上限/总</span>
+          <div class="Input">
+            <input type="text" class="ivu-input" v-model="userLimit">
+          </div>
+        </div>
+      </div>
+      <footer>
+        <Button type="primary" @click="goBack">取消</Button>
+        <Button type="success" @click="submit('form')" class="btn-next">下一步</Button>
+      </footer>
     </div>
+    <Modal v-model="treeShow" @on-ok="areaList">
+      <div style="height: 400px; overflow-y:auto;">
+        <Tree :data="areaData" ref="tree" multiple show-checkbox></Tree>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -415,37 +429,10 @@ import area from "../../config/areaCode.js";
 import { areaTreeInit } from "@/util/index.js";
 import upData from "../../assets/js/upload.js";
 import PROJECT_CONFIG from "../../util/config.js";
+import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+
 export default {
   data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.endTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("endTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.startTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       treeShow: false,
       wenzi: "",
@@ -482,11 +469,11 @@ export default {
       userLimit: "",
       bizAreaList: [],
       vendorName: "",
-      img1TimeStr:"",
-      img2TimeStr:""
+      img1TimeStr: "",
+      img2TimeStr: ""
     };
   },
-  created: function() {
+  created() {
     var type = this.$route.query.type;
     var id = this.$route.query.id;
     if (type) {
@@ -495,15 +482,14 @@ export default {
     if (id) {
       this.activityDetail(id);
     }
-    var that = this;
     this.Global.doPostNoLoading("condition/queryBrands.json", {}, res => {
       this.brandList = [];
       Object.entries(res).forEach(item => {
         this.brandList.push({ id: Number(item[0]), brandName: item[1] });
       });
     });
-    this.Global.redGoodsList(function(res) {
-      that.redGoodsList = res;
+    this.Global.redGoodsList(res => {
+      this.redGoodsList = res;
     });
     areaTreeInit(this.areaData); //重新打开地区tree，取消上次选中效果
   },
@@ -523,10 +509,18 @@ export default {
       this.upData["key"] = "ecuda/image/" + this.img2TimeStr + res.name;
     },
     notifyUpload: function(response, file, fileList) {
-      this.notifyImg = PROJECT_CONFIG.ossServer + "ecuda/image/" + this.img2TimeStr + file.name;
+      this.notifyImg =
+        PROJECT_CONFIG.ossServer +
+        "ecuda/image/" +
+        this.img2TimeStr +
+        file.name;
     },
     activityUpload: function(response, file, fileList) {
-      this.activityImg = PROJECT_CONFIG.ossServer + "ecuda/image/" + this.img1TimeStr + file.name;
+      this.activityImg =
+        PROJECT_CONFIG.ossServer +
+        "ecuda/image/" +
+        this.img1TimeStr +
+        file.name;
     },
     handleFormatError: function(file) {
       this.$Notice.warning({
@@ -538,8 +532,7 @@ export default {
     delRules: function(index) {
       this.list.splice(index, 1);
     },
-    areaEcho: function(value) {
-      var that = this;
+    areaEcho(value) {
       function getNameByValue(value, data, level) {
         var temp = (value.substr(0, level) + "0000").substr(0, 6);
 
@@ -557,49 +550,46 @@ export default {
           }
         }
       }
-      getNameByValue(value, that.areaData, 2);
+      getNameByValue(value, this.areaData, 2);
     },
-    activityDetail: function(id) {
-      var that = this;
+    activityDetail(id) {
       var newDate = new Date();
       if (id) {
-        this.Global.doPost("activity/queryDrawActivityInfo.json", id, function(
-          res
-        ) {
-          that.formData["brandId"] = res.brandId;
-          that.formData["name"] = res.name;
-          that.formData["id"] = res.id;
-          that.formData["pageUrl"] = res.pageUrl;
-          that.formData["startTime"] = newDate.setTime(res.startTime);
-          that.formData["endTime"] = newDate.setTime(res.endTime);
-          that.formData["detailUrl"] = res.detailUrl;
-          that.activityImg = res.logoUrl;
-          that.notifyImg = res.presentList[0].notifyLogo;
+        this.Global.doPost("activity/queryDrawActivityInfo.json", id, res => {
+          this.formData["brandId"] = res.brandId;
+          this.formData["name"] = res.name;
+          this.formData["id"] = res.id;
+          this.formData["pageUrl"] = res.pageUrl;
+          this.formData["startTime"] = newDate.setTime(res.startTime);
+          this.formData["endTime"] = newDate.setTime(res.endTime);
+          this.formData["detailUrl"] = res.detailUrl;
+          this.activityImg = res.logoUrl;
+          this.notifyImg = res.presentList[0].notifyLogo;
           if (res.bizAreaList.length > 0) {
             for (var i = 0; i < res.bizAreaList.length; i++) {
-              that.bizAreaList.push(res.bizAreaList[i].areaCode);
-              that.areaEcho(res.bizAreaList[i].areaCode);
-              that.areaName += res.bizAreaList[i].areaName + "/";
+              this.bizAreaList.push(res.bizAreaList[i].areaCode);
+              this.areaEcho(res.bizAreaList[i].areaCode);
+              this.areaName += res.bizAreaList[i].areaName + "/";
             }
           }
-          that.setInputValue("rulesChild", res.presentList);
+          this.setInputValue("rulesChild", res.presentList);
           if (res.activityConfigList.length > 0) {
             for (var i = 0; i < res.activityConfigList.length; i++) {
               if (res.activityConfigList[i]["confType"] == "user_limit") {
-                that.userLimit = res.activityConfigList[i].confValue;
+                this.userLimit = res.activityConfigList[i].confValue;
               }
               if (res.activityConfigList[i]["confType"] == "daily_limit") {
-                that.dailyLimit = res.activityConfigList[i].confValue;
+                this.dailyLimit = res.activityConfigList[i].confValue;
               }
               if (res.activityConfigList[i]["confType"] == "week_limit") {
-                that.weekLimit = res.activityConfigList[i].confValue;
+                this.weekLimit = res.activityConfigList[i].confValue;
               }
               if (res.activityConfigList[i]["confType"] == "out_area") {
                 if (res.activityConfigList[i].confValue == "" || -1) {
-                  that.outArea = "";
-                  that.notifyMessage = res.activityConfigList[i].notifyMessage;
+                  this.outArea = "";
+                  this.notifyMessage = res.activityConfigList[i].notifyMessage;
                 } else {
-                  that.outArea = "min";
+                  this.outArea = "min";
                 }
               }
             }
@@ -663,8 +653,7 @@ export default {
         }
       });
     },
-    init: function() {
-      var that = this;
+    init() {
       var data = this.Global.JsonChange(this.formData);
       data["startTime"] = this.Global.createTime(this.formData.startTime);
       data["endTime"] = this.Global.createTime(this.formData.endTime);
@@ -716,21 +705,14 @@ export default {
       if (this.type == "add") {
         api = "activity/addActivityInfo.json";
       }
-      this.Global.doPost(api, data, function(res) {
-        // that.$router.push('/salesmanNext');
-        // that.$store.commit('default',{
-        //     brandId: that.formData['brandId'],
-        //     vendorName: that.vendorName,
-        //     id: that.formData['id'],
-        //     brandName: that.formData['brandName']
-        // })
+      this.Global.doPost(api, data, res => {
         let pramasData = {
-          brandId: that.formData["brandId"],
-          vendorName: that.vendorName,
+          brandId: this.formData["brandId"],
+          vendorName: this.vendorName,
           id: res,
-          brandName: that.formData["brandName"]
+          brandName: this.formData["brandName"]
         };
-        that.$router.push({ path: "/salesmanNext", query: pramasData });
+        this.$router.push({ path: "/salesmanNext", query: pramasData });
       });
     },
     changeValue: function(value) {

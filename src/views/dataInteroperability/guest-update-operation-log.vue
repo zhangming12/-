@@ -48,73 +48,73 @@
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">客资更新操作日志</h2> -->
-        <div class="box">  
-            <Form ref="form" :model="formData" :label-width="88">
-                <Row>
-                  <Col span="21">
-                    <Row>
-                      <Col span='16'>
-                          <Form-item label="操作时间:" required>
-                            <Row>
-                                <Col span="11">
-                                    <Form-item prop="startTime">
-                                      <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.startTime" start></data-range>
-                                    </Form-item>
-                                </Col>
-                                <Col span="2" style="text-align: center;">至</Col>
-                                <Col span="11">
-                                    <Form-item prop="endTime">
-                                        <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.endTime"></data-range>
-                                    </Form-item>
-                                </Col>
-                            </Row>
-                          </Form-item>
-                          <Form-item label="客户编号:">
-                              <Input v-model.trim="formData.joinCode" placeholder="请输入客户编号"></Input>
-                          </Form-item>
-                      </Col>
-                      <Col span='8'>
-                          <!-- <Form-item label="操作类型:">
-                            <Select v-model="formData.brandId" placeholder="请选择操作类型">
-                                <Option value="genxin">更新</Option>
-                            </Select>  
-                          </Form-item> -->
-                          <Form-item label="操作人:">
-                              <Input v-model.trim="formData.userName" placeholder="请输入操作人"></Input>
-                          </Form-item>
-                      </Col>
-                    </Row> 
-                  </Col>
-                  <Col span="2" offset="1" style="margin-top:20px;">
-                    <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-                  </Col>
-                    
-                </Row>
-            </Form>       
-        </div>
-        <div class="box tableBox">
-            <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-            <div class="pageBox">
-                <div style="float: right;">
-                    <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-                </div>
-            </div>
-        </div>
+  <div id="Main">
+    <!-- <h2 class="Title">客资更新操作日志</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88">
+        <Row>
+          <Col span="21">
+            <Row>
+              <Col span="16">
+                <Form-item label="操作时间:" required>
+                  <Row>
+                    <Col span="11">
+                      <Form-item prop="startTime">
+                        <data-range
+                          @dataChange="startTimeChange"
+                          hour="00:00"
+                          :time="formData.startTime"
+                          start
+                        ></data-range>
+                      </Form-item>
+                    </Col>
+                    <Col span="2" style="text-align: center;">至</Col>
+                    <Col span="11">
+                      <Form-item prop="endTime">
+                        <data-range
+                          hour="24:00"
+                          placeholder="结束时间"
+                          @dataChange="endTimeChange"
+                          :time="formData.endTime"
+                        ></data-range>
+                      </Form-item>
+                    </Col>
+                  </Row>
+                </Form-item>
+                <Form-item label="客户编号:">
+                  <Input v-model.trim="formData.joinCode" placeholder="请输入客户编号"></Input>
+                </Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="操作人:">
+                  <Input v-model.trim="formData.userName" placeholder="请输入操作人"></Input>
+                </Form-item>
+              </Col>
+            </Row>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:20px;">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
+      </Form>
     </div>
+    <div class="box tableBox">
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      <div class="pageBox">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import area from "@/config/areaCode.js";
-import dataRange from "../../components/data-rang.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
+import dataRange from "@/components/data-rang.vue";
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
-  name:"guest-update-operation-log-keepAlive",
+  name: "guest-update-operation-log-keepAlive",
   components: {
     dataRange
   },
@@ -204,7 +204,7 @@ export default {
           title: "备注",
           key: "memo",
           align: "center",
-          minWidth: 100,
+          minWidth: 100
         }
       ],
       pageData: [],
@@ -232,10 +232,7 @@ export default {
       if (value.hour == "24:00") {
         return;
       }
-      this.formData.endTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
+      this.formData.endTime = this.Global.setHoursData(value.time, value.hour);
     },
     submit(name) {
       this.$refs[name].validate(valid => {

@@ -110,267 +110,242 @@
 </style>
 
 <template>
-	<div id="Main">
-		<h2 class="Title">陈列结果清算发奖</h2>
-		<div class="box">
-			<Form ref="form" :model="formData" :label-width="85">
-				<Row>
-					<Col span="9">
-					<Form-item label="上传时间:">
-						<Row>
-							<Col span="11">
-							<Form-item>
-								<Date-picker type="datetime" placeholder="选择日期" v-model="formData.queryStartTime"></Date-picker>
-							</Form-item>
-							</Col>
-							<Col span="2" style="text-align:center"> 至 </Col>
-							<Col span="11">
-							<Form-item>
-								<Date-picker type="datetime" placeholder="选择日期" v-model="formData.queryEndTime" @on-change='dataChange'></Date-picker>
-							</Form-item>
-							</Col>
-						</Row>
-					</Form-item>
-					<Form-item label="活动名称:" prop="activityId">
-						<Select v-model="formData.activityId" placeholder="请选择" @on-change="getpresentList" clearable>
-							<Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-						</Select>
-					</Form-item>
-
-					</Col>
-					<Col span="6">
-					<Form-item label="品牌名称:" prop="brandId">
-						<Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue" clearable>
-							<Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-						</Select>
-					</Form-item>
-					<Form-item label="分组名称:" prop="presentId">
-						<Select v-model="formData.presentId" placeholder="请选择" clearable>
-							<Option :value="item.id" v-for="(item,index) in presentNameList" :key="index">{{ item.activityTag }}</Option>
-						</Select>
-					</Form-item>
-
-					</Col>
-					<Col span="6">
-					<Form-item label="活动包名:" prop="groupId">
-						<Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
-							<Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-						</Select>
-					</Form-item>
-					<Form-item label="客户编号:" prop="joinCode">
-						<Input v-model.trim="formData.joinCode" placeholder="请输入客户编号"></Input>
-					</Form-item>
-
-					</Col>
-					<Col span='2' offset="1" style="margin-top:20px">
-					<div class="searchBox">
-						<Button @click="submit()" class="btn-search  search_btn" type="primary">查询</Button>
-            <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
-                <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button>
-						</div>
-
-					</Col>
-				</Row>
-				<transition name="fade">
-					<Row v-if="showQuery">
-						<Col span='9'>
-						<Form-item label="门店名称:">
-							<Input v-model.trim="formData.storeName" placeholder="请输入门店名称"></Input>
-						</Form-item>
-						</Col>
-						<Col span='6'>
-						<Form-item label="用户ID:">
-							<Input v-model.trim="formData.storeId" placeholder="请输入用户ID"></Input>
-						</Form-item>
-						</Col>
-						<Col span='6'>
-						<Form-item label="业代手机:">
-							<Input v-model.trim="formData.workerPhone" placeholder="请输入业代手机"></Input>
-						</Form-item>
-						</Col>
-						<Col span='9'>
-            <Form-item label="区域:">
-							<Input v-model.trim="formData.workerPhone" placeholder="请输入区域"></Input>
-						</Form-item>
-						</Col>
-                        <Col span='6'>
-						<Form-item label="业代姓名:">
-							<Input v-model.trim="formData.workerName" placeholder="请输入业代姓名"></Input>
-						</Form-item>
-						</Col>
-					</Row>
-				</transition>
-			</Form>
-		</div>
-		<div class="box" style='margin-top: 15px;overflow: hidden;'>
-			<div class='contentTop'>
-				<Button class="btn-export" icon="ios-download-outline" @click="exportExcel" type="primary">导出</Button>
-			</div>
-			<Table :columns="columns1" :data="pageData" disabled-hover></Table>
-
-		</div>
-		<div style="margin: 10px;overflow: hidden">
-			<div style="float: right;">
-				<Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-			</div>
-		</div>
+  <div id="Main">
+    <h2 class="Title">陈列结果清算发奖</h2>
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="85">
+        <Row>
+          <Col span="9">
+            <Form-item label="上传时间:">
+              <Row>
+                <Col span="11">
+                  <Form-item>
+                    <Date-picker
+                      type="datetime"
+                      placeholder="选择日期"
+                      v-model="formData.queryStartTime"
+                    ></Date-picker>
+                  </Form-item>
+                </Col>
+                <Col span="2" style="text-align:center">至</Col>
+                <Col span="11">
+                  <Form-item>
+                    <Date-picker
+                      type="datetime"
+                      placeholder="选择日期"
+                      v-model="formData.queryEndTime"
+                      @on-change="dataChange"
+                    ></Date-picker>
+                  </Form-item>
+                </Col>
+              </Row>
+            </Form-item>
+            <Form-item label="活动名称:" prop="activityId">
+              <Select
+                v-model="formData.activityId"
+                placeholder="请选择"
+                @on-change="getpresentList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="6">
+            <Form-item label="品牌名称:" prop="brandId">
+              <Select
+                v-model="formData.brandId"
+                placeholder="请选择"
+                @on-change="changeValue"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="分组名称:" prop="presentId">
+              <Select v-model="formData.presentId" placeholder="请选择" clearable>
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in presentNameList"
+                  :key="index"
+                >{{ item.activityTag }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="6">
+            <Form-item label="活动包名:" prop="groupId">
+              <Select
+                v-model="formData.groupId"
+                placeholder="请选择"
+                @on-change="getActivityList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="客户编号:" prop="joinCode">
+              <Input v-model.trim="formData.joinCode" placeholder="请输入客户编号"></Input>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:20px">
+            <div class="searchBox">
+              <Button @click="submit()" class="btn-search search_btn" type="primary">查询</Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-up"
+                v-if="showQuery"
+              ></Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-down"
+                v-else
+              ></Button>
+            </div>
+          </Col>
+        </Row>
+        <transition name="fade">
+          <Row v-if="showQuery">
+            <Col span="9">
+              <Form-item label="门店名称:">
+                <Input v-model.trim="formData.storeName" placeholder="请输入门店名称"></Input>
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="用户ID:">
+                <Input v-model.trim="formData.storeId" placeholder="请输入用户ID"></Input>
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="业代手机:">
+                <Input v-model.trim="formData.workerPhone" placeholder="请输入业代手机"></Input>
+              </Form-item>
+            </Col>
+            <Col span="9">
+              <Form-item label="区域:">
+                <Input v-model.trim="formData.workerPhone" placeholder="请输入区域"></Input>
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="业代姓名:">
+                <Input v-model.trim="formData.workerName" placeholder="请输入业代姓名"></Input>
+              </Form-item>
+            </Col>
+          </Row>
+        </transition>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;overflow: hidden;">
+      <div class="contentTop">
+        <Button
+          class="btn-export"
+          icon="ios-download-outline"
+          @click="exportExcel"
+          type="primary"
+        >导出</Button>
+      </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+    </div>
+    <div style="margin: 10px;overflow: hidden">
+      <div style="float: right;">
+        <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+      </div>
+    </div>
     <button @click="showVideoPlay=true">按钮</button>
-		<Modal v-model="showVideoPlay" :width=800>
-            <div>
-                <Form :label-width="85" label-position="left">
-                  <Row>
-                    <Col span="8" offset='1'>
-                      <Form-item label="客户编号:">
-                        {{tableData.joinCode}}
-                      </Form-item>
-                      <Form-item label="用户ID:">
-                        {{tableData.storeId}}
-                      </Form-item>
-                      <Form-item label="手机号码:">
-                        {{tableData.phone}}
-                      </Form-item>
-                      
-                    </Col>
-                    <Col span="14" offset='1'>
-                      <Form-item label="门店名称:">
-                        {{tableData.storeName}}
-                      </Form-item>
-                      <Form-item label="客户姓名:">
-                        {{tableData.userName}}
-                      </Form-item>
-                      <Form-item label="客户状态:">
-                        {{tableData.salesRoute}}
-                      </Form-item>
-                    </Col>
-                  </Row>
-                  <Form-item label="地址:" :label-width="50">
-                    {{tableData.address}}
-                  </Form-item>
-                  <Row>
-                    <Col span="8" offset='1'>
-                      <Form-item label="线路编号:">
-                        {{tableData.salesRoute}}
-                      </Form-item>
-
-                    </Col>
-                    <Col span="14" offset='1'>
-                      <Form-item label="业代姓名:">
-                        {{tableData.salesRoute}}
-                      </Form-item>
-                    </Col>
-                  </Row>
-                  <Form-item label="业代手机:">
-                    {{tableData.workerPhone}}
-                  </Form-item>
-                  <Row>
-                    <Col span="8" offset='1'>
-                      <Form-item label="陈列活动:">
-                        {{tableData.activityName}}
-                      </Form-item>
-                      <Form-item label="上传时间:">
-                        {{tableData.createTime}}
-                      </Form-item>
-                      <Form-item label="合格情况:" :label-width="120">
-                        {{tableData.salesRoute}}
-                      </Form-item>
-                      <Form-item label="进货达标情况:" :label-width="120">
-                        {{tableData.salesRoute}}
-                      </Form-item>
-                      <Form-item label="标准费用:">
-                        {{tableData.salesRoute}}
-                      </Form-item>
-                      <Form-item label="清算状态:">
-                        {{tableData.salesRoute}}
-                      </Form-item>
-
-                    </Col>
-                    <Col span="14" offset='1'>
-                      <Form-item label="分组名称:">
-                        {{tableData.presentName}}
-                      </Form-item>
-                      <Form-item label="结算周期:">
-                        {{tableData.presentName}}
-                      </Form-item>
-                      <Form-item label="稽查状态:">
-                        {{tableData.presentName}}
-                      </Form-item>
-                      <Form-item label="综合判定状态:" :label-width="120">
-                        {{tableData.presentName}}
-                      </Form-item>
-                      <Form-item label="折扣奖励:">
-                        <div style="overflow:hidden;">
-
-                        </div>
-                      </Form-item>
-                      <Form-item label="体现状态:">
-                        {{tableData.presentName}}
-                      </Form-item>
-                    </Col>
-                  </Row>
-                  <Form-item label="特殊处理:">
-                    <RadioGroup v-model="tableData.gender">
-                      <Radio label="male">暂不发放奖励</Radio>
-                      <Radio label="female">正常发放奖励</Radio>
-                    </RadioGroup>
-                  </Form-item>
-                  <Form-item label="备注:" :label-width='50'>
-                    <Input v-model="tableData.memo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"></Input>
-                  </Form-item>
-                </Form>
-                
-            </div>
-            <div slot="footer" style="text-align:center">
-                <Button @click="" class="btn-search  search_btn" type="primary">返回</Button>
-                <Button @click="" class="btn-search  search_btn" type="success">保存</Button>
-            </div>
-		</Modal>
-	</div>
+    <Modal v-model="showVideoPlay" :width="800">
+      <div>
+        <Form :label-width="85" label-position="left">
+          <Row>
+            <Col span="8" offset="1">
+              <Form-item label="客户编号:">{{tableData.joinCode}}</Form-item>
+              <Form-item label="用户ID:">{{tableData.storeId}}</Form-item>
+              <Form-item label="手机号码:">{{tableData.phone}}</Form-item>
+            </Col>
+            <Col span="14" offset="1">
+              <Form-item label="门店名称:">{{tableData.storeName}}</Form-item>
+              <Form-item label="客户姓名:">{{tableData.userName}}</Form-item>
+              <Form-item label="客户状态:">{{tableData.salesRoute}}</Form-item>
+            </Col>
+          </Row>
+          <Form-item label="地址:" :label-width="50">{{tableData.address}}</Form-item>
+          <Row>
+            <Col span="8" offset="1">
+              <Form-item label="线路编号:">{{tableData.salesRoute}}</Form-item>
+            </Col>
+            <Col span="14" offset="1">
+              <Form-item label="业代姓名:">{{tableData.salesRoute}}</Form-item>
+            </Col>
+          </Row>
+          <Form-item label="业代手机:">{{tableData.workerPhone}}</Form-item>
+          <Row>
+            <Col span="8" offset="1">
+              <Form-item label="陈列活动:">{{tableData.activityName}}</Form-item>
+              <Form-item label="上传时间:">{{tableData.createTime}}</Form-item>
+              <Form-item label="合格情况:" :label-width="120">{{tableData.salesRoute}}</Form-item>
+              <Form-item label="进货达标情况:" :label-width="120">{{tableData.salesRoute}}</Form-item>
+              <Form-item label="标准费用:">{{tableData.salesRoute}}</Form-item>
+              <Form-item label="清算状态:">{{tableData.salesRoute}}</Form-item>
+            </Col>
+            <Col span="14" offset="1">
+              <Form-item label="分组名称:">{{tableData.presentName}}</Form-item>
+              <Form-item label="结算周期:">{{tableData.presentName}}</Form-item>
+              <Form-item label="稽查状态:">{{tableData.presentName}}</Form-item>
+              <Form-item label="综合判定状态:" :label-width="120">{{tableData.presentName}}</Form-item>
+              <Form-item label="折扣奖励:">
+                <div style="overflow:hidden;"></div>
+              </Form-item>
+              <Form-item label="体现状态:">{{tableData.presentName}}</Form-item>
+            </Col>
+          </Row>
+          <Form-item label="特殊处理:">
+            <RadioGroup v-model="tableData.gender">
+              <Radio label="male">暂不发放奖励</Radio>
+              <Radio label="female">正常发放奖励</Radio>
+            </RadioGroup>
+          </Form-item>
+          <Form-item label="备注:" :label-width="50">
+            <Input
+              v-model="tableData.memo"
+              type="textarea"
+              :autosize="{minRows: 2,maxRows: 5}"
+              placeholder="请输入备注"
+            ></Input>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer" style="text-align:center">
+        <Button @click class="btn-search search_btn" type="primary">返回</Button>
+        <Button @click class="btn-search search_btn" type="success">保存</Button>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_START_7AGOTIME
-} from "@/util/index.js"; //搜索条件默认时间
-import { monitorRecord } from "@/util/ENUMS.js";
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
   queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
   queryActivityVOByGroupId, //根据活动包名ID获取陈列活动列表
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
   name: "display-results-liquidation-awards-keepAlive",
   data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       screenWidth: document.body.clientWidth,
       showQuery: false,

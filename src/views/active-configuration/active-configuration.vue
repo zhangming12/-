@@ -45,19 +45,24 @@ nav {
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">我的活动管理</h2> -->
-      <div class="box">
-          <nav>
-              <div :class="['children',showStatus == item.status?'select':'']" @click="selectMenu(index,item.status)" v-for="(item,index) in Menu" :key="index">
-                  <span>{{ item.name }}</span>
-              </div>
-          </nav>
-          <activeBase v-show="showStatus == 'base'" ></activeBase>
-          <activeLottery ref="activeLottery" v-show="showStatus == 'lottery'" ></activeLottery>
-          <activeRules ref="activeRules" v-show="showStatus == 'rules'" ></activeRules>
-          <activeErrorMsg ref="activeErrorMsg" v-show="showStatus == 'errorMsg'" ></activeErrorMsg>
-          <activeRelation ref="activeErrorMsg" v-show="showStatus == 'relation'" ></activeRelation>
-      </div>
+    <!-- <h2 class="Title">我的活动管理</h2> -->
+    <div class="box">
+      <nav>
+        <div
+          :class="['children',showStatus == item.status?'select':'']"
+          @click="selectMenu(index,item.status)"
+          v-for="(item,index) in Menu"
+          :key="index"
+        >
+          <span>{{ item.name }}</span>
+        </div>
+      </nav>
+      <activeBase v-show="showStatus == 'base'"></activeBase>
+      <activeLottery ref="activeLottery" v-show="showStatus == 'lottery'"></activeLottery>
+      <activeRules ref="activeRules" v-show="showStatus == 'rules'"></activeRules>
+      <activeErrorMsg ref="activeErrorMsg" v-show="showStatus == 'errorMsg'"></activeErrorMsg>
+      <activeRelation ref="activeErrorMsg" v-show="showStatus == 'relation'"></activeRelation>
+    </div>
   </div>
 </template>
 
@@ -122,5 +127,3 @@ export default {
   }
 };
 </script>
-
-

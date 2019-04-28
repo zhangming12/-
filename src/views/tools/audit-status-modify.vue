@@ -392,12 +392,9 @@ import {
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
-import { displayExamineWord } from "@/util/displayExamineWord.js"; //审核话术
-import qs from "qs";
 import { displayCheckStatus } from "@/util/ENUMS.js";
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
   name: "display-one-level-audit-keepAlive",
   components: {
@@ -576,20 +573,6 @@ export default {
       });
     },
     radioChange(val) {
-    },
-    getDisplayExamineWord(brandId, activityId, filter) {
-      let str = `b${brandId}g${this.formData.groupId}`;
-      let str1 = `b${brandId}a${activityId}`;
-      let arr = [];
-      if (displayExamineWord[str1]) {
-        arr = displayExamineWord[str1];
-      } else if (displayExamineWord[str]) {
-        arr = displayExamineWord[str];
-      } else {
-        arr = displayExamineWord["defaultWord"];
-      }
-      this.wordList = arr;
-      return arr;
     },
     //状态过滤
     wordFilter(e) {

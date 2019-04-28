@@ -24,27 +24,29 @@
   <div id="Main">
     <!-- <h2 class="Title" id="Title">业代关联门店分布</h2> -->
     <div class="box">
-        <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-            <Row>
-                <Col span="10">
-                    <Form-item label="品牌名称" prop="brandId" :label-width="90" >
-                        <Select v-model="formData.brandId" placeholder="请选择" @on-change="brandChangeValue">
-                            <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                        </Select>  
-                    </Form-item> 
-                            
-                </Col>   
-                <Col span="10" offset="1" >
-                </Col>   
-                <Col span='2' offset="1" >
-                    <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-                </Col>
-            </Row>
-        </Form>
+      <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+        <Row>
+          <Col span="10">
+            <Form-item label="品牌名称" prop="brandId" :label-width="90">
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="brandChangeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="10" offset="1"></Col>
+          <Col span="2" offset="1">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
+      </Form>
     </div>
     <div class="box" style="margin-top: 15px;padding-bottom:20px">
-        <div id="scancodeActivity" :style="{  height: '800px'}"></div>
-    </div>  
+      <div id="scancodeActivity" :style="{  height: '800px'}"></div>
+    </div>
   </div>
 </template>
 
@@ -52,10 +54,9 @@
 import echarts from "echarts";
 import "echarts/map/js/china.js";
 export default {
-  name:"national-stores-statistics-keepAlive",
+  name: "national-stores-statistics-keepAlive",
 
   data() {
-    const that = this;
     return {
       formData: {
         brandId: "",
@@ -495,7 +496,7 @@ export default {
         return;
       }
       //获取活动周序列表 params:brandId,activityId
-      this.Global.doPost("report/getActivityWeekDict.json", data,res => {
+      this.Global.doPost("report/getActivityWeekDict.json", data, res => {
         let datalist = res;
         let timeItem = [];
         for (var key in datalist) {
@@ -509,16 +510,12 @@ export default {
       this.activityList = [];
       let brandList = this.brandList;
 
-      for (let i = 0,len = brandList.length; i < len; i++) {
+      for (let i = 0, len = brandList.length; i < len; i++) {
         if (value == brandList[i].id) {
           this.formData.brandId = brandList[i].id;
           this.formData.brandName = brandList[i].brandName;
         }
       }
-      //    this.Global.getActivityList(value,function(res){
-      //        that.activityList = res.datalist;
-      //        that.formData.activityId=res.datalist[0].id;
-      //    })
     },
     activetyChangeValue(value) {
       let activityList = this.activityList;

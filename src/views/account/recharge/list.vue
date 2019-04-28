@@ -101,77 +101,86 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">转入&充值</h2> -->
-      <div class="box">
-          <h4>转入银行 : </h4>
-          <ul class="brankList">
-            <li :class="[{select: active == item.bankCode },'children']" v-for="(item,index) in bankList" :key="index" @click="select(item.bankCode)">
-                <img :src="item.logo" alt="">
-            </li>
-          </ul>
-      </div>
-      <div class="box boxBottom">
-              <Row>
-                  <Col span="12">
-                    <div id="money">
-                        <label>品牌： </label>
-                        <div class="inputBox">
-                            <Select v-model="brandId" placeholder="请选择品牌">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </div>
-                    </div>
-                </Col>
-                <Col span="12">
-                    <div id="money">
-                        <label>汇款单号： </label>
-                        <div class="inputBox">
-                            <Input placeholder="请输入汇款单号" v-model.trim="remitNo"></Input>
-                        </div>
-                    </div> 
-                </Col>
-                
-                <Col span="12">
-                    <div id="money">
-                        <label>金额： </label>
-                        <div class="inputBox">
-                            <Input placeholder="请输入转入金额" @on-change="NumberToChinese" v-model.trim="money"></Input>
-                        </div>
-                        <span>元</span>
-                    </div> 
-                </Col>
-                <Col span="12">
-                    <div id="money">
-                        <label>确认转入金额：</label>
-                        <div class="inputBox">
-                            <!-- <Input v-model.trim="money" :disabled="true"></Input> -->
-                            <Input v-model.trim="text" :readonly="true"></Input>
-                        </div>
-                        <!-- <span>元</span> -->
-                    </div>
-                </Col>
-                
-                <Col span="12">
-                    <div id="money" style="position: relative;">
-                        <label style="float: left;">备注：</label>
-                        <div class="inputBox">
-                            <Input v-model.trim="memo"></Input>
-                        </div>
-                    </div>
-                </Col>
-            </Row>  
-            <Row>
-                <Col span="24" style="text-align: center;">                    
-                    <Button  class="btn-search" type="primary" @click="submit">提交</Button>                
-                </Col>
-            </Row> 
-      </div>
+    <!-- <h2 class="Title">转入&充值</h2> -->
+    <div class="box">
+      <h4>转入银行 :</h4>
+      <ul class="brankList">
+        <li
+          :class="[{select: active == item.bankCode },'children']"
+          v-for="(item,index) in bankList"
+          :key="index"
+          @click="select(item.bankCode)"
+        >
+          <img :src="item.logo" alt>
+        </li>
+      </ul>
+    </div>
+    <div class="box boxBottom">
+      <Row>
+        <Col span="12">
+          <div id="money">
+            <label>品牌：</label>
+            <div class="inputBox">
+              <Select v-model="brandId" placeholder="请选择品牌">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </div>
+          </div>
+        </Col>
+        <Col span="12">
+          <div id="money">
+            <label>汇款单号：</label>
+            <div class="inputBox">
+              <Input placeholder="请输入汇款单号" v-model.trim="remitNo"></Input>
+            </div>
+          </div>
+        </Col>
+
+        <Col span="12">
+          <div id="money">
+            <label>金额：</label>
+            <div class="inputBox">
+              <Input placeholder="请输入转入金额" @on-change="NumberToChinese" v-model.trim="money"></Input>
+            </div>
+            <span>元</span>
+          </div>
+        </Col>
+        <Col span="12">
+          <div id="money">
+            <label>确认转入金额：</label>
+            <div class="inputBox">
+              <!-- <Input v-model.trim="money" :disabled="true"></Input> -->
+              <Input v-model.trim="text" :readonly="true"></Input>
+            </div>
+            <!-- <span>元</span> -->
+          </div>
+        </Col>
+
+        <Col span="12">
+          <div id="money" style="position: relative;">
+            <label style="float: left;">备注：</label>
+            <div class="inputBox">
+              <Input v-model.trim="memo"></Input>
+            </div>
+          </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col span="24" style="text-align: center;">
+          <Button class="btn-search" type="primary" @click="submit">提交</Button>
+        </Col>
+      </Row>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name:"recharge-list-keepAlive",
+  name: "recharge-list-keepAlive",
   data() {
     return {
       formData: {},
@@ -187,8 +196,7 @@ export default {
       unit: ["仟", "佰", "拾", "", "仟", "佰", "拾", "", "角", "分"]
     };
   },
-  created: function() {
-    var that = this;
+  created() {
     this.Global.doPostNoLoading("condition/queryBrands.json", {}, res => {
       this.brandList = [];
       Object.entries(res).forEach(item => {
@@ -198,8 +206,8 @@ export default {
         this.brandId = this.brandList[0].id;
       }
     });
-    this.Global.getBankList(function(res) {
-      that.bankList = res;
+    this.Global.getBankList(res => {
+      this.bankList = res;
     });
   },
   methods: {
@@ -267,8 +275,7 @@ export default {
       this.active = id;
       this.bankCode = id;
     },
-    submit: function() {
-      var that = this;
+    submit() {
       if (this.bankCode == "") {
         this.$Message.error("请选择银行");
         return false;
@@ -298,8 +305,8 @@ export default {
             remitNo: this.remitNo
           }
         },
-        function(res) {
-          that.$Message.success("转入申请已提交");
+        res => {
+          this.$Message.success("转入申请已提交");
         }
       );
     }

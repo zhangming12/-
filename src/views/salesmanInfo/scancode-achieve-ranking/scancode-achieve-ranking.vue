@@ -99,12 +99,6 @@
       }
     }
   }
-  #scancode {
-    //background-image: url('../../../assets/image/week-worker-scancode.jpg');
-  }
-  #activityRate {
-    //background-image: url('../../../assets/image/week-worker-actrate.jpg');
-  }
 }
 
 .ivu-table-row {
@@ -152,134 +146,127 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">业代扫码绩效排行</h2> -->
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-                <Row>
-                    <Col span="10">
-                        
-                        <Form-item label="品牌名称" prop="brandId" required >
-                            <Select v-model="formData.brandId" placeholder="请选择" @on-change="brandChangeValue">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>  
-                        
-                        <Form-item label="时间"  prop="queryStartTime">
-                            <Select v-model="formData.queryStartTime"  placeholder="请选择" @on-change="timeDataChangeValue" >
-                                <Option :value="item.actStartTime" v-for="(item,index) in timeDataList" :key="index" >{{ item.actStartTime}} - {{ item.actEndTime}}</Option>
-                            </Select>
-                        </Form-item>
-                    </Col>
-                    <Col span="10" offset="1">
-                        <Form-item label="活动名称" prop="activityId" required>
-                            <Select v-model="formData.activityId" placeholder="请选择" @on-change="activityChangeValue">
-                                <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                            </Select>
-                        </Form-item>                     
-                    </Col>
-                    <Col span="2" offset="1" style="margin-top:24px">
-                        <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-                    </Col>
-                </Row>
-            </Form>
-      </div>
-      <div class="areaBox">
-          <div id="scancode" >
-              <div class="top">
-                    <div class="top-img">
-                        <img src="../../../assets/image/week-worker-scancode.jpg" class="top-img" alt="本周业代关联门店扫码量排行榜">
-                    </div>
-                    
-                    <div class="top-icon"  @click="activityRateExport" v-show="activityRate.length>0">
-                        <!-- <Icon type="ios-download" size="18" /> -->
-                        <img src="../../../assets/image/echart-down.jpg" alt="">
-                    </div>
-              </div>
-              <ul>
-                  <li>
-                      <span>排名</span>
-                      <span>业代姓名</span>
-                      <span>手机号</span> 
-                      <span>周活跃门店数</span>
-                      <span>门店周扫码量</span>
-                  </li>
-                  <li v-for="(item,index) in scancodeDatalist" :key="index" >
-                      <span>{{ index + 1}}</span>
-                      <span>{{ item.workerName }}</span>
-                      <span>{{ item.workerPhone }}</span>
-                      <span>{{ item.storeCount }}</span>
-                      <span>{{ item.scanCount }}</span>
-                  </li>
-              </ul>
+    <!-- <h2 class="Title">业代扫码绩效排行</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+        <Row>
+          <Col span="10">
+            <Form-item label="品牌名称" prop="brandId" required>
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="brandChangeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+
+            <Form-item label="时间" prop="queryStartTime">
+              <Select
+                v-model="formData.queryStartTime"
+                placeholder="请选择"
+                @on-change="timeDataChangeValue"
+              >
+                <Option
+                  :value="item.actStartTime"
+                  v-for="(item,index) in timeDataList"
+                  :key="index"
+                >{{ item.actStartTime}} - {{ item.actEndTime}}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="10" offset="1">
+            <Form-item label="活动名称" prop="activityId" required>
+              <Select
+                v-model="formData.activityId"
+                placeholder="请选择"
+                @on-change="activityChangeValue"
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:24px">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="areaBox">
+      <div id="scancode">
+        <div class="top">
+          <div class="top-img">
+            <img
+              src="../../../assets/image/week-worker-scancode.jpg"
+              class="top-img"
+              alt="本周业代关联门店扫码量排行榜"
+            >
           </div>
-          <div id="activityRate">
-              
-              <div class="top">
-                    <div class="top-img">
-                        <img src="../../../assets/image/week-worker-actrate.jpg" alt="">
-                    </div>
-                    <div class="top-icon"  @click="scancodeExport" v-show="activityRate.length>0">
-                        <img src="../../../assets/image/echart-down.jpg" alt="">
-                    </div>
-              </div>
-              <ul>
-                  <li>
-                      <span>排名</span>
-                      <span>业代姓名</span>
-                      <span>手机号</span>
-                      <span>总关联门店</span>
-                      <span>周活跃门店</span>
-                      <span>活跃率</span>
-                  </li>
-                  <li v-for="(item,index) in activityRate" :key="index"  >
-                      <span>{{ index + 1}}</span>
-                      <span>{{ item.workerName }}</span>
-                      <span>{{ item.workerPhone }}</span>
-                      <span>{{ item.allStoreCount }}</span>
-                      <span>{{ item.storeCount }}</span>
-                      <span>{{ (item.actRate * 100).toFixed(2) + '%'}}</span>
-                  </li>
-              </ul>
+
+          <div class="top-icon" @click="activityRateExport" v-show="activityRate.length>0">
+            <!-- <Icon type="ios-download" size="18" /> -->
+            <img src="../../../assets/image/echart-down.jpg" alt>
           </div>
+        </div>
+        <ul>
+          <li>
+            <span>排名</span>
+            <span>业代姓名</span>
+            <span>手机号</span>
+            <span>周活跃门店数</span>
+            <span>门店周扫码量</span>
+          </li>
+          <li v-for="(item,index) in scancodeDatalist" :key="index">
+            <span>{{ index + 1}}</span>
+            <span>{{ item.workerName }}</span>
+            <span>{{ item.workerPhone }}</span>
+            <span>{{ item.storeCount }}</span>
+            <span>{{ item.scanCount }}</span>
+          </li>
+        </ul>
       </div>
+      <div id="activityRate">
+        <div class="top">
+          <div class="top-img">
+            <img src="../../../assets/image/week-worker-actrate.jpg" alt>
+          </div>
+          <div class="top-icon" @click="scancodeExport" v-show="activityRate.length>0">
+            <img src="../../../assets/image/echart-down.jpg" alt>
+          </div>
+        </div>
+        <ul>
+          <li>
+            <span>排名</span>
+            <span>业代姓名</span>
+            <span>手机号</span>
+            <span>总关联门店</span>
+            <span>周活跃门店</span>
+            <span>活跃率</span>
+          </li>
+          <li v-for="(item,index) in activityRate" :key="index">
+            <span>{{ index + 1}}</span>
+            <span>{{ item.workerName }}</span>
+            <span>{{ item.workerPhone }}</span>
+            <span>{{ item.allStoreCount }}</span>
+            <span>{{ item.storeCount }}</span>
+            <span>{{ (item.actRate * 100).toFixed(2) + '%'}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
-  name:"scancode-achieve-ranking-keepAlive",
+  name: "scancode-achieve-ranking-keepAlive",
 
   data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       formData: {
         brandId: "",
@@ -355,7 +342,6 @@ export default {
       });
     },
     activityChangeValue(value) {
-      var that = this;
       let activityList = this.activityList; //品牌列表
       for (var i = 0; i < activityList.length; i++) {
         if (value == activityList[i].id) {
@@ -368,13 +354,12 @@ export default {
       }, 500);
     },
     getTimeDataList() {
-      var that = this;
       //获取活动周序列表
       let data = {
-        brandId: that.formData.brandId,
-        activityId: that.formData.activityId
+        brandId: this.formData.brandId,
+        activityId: this.formData.activityId
       };
-      that.Global.doPost("report/getActivityWeekDict.json", data, res => {
+      this.Global.doPost("report/getActivityWeekDict.json", data, res => {
         if (res) {
           let timeDataList = [];
           for (const key in res) {
@@ -393,10 +378,8 @@ export default {
     },
     scancodeExport() {
       //扫码量导出
-      var that = this;
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
-      console.log(data);
       var url = this.Global.getExportUrl(
         "report/workerStoreActRateRankingExport.json",
         data
@@ -405,10 +388,8 @@ export default {
     },
     activityRateExport() {
       //活跃率
-      var that = this;
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
-      console.log(data);
       var url = this.Global.getExportUrl(
         "report/workerStoreScanPerformanceRankingExport.json",
         data

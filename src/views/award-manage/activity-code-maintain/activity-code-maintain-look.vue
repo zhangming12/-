@@ -96,11 +96,7 @@ export default {
       res_formData: null, //根据活动主键id请求数据
       page: 1,
       pageNum: 0,
-      rule: {
-        // totalQuantity: [
-        //     { required: true, message: '码包加量不能为空',  }
-        // ],
-      },
+      rule: {},
       columns1: [
         {
           title: "序号",

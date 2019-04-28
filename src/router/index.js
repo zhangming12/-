@@ -2218,6 +2218,114 @@ export const routers = [{
                 title: "合成记录",
                 component: _import('YD-scan-b/synthesis-record-YD')
             },
+            /**
+             * 2019 - 04 - 19
+             * 客服系统外包质检 customerQualitySystem
+             */
+            {
+                //审核分配
+                path: '/auditAllocation',
+                name: 'auditAllocation',
+                title: "审核分配",
+                component: _import('customer-quality-system/audit-allocation')
+            },
+            {
+                //待审核
+                path: '/overtimeForAudit',
+                name: 'overtimeForAudit',
+                title: "待审核",
+                component: _import('customer-quality-system/overtime-for-audit')
+            },
+            {
+                //初审
+                path: '/firstAudit',
+                name: 'firstAudit',
+                title: "初审",
+                component: _import('customer-quality-system/first-audit')
+            },
+            {
+                //复审
+                path: '/twiceAudit',
+                name: 'twiceAudit',
+                title: "复审",
+                component: _import('customer-quality-system/twice-audit')
+            },
+            {
+                //质检
+                path: '/qualityTesting',
+                name: 'qualityTesting',
+                title: "质检",
+                component: _import('customer-quality-system/quality-testing')
+            },
+            {
+                //退回通知
+                path: '/returnNotice',
+                name: 'returnNotice',
+                title: "退回通知",
+                component: _import('customer-quality-system/return-notice')
+            },
+            {
+                //质检记录
+                path: '/testingRecord',
+                name: 'testingRecord',
+                title: "质检记录",
+                component: _import('customer-quality-system/testing-record')
+            },
+            {
+                //质检记录-复审
+                path: '/testingRecordTwice',
+                name: 'testingRecordTwice',
+                title: "质检记录-复审",
+                component: _import('customer-quality-system/testing-record-twice')
+            },
+            {
+                //审核记录
+                path: '/auditRecord',
+                name: 'auditRecord',
+                title: "审核记录",
+                component: _import('customer-quality-system/audit-record')
+            },
+            {
+                //质检数据统计
+                path: '/batchAuditStatistics',
+                name: 'batchAuditStatistics',
+                title: "质检数据统计",
+                component: _import('customer-quality-system/batch-audit-statistics')
+            },
+            {
+                //审核日志
+                path: '/auditLog',
+                name: 'auditLog',
+                title: "审核日志",
+                component: _import('customer-quality-system/audit-log')
+            },
+            {
+                //团队管理
+                path: '/teamManage',
+                name: 'teamManage',
+                title: "团队管理",
+                component: _import('customer-quality-system/team-manage')
+            },
+            /**
+             * 资金流水记录-发红包
+             */
+            {
+                //红包转账
+                path: '/capitalFlowRecordImport',
+                name: 'capitalFlowRecordImport',
+                title: "红包转账",
+                component: _import('account/capital-flow-record-import')
+            },
+            /**
+             * 对换客户账号日志新
+             */
+            {
+                //对换客户账户日志新
+                path: '/newCustomLog',
+                name: 'newCustomLog',
+                title: "对换客户账户日志新",
+                component: _import('tools/new-custom-log')
+            },
             {
                 //测试
                 path: '/demo',

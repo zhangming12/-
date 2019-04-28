@@ -180,7 +180,6 @@
 <script>
 import { removeRoleResource, getRoleResource } from "@/api/common.js";
 import { workerUpdateStatus } from "@/api/salesman-info/salesman-info";
-import { getBrandsList } from "@/util/index.js";
 export default {
   name: "brand-role-manage-keepAlive",
 

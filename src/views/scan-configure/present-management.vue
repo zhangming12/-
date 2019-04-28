@@ -137,118 +137,125 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">奖品管理</h2> -->
-      <div class="main-container">
-        <div class="box" >
-          <Form ref="form" @keyup.enter="submit" class="form" :model="formData" :label-width="10" :rules="rule">
-              <div class="container">
-                <div class="btn-left w18">
-                  <Form-item  required>
-                      <Input v-model.trim="formData.name" placeholder="折扣名称" />
-                  </Form-item>
-                </div>
-                
-              </div>
-              <div class="btn-left w10">
-                  <div class="searchBox">
-                    <div class="btn-right search-right" @click="submit('form')">
-                      <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                    </div>
-                  </div>
-                </div>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">此表共包含<span class='numColor'>{{pageNum}}</span>条数据</span>
-              
-              <addNewBtn class="btn-right ml20" @btnClick="showModal" />
-              <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
+    <!-- <h2 class="Title">奖品管理</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form
+          ref="form"
+          @keyup.enter="submit"
+          class="form"
+          :model="formData"
+          :label-width="10"
+          :rules="rule"
+        >
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required>
+                <Input v-model.trim="formData.name" placeholder="折扣名称"/>
+              </Form-item>
             </div>
-            <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-            
-        </div>
-        <div class="page-box">
-          <div style="float: right;">
-            <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
           </div>
+          <div class="btn-left w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+              </div>
+            </div>
+          </div>
+        </Form>
+      </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            此表共包含
+            <span class="numColor">{{pageNum}}</span>条数据
+          </span>
+
+          <addNewBtn class="btn-right ml20" @btnClick="showModal"/>
+          <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
+        </div>
+        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      
-      <myModal class="myModal"
-          @close="closeModal"
-          width="520"
-          :modal="myModalisShow">
-        <div slot="main" class="modal-main">
-          <h3>{{type == 'modify' ? '修改折扣' :type == 'look' ? '查看折扣' :'新建折扣'}}</h3>
-          <div class="modal-table">
-              <Form ref="form" :model="formDatas" :label-width="88">
-                  <Form-item label="品牌名称" required>
-                      <Select :disabled="type == 'look'" v-model="formDatas.brandId" placeholder="品牌名称">
-                        <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                      </Select>
-                  </Form-item>
-                  <Form-item label="折扣名称" required>
-                      <Input :disabled="type == 'look'" v-model.trim="formDatas.name" placeholder="折扣名称" />
-                  </Form-item>
-                  <Form-item label="折扣分类" required>
-                      <Select :disabled="type == 'look'" v-model="formDatas.type" placeholder="折扣分类">
-                          <Option value="1">实物奖品</Option>
-                          <Option value="2">现金红包</Option>
-                          <Option value="0">电子劵</Option>
-                          <Option value="9">谢谢惠顾</Option>
-                      </Select>
-                  </Form-item>
-                  <div class="upload-image-box">
-                      <p>
-                          <span style="color:red;">*</span>
-                          <span> 折扣图片</span>
-                      </p>
-                      <div class="upload-box">
-                        <Upload action="https://hbrand.oss-cn-hangzhou.aliyuncs.com" 
-                            :data="upData" 
-                            :before-upload="beforeUpload" 
-                            :on-success="UploadLogoUrl" 
-                            :show-upload-list="false"
-                            :format="['jpg','jpeg','png']"
-                            :on-format-error="handleFormatError">
-                            <img :src="formDatas.goodsUrl " alt="" v-if="formDatas.goodsUrl ">
-                            <img src="../../assets/image/imgBg.png" alt="" v-else>
-                            <div class="zhezhao" @click.stop.prevent="zhezhaoClick" v-if="type == 'look'"></div>
-                        </Upload>
-                      </div>
-                  </div>
-                  <div class="modal-fotter" style="text-align:center;">
-                      <Button @click="closeModal" type="default">取消</Button>
-                      <Button v-if="type != 'look'" @click="saveNewPresent" type="default">确定</Button>
-                  </div>
-              </Form>
-          </div>
+    </div>
+
+    <myModal class="myModal" @close="closeModal" width="520" :modal="myModalisShow">
+      <div slot="main" class="modal-main">
+        <h3>{{type == 'modify' ? '修改折扣' :type == 'look' ? '查看折扣' :'新建折扣'}}</h3>
+        <div class="modal-table">
+          <Form ref="form" :model="formDatas" :label-width="88">
+            <Form-item label="品牌名称" required>
+              <Select :disabled="type == 'look'" v-model="formDatas.brandId" placeholder="品牌名称">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="折扣名称" required>
+              <Input :disabled="type == 'look'" v-model.trim="formDatas.name" placeholder="折扣名称"/>
+            </Form-item>
+            <Form-item label="折扣分类" required>
+              <Select :disabled="type == 'look'" v-model="formDatas.type" placeholder="折扣分类">
+                <Option value="1">实物奖品</Option>
+                <Option value="2">现金红包</Option>
+                <Option value="0">电子劵</Option>
+                <Option value="9">谢谢惠顾</Option>
+              </Select>
+            </Form-item>
+            <div class="upload-image-box">
+              <p>
+                <span style="color:red;">*</span>
+                <span>折扣图片</span>
+              </p>
+              <div class="upload-box">
+                <Upload
+                  action="https://hbrand.oss-cn-hangzhou.aliyuncs.com"
+                  :data="upData"
+                  :before-upload="beforeUpload"
+                  :on-success="UploadLogoUrl"
+                  :show-upload-list="false"
+                  :format="['jpg','jpeg','png']"
+                  :on-format-error="handleFormatError"
+                >
+                  <img :src="formDatas.goodsUrl " alt v-if="formDatas.goodsUrl ">
+                  <img src="../../assets/image/imgBg.png" alt v-else>
+                  <div class="zhezhao" @click.stop.prevent="zhezhaoClick" v-if="type == 'look'"></div>
+                </Upload>
+              </div>
+            </div>
+            <div class="modal-fotter" style="text-align:center;">
+              <Button @click="closeModal" type="default">取消</Button>
+              <Button v-if="type != 'look'" @click="saveNewPresent" type="default">确定</Button>
+            </div>
+          </Form>
         </div>
-      </myModal>
+      </div>
+    </myModal>
   </div>
 </template>
 
 <script>
 import { queryDisPlayApplyAudit } from "@/api/activity-manage/display-apply-examine.js"; //api
-import dataRange from "../../components/data-rang.vue";
-import exportBtn from "../../components/Button/export-btn.vue";
-import addNewBtn from "../../components/Button/addNew-btn.vue";
-import myModal from "../../components/Modal/my-modal.vue";
+import dataRange from "@/components/data-rang.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
+import addNewBtn from "@/components/Button/addNew-btn.vue";
+import myModal from "@/components/Modal/my-modal.vue";
 import upData from "@/assets/js/upload.js";
 import PROJECT_CONFIG from "@/util/config.js";
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
 import {
-  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
-  typeQueryActivityGroupVOByBrandId, //根据活动包名ID获取陈列活动列表
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
-import { displayApplyDetail } from "@/api/activity-manage/display-activity-manage.js"; //api
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
   name: "present-management",
   data() {
@@ -438,7 +445,7 @@ export default {
       pageData: [],
       brandList: [],
       activityList: [],
-      timeStr:"",
+      timeStr: "",
       formDatas: {
         brandId: "",
         type: "",

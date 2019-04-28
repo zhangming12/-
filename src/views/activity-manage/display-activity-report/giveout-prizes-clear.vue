@@ -119,11 +119,7 @@
           </Col>
           <Col span="7">
             <Form-item label="陈列活动:" prop="activityId">
-              <Select
-                v-model="formData.activityId"
-                placeholder="请选择"
-                @on-change="getActivityMonthDict"
-              >
+              <Select v-model="formData.activityId" placeholder="请选择">
                 <Option
                   :value="item.id"
                   v-for="(item,index) in activityList"
@@ -198,10 +194,6 @@ let auditCountQualified = {
   "1": "合格",
   "0": "不合格"
 };
-import {
-  queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
-  queryActivityVOByGroupId //根据活动包名ID获取陈列活动列表
-} from "@/api/common.js";
 import area from "@/config/areaCode.js";
 import config from "../../../util/config.js";
 import {
@@ -209,10 +201,6 @@ import {
   callLiquidateByActivityId, //清算费用
   callDisplayAwardPrice //全部发奖
 } from "@/api/activity-manage/display-activity-manage.js";
-import {
-  getDisplayActivityListDoQuery, //陈列活动
-  getActivityMonthDict //获取活动月序列表
-} from "@/api/common.js";
 import {
   mergeGiveAwardStatus,
   mergeGiveAwardCheckStatus,
@@ -654,7 +642,6 @@ export default {
       this.init(size, 10);
     },
     init(currentPage, pageSize) {
-      var that = this;
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = currentPage;
@@ -668,7 +655,6 @@ export default {
       });
     },
     exportExcel() {
-      var that = this;
       var data = this.Global.JsonChange(this.formData);
       if (
         !this.formData.brandId ||
@@ -740,28 +726,6 @@ export default {
           this.timeDataList = timeDataList;
         }
       });
-    },
-    getActivityMonthDict(val) {
-      let params = {
-        brandId: this.formData.brandId,
-        activityId: val
-      };
-      // this.formData.periodMonth = "";
-      // if(!val) return
-
-      // getActivityMonthDict(params).then(res => {
-
-      //   if (res && res.data) {
-      //     let timeDataList = [];
-      //     for (const key in res.data) {
-      //       let item = {
-      //         queryMonth: res.data[key]
-      //       };
-      //       timeDataList.push(item);
-      //     }
-      //     this.timeDataList = timeDataList;
-      //   }
-      // });
     },
     handleClearDisplayActivity() {
       if (

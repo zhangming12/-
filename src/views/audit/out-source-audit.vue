@@ -552,9 +552,8 @@ import {
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
-import qs from "qs";
 import imageLook from "@/components/imgLook/img-look.vue";
 export default {
   name: "out-source-audit-keepAlive",
@@ -621,7 +620,7 @@ export default {
         "151": [537, 538, 539, 540, 541, 542, 543, 652],
         "155": [559, 560, 561, 562, 563, 565, 566, 687],
         "123": [482, 573, 574, 575, 571],
-        "126": [479],
+        "126": [476, 479],
         "157": [572],
         "160": [582]
       },
@@ -705,10 +704,20 @@ export default {
       return date;
     },
     getpresentList(value) {
-      this.formData.presentId = "";
-      this.presentNameList = [];
       this.$set(this.formData, "presentId", "");
+      this.presentNameList = [];
       this.showP();
+      if (value == 476) {
+        this.presentNameList = [
+          { id: 1084 },
+          { id: 1478 },
+          { id: 1487 },
+          { id: 1660 },
+          { id: 1661 },
+          { id: 1708 }
+        ];
+        return;
+      }
       queryActivityPresentVOByactivityId(value).then(res => {
         if (res && res.status == 1) {
           this.presentNameList = res.data;

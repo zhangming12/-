@@ -22,57 +22,65 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">陈列上传成长曲线</h2> -->
-        <div class="box">
-          <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-              <Row>
-                  <Col span="7">
-                      <Form-item label="品牌名称:" prop="brandId" :label-width="90">
-                          <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
-                              <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                          </Select>  
-                      </Form-item> 
-                                
-                  </Col>   
-                  <Col span="7" > 
-                      <Form-item label="活动包名:"  prop="groupId" :label-width="90">
-                          <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList">
-                              <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                          </Select>  
-                      </Form-item> 
-                  </Col>   
-                  <Col span="7" > 
-                      <Form-item label="陈列活动:"  prop="activityId" :label-width="90">
-                          <Select v-model="formData.activityId" placeholder="请选择" @on-change="activetyChangeValue">
-                              <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                          </Select>  
-                      </Form-item> 
-                  </Col>
-                  <Col span='2' offset="1" >
-                      <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-                  </Col>
-              </Row>
-          </Form>
-        </div>
-        
-        <div class="box" style="margin-top: 15px;padding-bottom:20px">
-            <div id="scancodeActivity" :style="{height: '500px'}"></div>
-        </div>
-        
-        
+    <!-- <h2 class="Title">陈列上传成长曲线</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+        <Row>
+          <Col span="7">
+            <Form-item label="品牌名称:" prop="brandId" :label-width="90">
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动包名:" prop="groupId" :label-width="90">
+              <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="陈列活动:" prop="activityId" :label-width="90">
+              <Select
+                v-model="formData.activityId"
+                placeholder="请选择"
+                @on-change="activetyChangeValue"
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+
+    <div class="box" style="margin-top: 15px;padding-bottom:20px">
+      <div id="scancodeActivity" :style="{height: '500px'}"></div>
+    </div>
   </div>
 </template>
 
 <script>
 import echarts from "echarts";
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
-import {
-  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
-  typeQueryActivityGroupVOByBrandId //根据活动包名ID获取陈列活动列表
-} from "@/api/common.js";
 import { storeDisplayUploadScanGrowthCurve } from "@/api/activity-manage/display-activity-manage.js";
 export default {
-  name:"display-growup-curve-keepAlive",
+  name: "display-growup-curve-keepAlive",
   data() {
     return {
       formData: {
@@ -103,7 +111,7 @@ export default {
         Object.entries(res).forEach(item => {
           this.brandList.push({ id: Number(item[0]), brandName: item[1] });
         });
-        if(this.brandList && this.brandList.length){
+        if (this.brandList && this.brandList.length) {
           this.formData.brandId = this.brandList[0].id;
           this.changeValue(this.formData.brandId);
         }
@@ -117,7 +125,7 @@ export default {
     getActivityList(value) {
       this.activityList = [];
       this.formData.activityId = "";
-      if(!value) return ;
+      if (!value) return;
       this.Global.doPostNoLoading(
         "condition/queryActivity.json",
         { date: 7, activityType: 3, scope: "a", groupId: value },
@@ -127,16 +135,11 @@ export default {
           });
         }
       );
-      // typeQueryActivityVOByGroupId({ groupId: value, type: 3 }).then(res => {
-      //   if (res && res.status == 1) {
-      //     this.activityList = res.data;
-      //   }
-      // });
     },
     changeValue(value) {
       this.groupList = [];
       this.formData.groupId = "";
-      if(!value) return;
+      if (!value) return;
       this.Global.doPostNoLoading(
         "condition/queryGroup.json",
         { date: 7, activityType: 3, scope: "a", brandId: value },
@@ -163,7 +166,7 @@ export default {
         },
         // color: ["#FF0000"],
         legend: {
-          data: ["当日上传门店数","当日上传数"]
+          data: ["当日上传门店数", "当日上传数"]
         },
         grid: {
           left: "3%",
@@ -302,7 +305,6 @@ export default {
                   }
                 },
                 data: activityScanCount
-                
               }
             ]
           });

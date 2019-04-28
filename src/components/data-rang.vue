@@ -59,7 +59,7 @@ export default {
     },
     placement: {
       type: String,
-      default: "bottom"
+      default: "bottom-start"
     },
     hour: {
       type: String

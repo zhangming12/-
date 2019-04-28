@@ -11,7 +11,6 @@
 }
 .activity-content-group-box {
   transition: all 0.2s;
-  // border: 1px solid #cccccc;
   padding: 10px;
 }
 .ivu-table-row {
@@ -248,13 +247,6 @@
                       id="success"
                       @click="modifyGroup(index)"
                     >修改</Button>
-                    <!-- <Button
-                      type="text"
-                      class="btn border-right"
-                      v-if="!item.isModify"
-                      id="fail"
-                      @click="deleteGroup(index)"
-                    >删除</Button>-->
                     <Button
                       type="text"
                       class="btn"
@@ -749,43 +741,13 @@
 <script>
 import skuModel from "../../activity-statistics-C/setting-SKU.vue";
 import upData from "@/assets/js/upload.js";
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 import PROJECT_CONFIG from "@/util/config.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import index from "vue";
 import addBtn from "@/components/Button/addNew-btn.vue";
 import configureBtn from "@/components/configureBtn/configure-btn.vue";
-import qs from "qs";
 export default {
   data() {
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.endTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("endTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.startTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       showSkuNum: true,
       showSkuRule: true,
@@ -839,14 +801,7 @@ export default {
     this.brandId = this.$route.query.brandId;
     this.id = this.$route.query.id; //活动ID
     this.isSku = this.$route.query.isSku;
-    // if (type) {
-    // this.type = type;
-    // }
-    // if (this.id) {
     this.activityDetail(this.id);
-  },
-  beforeDestroy() {
-    // window.sessionStorage.removeItem("skuList");
   },
   watch: {
     skuIsShow(val) {

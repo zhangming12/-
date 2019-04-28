@@ -8,74 +8,73 @@
 <template>
   <div class="layout">
     <div class="layout-menu-left" :style="{ width: shrink?'60px':'200px' }">
-        <shrinkable-menu 
-            :shrink="shrink"
-            @on-change="handleSubmenuChange"
-            :theme="menuTheme" 
-            :before-push="beforePush"
-            :open-names="openedSubmenuArr"
-            :menu-list="menuList">
-            <div slot="top" class="logo-con">
-                <div v-show="!shrink" class="layout-logo-left" key="max-logo">e店佳后台管理系统</div>
-                <img v-show="shrink" src="../../assets/image/E.png" key="min-logo" />
-            </div>
-        </shrinkable-menu>
+      <shrinkable-menu
+        :shrink="shrink"
+        @on-change="handleSubmenuChange"
+        :theme="menuTheme"
+        :before-push="beforePush"
+        :open-names="openedSubmenuArr"
+        :menu-list="menuList"
+      >
+        <div slot="top" class="logo-con">
+          <div v-show="!shrink" class="layout-logo-left" key="max-logo">e店佳后台管理系统</div>
+          <img v-show="shrink" src="../../assets/image/E.png" key="min-logo">
+        </div>
+      </shrinkable-menu>
     </div>
-    <!-- <div class="layout-main">
-        <div class="layout-header">
-            <div class="navicon-con">
-                <Button :style="{transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)'}" type="primary" @click="toggleClick">
-                    <Icon type="navicon" size="23"></Icon>
-                </Button>
-            </div>
-            <div class="header-middle-con"></div>
-            <div class="header-avator-con">
-                <div class="closeBtn" @click="loginOut">
-                    <Icon type="power" color='rgba(255,255,255,.7)' size="20"></Icon>
-                </div>
-            </div>
-        </div>
-    </div> -->
     <div class="layout-main">
-        <div class="layout-header">
-            <div class="navicon-con">
-                <Button class="toggleBtn" :style="{transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)'}" type="text" @click="toggleClick">
-                    <!-- <Icon type="navicon" size="23" color='#fff'></Icon> -->
-                    <Icon type="md-menu" size="23" color='#fff'/>
-                </Button>
-            </div>
-            <!-- 三级分类 -->
-            <div class="header-middle-con">
-              <ul class="header-menuBtn">
-                <li :class="[headerMenuList.select === item.id?'select':''] " v-for="(item,index) in headerMenuList.list" :key="index" v-if=" item.resType === 'template' " @click="changeMenu(index)">
-                  <Icon :type="item.resIcon" size="23"/>
-                  {{item.resName}}
-                </li>
-              </ul>
-            </div>
-            <div class="header-avator-con">
-                <div class="closeBtn" @click="loginOut">
-                    <!-- <Icon type="power" color='rgba(255,255,255,.7)' size="20"></Icon> -->
-                    <Icon type="md-power" color='rgba(255,255,255,.7)' size="20"/>
-                </div>
-            </div>
+      <div class="layout-header">
+        <div class="navicon-con">
+          <Button
+            class="toggleBtn"
+            :style="{transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)'}"
+            type="text"
+            @click="toggleClick"
+          >
+            <Icon type="md-menu" size="23" color="#fff"/>
+          </Button>
         </div>
-        <div class="tages">
-            <tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened>
+        <!-- 三级分类 -->
+        <div class="header-middle-con">
+          <ul class="header-menuBtn">
+            <li
+              :class="[headerMenuList.select === item.id?'select':''] "
+              v-for="(item,index) in headerMenuList.list"
+              :key="index"
+              v-if=" item.resType === 'template' "
+              @click="changeMenu(index)"
+            >
+              <Icon :type="item.resIcon" size="23"/>
+              {{item.resName}}
+            </li>
+          </ul>
         </div>
-        
-        <div class="layout-content">
-          <keep-alive :include="/keepAlive/">
-            <router-view :status='shrink' />
-          </keep-alive>
+        <div class="header-avator-con">
+          <div class="closeBtn" @click="goToNotice">
+            <Icon type="ios-mail" style="margin-top:2px;" color="red" size="25"/>
+            <sup v-if="$store.state.noticeMsg" class="sup">{{ $store.state.noticeMsg }}</sup>
+          </div>
+          <div class="closeBtn" @click="loginOut">
+            <Icon type="md-power" color="rgba(255,255,255,.7)" size="20"/>
+          </div>
         </div>
+      </div>
+      <div class="tages">
+        <tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened>
+      </div>
+
+      <div class="layout-content">
+        <keep-alive :include="/keepAlive/">
+          <router-view :status="shrink"/>
+        </keep-alive>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import list from "../../config/data.js";
-import shrinkableMenu from "../../components/shrinkable-menu/shrinkable-menu.vue";
-import tagsPageOpened from "../../components/tags-pages-opend.vue";
+import list from "@/config/data.js";
+import shrinkableMenu from "@/components/shrinkable-menu/shrinkable-menu.vue";
+import tagsPageOpened from "@/components/tags-pages-opend.vue";
 export default {
   data() {
     return {
@@ -95,6 +94,11 @@ export default {
     tagsPageOpened
   },
   methods: {
+    goToNotice() {
+      this.$router.push({
+        path: "/returnNotice"
+      });
+    },
     select(name) {
       this.$router.push(name);
     },
@@ -126,7 +130,7 @@ export default {
             if (
               val[i].children &&
               val[i].children.length &&
-              val[i].children.resPage == '/' + name
+              val[i].children.resPage == "/" + name
             ) {
               return {
                 selectId: item.id,
@@ -144,7 +148,7 @@ export default {
     if (user) {
       const userData = JSON.parse(user);
       // this.menuList = userData.resources;
-      
+
       const resourceData = userData.resources;
       let implode = (arr, parentId) => {
         let newArr = [];
@@ -173,12 +177,12 @@ export default {
       };
       this.headerMenuList.list = [];
       const arr = implode(resourceData, 0, 1);
-      console.log(arr)
+      console.log(arr);
       arr.forEach(item => {
-        if(item.resType == "template" && item.parentId == 0){
-          this.headerMenuList.list.push(item)
+        if (item.resType == "template" && item.parentId == 0) {
+          this.headerMenuList.list.push(item);
         }
-      })
+      });
       // this.headerMenuList.list = arr;
       // this.headerMenuList.select = arr[0].id;
       this.headerMenuList.select = this.headerMenuList.list[0].id;
@@ -186,45 +190,25 @@ export default {
     } else {
       this.$router.replace("/");
     }
-    // var hash = location.hash;
-    // this.activeName = hash.replace('#','');
-    // for (let i = 0; i < this.menuList.length; i++) {
-    //   if (this.menuList[i].resPage == this.activeName) {
-    //     this.openName.push(this.data[i].id);
-    //     break;
-    //   }
-    // }
     this.$store.commit("setOpenedList");
-
+    // this.$on("")
   },
   computed: {
     pageTagsList() {
       return this.$store.state.app.pageOpenedList; // 打开的页面的页面对象
     }
+    // '$store.state.'
   },
   watch: {
     $route(to) {
       this.Global.openNewPage(this, to.path, to.query);
-    },
-    // "$route.name"(val) {
-    //   let item = this.getParentId(val)
-    //   console.log(item)
-    //   if(item){
-    //     this.headerMenuList.select = item.selectId;
-    //     this.openedSubmenuArr = [item.parentId];
-
-    //   }
-    // }
+    }
   }
 };
 </script>
 
 <style scoped lang='less'>
 @import "../../config/index.less";
-// 过渡动画 横向渐变
-// *::-webkit-scrollbar {
-//   display: none;
-// }
 .header-menuBtn {
   width: 100%;
   height: 100%;
@@ -317,13 +301,9 @@ export default {
   overflow: hidden;
 }
 .layout-header {
-  // height: 60px;
   height: 40px;
   background: #26201b;
-  // background: @head-color;
   box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
-  // text-align: right;
-  // line-height: 60px;
   line-height: 40px;
   position: relative;
   .header-middle-con {
@@ -344,16 +324,17 @@ export default {
     display: flex;
     justify-content: flex-end;
     .closeBtn {
-      width: 60px;
-      // border-left: 1px solid rgba(255,255,255,.7);
+      width: 50px;
       text-align: center;
-      line-height: 45px;
+      line-height: 40px;
       cursor: pointer;
+      .sup {
+        color: red;
+      }
     }
   }
 }
 .user {
-  // border-left: 1px solid rgba(255,255,255,.7);
   display: flex;
   align-items: center;
   color: #fff;

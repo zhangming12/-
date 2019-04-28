@@ -44,23 +44,6 @@
     }
   }
 }
-
-.searchBox {
-  overflow: hidden;
-  .search_btn {
-    float: left;
-    width: 50px;
-    padding: 5px 14px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .search_icon {
-    float: left;
-    padding: 5px 10px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-}
 .myModal {
   position: absolute;
   width: 100%;
@@ -117,50 +100,57 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">人员维护</h2> -->
-        <div class="main-container">
-            <div class="box">
-                <Form ref="form" class="form" :model="formData" :label-width="10">
-                    <div class="container">
-                        <div class="btn-left w18">
-                            <Form-item prop="name">
-                                <Input placeholder="用户ID" v-model="formData.storeId"></Input>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item prop="phone">
-                                <Input placeholder="手机号" v-model="formData.phone"></Input>
-                            </Form-item>
-                        </div>
-                        
-                    </div>
-                    <div class="btn-right w10">
-                        <div class="searchBox">
-                            <div class="btn-right search-right" @click="submit('form')">
-                                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                            </div>
-                        </div>
-                    </div>
-                </Form>
+  <div id="Main">
+    <!-- <h2 class="Title">人员维护</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" class="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item prop="name">
+                <Input placeholder="用户ID" v-model="formData.storeId"></Input>
+              </Form-item>
             </div>
-            <div class="box" style="padding:10px">
-                <div class="contentTop">
-                    <span class="btn-left">此表共包含<span class='numColor'>{{pageNum}}</span>条数据</span>
-                    <!-- <addNewBtn  class="btn-right" title="新建" @btnClick="showModel" /> -->
-                </div>
-                <hhTable ref="table" :columns="columns" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
-            
+            <div class="btn-left w18">
+              <Form-item prop="phone">
+                <Input placeholder="手机号" v-model="formData.phone"></Input>
+              </Form-item>
             </div>
-            <div class="page-box">
-                <div>
-                    <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
-                </div>
+          </div>
+          <div class="btn-right w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+              </div>
             </div>
-           
-            <fieldNameDes/>
+          </div>
+        </Form>
+      </div>
+      <div class="box" style="padding:10px">
+        <div class="contentTop">
+          <span class="btn-left">
+            此表共包含
+            <span class="numColor">{{pageNum}}</span>条数据
+          </span>
+          <!-- <addNewBtn  class="btn-right" title="新建" @btnClick="showModel" /> -->
         </div>
-	</div>
+        <hhTable
+          ref="table"
+          :columns="columns"
+          :pageData="pageData"
+          :noneStatus="noneStatus"
+          disabled-hover
+        ></hhTable>
+      </div>
+      <div class="page-box">
+        <div>
+          <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
+        </div>
+      </div>
+
+      <fieldNameDes/>
+    </div>
+  </div>
 </template>
 
 <script>

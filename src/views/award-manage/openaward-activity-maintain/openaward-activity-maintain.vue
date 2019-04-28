@@ -3,7 +3,6 @@
 
 .box {
   width: 100%;
-  // box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
   margin: 0 auto 15px;
   padding: 30px 20px;
   padding-bottom: 0;
@@ -20,59 +19,60 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">开奖活动维护</h2> -->
-      <div class="main-container">
-        <div class="box">
-              <Form ref="form" :model="formData" :label-width="80" :rules="rule">
-                  <Row>
-                      <Col span='10'>                     
-                          <Form-item label="品牌名称" required prop="brandId">
-                              <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue" >
-                                  <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                              </Select>  
-                          </Form-item>
-                          <Form-item label="展示区域" >
-                              <Cascader :data="areaData" v-model="formData.searchAreaCode" change-on-select></Cascader>
-                          </Form-item>
-                      </Col>
-                      <Col span='10' offset="1">
-                          
-                          <Form-item label="活动名称"  >
-                              <Select v-model="formData.name" placeholder="请选择"  >
-                                  <Option :value="item.name" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                              </Select>  
-                          </Form-item>
-                          <!-- <Form-item label="活动状态" >
-                              <Select v-model="formData.showStatus" placeholder="请选择" clearable>
-                                  <Option v-for="(value, key, index) in showStatus" :value="key" :key="key">{{value}}</Option> 
-                              </Select>
-                          </Form-item>   -->
-                          <Form-item label="活动状态" >
-                              <Radio-group v-model="formData.showStatus">
-                                  <Radio label="0">非展示中</Radio>
-                                  <Radio label="1">展示中</Radio>
-                              </Radio-group>
-                          </Form-item>                
-                      </Col>
-                      <Col span="2" offset="1" style="margin-top:24px"> 
-                          <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-                      </Col>
-                  </Row>
-              </Form>
-        </div>
-        <div class="box" style="padding-bottom:20px">
-          <div class='contentTop'>
-              <Button icon="plus-round" @click="handleAdd" type="primary" class="btn-right">新建</Button>
-          </div>
-          <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-          
-        </div>
-        <div class="page-box">
-              <div style="float: right;">
-                  <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
-              </div>
-          </div>
+    <!-- <h2 class="Title">开奖活动维护</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="80" :rules="rule">
+          <Row>
+            <Col span="10">
+              <Form-item label="品牌名称" required prop="brandId">
+                <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+              <Form-item label="展示区域">
+                <Cascader :data="areaData" v-model="formData.searchAreaCode" change-on-select></Cascader>
+              </Form-item>
+            </Col>
+            <Col span="10" offset="1">
+              <Form-item label="活动名称">
+                <Select v-model="formData.name" placeholder="请选择">
+                  <Option
+                    :value="item.name"
+                    v-for="(item,index) in activityList"
+                    :key="index"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
+              <Form-item label="活动状态">
+                <Radio-group v-model="formData.showStatus">
+                  <Radio label="0">非展示中</Radio>
+                  <Radio label="1">展示中</Radio>
+                </Radio-group>
+              </Form-item>
+            </Col>
+            <Col span="2" offset="1" style="margin-top:24px">
+              <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+            </Col>
+          </Row>
+        </Form>
       </div>
+      <div class="box" style="padding-bottom:20px">
+        <div class="contentTop">
+          <Button icon="plus-round" @click="handleAdd" type="primary" class="btn-right">新建</Button>
+        </div>
+        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -82,37 +82,9 @@ import area from "@/config/china_code_data.js";
 import { showStatus } from "@/util/ENUMS.js"; //展示状态
 
 export default {
-  name:"openaward-activity-maintain-keepAlive",
+  name: "openaward-activity-maintain-keepAlive",
   data() {
     const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       formData: {
         brandId: "",
@@ -157,7 +129,7 @@ export default {
           width: 150,
           align: "center",
           render: (h, params) => {
-            return that.Global.createTime(params.row.startTime);
+            return this.Global.createTime(params.row.startTime);
           }
         },
         {
@@ -166,7 +138,7 @@ export default {
           width: 150,
           align: "center",
           render: (h, params) => {
-            return that.Global.createTime(params.row.endTime);
+            return this.Global.createTime(params.row.endTime);
           }
         },
         {
@@ -259,7 +231,7 @@ export default {
       if (this.brandList && this.brandList.length) {
         this.formItem.brandId = this.brandList[0].id;
         this.changeValue(this.brandList[0].id);
-        this.init(1,10)
+        this.init(1, 10);
       }
     });
   },

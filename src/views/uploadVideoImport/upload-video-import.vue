@@ -57,88 +57,105 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">上传视频统计导出</h2> -->
+    <!-- <h2 class="Title">上传视频统计导出</h2> -->
     <div class="box">
       <Form ref="form" :model="formData" :label-width="88">
-          <Row>
-              <Col span="14">  
-                    <Form-item label="时间:">
-                    <Row>
-                        <Col span="11">
-                            <Form-item prop="queryStartTime">
-                              <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                            </Form-item>
-                        </Col>
-                        <Col span="2" style="text-align: center;">至</Col>
-                        <Col span="11">
-                            <Form-item prop="queryEndTime">
-                                <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                            </Form-item>
-                        </Col>
-                    </Row>
+        <Row>
+          <Col span="14">
+            <Form-item label="时间:">
+              <Row>
+                <Col span="11">
+                  <Form-item prop="queryStartTime">
+                    <data-range
+                      @dataChange="startTimeChange"
+                      hour="00:00"
+                      :time="formData.queryStartTime"
+                      start
+                    ></data-range>
                   </Form-item>
-                  <Form-item label="活动包名:" prop="groupId"    >
-                      <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
-                          <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                      </Select>
-                  </Form-item>             
-                     
-                  
-                  
-              </Col>
-              <Col span="7">
-                  <Form-item label="品牌名称" prop="brandId"    >
-                      <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
-                          <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                      </Select>
-                  </Form-item> 
-                  <Form-item label="活动名称"    >
-                      <Select v-model="formData.activityId" placeholder="请选择" @on-change="activityChangeValue">
-                          <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                      </Select>
+                </Col>
+                <Col span="2" style="text-align: center;">至</Col>
+                <Col span="11">
+                  <Form-item prop="queryEndTime">
+                    <data-range
+                      hour="24:00"
+                      placeholder="结束时间"
+                      @dataChange="endTimeChange"
+                      :time="formData.queryEndTime"
+                    ></data-range>
                   </Form-item>
-                  
-                    
-                  <!-- <Form-item label="时间"  prop="queryMonth">
-                      <Select v-model="formData.queryMonth"  placeholder="请选择" @on-change="timeDataChangeValue" >
-                          <Option :value="item.queryMonth" v-for="(item,index) in timeDataList" :key="index" >{{ item.queryMonth}}</Option>
-                      </Select>
-                      
-                  </Form-item>                     -->
-                  
-
-              </Col>
-              <Col span="2" offset="1" >
-                  <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-              </Col>
-          </Row>
+                </Col>
+              </Row>
+            </Form-item>
+            <Form-item label="活动包名:" prop="groupId">
+              <Select
+                v-model="formData.groupId"
+                placeholder="请选择"
+                @on-change="getActivityList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="品牌名称" prop="brandId">
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="活动名称">
+              <Select
+                v-model="formData.activityId"
+                placeholder="请选择"
+                @on-change="activityChangeValue"
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
       </Form>
     </div>
 
-    <div class="box" style='margin-top: 15px;overflow: hidden;padding-bottom:20px;'>
-			<div class='contentTop'>
-				<Button class="btn-export" icon="ios-download-outline" @click="exportExcel" type="primary">导出</Button>
-			</div>
-			<Table :columns="columns1" :data="pageData" disabled-hover></Table>
-
-		</div>
-		<!-- <div style="margin: 10px;overflow: hidden">
-			<div style="float: right;">
-				<Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-			</div>
-		</div> -->
+    <div class="box" style="margin-top: 15px;overflow: hidden;padding-bottom:20px;">
+      <div class="contentTop">
+        <Button
+          class="btn-export"
+          icon="ios-download-outline"
+          @click="exportExcel"
+          type="primary"
+        >导出</Button>
+      </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+    </div>
   </div>
 </template>
 
 <script>
-import dataRange from "../../components/data-rang.vue";
+import dataRange from "@/components/data-rang.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
   typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
   typeQueryActivityGroupVOByBrandId //根据活动包名ID获取陈列活动列表
 } from "@/api/common.js";
 export default {
-  name:"upload-video-import-keepAlive",
+  name: "upload-video-import-keepAlive",
 
   data() {
     return {
@@ -264,7 +281,6 @@ export default {
   },
   methods: {
     activityChangeValue(value) {
-      let that = this;
       let activityList = this.activityList; //品牌列表
       for (var i = 0; i < activityList.length; i++) {
         if (value == activityList[i].id) {
@@ -277,19 +293,16 @@ export default {
           this.getTimeDataList(); //获取活动周序列表
         }, 500);
       } else {
-        that.timeDataList = [];
+        this.timeDataList = [];
       }
     },
     getTimeDataList() {
       //获取活动周序列表
-      let that = this;
       let data = {
-        brandId: that.formData.brandId,
-        activityId: that.formData.activityId
+        brandId: this.formData.brandId,
+        activityId: this.formData.activityId
       };
-      that.Global.doPost("report/getActivityMonthDict.json", data, function(
-        res
-      ) {
+      this.Global.doPost("report/getActivityMonthDict.json", data, res => {
         if (res) {
           let timeDataList = [];
           for (const key in res) {
@@ -298,8 +311,8 @@ export default {
             };
             timeDataList.push(item);
           }
-          that.timeDataList = timeDataList;
-          that.formData.queryMonth = timeDataList[0].queryMonth;
+          this.timeDataList = timeDataList;
+          this.formData.queryMonth = timeDataList[0].queryMonth;
         }
       });
     },

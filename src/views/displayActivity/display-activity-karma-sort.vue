@@ -1,14 +1,14 @@
 <style lang="less" scoped>
 @import "../../config/index.less";
-#Main{
+#Main {
   height: 100%;
 }
-.main-container{
+.main-container {
   position: relative;
   background: #fff;
   min-height: 100%;
   padding-bottom: 60px;
-  .box{
+  .box {
     height: auto;
   }
   .page-box {
@@ -112,7 +112,7 @@
       }
     }
   }
-  li:first-child{
+  li:first-child {
     width: 4%;
   }
 }
@@ -164,187 +164,226 @@
     }
   }
 }
-.contentTop{
+.contentTop {
   margin-top: 10px;
 }
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">陈列活动区域排行榜</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" :model="formData" :label-width="10" :rules="rule">
-              <div class="container">
-                <div class="btn-left w18">
-                  <Form-item  required>
-                      <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
-                          <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                      </Select> 
-                  </Form-item>
+    <!-- <h2 class="Title">陈列活动区域排行榜</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10" :rules="rule">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required>
+                <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="groupId" required>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="活动包名称*"
+                  @on-change="getActivityList"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in groupList"
+                    :key="index"
+                  >{{ item.groupName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="startTime" required>
+                <data-range
+                  @dataChange="startTimeChange"
+                  hour="00:00"
+                  :time="formData.startTime"
+                  start
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="endTime" required>
+                <data-range
+                  hour="24:00"
+                  placeholder="结束时间"
+                  @dataChange="endTimeChange"
+                  :time="formData.endTime"
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item>
+                <Select v-model="formData.activityId" placeholder="活动名称" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in activityList"
+                    :key="index"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w10">
+              <div class="searchBox">
+                <div class="btn-left search-left" @click="showQuery=!showQuery">
+                  <button type="button">
+                    {{showQuery?'收起':'更多'}}
+                    <Icon
+                      type="ios-arrow-down"
+                      size="14"
+                      style="margin-top:-2px;"
+                      v-if="!showQuery"
+                    />
+                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
+                  </button>
                 </div>
-                <div class="btn-left w18">
-                  <Form-item  prop="groupId" required>
-                      <Select v-model="formData.groupId" placeholder="活动包名称*" @on-change="getActivityList" clearable>
-                          <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                      </Select>
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item  prop="startTime" required>
-                      <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.startTime" start></data-range>
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item  prop="endTime" required>
-                      <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.endTime"></data-range>
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item>                             
-                      <Select v-model="formData.activityId" placeholder="活动名称" clearable>
-                          <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                      </Select> 
-                  </Form-item>
-                </div>
-                <div class="btn-left w10">
-                  <div class="searchBox">
-                    <div class="btn-left search-left" @click="showQuery=!showQuery">
-                      <button type="button">
-                        {{showQuery?'收起':'更多'}}
-                        <Icon type="ios-arrow-down" size="14" style="margin-top:-2px;" v-if="!showQuery"/>
-                        <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
-                      </button>
-                    </div>
-                    <div class="btn-right search-right" @click="submit('form')">
-                      <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                    </div>
-                  </div>
+                <div class="btn-right search-right" @click="submit('form')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
                 </div>
               </div>
-              <transition name="fade">
-                <div class="container" v-if="showQuery">
-                  <div class="btn-left w18">
-                    <Form-item required>
-                      <Select v-model="formData.oneLevel"  placeholder="一级组织" @on-change="oneLevelChange">
-                          <Option :value="item.id" v-for="(item,index) in oneLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                      </Select> 
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item  required>
-                      <Select v-model="formData.twoLevel" placeholder="二级组织" @on-change="twoLevelChange">
-                          <Option :value="item.id" v-for="(item,index) in twoLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                      </Select> 
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item  required>
-                      <Select v-model="formData.threeLevel" placeholder="三级组织" @on-change="threeLevelChange">
-                          <Option :value="item.id" v-for="(item,index) in threeLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                      </Select> 
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item  required>
-                      <Select v-model="formData.fourLevel"  placeholder="四级组织">
-                          <Option :value="item.id" v-for="(item,index) in fourLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                      </Select> 
-                    </Form-item>
-                  </div>
-                </div>
-              </transition>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <div id="allCount">此表包含 <span>{{pageNum}}</span> 条数据</div>
-              <!-- <detailBtn class="btn-right ml20" @btnClick="exportExcel" /> -->
-              <exportBtn  class="btn-right" @btnClick="exportExcel" />
             </div>
+          </div>
+          <transition name="fade">
+            <div class="container" v-if="showQuery">
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Select
+                    v-model="formData.oneLevel"
+                    placeholder="一级组织"
+                    @on-change="oneLevelChange"
+                  >
+                    <Option :value="item.id" v-for="(item,index) in oneLeverList" :key="index">
+                      <span :title="item.areaName" class="text-overflow">{{item.areaName}}</span>
+                    </Option>
+                  </Select>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Select
+                    v-model="formData.twoLevel"
+                    placeholder="二级组织"
+                    @on-change="twoLevelChange"
+                  >
+                    <Option :value="item.id" v-for="(item,index) in twoLeverList" :key="index">
+                      <span :title="item.areaName" class="text-overflow">{{item.areaName}}</span>
+                    </Option>
+                  </Select>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Select
+                    v-model="formData.threeLevel"
+                    placeholder="三级组织"
+                    @on-change="threeLevelChange"
+                  >
+                    <Option :value="item.id" v-for="(item,index) in threeLeverList" :key="index">
+                      <span :title="item.areaName" class="text-overflow">{{item.areaName}}</span>
+                    </Option>
+                  </Select>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Select v-model="formData.fourLevel" placeholder="四级组织">
+                    <Option :value="item.id" v-for="(item,index) in fourLeverList" :key="index">
+                      <span :title="item.areaName" class="text-overflow">{{item.areaName}}</span>
+                    </Option>
+                  </Select>
+                </Form-item>
+              </div>
+            </div>
+          </transition>
+        </Form>
+      </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <div id="allCount">
+            此表包含
+            <span>{{pageNum}}</span> 条数据
+          </div>
+          <!-- <detailBtn class="btn-right ml20" @btnClick="exportExcel" /> -->
+          <exportBtn class="btn-right" @btnClick="exportExcel"/>
+        </div>
 
-            <!-- 业代排行榜 -->
-            
-            <div id="rank">
-                <div id="rankTopImage">
-                  <img src="../../assets/image/yedai10.png" alt="">
-                </div>
-                <ul id="rankHeader">
-                  <li v-for="(item,index) in rankHeaderList" :key="index" @click="changeRankList(item.type,item.sort)">
-                      {{ item.title }}
-                      <div id="sort" v-if="item.sort">
-                          <Icon type="ios-funnel" :color="item.type == formData.orderType?'#ff9900':'#17233d'"></Icon>
-                      </div>
-                  </li>
-                </ul>
-                <div>
-                  <ul id="rankList" :class="page == 1?'top' + ( index + 1 ):''" v-for="(item,index) in rankList" :key="index">
-                    <li >{{ ( page - 1) * pageSize + index + 1 }}</li>
-                    <li v-for="(j,num) in rankHeaderList" :key="num" v-if="j.type !== 'index'">{{item[j.type]}}</li>
-                  </ul>
-                </div>
-                
-            </div>
-            
-        </div>
-        <div class="page-box">
-          <div style="float: right;">
-            <Page :total="pageNum" :current="page" :page-size="pageSize" @on-change="changePage"></Page>
+        <!-- 业代排行榜 -->
+
+        <div id="rank">
+          <div id="rankTopImage">
+            <img src="../../assets/image/yedai10.png" alt>
+          </div>
+          <ul id="rankHeader">
+            <li
+              v-for="(item,index) in rankHeaderList"
+              :key="index"
+              @click="changeRankList(item.type,item.sort)"
+            >
+              {{ item.title }}
+              <div id="sort" v-if="item.sort">
+                <Icon
+                  type="ios-funnel"
+                  :color="item.type == formData.orderType?'#ff9900':'#17233d'"
+                ></Icon>
+              </div>
+            </li>
+          </ul>
+          <div>
+            <ul
+              id="rankList"
+              :class="page == 1?'top' + ( index + 1 ):''"
+              v-for="(item,index) in rankList"
+              :key="index"
+            >
+              <li>{{ ( page - 1) * pageSize + index + 1 }}</li>
+              <li
+                v-for="(j,num) in rankHeaderList"
+                :key="num"
+                v-if="j.type !== 'index'"
+              >{{item[j.type]}}</li>
+            </ul>
           </div>
         </div>
-        <fieldNameDes/>
       </div>
-      
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" :page-size="pageSize" @on-change="changePage"></Page>
+        </div>
+      </div>
+      <fieldNameDes/>
+    </div>
   </div>
 </template>
 
 <script>
 import fieldNameDes from "@/components/field-name-description.vue";
-import dataRange from "../../components/data-rang.vue";
-import exportBtn from "../../components/Button/export-btn.vue";
-import detailBtn from "../../components/Button/detail-btn.vue";
+import dataRange from "@/components/data-rang.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
+import detailBtn from "@/components/Button/detail-btn.vue";
 
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
 import {
-  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
-  typeQueryActivityGroupVOByBrandId, //根据活动包名ID获取陈列活动列表
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
-import { displayApplyDetail } from "@/api/activity-manage/display-activity-manage.js"; //api
-export default {
-  name:"display-activity-karma-sort-keepAlive",
-  data() {
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.endTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("endTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
+import { validateStart, validateEnd } from "@/util/index.js";//验证规则
 
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.startTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
+export default {
+  name: "display-activity-karma-sort-keepAlive",
+  data() {
     return {
       oneLeverList: [], //一级组织数据
       twoLeverList: [], //二级组织数据
@@ -445,11 +484,11 @@ export default {
           sort: true
         }
       ],
-      pageSize:20,
+      pageSize: 20,
       rankList: []
     };
   },
-  components: { dataRange, exportBtn, detailBtn,fieldNameDes },
+  components: { dataRange, exportBtn, detailBtn, fieldNameDes },
   created() {
     this.Global.doPostNoLoading(
       "condition/queryBrands.json",
@@ -459,9 +498,9 @@ export default {
         Object.entries(res).forEach(item => {
           this.brandList.push({ id: Number(item[0]), brandName: item[1] });
         });
-        if(this.brandList && this.brandList.length){
+        if (this.brandList && this.brandList.length) {
           this.formData.brandId = this.brandList[0].id;
-          this.changeValue(this.formData.brandId)
+          this.changeValue(this.formData.brandId);
         }
       }
     );
@@ -511,11 +550,6 @@ export default {
           });
         }
       );
-      // typeQueryActivityVOByGroupId({ groupId: value, type: 3 }).then(res => {
-      //   if (res && res.status == 1) {
-      //     this.activityList = res.data;
-      //   }
-      // });
     },
     endTimeChange(value) {
       this.end.hour = value.hour;
@@ -613,7 +647,7 @@ export default {
       this.groupList = [];
       this.formData.groupId = "";
       this.formData.oneLevel = "";
-      if(!value) return;
+      if (!value) return;
       //查询活动包
       this.Global.doPostNoLoading(
         "condition/queryGroup.json",
@@ -624,7 +658,7 @@ export default {
           });
           if (this.groupList && this.groupList.length) {
             this.formData.groupId = this.groupList[0].id;
-            this.getActivityList(this.formData.groupId)
+            this.getActivityList(this.formData.groupId);
           }
         }
       );

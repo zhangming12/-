@@ -55,39 +55,12 @@
 
 <script>
 import { awardStatus } from "@/util/ENUMS.js";
+import { validateStart, validateEnd } from "@/util/index.js";//验证规则
 
 export default {
   name: "red-award-manage-keepAlive",
   data() {
     const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       formData: {
         name: "",
@@ -119,7 +92,7 @@ export default {
           key: "startTime",
           align: "center",
           render: (h, params) => {
-            return that.Global.createTime(params.row.startTime);
+            return this.Global.createTime(params.row.startTime);
           }
         },
         {
@@ -127,7 +100,7 @@ export default {
           key: "endTime",
           align: "center",
           render: (h, params) => {
-            return that.Global.createTime(params.row.endTime);
+            return this.Global.createTime(params.row.endTime);
           }
         },
         {

@@ -132,71 +132,99 @@
 </style>
 
 <template>
-	<div id="Main">
-		<h2 class="Title">陈列折扣使用情况汇总-品牌及经销商</h2>
-		<div class="box">
-			<Form ref="form" :model="formData" :label-width="85">
-				<Row>
-					<Col span="7">
-                    <Form-item label="品牌名称:" prop="brandId">
-						<Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue" clearable>
-							<Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-						</Select>
-					</Form-item>
-                    <Form-item label="分组名称:" prop="presentId">
-						<Select v-model="formData.presentId" placeholder="请选择" clearable>
-							<Option :value="item.id" v-for="(item,index) in presentNameList" :key="index">{{ item.activityTag }}</Option>
-						</Select>
-					</Form-item>
-					</Col>
-					<Col span="7">
-					<Form-item label="活动包名:" prop="groupId">
-						<Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
-							<Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-						</Select>
-					</Form-item>
-
-					</Col>
-					<Col span="7">
-					<Form-item label="活动名称:" prop="activityId">
-						<Select v-model="formData.activityId" placeholder="请选择" @on-change="getpresentList" clearable>
-							<Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-						</Select>
-					</Form-item>
-
-					</Col>
-					<Col span='2' offset="1" style="margin-top:20px">
-					<div class="searchBox">
-						<Button @click="submit()"  type="primary">查询</Button>
-						<!-- <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="chevron-up" v-if="showQuery"></Button>
-						<Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="chevron-down" v-else></Button> -->
-					</div>
-
-					</Col>
-				</Row>
-			</Form>
-		</div>
-		<div class="box" style='margin-top: 15px;overflow: hidden;'>
-      <ul class='ull'>
-        <li @click="changeImageData(index)" :class="checkImg[index].checked?'checked':''" v-for='(item,index) in keys' :key='item'>
-          {{item}}
-        </li>
+  <div id="Main">
+    <h2 class="Title">陈列折扣使用情况汇总-品牌及经销商</h2>
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="85">
+        <Row>
+          <Col span="7">
+            <Form-item label="品牌名称:" prop="brandId">
+              <Select
+                v-model="formData.brandId"
+                placeholder="请选择"
+                @on-change="changeValue"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="分组名称:" prop="presentId">
+              <Select v-model="formData.presentId" placeholder="请选择" clearable>
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in presentNameList"
+                  :key="index"
+                >{{ item.activityTag }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动包名:" prop="groupId">
+              <Select
+                v-model="formData.groupId"
+                placeholder="请选择"
+                @on-change="getActivityList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动名称:" prop="activityId">
+              <Select
+                v-model="formData.activityId"
+                placeholder="请选择"
+                @on-change="getpresentList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:20px">
+            <div class="searchBox">
+              <Button @click="submit()" type="primary">查询</Button>
+              <!-- <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="chevron-up" v-if="showQuery"></Button>
+              <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="chevron-down" v-else></Button>-->
+            </div>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;overflow: hidden;">
+      <ul class="ull">
+        <li
+          @click="changeImageData(index)"
+          :class="checkImg[index].checked?'checked':''"
+          v-for="(item,index) in keys"
+          :key="item"
+        >{{item}}</li>
       </ul>
       <div ref="scancodeActivity" :style="{height: '500px'}"></div>
-		</div>
-	</div>
+    </div>
+  </div>
 </template>
 
 <script>
 import echarts from "echarts";
 import {
-  queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
-  queryActivityVOByGroupId, //根据活动包名ID获取陈列活动列表
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-// import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
-  name:"display-prizes-summary-keepAlive",
+  name: "display-prizes-summary-keepAlive",
   data() {
     return {
       formData: {
@@ -227,7 +255,7 @@ export default {
         Object.entries(res).forEach(item => {
           this.brandList.push({ id: Number(item[0]), brandName: item[1] });
         });
-        if(this.brandList && this.brandList.length){
+        if (this.brandList && this.brandList.length) {
           this.formData.brandId = this.brandList[0].id;
           this.changeValue(this.formData.brandId);
           this.drawLine();
@@ -297,10 +325,10 @@ export default {
     changeValue(value) {
       this.groupList = [];
       this.formData.groupId = "";
-      if(!value) return
+      if (!value) return;
       this.Global.doPostNoLoading(
         "condition/queryGroup.json",
-        { activityType: 3, scope: "a",date:7, brandId: value },
+        { activityType: 3, scope: "a", date: 7, brandId: value },
         res => {
           Object.entries(res).forEach(item => {
             this.groupList.push({ id: Number(item[0]), groupName: item[1] });
@@ -314,8 +342,8 @@ export default {
     },
     getActivityList(value) {
       this.activityList = [];
-      this.formData.activityId = ""
-      if(!value) return ;
+      this.formData.activityId = "";
+      if (!value) return;
       this.Global.doPostNoLoading(
         "condition/queryActivity.json",
         { date: 7, activityType: 3, scope: "a", groupId: value },

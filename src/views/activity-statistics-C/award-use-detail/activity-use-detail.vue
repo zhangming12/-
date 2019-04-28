@@ -140,46 +140,19 @@
 
 <script>
 import area from "@/config/china_code_data.js";
-import dataRange from "../../../components/data-rang.vue";
+import dataRange from "@/components/data-rang.vue";
 
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
+import { validateStart, validateEnd } from "@/util/index.js";//验证规则
 
 export default {
   name: "activity-use-detail-keepAlive",
   data() {
     const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
@@ -214,7 +187,7 @@ export default {
           minWidth: 150,
           render: (h, params) => {
             return params.row.createTime
-              ? that.Global.createTime(params.row.createTime)
+              ? this.Global.createTime(params.row.createTime)
               : "";
           }
         },

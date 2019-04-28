@@ -903,7 +903,7 @@ import {
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
 import qs from "qs";
 import imageLook from "@/components/imgLook/img-look.vue";
@@ -1608,14 +1608,6 @@ export default {
         path: "/auditDetail",
         query: queryParams
       });
-      // return;
-      // window.open(
-      //   location.origin +
-      //     location.pathname +
-      //     "#" +
-      //     "/displayResultOneEdit?" +
-      //     qs.stringify(queryParams)
-      // );
     },
     skuClick(val) {
       let { id } = val;

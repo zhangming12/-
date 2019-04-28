@@ -77,12 +77,6 @@
       }
     }
   }
-  #city {
-    // background-image: url('../../../assets/image/cityTop.png')
-  }
-  #area {
-    // background-image: url('../../../assets/image/areaTop.png')
-  }
 }
 
 .ivu-table-row {
@@ -143,183 +137,166 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">陈列活动排行榜</h2> -->
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="80" :rules="rule">
-                <Row>
-                    <Col span="12">
-                        <Form-item label="上传时间:" required prop="queryTime">
-                            <!-- <DatePicker  v-model="formData.queryTime" placeholder="选择日期跟时间" type="datetimerange" style="width:100%"></DatePicker> -->
-                            <Row>
-                                <Col span="11">
-                                    <Form-item prop="queryStartTime">
-                                    <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                                    </Form-item>
-                                </Col>
-                                <Col span="2" style="text-align: center;">至</Col>
-                                <Col span="11">
-                                    <Form-item prop="queryEndTime">
-                                        <data-range placeholder="结束时间" hour="24:00" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                                    </Form-item>
-                                </Col>
-                            </Row>
-                        </Form-item>
-                         <Form-item label="活动包名:" prop="groupId" required>
-                              <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList">
-                                  <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                              </Select>  
-                          </Form-item>
-                    </Col>
-                    <Col span="8" offset="1">
-                        <Form-item label="品牌名称:" prop="brandId" required>
-                            <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>
-                        <Form-item label="陈列活动:" prop="activityId">
-                            <Select v-model="formData.activityId" placeholder="请选择" clearable>
-                                <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                            </Select>
-                        </Form-item>
-                        
-                    </Col>
-                    <Col span="2" offset="1" style="margin-top:24px">
-                        <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
-                    </Col>
-                </Row>
-            </Form>
+    <!-- <h2 class="Title">陈列活动排行榜</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="80" :rules="rule">
+        <Row>
+          <Col span="12">
+            <Form-item label="上传时间:" required prop="queryTime">
+              <!-- <DatePicker  v-model="formData.queryTime" placeholder="选择日期跟时间" type="datetimerange" style="width:100%"></DatePicker> -->
+              <Row>
+                <Col span="11">
+                  <Form-item prop="queryStartTime">
+                    <data-range
+                      @dataChange="startTimeChange"
+                      hour="00:00"
+                      :time="formData.queryStartTime"
+                      start
+                    ></data-range>
+                  </Form-item>
+                </Col>
+                <Col span="2" style="text-align: center;">至</Col>
+                <Col span="11">
+                  <Form-item prop="queryEndTime">
+                    <data-range
+                      placeholder="结束时间"
+                      hour="24:00"
+                      @dataChange="endTimeChange"
+                      :time="formData.queryEndTime"
+                    ></data-range>
+                  </Form-item>
+                </Col>
+              </Row>
+            </Form-item>
+            <Form-item label="活动包名:" prop="groupId" required>
+              <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="8" offset="1">
+            <Form-item label="品牌名称:" prop="brandId" required>
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="陈列活动:" prop="activityId">
+              <Select v-model="formData.activityId" placeholder="请选择" clearable>
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:24px">
+            <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <h2 class="Title" style="margin-top: 20px;">区域上传排行榜</h2>
+    <div class="areaBox">
+      <div id="province">
+        <div class="top">
+          <div class="top-img">
+            <img src="../../../assets/image/provinceTop20.png" class="top-img" alt="本周业代关联门店扫码量排行榜">
+          </div>
+          <div class="top-icon" @click="displayRateExport" v-show="provinceList.length>0">
+            <img src="../../../assets/image/echart-down.jpg" alt>
+          </div>
+        </div>
+        <ul>
+          <li>
+            <span>排名</span>
+            <span>省</span>
+            <span>上传数</span>
+            <span>门店数</span>
+          </li>
+          <li v-for="(item,index) in provinceList" :key="index">
+            <span>{{ index + 1}}</span>
+            <span>{{ item.province }}</span>
+            <span>{{ item.winCount }}</span>
+            <span>{{ item.winUserCount }}</span>
+          </li>
+        </ul>
       </div>
-      <h2 class="Title" style="margin-top: 20px;">区域上传排行榜</h2>
-      <div class="areaBox">
-          <div id="province">
-              <div class="top">
-                  <div class="top-img">
-                      <img src="../../../assets/image/provinceTop20.png" class="top-img" alt="本周业代关联门店扫码量排行榜">
-                  </div>
-                  <div class="top-icon" @click="displayRateExport" v-show="provinceList.length>0">
-                      <img src="../../../assets/image/echart-down.jpg" alt="">
-                  </div>
-              </div>
-              <ul>
-                  <li>
-                      <span>排名</span>
-                      <span>省</span>
-                      <span>上传数</span>
-                      <span>门店数</span>
-                  </li>
-                  <li v-for="(item,index) in provinceList" :key="index" >
-                        <span>{{ index + 1}}</span>
-                        <span>{{ item.province }}</span>
-                        <span>{{ item.winCount }}</span>
-                        <span>{{ item.winUserCount }}</span>
-                    </li>
-              </ul>
+      <div id="city">
+        <div class="top">
+          <div class="top-img">
+            <img src="../../../assets/image/areaTop20.png" class="top-img" alt="本周业代关联门店扫码量排行榜">
           </div>
-          <div id="city">
-              <div class="top">
-                    <div class="top-img">
-                        <img src="../../../assets/image/areaTop20.png" class="top-img" alt="本周业代关联门店扫码量排行榜">
-                    </div>
-                    <div class="top-icon" @click="displayRateExport" v-show="cityList.length>0">
-                        <img src="../../../assets/image/echart-down.jpg" alt="">
-                    </div>
-                </div>
-              <ul>
-                  <li>
-                      <span>排名</span>
-                      <span>省</span>
-                      <span>市</span> 
-                      <span>上传数</span>
-                      <span>门店数</span>
-                  </li>
-                  <li v-for="(item,index) in cityList" :key="index" >
-                      <span>{{ index + 1}}</span>
-                      <span>{{ item.province }}</span>
-                      <span>{{ item.city }}</span>
-                      <span>{{ item.winCount }}</span>
-                      <span>{{ item.winUserCount }}</span>
-                      
-                  </li>
-              </ul>
+          <div class="top-icon" @click="displayRateExport" v-show="cityList.length>0">
+            <img src="../../../assets/image/echart-down.jpg" alt>
           </div>
-          <div id="area">
-              <div class="top">
-                    <div class="top-img">
-                      
-                        <img src="../../../assets/image/cityTop20.png" class="top-img" alt="本周业代关联门店扫码量排行榜">
-                    </div>
-                    <div class="top-icon" @click="displayRateExport" v-show="areaList.length>0">
-                        <img src="../../../assets/image/echart-down.jpg" alt="">
-                    </div>
-                </div>
-              <ul>
-                  <li>
-                      <span>排名</span>
-                      <span>省</span>
-                      <span>市</span>
-                      <span>区</span>
-                      <span>上传数</span>
-                      <span>门店数</span>
-                  </li>
-                  <li v-for="(item,index) in areaList" :key="index"  >
-                      <span>{{ index + 1}}</span>
-                      <span>{{ item.province }}</span>
-                      <span>{{ item.city }}</span>
-                      <span>{{ item.area }}</span>
-                      <span>{{ item.winCount }}</span>
-                      <span>{{ item.winUserCount }}</span>
-                  </li>
-              </ul>
-          </div>
+        </div>
+        <ul>
+          <li>
+            <span>排名</span>
+            <span>省</span>
+            <span>市</span>
+            <span>上传数</span>
+            <span>门店数</span>
+          </li>
+          <li v-for="(item,index) in cityList" :key="index">
+            <span>{{ index + 1}}</span>
+            <span>{{ item.province }}</span>
+            <span>{{ item.city }}</span>
+            <span>{{ item.winCount }}</span>
+            <span>{{ item.winUserCount }}</span>
+          </li>
+        </ul>
       </div>
+      <div id="area">
+        <div class="top">
+          <div class="top-img">
+            <img src="../../../assets/image/cityTop20.png" class="top-img" alt="本周业代关联门店扫码量排行榜">
+          </div>
+          <div class="top-icon" @click="displayRateExport" v-show="areaList.length>0">
+            <img src="../../../assets/image/echart-down.jpg" alt>
+          </div>
+        </div>
+        <ul>
+          <li>
+            <span>排名</span>
+            <span>省</span>
+            <span>市</span>
+            <span>区</span>
+            <span>上传数</span>
+            <span>门店数</span>
+          </li>
+          <li v-for="(item,index) in areaList" :key="index">
+            <span>{{ index + 1}}</span>
+            <span>{{ item.province }}</span>
+            <span>{{ item.city }}</span>
+            <span>{{ item.area }}</span>
+            <span>{{ item.winCount }}</span>
+            <span>{{ item.winUserCount }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
-import dataRange from "../../../components/data-rang.vue";
-import {
-  typeQueryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
-  typeQueryActivityVOByGroupId //根据活动包名ID获取陈列活动列表
-} from "@/api/common.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
+import dataRange from "@/components/data-rang.vue";
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
+
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import { displayRankingShow } from "@/api/activity-manage/apply-survey-statistics.js";
 export default {
-  name:"display-activity-ranking-keepAlive",
+  name: "display-activity-ranking-keepAlive",
   data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       start: {
         time: "",
@@ -329,12 +306,12 @@ export default {
         time: EDFAULT_ENDTIME,
         hour: "24:00"
       },
-      groupList:[],
+      groupList: [],
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME,
         brandId: "",
-        groupId:"",
+        groupId: "",
         activityId: "",
         queryTime: [EDFAULT_STARTTIME, EDFAULT_ENDTIME]
       },
@@ -342,7 +319,7 @@ export default {
         queryStartTime: [{ validator: validateStart }],
         queryEndTime: [{ validator: validateEnd }],
         brandId: [{ required: true, message: "品牌不能为空" }],
-        groupId: [{ required: true, message: "活动包名不能为空" }],
+        groupId: [{ required: true, message: "活动包名不能为空" }]
       },
 
       brandList: [],
@@ -362,7 +339,7 @@ export default {
         Object.entries(res).forEach(item => {
           this.brandList.push({ id: Number(item[0]), brandName: item[1] });
         });
-        if(this.brandList && this.brandList.length){
+        if (this.brandList && this.brandList.length) {
           this.formData.brandId = this.brandList[0].id;
           this.changeValue(this.formData.brandId);
         }
@@ -373,7 +350,7 @@ export default {
     getActivityList(value) {
       this.activityList = [];
       this.formData.activityId = "";
-      if(!value) return ;
+      if (!value) return;
       this.Global.doPostNoLoading(
         "condition/queryActivity.json",
         { date: 7, activityType: 3, scope: "a", groupId: value },
@@ -410,15 +387,13 @@ export default {
       if (value.hour == "24:00") {
         return;
       }
-      this.formData.queryEndTime = this.Global.setHoursData(value.time, value.hour);
+      this.formData.queryEndTime = this.Global.setHoursData(
+        value.time,
+        value.hour
+      );
     },
-    init: function() {
-      var that = this;
+    init() {
       var data = this.Global.JsonChange(this.formData);
-      //   data["queryStartTime"] = this.Global.createTime(
-      //     this.formData.queryTime[0]
-      //   );
-      //   data["queryEndTime"] = this.Global.createTime(this.formData.queryTime[1]);
 
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
@@ -453,7 +428,7 @@ export default {
     changeValue(value) {
       this.groupList = [];
       this.formData.groupId = "";
-      if(!value) return;
+      if (!value) return;
       this.Global.doPostNoLoading(
         "condition/queryGroup.json",
         { date: 7, activityType: 3, scope: "a", brandId: value },
@@ -469,7 +444,6 @@ export default {
       );
     },
     displayRateExport() {
-      var that = this;
       var data = this.Global.JsonChange(this.formData);
 
       data["queryStartTime"] = this.Global.createTime(

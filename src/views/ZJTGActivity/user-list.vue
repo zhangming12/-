@@ -40,33 +40,6 @@
 .ivu-radio-wrapper {
   margin-right: 30px;
 }
-.searchBox {
-  overflow: hidden;
-  .search-left,
-  .search-right {
-    width: 48%;
-  }
-  .search-left {
-    button {
-      outline: none;
-      border: none;
-      width: 60px;
-      height: 30px;
-      line-height: 30px;
-      background: #ffffff;
-      margin-left: 8px;
-      cursor: pointer;
-      color: @primary-color;
-    }
-  }
-  .search-right {
-    width: 52%;
-    img {
-      cursor: pointer;
-      margin-left: 6px;
-    }
-  }
-}
 .myModal {
   position: absolute;
   width: 100%;
@@ -136,54 +109,60 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">二维码列表</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" class="form" :model="formData" :label-width="10">
-              <div class="container">
-                <div class="btn-left w18">
-                  <Form-item   >
-                      <Input placeholder="请输入昵称" v-model="formData.wxNickName" clearable></Input>
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                    <Form-item>
-                      <Cascader placeholder="所在地" :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item    >
-                      <Select v-model="formData.sex"  placeholder="性别" clearable>
-                          <Option value="0">女</Option>
-                          <Option value="1">男</Option>
-                      </Select> 
-                    </Form-item>
-                  </div>
-                
-              </div>
-              <div class="btn-left w10">
-                <div class="searchBox">
-                    <div class="btn-right search-right" @click="submit('form')">
-                        <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                    </div>
-                </div>
-              </div>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">共查询到 <span class='numColor'>{{ pageNum }}</span> 条数据</span>
+    <!-- <h2 class="Title">二维码列表</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" class="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item>
+                <Input placeholder="请输入昵称" v-model="formData.wxNickName" clearable></Input>
+              </Form-item>
             </div>
-            <hhTable :columns="columns1" :pageData="pageData" :noneStatus = "noneStatus" disabled-hover></hhTable>
-            
-        </div>
-        <div class="page-box">
-          <div style="float: right;">
-            <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+            <div class="btn-left w18">
+              <Form-item>
+                <Cascader
+                  placeholder="所在地"
+                  :data="areaData"
+                  v-model="formData.areaCode"
+                  change-on-select
+                ></Cascader>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item>
+                <Select v-model="formData.sex" placeholder="性别" clearable>
+                  <Option value="0">女</Option>
+                  <Option value="1">男</Option>
+                </Select>
+              </Form-item>
+            </div>
           </div>
-        </div>
-        <fieldNameDes/>
+          <div class="btn-left w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+              </div>
+            </div>
+          </div>
+        </Form>
       </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            共查询到
+            <span class="numColor">{{ pageNum }}</span> 条数据
+          </span>
+        </div>
+        <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
+      <fieldNameDes/>
+    </div>
   </div>
 </template>
 
@@ -194,7 +173,6 @@ import importBtn from "@/components/Button/import-btn.vue";
 import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
-import config from "@/util/config.js";
 import area from "@/config/china_code_data.js";
 export default {
   name: "user-list-keepAlive",
@@ -226,7 +204,7 @@ export default {
                   height: "30px",
                   margin: "0 auto",
                   cursor: "pointer"
-                },
+                }
                 // on: {
                 //   click: () => {
                 //     this.src = params.row.resIcon;
@@ -270,7 +248,7 @@ export default {
           minWidth: 140,
           align: "center",
           tooltip: true
-        },
+        }
         // {
         //   title: "手机号",
         //   key: "phone",

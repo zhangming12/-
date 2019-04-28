@@ -1050,12 +1050,13 @@ import myTooltip from "@/components/tooltip/tooltip.vue";
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
+import qs from "qs";
+
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
-import qs from "qs";
 import imageLook from "@/components/imgLook/img-look.vue";
 export default {
   name: "audit-review-double-keepAlive",
@@ -1717,14 +1718,6 @@ export default {
         path: "/auditDetail",
         query: queryParams
       });
-      // return;
-      // window.open(
-      //   location.origin +
-      //     location.pathname +
-      //     "#" +
-      //     "/displayResultOneEdit?" +
-      //     qs.stringify(queryParams)
-      // );
     },
     skuClick(val) {
       let { id } = val;

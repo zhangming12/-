@@ -128,174 +128,200 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">陈列风险记录</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" :model="formData" :label-width="10">
-              <div class="container">
-                    <div class="btn-left w18">
-                        <Form-item required prop="brandId">
-                            <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue" clearable>
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item  prop="queryStartTime" required>
-                            <data-range placeholder="上传时间查询范围" @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item  prop="queryEndTime" required>
-                            <data-range hour="24:00" placeholder="上传时间查询范围" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item required>
-                            <Select v-model="formData.riskStatus" placeholder="风险状态" clearable>
-                            <Option value="0" >正常</Option>
-                            <Option value="1" >预警</Option>
-                        </Select> 
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item  prop="groupId" required>
-                            <Select v-model="formData.groupId" placeholder="活动名称*" @on-change="getActivityList" clearable>
-                                <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    
-                    
-                    
-                    
-                    
-                    <div class="btn-left w10">
-                        <div class="searchBox">
-                            <div class="btn-left search-left" @click="showQuery=!showQuery">
-                              <button type="button">
-                                  {{showQuery?'收起':'更多'}}
-                                  <Icon type="ios-arrow-down" size="14" style="margin-top:-2px;" v-if="!showQuery"/>
-                                  <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
-                              </button>
-                            </div>
-                            <div class="btn-right search-right" @click="submit('search')">
-                              <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                            </div>
-                        </div>
-                    </div>
-              </div>
-              <transition name="fade">
-                <div class="container" v-if="showQuery">
-                  
-                    <div class="btn-left w18">
-                        <Form-item required prop="activityId">
-                            <Select v-model="formData.activityId" placeholder="子活动名称" clearable>
-                                <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item required>
-                            <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item required>
-                            <Input v-model.trim="formData.salesRoute" placeholder="销售路线"></Input>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item required>
-                            <Input v-model.trim="formData.workerName" placeholder="业代姓名"></Input>
-                        </Form-item>
-                    </div>
+    <!-- <h2 class="Title">陈列风险记录</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required prop="brandId">
+                <Select
+                  v-model="formData.brandId"
+                  placeholder="品牌名称"
+                  @on-change="changeValue"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="queryStartTime" required>
+                <data-range
+                  placeholder="上传时间查询范围"
+                  @dataChange="startTimeChange"
+                  hour="00:00"
+                  :time="formData.queryStartTime"
+                  start
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="queryEndTime" required>
+                <data-range
+                  hour="24:00"
+                  placeholder="上传时间查询范围"
+                  @dataChange="endTimeChange"
+                  :time="formData.queryEndTime"
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <Select v-model="formData.riskStatus" placeholder="风险状态" clearable>
+                  <Option value="0">正常</Option>
+                  <Option value="1">预警</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="groupId" required>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="活动名称*"
+                  @on-change="getActivityList"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in groupList"
+                    :key="index"
+                  >{{ item.groupName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+
+            <div class="btn-left w10">
+              <div class="searchBox">
+                <div class="btn-left search-left" @click="showQuery=!showQuery">
+                  <button type="button">
+                    {{showQuery?'收起':'更多'}}
+                    <Icon
+                      type="ios-arrow-down"
+                      size="14"
+                      style="margin-top:-2px;"
+                      v-if="!showQuery"
+                    />
+                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
+                  </button>
                 </div>
-              </transition>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">共查询到 <span class='numColor'>{{pageNum}}</span> 条记录</span>
-              
-              <!-- <exportBtn  class="btn-right" @btnClick="submit('export')" title="导出"/> -->
-              <!-- <exportBtn  class="btn-right" @btnClick="myModalisShow = true" title="导出暂存"/> -->
-              <!-- <detailBtn  class="btn-right" @btnClick="historyShow = true" title="历史数据" /> -->
+                <div class="btn-right search-right" @click="submit('search')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+                </div>
+              </div>
             </div>
-            <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" ></hhTable>
-            
-        </div>
-        <div class="page-box">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+          </div>
+          <transition name="fade">
+            <div class="container" v-if="showQuery">
+              <div class="btn-left w18">
+                <Form-item required prop="activityId">
+                  <Select v-model="formData.activityId" placeholder="子活动名称" clearable>
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in activityList"
+                      :key="index"
+                    >{{ item.name }}</Option>
+                  </Select>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input v-model.trim="formData.salesRoute" placeholder="销售路线"></Input>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input v-model.trim="formData.workerName" placeholder="业代姓名"></Input>
+                </Form-item>
+              </div>
             </div>
+          </transition>
+        </Form>
+      </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            共查询到
+            <span class="numColor">{{pageNum}}</span> 条记录
+          </span>
+
+          <!-- <exportBtn  class="btn-right" @btnClick="submit('export')" title="导出"/> -->
+          <!-- <exportBtn  class="btn-right" @btnClick="myModalisShow = true" title="导出暂存"/> -->
+          <!-- <detailBtn  class="btn-right" @btnClick="historyShow = true" title="历史数据" /> -->
+        </div>
+        <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      
-      <!-- 导入导出历史 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="myModalisShow"
-            width=800>
-          <div slot="main" class="modal-main">
-            <!-- <h3>近一周导出历史</h3> -->
-            <div class="modal-table" style="margin-top:0;">
-              <div class="modal-table-top">
-                <span class="btn-left"><Icon type="md-alert" size="22" style="margin-right:5px;" />生成的数据报表可在【导出暂存】中保留7天,过期自动删除</span>
-                <refreshBtn @click.native="queryhistoryData" class="btn-right"/>
-              </div>
-              <!-- <hhTable :columns="columns" :pageData="historyData"  disabled-hover></hhTable> -->
-              <Table :columns="columns" :data="historyData"  disabled-hover></Table>
-            </div>
-          </div>
-       </myModal>
+    </div>
 
-       <!-- 时间溢出弹窗 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="timeModalShow">
-          <div slot="main" class="modal-main">
-            <h3>提示</h3>
-            <div class="modal-table">
-                <!-- <p style="text-align:center;">{{ str }}的范围超过31天，请缩小查询范围或者前往【历史数据】中下载历史数据</p> -->
-                <p style="text-align:center;">查询的范围超过31天，请缩小查询范围或者【导出】查看</p>
-            </div>
-            <div class="maintain-footer">
-                <Button @click="closeModal" type="text">知道了</Button>
-                <Button @click="goToHistory" style="color:#ff8a34;" type="text">导出</Button>
-            </div>
+    <!-- 导入导出历史 -->
+    <myModal class="myModal" @close="closeModal" :modal="myModalisShow" width="800">
+      <div slot="main" class="modal-main">
+        <!-- <h3>近一周导出历史</h3> -->
+        <div class="modal-table" style="margin-top:0;">
+          <div class="modal-table-top">
+            <span class="btn-left">
+              <Icon type="md-alert" size="22" style="margin-right:5px;"/>生成的数据报表可在【导出暂存】中保留7天,过期自动删除
+            </span>
+            <refreshBtn @click.native="queryhistoryData" class="btn-right"/>
           </div>
-       </myModal>
+          <Table :columns="columns" :data="historyData" disabled-hover></Table>
+        </div>
+      </div>
+    </myModal>
 
-       <!-- 历史数据 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="historyShow"
-            width=520>
-          <div slot="main" class="modal-main">
-            <h3>预警处理</h3>
-            <Form :label-width="80">
-              <Form-item required label="风险状态:">
-                <RadioGroup v-model="hanleData.riskStatus">
-                    <Radio :label="1">
-                        <span>预警</span>
-                    </Radio>
-                    <Radio :label="0">
-                        <span>正常</span>
-                    </Radio>
-                </RadioGroup>
-              </Form-item>
-              <Form-item required label="备注:">
-                  <Input v-model.trim="hanleData.memo" type="textarea" :rows="4"></Input>
-              </Form-item>
-            </Form>
-            <div class="maintain-footer">
-                <Button @click="closeModal" type="text">取消</Button>
-                <Button @click="handleSure" style="color:#ff8a34;" type="text">保存</Button>
-            </div>
-          </div>
-       </myModal>
+    <!-- 时间溢出弹窗 -->
+    <myModal class="myModal" @close="closeModal" :modal="timeModalShow">
+      <div slot="main" class="modal-main">
+        <h3>提示</h3>
+        <div class="modal-table">
+          <p style="text-align:center;">查询的范围超过31天，请缩小查询范围或者【导出】查看</p>
+        </div>
+        <div class="maintain-footer">
+          <Button @click="closeModal" type="text">知道了</Button>
+          <Button @click="goToHistory" style="color:#ff8a34;" type="text">导出</Button>
+        </div>
+      </div>
+    </myModal>
 
+    <!-- 历史数据 -->
+    <myModal class="myModal" @close="closeModal" :modal="historyShow" width="520">
+      <div slot="main" class="modal-main">
+        <h3>预警处理</h3>
+        <Form :label-width="80">
+          <Form-item required label="风险状态:">
+            <RadioGroup v-model="hanleData.riskStatus">
+              <Radio :label="1">
+                <span>预警</span>
+              </Radio>
+              <Radio :label="0">
+                <span>正常</span>
+              </Radio>
+            </RadioGroup>
+          </Form-item>
+          <Form-item required label="备注:">
+            <Input v-model.trim="hanleData.memo" type="textarea" :rows="4"></Input>
+          </Form-item>
+        </Form>
+        <div class="maintain-footer">
+          <Button @click="closeModal" type="text">取消</Button>
+          <Button @click="handleSure" style="color:#ff8a34;" type="text">保存</Button>
+        </div>
+      </div>
+    </myModal>
   </div>
 </template>
 
@@ -394,7 +420,7 @@ export default {
           title: "风险来源",
           key: "riskSource",
           align: "center",
-          tooltip: true,
+          tooltip: true
           // render: (h, params) => {
           //   let str = "";
           //   if (params.row.riskSource == "M") {
@@ -409,7 +435,7 @@ export default {
           title: "风险类型",
           key: "riskType",
           align: "center",
-          tooltip: true,
+          tooltip: true
           // render: (h, params) => {
           //   let str = "";
           //   if (params.row.riskType == "V") {
@@ -861,7 +887,7 @@ export default {
             let riskType = res.datalist[i].riskType;
             if (riskType == "V") {
               res.datalist[i].riskType = "视频异常";
-            }else {
+            } else {
               res.datalist[i].riskType = "";
             }
 

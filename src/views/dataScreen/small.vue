@@ -226,180 +226,230 @@
 </style>
 
 <template>
-    <div id="Main">
-        <div class="mainTop">
-            <div><span></span></div>
-            <div class='boxs'>
-              <!-- 品牌的选择 -->
-              <div class="activityChange"  @click='showPackage' >
-                  <div id='activity' style="width: 180px;">
-                      <div :id='formData.groupId' style="color: #d5ab32;" class='Title'>
-                          {{groupName}}
-                      </div> 
+  <div id="Main">
+    <div class="mainTop">
+      <div>
+        <span></span>
+      </div>
+      <div class="boxs">
+        <!-- 品牌的选择 -->
+        <div class="activityChange" @click="showPackage">
+          <div id="activity" style="width: 180px;">
+            <div :id="formData.groupId" style="color: #d5ab32;" class="Title">{{groupName}}</div>
 
-                      <ul class='List' :class="{ 'show': showGroup}" style='width: 180px;left: -10px;'>
-                          <li v-for="(item,index) in groupList" :key="index" @click.stop='changeGroup' :brandId="item.brandId" :id='item.id' :title='item.groupName'>
-                              {{ item.groupName }}
-                          </li>
-                      </ul> 
-                  </div> 
-              </div>
-              <!-- 活动的选择 -->
-              <div class="activityChange"  @click='show' >
-                  <div id='activity' style="width: 180px;">
-                      <div :id='formData.activityId' style="color: #d5ab32;" class='Title'>
-                          {{activityName}}
-                      </div> 
+            <ul class="List" :class="{ 'show': showGroup}" style="width: 180px;left: -10px;">
+              <li
+                v-for="(item,index) in groupList"
+                :key="index"
+                @click.stop="changeGroup"
+                :brandId="item.brandId"
+                :id="item.id"
+                :title="item.groupName"
+              >{{ item.groupName }}</li>
+            </ul>
+          </div>
+        </div>
+        <!-- 活动的选择 -->
+        <div class="activityChange" @click="show">
+          <div id="activity" style="width: 180px;">
+            <div :id="formData.activityId" style="color: #d5ab32;" class="Title">{{activityName}}</div>
 
-                      <ul class='List' :class="{ 'show': showList}" style='width: 180px;left: -10px;'>
-                          <li id='' title='全部' @click='changeActivity'>全部</li>
-                          <li v-for="(item,index) in activityList" :key="index" @click='changeActivity' :id='item.id' :title='item.name'>
-                              {{ item.name }}
-                          </li>
-                      </ul> 
-                  </div> 
-              </div>
-              
-              <div class="selectBox">
-                  <div style="display: flex;">
-                      <!-- <div id='province' style='width: 120px;' @click='province'> -->
-                        <!-- 省的选择 -->
-                      <div id='province' style='width: 120px;' @click='province'>
-                          <div   style="color: #fb8833" class='Title'>
-                              {{pro}}
-                          </div> 
+            <ul class="List" :class="{ 'show': showList}" style="width: 180px;left: -10px;">
+              <li id title="全部" @click="changeActivity">全部</li>
+              <li
+                v-for="(item,index) in activityList"
+                :key="index"
+                @click="changeActivity"
+                :id="item.id"
+                :title="item.name"
+              >{{ item.name }}</li>
+            </ul>
+          </div>
+        </div>
 
-                          <ul class='List' :class="{ 'show': showProvince}">
-                              <li id='' title='全部' @click='changeProvince'>全部</li>
-                              <li v-for="(item,index) in areaData" :key="index" @click='changeProvince' :id='item.id' :title='item.areaName'>
-                                  {{ item.areaName }}
-                              </li>
-                          </ul> 
-                      </div>
-                      <!-- 市的选择 -->
-                      <div id='city' style='width: 120px' @click='city'>
-                          <div  style="color: #fb8833" class='Title'>
-                              {{cit}}
-                          </div> 
+        <div class="selectBox">
+          <div style="display: flex;">
+            <!-- <div id='province' style='width: 120px;' @click='province'> -->
+            <!-- 省的选择 -->
+            <div id="province" style="width: 120px;" @click="province">
+              <div style="color: #fb8833" class="Title">{{pro}}</div>
 
-                          <ul class='List' :class="{ 'show': showCity}">
-                              <li id='' title='全部' @click='changeCity'>全部</li>
-                              <li v-for="(item,index) in cityData" :key="index" @click='changeCity' :id='item.id' :title='item.areaName'>
-                                  {{ item.areaName }}
-                              </li>
-                          </ul> 
-                      </div>
-                  </div>
-              </div>
+              <ul class="List" :class="{ 'show': showProvince}">
+                <li id title="全部" @click="changeProvince">全部</li>
+                <li
+                  v-for="(item,index) in areaData"
+                  :key="index"
+                  @click="changeProvince"
+                  :id="item.id"
+                  :title="item.areaName"
+                >{{ item.areaName }}</li>
+              </ul>
             </div>
-            
-            <router-link to='/bigScreen' v-if="bigStatus">
-                <!-- <Icon type="arrow-expand" size="22" color="#fff" class='small'></Icon> -->
-                <Icon type="ios-expand" size="22" color="#fff" class='small'/>
-            </router-link>
-            <router-link to='/dataScreen' v-else>
-                <!-- <Icon type="arrow-shrink" size="22" color="#fff" class='big'></Icon> -->
-                <Icon type="ios-contract" size="22" color="#fff" class='big'/>
-            </router-link>
-        </div>
-        <div id="mainTitle">
-            <Row class-name="child" type="flex" justify="space-around">
-                <Col span="4" class-name="child">
-                    <div class="child-plate">
-                        <span>{{ allData.scanCount }}</span>
-                        <p>累计参与量</p>
-                    </div>
-                </Col>
-                <Col span="4" class-name="child">
-                    <div class="child-plate">
-                        <span>{{ allData.userCount }}</span>
-                        <p>累计用户数</p>
-                    </div>
-                </Col>
-                <Col span="4" class-name="child">
-                    <div class="child-plate year">
-                        <div class="left">
-                            <span>{{ allData.lastScan ? allData.lastScan : 0 }}</span>
-                            <p>昨日参与量</p>
-                        </div>            
-                        <div class="right">
-                            <span><span>日环比</span> {{ allData.lastDayScan }}% <Icon :type="allData.lastDayScan >0?'arrow-up-c':allData.lastDayScan == 0?'minus':'arrow-down-c'" color="#ff8a34"></Icon></span>
-                            <span><span>周环比</span> {{ allData.lastWeekScan }}% <Icon :type="allData.lastWeekScan >0?'arrow-up-c':allData.lastWeekScan == 0?'minus':'arrow-down-c'" color="#ff8a34"></Icon></span>
-                            <span><span>月环比</span> {{ allData.lastMonthScan }}% <Icon :type="allData.lastMonthScan >0?'arrow-up-c':allData.lastMonthScan == 0?'minus':'arrow-down-c'" color="#ff8a34"></Icon></span>
-                        </div>
-                    </div>
-                </Col>
-                <Col span="4" class-name="child">
-                    <div class="child-plate year">
-                        <div class="left">
-                            <span>{{ allData.lastUser }}</span>
-                            <p>昨日用户数</p>
-                        </div>
-                        <div class="right">
-                            <span><span>日环比</span> <span>{{ allData.lastDayUser }}%</span> <Icon :type="allData.lastDayUser >0?'arrow-up-c':allData.lastDayUser == 0?'minus':'arrow-down-c'" color="#ff8a34"></Icon></span>
-                            <span><span>周环比</span> <span>{{ allData.lastWeekUser }}% </span><Icon :type="allData.lastWeekUser >0?'arrow-up-c':allData.lastWeekUser == 0?'minus':'arrow-down-c'" color="#ff8a34"></Icon></span>
-                            <span><span>月环比</span> <span>{{ allData.lastMonthUser }}%</span> <Icon :type="allData.lastMonthUser >0?'arrow-up-c':allData.lastMonthUser == 0?'minus':'arrow-down-c'" color="#ff8a34"></Icon></span>
-                        </div>
-                    </div>
-                </Col>
-            </Row>
-        </div>
-        <div id="mainContent">
-            <Row class-name="child">
-                <Col class-name="child" span="7">
-                    <div id="one">    
-                        <div id="title-main">
-                            <div class="title-txt">今日区域占比</div>
-                        </div>
-                        <div id="pieNest" style="height: 80%;width: 100%;"></div>
-                    </div>
-                    <div id="two">
-                        <div id="title-main">
-                            <div class="title-txt">近30天扫码量</div>
-                            <div class="subtext">统计时间：{{ yesterday }}</div>
-                        </div>
-                        <div id="lineStackLeft" style="height: 80%;"></div>
-                    </div>
-                </Col>
-                <Col class-name="child" span="9">
-                    <div id="three">
-                        <div class="threeTop">
-                            <h4>今日参与量</h4>
-                            <ul>
-                                <li v-for="(item,index) in numList " :key="index">{{ item }}</li>
-                            </ul>
-                            <span>{{ dateNow }}</span>
-                        </div>
-                        
-                        <div id="areaStack" style="height: 50%;"></div>
-                    </div>
-                </Col>
-                <Col class-name="child" span="8">
-                    <div id="one" class="right">
-                        <div id="title-main">
-                            <div class="title-txt" style="text-align:right;">今日男女覆盖率</div>
-                        </div>
-                        <div id="user" style="height: 80%;margin-top: 35px"></div>
-                    </div>
-                    <div id="two" class="right">
-                        <div id="title-main">
-                            <div class="title-txt">近30天用户数</div>
-                            <div class="subtext">统计时间：{{ yesterday }}</div>
-                        </div>
-                        <div id="lineStackRight" style="height: 80%;margin-top: 50px;">
+            <!-- 市的选择 -->
+            <div id="city" style="width: 120px" @click="city">
+              <div style="color: #fb8833" class="Title">{{cit}}</div>
 
-                        </div>
-                    </div>
-                </Col>
-            </Row>
+              <ul class="List" :class="{ 'show': showCity}">
+                <li id title="全部" @click="changeCity">全部</li>
+                <li
+                  v-for="(item,index) in cityData"
+                  :key="index"
+                  @click="changeCity"
+                  :id="item.id"
+                  :title="item.areaName"
+                >{{ item.areaName }}</li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <!-- <Spin fix v-if="spinShow">加载中...</Spin> -->
-        <Spin fix v-if="spinShow">
-            <Icon type="load-c" size=40 class="demo-spin-icon-load"></Icon>
-            <div style="font-size: 14px;">Loading</div>
-        </Spin>
+      </div>
+
+      <router-link to="/bigScreen" v-if="bigStatus">
+        <!-- <Icon type="arrow-expand" size="22" color="#fff" class='small'></Icon> -->
+        <Icon type="ios-expand" size="22" color="#fff" class="small"/>
+      </router-link>
+      <router-link to="/dataScreen" v-else>
+        <!-- <Icon type="arrow-shrink" size="22" color="#fff" class='big'></Icon> -->
+        <Icon type="ios-contract" size="22" color="#fff" class="big"/>
+      </router-link>
     </div>
-    
+    <div id="mainTitle">
+      <Row class-name="child" type="flex" justify="space-around">
+        <Col span="4" class-name="child">
+          <div class="child-plate">
+            <span>{{ allData.scanCount }}</span>
+            <p>累计参与量</p>
+          </div>
+        </Col>
+        <Col span="4" class-name="child">
+          <div class="child-plate">
+            <span>{{ allData.userCount }}</span>
+            <p>累计用户数</p>
+          </div>
+        </Col>
+        <Col span="4" class-name="child">
+          <div class="child-plate year">
+            <div class="left">
+              <span>{{ allData.lastScan ? allData.lastScan : 0 }}</span>
+              <p>昨日参与量</p>
+            </div>
+            <div class="right">
+              <span>
+                <span>日环比</span>
+                {{ allData.lastDayScan }}%
+                <Icon
+                  :type="allData.lastDayScan >0?'arrow-up-c':allData.lastDayScan == 0?'minus':'arrow-down-c'"
+                  color="#ff8a34"
+                ></Icon>
+              </span>
+              <span>
+                <span>周环比</span>
+                {{ allData.lastWeekScan }}%
+                <Icon
+                  :type="allData.lastWeekScan >0?'arrow-up-c':allData.lastWeekScan == 0?'minus':'arrow-down-c'"
+                  color="#ff8a34"
+                ></Icon>
+              </span>
+              <span>
+                <span>月环比</span>
+                {{ allData.lastMonthScan }}%
+                <Icon
+                  :type="allData.lastMonthScan >0?'arrow-up-c':allData.lastMonthScan == 0?'minus':'arrow-down-c'"
+                  color="#ff8a34"
+                ></Icon>
+              </span>
+            </div>
+          </div>
+        </Col>
+        <Col span="4" class-name="child">
+          <div class="child-plate year">
+            <div class="left">
+              <span>{{ allData.lastUser }}</span>
+              <p>昨日用户数</p>
+            </div>
+            <div class="right">
+              <span>
+                <span>日环比</span>
+                <span>{{ allData.lastDayUser }}%</span>
+                <Icon
+                  :type="allData.lastDayUser >0?'arrow-up-c':allData.lastDayUser == 0?'minus':'arrow-down-c'"
+                  color="#ff8a34"
+                ></Icon>
+              </span>
+              <span>
+                <span>周环比</span>
+                <span>{{ allData.lastWeekUser }}%</span>
+                <Icon
+                  :type="allData.lastWeekUser >0?'arrow-up-c':allData.lastWeekUser == 0?'minus':'arrow-down-c'"
+                  color="#ff8a34"
+                ></Icon>
+              </span>
+              <span>
+                <span>月环比</span>
+                <span>{{ allData.lastMonthUser }}%</span>
+                <Icon
+                  :type="allData.lastMonthUser >0?'arrow-up-c':allData.lastMonthUser == 0?'minus':'arrow-down-c'"
+                  color="#ff8a34"
+                ></Icon>
+              </span>
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </div>
+    <div id="mainContent">
+      <Row class-name="child">
+        <Col class-name="child" span="7">
+          <div id="one">
+            <div id="title-main">
+              <div class="title-txt">今日区域占比</div>
+            </div>
+            <div id="pieNest" style="height: 80%;width: 100%;"></div>
+          </div>
+          <div id="two">
+            <div id="title-main">
+              <div class="title-txt">近30天扫码量</div>
+              <div class="subtext">统计时间：{{ yesterday }}</div>
+            </div>
+            <div id="lineStackLeft" style="height: 80%;"></div>
+          </div>
+        </Col>
+        <Col class-name="child" span="9">
+          <div id="three">
+            <div class="threeTop">
+              <h4>今日参与量</h4>
+              <ul>
+                <li v-for="(item,index) in numList " :key="index">{{ item }}</li>
+              </ul>
+              <span>{{ dateNow }}</span>
+            </div>
+
+            <div id="areaStack" style="height: 50%;"></div>
+          </div>
+        </Col>
+        <Col class-name="child" span="8">
+          <div id="one" class="right">
+            <div id="title-main">
+              <div class="title-txt" style="text-align:right;">今日男女覆盖率</div>
+            </div>
+            <div id="user" style="height: 80%;margin-top: 35px"></div>
+          </div>
+          <div id="two" class="right">
+            <div id="title-main">
+              <div class="title-txt">近30天用户数</div>
+              <div class="subtext">统计时间：{{ yesterday }}</div>
+            </div>
+            <div id="lineStackRight" style="height: 80%;margin-top: 50px;"></div>
+          </div>
+        </Col>
+      </Row>
+    </div>
+    <!-- <Spin fix v-if="spinShow">加载中...</Spin> -->
+    <Spin fix v-if="spinShow">
+      <Icon type="load-c" size="40" class="demo-spin-icon-load"></Icon>
+      <div style="font-size: 14px;">Loading</div>
+    </Spin>
+  </div>
 </template>
 
 <script>
@@ -429,7 +479,7 @@ export default {
       formData: {
         areaCode: "",
         activityId: "",
-        brandId:"",
+        brandId: "",
         groupId: "" //活动包名Id
       },
       parentCode: "",
@@ -480,9 +530,14 @@ export default {
         this.Global.doPostNoLoading("queryActivity.json", res[0].id, res => {
           this.activityList = res;
           if (res && res.length) {
-            this.Global.changeArea(this.formData.groupId,res[0].id, "", pro => {
-              this.areaData = pro;
-            });
+            this.Global.changeArea(
+              this.formData.groupId,
+              res[0].id,
+              "",
+              pro => {
+                this.areaData = pro;
+              }
+            );
           }
         });
       }
@@ -524,7 +579,7 @@ export default {
     changeGroup(e) {
       this.formData.groupId = e.target.id;
       this.formData.brandId = this.findBrandId(e.target.id);
-      console.log(e.target.brandId)
+      console.log(e.target.brandId);
       // console.log(this.formData)
       this.groupName = e.target.title;
       this.showGroup = false;
@@ -536,15 +591,20 @@ export default {
       this.Global.doPostNoLoading("queryActivity.json", e.target.id, res => {
         this.activityList = res;
       });
-      this.Global.changeArea(this.formData.groupId,this.formData.activityId, "", res => {
-        this.areaData = res;
-        if (res) {
-          this.pro = "请选择省";
-          this.cit = "请选择市";
-          this.init();
-          this.spinShow = false;
+      this.Global.changeArea(
+        this.formData.groupId,
+        this.formData.activityId,
+        "",
+        res => {
+          this.areaData = res;
+          if (res) {
+            this.pro = "请选择省";
+            this.cit = "请选择市";
+            this.init();
+            this.spinShow = false;
+          }
         }
-      });
+      );
     },
     changeActivity(e) {
       this.formData.activityId = e.target.id;
@@ -554,7 +614,7 @@ export default {
       this.show();
       this.areaData = [];
       this.formData.areaCode = "";
-      this.Global.changeArea(this.formData.groupId,e.target.id, "", res => {
+      this.Global.changeArea(this.formData.groupId, e.target.id, "", res => {
         this.areaData = res;
         if (res) {
           this.pro = "请选择省";
@@ -570,11 +630,16 @@ export default {
       this.pro = e.target.title;
       this.cit = "请选择市";
       if (e.target.id) {
-        this.Global.changeArea(this.formData.groupId,this.formData.activityId, e.target.id, res => {
-          this.cityData = res;
-          this.init();
-          this.spinShow = false;
-        });
+        this.Global.changeArea(
+          this.formData.groupId,
+          this.formData.activityId,
+          e.target.id,
+          res => {
+            this.cityData = res;
+            this.init();
+            this.spinShow = false;
+          }
+        );
       } else {
         this.cityData = [];
         this.init();
@@ -594,11 +659,9 @@ export default {
       this.init();
       this.spinShow = false;
     },
-    pieNestStart: function() {
-      var that = this;
+    pieNestStart() {
       this.pieNest = echarts.init(document.getElementById("pieNest"));
       var pieNestOption = {
-        // backgroundColor:'#0c2a44',//背景颜色
         textStyle: { color: "#ffffff", fontSize: "12" }, //字体
         tooltip: {
           trigger: "item",
@@ -617,26 +680,16 @@ export default {
         series: []
       };
       this.pieNest.setOption(pieNestOption, true);
-      // window.onresize = function(){
-      //     pieNest.resize
-      // }
     },
-    lineStackLeftStart: function() {
-      var that = this;
+    lineStackLeftStart() {
       this.lineStackLeft = echarts.init(
         document.getElementById("lineStackLeft")
       );
       var date = 1;
       var lineStackLeftOption = {
-        // title: {
-        //     text: '近30天扫码量',
-        //     // subtext: '统计时间：'+ yesterDay,
-        //     textStyle:{color:'#ffffff'} //标题颜色
-        // },
         tooltip: {
           trigger: "axis"
         },
-        // backgroundColor:'#0c2a44',//背景颜色
         textStyle: { color: "#ffffff" }, //字体
         color: [
           "#ed7d31",
@@ -674,21 +727,12 @@ export default {
         series: []
       };
       this.lineStackLeft.setOption(lineStackLeftOption, true);
-      // window.onresize = function(){
-      //     that.pieNest.resize
-      // }
     },
-    lineStackRightStart: function() {
-      var that = this;
+    lineStackRightStart() {
       this.lineStackRight = echarts.init(
         document.getElementById("lineStackRight")
       );
       var lineStackRightOption = {
-        // title: {
-        //     text: '近30天用户数',
-        //     // subtext: '统计时间：'+ yesterDay,
-        //     textStyle:{color:'#ffffff'} //标题颜色
-        // },
         tooltip: {
           trigger: "axis"
         },
@@ -696,7 +740,6 @@ export default {
           textStyle: { color: "#ffffff" }, //字体
           bottom: "0%"
         },
-        // backgroundColor:'#0c2a44',//背景颜色
         textStyle: { color: "#ffffff" }, //字体
         color: [
           "#ed7d31",
@@ -735,15 +778,10 @@ export default {
         series: []
       };
       this.lineStackRight.setOption(lineStackRightOption, true);
-      // window.onresize = function(){
-      //     that.pieNest.resize
-      // }
     },
-    areaStackStart: function() {
-      var that = this;
+    areaStackStart() {
       this.areaStack = echarts.init(document.getElementById("areaStack"));
       var areaStackOption = {
-        // backgroundColor:'#0c2a44',//背景颜色
         textStyle: { color: "#ffffff" }, //字体
         tooltip: {
           trigger: "axis",
@@ -772,7 +810,7 @@ export default {
           textStyle: { color: "#ffffff" }, //字体
           // data:['果味水','茶π','力量帝维水'],
           bottom: "1%",
-          height: "100%",
+          height: "100%"
           // icon:"circle"
         },
         grid: {
@@ -806,8 +844,7 @@ export default {
       };
       this.areaStack.setOption(areaStackOption, true);
     },
-    userStart: function() {
-      var that = this;
+    userStart() {
       this.userStact = echarts.init(document.getElementById("user"));
       var option = {
         tooltip: {
@@ -942,17 +979,16 @@ export default {
       };
       this.userStact.setOption(option);
     },
-    findBrandId(id){
+    findBrandId(id) {
       let brandId = null;
       this.groupList.forEach(item => {
-        if(item.id == id){
-          brandId = item.brandId
+        if (item.id == id) {
+          brandId = item.brandId;
         }
-      })
-      return brandId
+      });
+      return brandId;
     },
     init() {
-      const that = this;
       this.pieNestStart();
       this.lineStackLeftStart();
       this.lineStackRightStart();
@@ -970,7 +1006,7 @@ export default {
         {
           activityId: prarms.activityId,
           groupId: Number(this.formData.groupId),
-          brandId:Number(this.formData.brandId),
+          brandId: Number(this.formData.brandId),
           areaCode: 0
         },
         data => {
@@ -1026,10 +1062,9 @@ export default {
     },
     vendorScanAreaReport(data) {
       // 圆饼图
-      var that = this;
       var data = getData(data.area_list);
       this.pieNest.setOption({
-        series: that.getpieNestSeries(data)
+        series: this.getpieNestSeries(data)
       });
       function getData(topList) {
         var result = [];
@@ -1044,46 +1079,43 @@ export default {
     },
     vendorScanHourReport(data) {
       // 堆叠图
-      var that = this;
       this.areaStack.setOption({
         xAxis: [
           {
             data: data.x_hour
           }
         ],
-        series: that.getHourReportSeries(data.y_data_list, "bizValue", true),
+        series: this.getHourReportSeries(data.y_data_list, "bizValue", true),
         legend: {
-          data: that.getLegendData(data.y_data_list)
+          data: this.getLegendData(data.y_data_list)
         }
       });
     },
     trueTime() {
-      var that = this;
       var prarms = this.Global.JsonChange(this.formData);
       prarms["groupId"] = Number(this.formData.groupId);
       this.Global.deleteEmptyProperty(prarms);
       this.Global.doPostNoLoading(
         "scanAreaReport.json",
         prarms,
-        function(data) {
-          that.numList = that.checkNum(data.total_sum);
-          that.vendorScanAreaReport(data);
-          that.userInfo(data.sex_list);
+        data => {
+          this.numList = this.checkNum(data.total_sum);
+          this.vendorScanAreaReport(data);
+          this.userInfo(data.sex_list);
         },
         true
       );
       this.Global.doPostNoLoading(
         "scanHourReport.json",
         prarms,
-        function(data) {
-          that.vendorScanHourReport(data);
+        data => {
+          this.vendorScanHourReport(data);
         },
         true
       );
     },
-    userInfo: function(data) {
+    userInfo(data) {
       // 男女性别
-      var that = this;
       var ret = {};
       if (data.length > 0) {
         for (var i = 0; i < data.length; i++) {
@@ -1230,32 +1262,27 @@ export default {
     },
     storeMonthScanReport(data) {
       // 月扫码量
-      var that = this;
       this.lineStackLeft.setOption({
         xAxis: [
           {
             data: data.x_month_day
           }
         ],
-        series: that.getHourReportSeries(data.y_scan_data_list, "bizValue")
-        // series:seriesData
-        // legend:{data: ['品牌']}
+        series: this.getHourReportSeries(data.y_scan_data_list, "bizValue")
       });
     },
-    storeMonthJoinReport: function(data) {
+    storeMonthJoinReport(data) {
       // 月参与量（用户数）
-      var that = this;
       this.lineStackRight.setOption({
         xAxis: [
           {
             data: data.x_month_day
           }
         ],
-        series: that.getHourReportSeries(data.y_user_data_list, "bizValue")
-        // legend:{data: ['品牌']}
+        series: this.getHourReportSeries(data.y_user_data_list, "bizValue")
       });
     },
-    count: function(a, b, num) {
+    count(a, b, num) {
       var number = (a / (a + b)).toFixed(num);
       if (number == Infinity) {
         return 10000;
@@ -1267,7 +1294,7 @@ export default {
         return (number * 100).toFixed(1);
       }
     },
-    getpieNestSeries: function(data) {
+    getpieNestSeries(data) {
       return [
         {
           type: "pie",

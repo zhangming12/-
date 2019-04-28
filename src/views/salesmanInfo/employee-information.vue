@@ -139,7 +139,6 @@ export default {
   name: "employee-information-keepAlive",
 
   data() {
-    const that = this;
     const validatePhone = (rule, value, callback) => {
       // 验证手机号码
       if (value == "") {

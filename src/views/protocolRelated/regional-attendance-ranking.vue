@@ -459,15 +459,15 @@
 </template>
 
 <script>
-import dataRange from "../../components/data-rang.vue";
-import exportBtn from "../../components/Button/export-btn.vue";
-import detailBtn from "../../components/Button/detail-btn.vue";
-import myModal from "../../components/Modal/my-modal.vue";
+import dataRange from "@/components/data-rang.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
+import detailBtn from "@/components/Button/detail-btn.vue";
+import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
 import {
   queryOrganizationDictList //查询四级组织数据
@@ -475,34 +475,6 @@ import {
 export default {
   name:"regional-attendance-ranking-keepAlive",
   data() {
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       myModalisShow: false,
       timer: null,

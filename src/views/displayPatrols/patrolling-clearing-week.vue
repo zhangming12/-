@@ -218,7 +218,6 @@
 </template>
 
 <script>
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 import {
   mergeGiveAwardCheckStatus,
   gdSyntheticalStatus,
@@ -227,16 +226,12 @@ import {
   distributionStatus //发放状态
 } from "@/util/ENUMS.js";
 
-import qs from "qs";
 
 import {
-  queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
-  queryActivityVOByGroupId, //根据活动包名ID获取陈列活动列表
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
 import configs from "../../util/config.js";
 
-import { gdDisplayClear } from "@/api/activity-manage/display-activity-manage.js";
 
 import config from "@/util/config.js";
 

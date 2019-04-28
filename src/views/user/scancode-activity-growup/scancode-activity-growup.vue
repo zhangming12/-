@@ -22,58 +22,66 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">扫码活动成长曲线</h2> -->
-        <div class="box">
-                
-                <Form ref="form" :model="formData" :label-width="60" :rules="rule">
-                    <Row>
-                        <Col span="7">
-                            <Form-item label="品牌名称" prop="brandId" :label-width="90">
-                                <Select v-model="formData.brandId" placeholder="请选择" @on-change="brandChangeValue">
-                                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                                </Select>  
-                            </Form-item>           
-                        </Col>   
-                        <Col span="7">
-                            <Form-item label="活动包名" :label-width="90">
-                                <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList">
-                                    <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                                </Select>  
-                            </Form-item>           
-                        </Col> 
-                        <Col span="7"> 
-                            <Form-item label="活动名称" :label-width="90" >
-                                <Select v-model="formData.activityId" placeholder="请选择" @on-change="activetyChangeValue">
-                                    <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                                </Select>  
-                            </Form-item> 
-                        </Col>   
-                        <Col span='2' offset="1" >
-                            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-                        </Col>
-                    </Row>
-                </Form>
-        </div>
+    <!-- <h2 class="Title">扫码活动成长曲线</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="60" :rules="rule">
+        <Row>
+          <Col span="7">
+            <Form-item label="品牌名称" prop="brandId" :label-width="90">
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="brandChangeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动包名" :label-width="90">
+              <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动名称" :label-width="90">
+              <Select
+                v-model="formData.activityId"
+                placeholder="请选择"
+                @on-change="activetyChangeValue"
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
 
-        <div class="box" style="margin-top: 15px;padding-bottom:20px">
-            <div id="scancodeActivity" :style="{height: '600px'}"></div>
-        </div>
-        
-        
+    <div class="box" style="margin-top: 15px;padding-bottom:20px">
+      <div id="scancodeActivity" :style="{height: '600px'}"></div>
+    </div>
   </div>
 </template>
 
 <script>
-import {
-  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
-  typeQueryActivityGroupVOByBrandId //根据活动包名ID获取陈列活动列表
-} from "@/api/common.js";
 import echarts from "echarts";
 export default {
   name: "scancode-activity-growup-keepAlive",
 
   data() {
-    const that = this;
     return {
       formData: {
         brandId: "",
@@ -210,8 +218,7 @@ export default {
         }
       });
     },
-    init: function() {
-      var that = this;
+    init() {
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       if (JSON.stringify(data) == "{}") {
@@ -219,9 +226,7 @@ export default {
         return;
       }
       //获取活动周序列表 params:brandId,activityId
-      this.Global.doPost("report/storeScanGrowthCurve.json", data, function(
-        res
-      ) {
+      this.Global.doPost("report/storeScanGrowthCurve.json", data, res => {
         let datalist = res;
         let activityCountDate = []; //时间
         let activityScanCount = []; //门店扫码量
@@ -231,11 +236,10 @@ export default {
           activityScanCount.push(datalist[key]["scanCount"]);
           activityStoreCount.push(datalist[key]["storeCount"]);
         }
-        that.activityGrowup.activityCountDate = activityCountDate;
-        that.activityGrowup.activityScanCount = activityScanCount;
-        that.activityGrowup.activityStoreCount = activityStoreCount;
-        console.log(that.activityGrowup);
-        that.myChart.setOption({
+        this.activityGrowup.activityCountDate = activityCountDate;
+        this.activityGrowup.activityScanCount = activityScanCount;
+        this.activityGrowup.activityStoreCount = activityStoreCount;
+        this.myChart.setOption({
           xAxis: {
             type: "category",
             boundaryGap: false,
@@ -267,8 +271,7 @@ export default {
         });
       });
     },
-    getTimeList: function() {
-      var that = this;
+    getTimeList() {
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       if (JSON.stringify(data) == "{}") {
@@ -276,15 +279,13 @@ export default {
         return;
       }
       //获取活动周序列表 params:brandId,activityId
-      this.Global.doPost("report/getActivityWeekDict.json", data, function(
-        res
-      ) {
+      this.Global.doPost("report/getActivityWeekDict.json", data, res => {
         let datalist = res;
         let timeItem = [];
         for (var key in datalist) {
           timeItem.push(datalist[key][1]);
         }
-        that.activityGrowup = timeItem;
+        this.activityGrowup = timeItem;
       });
     },
     brandChangeValue(value) {

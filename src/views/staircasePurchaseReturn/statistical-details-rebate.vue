@@ -68,6 +68,28 @@
   }
 }
 
+.showRadio {
+  position: fixed;
+  z-index: 99999;
+  top: 50%;
+  left: 50%;
+  margin-left: -150px;
+  margin-top: -250px;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  background: #f5f7f9;
+  border-radius: 5px;
+  .close {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    cursor: pointer;
+    display: block;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+  }
+}
 .searchBox {
   overflow: hidden;
   .search_btn {
@@ -84,172 +106,160 @@
     border-bottom-left-radius: 0;
   }
 }
-.showRadio {
-  position: fixed;
-  z-index: 99999;
-  top: 50%;
-  left: 50%;
-  margin-left: -150px;
-  margin-top: -250px;
-  // border: 1px solid black;
-  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  background: #f5f7f9;
-  border-radius: 5px;
-  .close {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    cursor: pointer;
-    display: block;
-    width: 20px;
-    height: 20px;
-    font-size: 20px;
-    // text-overflow: ellipsis
-  }
-}
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">返利统计明细</h2> -->
-		<div class="box">
-			<Form ref="form" :model="formData" :label-width="85">
-				<Row>
-					<Col span="21">
+  <div id="Main">
+    <!-- <h2 class="Title">返利统计明细</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="85">
+        <Row>
+          <Col span="21">
             <Row>
               <Col span="14">
-                <Form-item label="时间:"    >
+                <Form-item label="时间:">
                   <Row>
                     <Col span="11">
-                        <Form-item prop="queryStartTime">
-                          <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                        </Form-item>
+                      <Form-item prop="queryStartTime">
+                        <data-range
+                          @dataChange="startTimeChange"
+                          hour="00:00"
+                          :time="formData.queryStartTime"
+                          start
+                        ></data-range>
+                      </Form-item>
                     </Col>
                     <Col span="2" style="text-align: center;">至</Col>
                     <Col span="11">
-                        <Form-item prop="queryEndTime">
-                            <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                        </Form-item>
+                      <Form-item prop="queryEndTime">
+                        <data-range
+                          hour="24:00"
+                          placeholder="结束时间"
+                          @dataChange="endTimeChange"
+                          :time="formData.queryEndTime"
+                        ></data-range>
+                      </Form-item>
                     </Col>
                   </Row>
                 </Form-item>
               </Col>
               <Col span="10">
-                <Form-item label="品牌名称:" prop="brandId"    >
-                    <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue" clearable>
-                        <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                    </Select>
+                <Form-item label="品牌名称:" prop="brandId">
+                  <Select
+                    v-model="formData.brandId"
+                    placeholder="请选择"
+                    @on-change="changeValue"
+                    clearable
+                  >
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in brandList"
+                      :key="index"
+                    >{{ item.brandName }}</Option>
+                  </Select>
                 </Form-item>
               </Col>
             </Row>
             <Row>
               <Col span="8">
-                <Form-item label="活动名称:" prop="activityId"    >
-                    <Select v-model="formData.activityId" placeholder="请选择" @on-change="getpresentList" clearable>
-                        <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                    </Select>
+                <Form-item label="活动名称:" prop="activityId">
+                  <Select
+                    v-model="formData.activityId"
+                    placeholder="请选择"
+                    @on-change="getpresentList"
+                    clearable
+                  >
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in activityList"
+                      :key="index"
+                    >{{ item.name }}</Option>
+                  </Select>
                 </Form-item>
               </Col>
               <Col span="8">
                 <Form-item label="返利阶梯:" prop="presentId">
-                    <Select v-model="formData.presentId" placeholder="请选择" clearable>
-                        <Option :value="item.id" v-for="(item,index) in presentNameList" :key="index">{{ item.activityTag }}</Option>
-                    </Select>
+                  <Select v-model="formData.presentId" placeholder="请选择" clearable>
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in presentNameList"
+                      :key="index"
+                    >{{ item.activityTag }}</Option>
+                  </Select>
                 </Form-item>
               </Col>
-               <Col span="8">
+              <Col span="8">
                 <Form-item label="用户ID:" prop="storeId">
-                    <Input v-model.trim="formData.storeId" placeholder="请输入用户ID"></Input>
+                  <Input v-model.trim="formData.storeId" placeholder="请输入用户ID"></Input>
                 </Form-item>
               </Col>
             </Row>
-					</Col>
-          <Col span='2' offset="1" style="margin-top:20px">
-              <div class="searchBox">
-                <Button @click="submit()" class="btn-search  search_btn" type="primary">查询</Button>
-                <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
-                <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button>
-                
-              </div>
           </Col>
-				</Row>
-				<transition name="fade">
-					<Row v-if="showQuery">
-						<Col span='7'>
+          <Col span="2" offset="1" style="margin-top:20px">
+            <div class="searchBox">
+              <Button @click="submit()" class="btn-search search_btn" type="primary">查询</Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-up"
+                v-if="showQuery"
+              ></Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-down"
+                v-else
+              ></Button>
+            </div>
+          </Col>
+        </Row>
+        <transition name="fade">
+          <Row v-if="showQuery">
+            <Col span="7">
               <Form-item label="领取状态:">
                 <Select v-model="formData.recStatus" placeholder="请选择领取状态" clearable>
-                    <Option value="1">已提现</Option>
-                    <Option value="0">未提现</Option>
+                  <Option value="1">已提现</Option>
+                  <Option value="0">未提现</Option>
                 </Select>
               </Form-item>
-						</Col>
-					</Row>
-				</transition>
-			</Form>
-		</div>
-		<div class="box" style='margin-top: 15px;overflow: hidden;padding-bottom:20px;'>
-			<div class='contentTop'>
-				<Button class="btn-export" icon="ios-download-outline" @click="exportExcel" type="primary">导出</Button>
-			</div>
-			<Table :columns="columns1" :data="pageData" disabled-hover></Table>
-
-		</div>
-		<div style="margin: 10px;overflow: hidden">
-			<div style="float: right;">
-				<Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-			</div>
-		</div>
-	</div>
+            </Col>
+          </Row>
+        </transition>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;overflow: hidden;padding-bottom:20px;">
+      <div class="contentTop">
+        <Button
+          class="btn-export"
+          icon="ios-download-outline"
+          @click="exportExcel"
+          type="primary"
+        >导出</Button>
+      </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+    </div>
+    <div style="margin: 10px;overflow: hidden">
+      <div style="float: right;">
+        <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import dataRange from "../../components/data-rang.vue";
+import dataRange from "@/components/data-rang.vue";
 
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
-import { monitorRecord } from "@/util/ENUMS.js";
-import {
-  queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
   queryActivityVOByGroupId, //根据活动包名ID获取陈列活动列表
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
-  name:"statistical-details-rebate-keepAlive",
-  
+  name: "statistical-details-rebate-keepAlive",
+
   data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       start: {
         time: "",
@@ -430,9 +440,9 @@ export default {
               str = "未提现";
             } else if (params.row.recStatus == "1") {
               str = "已提现";
-            }else if (params.row.recStatus == -1) {
+            } else if (params.row.recStatus == -1) {
               str = "未清算";
-            }else if (params.row.recStatus == 2) {
+            } else if (params.row.recStatus == 2) {
               str = "已提取";
             }
             return h("div", str);
@@ -452,7 +462,6 @@ export default {
     dataRange
   },
   created() {
-
     this.Global.doPostNoLoading(
       "condition/queryBrands.json",
       { date: 15, activityType: 4, scope: "a" },
@@ -461,14 +470,12 @@ export default {
         Object.entries(res).forEach(item => {
           this.brandList.push({ id: Number(item[0]), brandName: item[1] });
         });
-        if(this.brandList && this.brandList.length){
+        if (this.brandList && this.brandList.length) {
           this.formData.brandId = this.brandList[0].id;
           this.changeValue(this.formData.brandId);
         }
       }
     );
-
-    
   },
   mounted() {},
   methods: {
@@ -500,7 +507,9 @@ export default {
     changeValue(value) {
       this.activityList = [];
       this.formData.activityId = "";
-      if(!value) {return}
+      if (!value) {
+        return;
+      }
       this.Global.doPostNoLoading(
         "condition/queryActivity.json",
         { date: 15, activityType: 4, scope: "a", brandId: value },
@@ -508,9 +517,9 @@ export default {
           Object.entries(res).forEach(item => {
             this.activityList.push({ id: Number(item[0]), name: item[1] });
           });
-          if(this.activityList.length){
+          if (this.activityList.length) {
             this.formData.activityId = this.activityList[0].id;
-            this.getpresentList(this.formData.activityId)
+            this.getpresentList(this.formData.activityId);
           }
         }
       );

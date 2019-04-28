@@ -68,113 +68,134 @@
     width: 150px;
   }
 }
-.main-container{
+.main-container {
   position: relative;
   padding-bottom: 60px;
-  .pageBox{
+  .pageBox {
     position: absolute;
     bottom: 10px;
     right: 10px;
-
   }
 }
 </style>
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">陈列折扣清算(按月)</h2> -->
-      <div class="main-container">
-        <div class="box">
-                <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-                    <Row>
-                        <Col span="7">
-                            <Form-item label="品牌名称:" prop="brandId">
-                                <Select  v-model="formData.brandId"  placeholder="请选择" @on-change="changeValue">
-                                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                                </Select> 
-                            </Form-item>                        
-                            <Form-item label="结算周期:" prop="periodMonth">
-                                <Select v-model="formData.periodMonth"  placeholder="请选择时间">
-                                    <Option :value="item.queryMonth" v-for="(item,index) in timeDataList" :key="index" >{{ item.queryMonth}}</Option>
-                                </Select>
-                            </Form-item>
-                        </Col>
-                        <Col span="7">
-                            <Form-item label="活动包名:" prop="groupId" required>
-                            <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
-                                <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                            </Select>
-                            </Form-item>
-                            <Form-item label="客户编号:">
-                                <Input v-model="formData.joinCode" placeholder="请输入客户编号"></Input>
-                            </Form-item>
-                            
-                        </Col>
-                        <Col span="7">
-                        
-                            <Form-item label="陈列活动:" prop="activityId">
-                                <Select v-model="formData.activityId" placeholder="请选择" @on-change="getActivityMonthDict">
-                                    <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                                </Select> 
-                            </Form-item>                       
-                            <Form-item label="门店编号:">
-                                <Input v-model="formData.joinCode" placeholder="请输入门店编号"></Input>
-                            </Form-item>
-                            
-                        </Col>
-                        <Col span='2' offset="1" style="margin-top:20px">
-                            <Button @click="submit('form')" class="btn-search  search_btn" type="primary">查询</Button>
-                            
-                        </Col>
-                    </Row>
-                </Form>
+    <!-- <h2 class="Title">陈列折扣清算(按月)</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+          <Row>
+            <Col span="7">
+              <Form-item label="品牌名称:" prop="brandId">
+                <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+              <Form-item label="结算周期:" prop="periodMonth">
+                <Select v-model="formData.periodMonth" placeholder="请选择时间">
+                  <Option
+                    :value="item.queryMonth"
+                    v-for="(item,index) in timeDataList"
+                    :key="index"
+                  >{{ item.queryMonth}}</Option>
+                </Select>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="活动包名:" prop="groupId" required>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="请选择"
+                  @on-change="getActivityList"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in groupList"
+                    :key="index"
+                  >{{ item.groupName }}</Option>
+                </Select>
+              </Form-item>
+              <Form-item label="客户编号:">
+                <Input v-model="formData.joinCode" placeholder="请输入客户编号"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="陈列活动:" prop="activityId">
+                <Select v-model="formData.activityId" placeholder="请选择">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in activityList"
+                    :key="index"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
+              <Form-item label="门店编号:">
+                <Input v-model="formData.joinCode" placeholder="请输入门店编号"></Input>
+              </Form-item>
+            </Col>
+            <Col span="2" offset="1" style="margin-top:20px">
+              <Button @click="submit('form')" class="btn-search search_btn" type="primary">查询</Button>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+      <div class="box" style="margin-top: 15px;padding:10px">
+        <div class="contentTop">
+          <Button @click="exportExcel" class="btn-right" icon="ios-download-outline" type="error">导出</Button>
+          <Button @click="batchAwardStore('form')" class="btn-right" type="primary">发放通知</Button>
+          <Button @click="allWorker('form')" class="btn-right" type="success">发放折扣</Button>
+          <Button
+            @click="modifyDataMethod('form')"
+            class="btn-right"
+            title="仅已清算记录允许"
+            type="primary"
+          >修改清算</Button>
+          <Button @click="handleClearDisplayActivity" class="btn-right" type="info">开始清算</Button>
         </div>
-        <div class="box" style="margin-top: 15px;padding:10px">
-            <div class="contentTop">
-                <Button @click="exportExcel" class="btn-right"  icon="ios-download-outline"  type="error">导出</Button>
-                <Button @click="batchAwardStore('form')" class="btn-right" type="primary">发放通知</Button>
-                <Button @click="allWorker('form')" class="btn-right" type="success">发放折扣</Button>
-                <Button @click="modifyDataMethod('form')" class="btn-right" title="仅已清算记录允许" type="primary">修改清算</Button>
-                <Button @click="handleClearDisplayActivity" class="btn-right" type="info">开始清算</Button>
-            </div>
-            <!-- <Table :columns="columns1" :data="pageData" disabled-hover></Table> -->
-            <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" ></hhTable>
-        </div>
-        <div class="pageBox">
-                <div style="float: right;">
-                    <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-                </div>
+        <!-- <Table :columns="columns1" :data="pageData" disabled-hover></Table> -->
+        <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
+      </div>
+      <div class="pageBox">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      <Modal
-          v-model="importShow">
-          <h2 style="text-align:center;">修改清算导入</h2>
-            <div class="uploadBox">
-                <div class='demo' @click='dowland'> 
-                    <Icon type="ios-paper-outline" size='14' color='#ff8a34'></Icon>
-                    <span>下载模版</span>
-                </div>
-                <div class='upDate'>
-                    <Upload :action="urls" 
-                    :show-upload-list=false
-                    :on-success='handleSuccess'
-                    :on-error='handleError'
-                    >
-                    <Icon type="ios-folder" size='14' color='#53a3f4'></Icon>
-                    <span>{{uploadText}}</span>
-                    </Upload>
-                </div>
-            </div>
-          <div slot="footer" style="text-align:center;">
-            <i-button type="text" @click="cancel">取消</i-button>
-            <i-button type="success" @click="uploadExcel">确定</i-button>
-          </div>
-        </Modal>
-      <Modal v-model='treeShow' @on-ok="areaList">
-        <div style='height: 400px; overflow-y:auto;'>
-            <Tree :data="areaData" ref='tree' multiple show-checkbox></Tree>
+    </div>
+    <Modal v-model="importShow">
+      <h2 style="text-align:center;">修改清算导入</h2>
+      <div class="uploadBox">
+        <div class="demo" @click="dowland">
+          <Icon type="ios-paper-outline" size="14" color="#ff8a34"></Icon>
+          <span>下载模版</span>
         </div>
-      </Modal>
+        <div class="upDate">
+          <Upload
+            :action="urls"
+            :show-upload-list="false"
+            :on-success="handleSuccess"
+            :on-error="handleError"
+          >
+            <Icon type="ios-folder" size="14" color="#53a3f4"></Icon>
+            <span>{{uploadText}}</span>
+          </Upload>
+        </div>
+      </div>
+      <div slot="footer" style="text-align:center;">
+        <i-button type="text" @click="cancel">取消</i-button>
+        <i-button type="success" @click="uploadExcel">确定</i-button>
+      </div>
+    </Modal>
+    <Modal v-model="treeShow" @on-ok="areaList">
+      <div style="height: 400px; overflow-y:auto;">
+        <Tree :data="areaData" ref="tree" multiple show-checkbox></Tree>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -183,10 +204,6 @@ let auditCountQualified = {
   "1": "合格",
   "0": "不合格"
 };
-import {
-  queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
-  queryActivityVOByGroupId //根据活动包名ID获取陈列活动列表
-} from "@/api/common.js";
 import area from "@/config/areaCode.js";
 import config from "../../util/config.js";
 import {
@@ -195,24 +212,20 @@ import {
   callDisplayAwardPrice //全部发奖
 } from "@/api/activity-manage/display-activity-manage.js";
 import {
-  getDisplayActivityListDoQuery, //陈列活动
-  getActivityMonthDict //获取活动月序列表
-} from "@/api/common.js";
-import {
   mergeGiveAwardStatus,
   mergeGiveAwardCheckStatus,
   mergeGiveAwardRecStatus
 } from "@/util/ENUMS.js";
 import hhTable from "@/components/table/table.vue";
 export default {
-  name:"giveout-prizes-clear-keepAlive",
+  name: "giveout-prizes-clear-keepAlive",
   components: {
     // dataRange,
     // exportBtn,
     // detailBtn,
     // myModal,
     // importBtn,
-    hhTable,
+    hhTable
     // yearSelect,
     // refreshBtn
   },
@@ -225,7 +238,7 @@ export default {
       groupList: [],
       treeShow: false,
       areaData: area,
-      noneStatus:false,
+      noneStatus: false,
       formData: {
         brandId: "",
         periodMonth: "", //结算周期
@@ -251,11 +264,7 @@ export default {
         periodMonth: [{ required: true, message: "选择日期跟时间" }],
         brandId: [{ required: true, message: "选择品牌名称" }]
       },
-      showList:[
-        {
-          
-        }
-      ],
+      showList: [{}],
       columns1: [
         {
           title: "陈列活动",
@@ -638,7 +647,6 @@ export default {
       this.init(size, 10);
     },
     init(currentPage, pageSize) {
-      var that = this;
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = currentPage;
@@ -653,7 +661,6 @@ export default {
       });
     },
     exportExcel() {
-      var that = this;
       var data = this.Global.JsonChange(this.formData);
       if (
         !this.formData.brandId ||
@@ -683,7 +690,7 @@ export default {
           });
           if (this.groupList && this.groupList.length) {
             this.formData.groupId = this.groupList[0].id;
-            this.getActivityList(this.formData.groupId)
+            this.getActivityList(this.formData.groupId);
           }
         }
       );
@@ -713,28 +720,6 @@ export default {
           this.timeDataList = timeDataList;
         }
       });
-    },
-    getActivityMonthDict(val) {
-      let params = {
-        brandId: this.formData.brandId,
-        activityId: val
-      };
-      // this.formData.periodMonth = "";
-      // if(!val) return
-
-      // getActivityMonthDict(params).then(res => {
-
-      //   if (res && res.data) {
-      //     let timeDataList = [];
-      //     for (const key in res.data) {
-      //       let item = {
-      //         queryMonth: res.data[key]
-      //       };
-      //       timeDataList.push(item);
-      //     }
-      //     this.timeDataList = timeDataList;
-      //   }
-      // });
     },
     handleClearDisplayActivity() {
       if (

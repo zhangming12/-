@@ -128,212 +128,253 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">二维码印刷及报废</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" :model="formData" :label-width="10" :rules="rule">
-              <div class="container">
-                <div class="btn-left w18">
-                  <Form-item  required>
-                    <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                  </Form-item>
+    <!-- <h2 class="Title">二维码印刷及报废</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10" :rules="rule">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required>
+                <data-range
+                  @dataChange="startTimeChange"
+                  hour="00:00"
+                  :time="formData.queryStartTime"
+                  start
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <data-range
+                  hour="24:00"
+                  placeholder="结束时间"
+                  @dataChange="endTimeChange"
+                  :time="formData.queryEndTime"
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="groupId" required>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="总活动名*"
+                  @on-change="getActivityList"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in groupList"
+                    :key="index"
+                  >{{ item.groupName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+
+            <div class="btn-left w18">
+              <Form-item>
+                <Checkbox v-model="formData.status">仅显示正常数据</Checkbox>
+              </Form-item>
+            </div>
+            <div class="btn-left w10">
+              <div class="searchBox">
+                <div class="btn-left search-left" @click="showQuery=!showQuery">
+                  <button type="button">
+                    {{showQuery?'收起':'更多'}}
+                    <Icon
+                      type="ios-arrow-down"
+                      size="14"
+                      style="margin-top:-2px;"
+                      v-if="!showQuery"
+                    />
+                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
+                  </button>
                 </div>
-                <div class="btn-left w18">
-                  <Form-item  required>
-                      <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range> 
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item  required>
-                      <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
-                          <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                      </Select> 
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item  prop="groupId" required>
-                      <Select v-model="formData.groupId" placeholder="总活动名*" @on-change="getActivityList" clearable>
-                          <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                      </Select>
-                  </Form-item>
-                </div>
-                
-                <div class="btn-left w18">
-                  <Form-item>                             
-                      <Checkbox v-model="formData.status">仅显示正常数据</Checkbox> 
-                  </Form-item>
-                </div>
-                <div class="btn-left w10">
-                  <div class="searchBox">
-                    <div class="btn-left search-left" @click="showQuery=!showQuery">
-                      <button type="button">
-                        {{showQuery?'收起':'更多'}}
-                        <Icon type="ios-arrow-down" size="14" style="margin-top:-2px;" v-if="!showQuery"/>
-                        <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
-                      </button>
-                    </div>
-                    <div class="btn-right search-right" @click="submit('form')">
-                      <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                    </div>
-                  </div>
+                <div class="btn-right search-right" @click="submit('form')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
                 </div>
               </div>
-              <transition name="fade">
-                <div class="container" v-if="showQuery">
-                  <div class="btn-left w18">
-                    <Form-item required>
-                        <Select v-model="formData.activityId" placeholder="活动名称" clearable @on-change="getActivityName">
-                          <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                      </Select> 
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item required>
-                        <Input v-model.trim="formData.packageNo" placeholder="请输入码包号"></Input>
-                    </Form-item>
-                  </div>
-                </div>
-              </transition>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">
-                {{activityName?activityName:groupName?groupName:""}}
-                ：已印刷码包数
-                <span class='numColor'>{{pageNum}}</span>，已印刷码量
-                <span class='numColor'>{{codeNum}}</span>，损耗量
-                <span class='numColor'>{{scrapNum}}</span>
-              </span>
-              
-              <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
-              <exportBtn  class="btn-right" @btnClick="exportExcel"/>
-              <importBtn  class="btn-right" @btnClick="maintainImport" title="维护导入" />
             </div>
-            <Table ref="table" :columns="columns1" :data="pageData" disabled-hover></Table>
-            
-        </div>
-        <div class="page-box">
-              <div style="float: right;">
-                  <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+          </div>
+          <transition name="fade">
+            <div class="container" v-if="showQuery">
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Select
+                    v-model="formData.activityId"
+                    placeholder="活动名称"
+                    clearable
+                    @on-change="getActivityName"
+                  >
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in activityList"
+                      :key="index"
+                    >{{ item.name }}</Option>
+                  </Select>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input v-model.trim="formData.packageNo" placeholder="请输入码包号"></Input>
+                </Form-item>
               </div>
             </div>
-            <!-- <img src="../../assets/image/edit.png" alt=""> -->
+          </transition>
+        </Form>
       </div>
-      
-      <!-- 导入导出历史 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="myModalisShow">
-          <div slot="main" class="modal-main">
-            <h3>近一周导出历史</h3>
-            <div class="modal-table">
-              <div class="modal-table-top">
-                <span class="btn-left">此表共包含<span class='numColor'>100</span>条数据</span>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            {{activityName?activityName:groupName?groupName:""}}
+            ：已印刷码包数
+            <span
+              class="numColor"
+            >{{pageNum}}</span>，已印刷码量
+            <span class="numColor">{{codeNum}}</span>，损耗量
+            <span class="numColor">{{scrapNum}}</span>
+          </span>
+
+          <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
+          <exportBtn class="btn-right" @btnClick="exportExcel"/>
+          <importBtn class="btn-right" @btnClick="maintainImport" title="维护导入"/>
+        </div>
+        <Table ref="table" :columns="columns1" :data="pageData" disabled-hover></Table>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
+      <!-- <img src="../../assets/image/edit.png" alt=""> -->
+    </div>
+
+    <!-- 导入导出历史 -->
+    <myModal class="myModal" @close="closeModal" :modal="myModalisShow">
+      <div slot="main" class="modal-main">
+        <h3>近一周导出历史</h3>
+        <div class="modal-table">
+          <div class="modal-table-top">
+            <span class="btn-left">
+              此表共包含
+              <span class="numColor">100</span>条数据
+            </span>
+          </div>
+          <Table :columns="columns" :data="pageData" disabled-hover></Table>
+        </div>
+      </div>
+    </myModal>
+    <!-- 维护导入 -->
+    <myModal class="myModal" height="220" @close="closeModal" :modal="maintainImportShow">
+      <div slot="main" class="modal-main">
+        <h3 style="margin-bottom:20px;">维护导入</h3>
+        <Form ref="form" :model="formData" :label-width="10" :rules="rule">
+          <div class="container">
+            <Form-item label="品牌名称：" :label-width="100" required>
+              <Select v-model="maintainImportData.brandId" placeholder="品牌名称*">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="已印刷码包：" :label-width="100" required>
+              <div
+                class="upDate"
+                style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;"
+              >
+                <Upload
+                  :action="url"
+                  :show-upload-list="false"
+                  :on-success="handleSuccess"
+                  :on-error="handleError"
+                >
+                  <Icon type="ios-folder" size="14" color="#53a3f4"></Icon>
+                  {{uploadText}}
+                </Upload>
               </div>
-              <Table :columns="columns" :data="pageData" disabled-hover></Table>
+            </Form-item>
+            <div class="demo" @click="dowland">
+              <Icon type="ios-paper-outline" size="14" color="#ff8a34"></Icon>
+              <span>下载导入模版</span>
             </div>
           </div>
-       </myModal>
-        <!-- 维护导入 -->
-        <myModal class="myModal"
-            height='220'
-            @close="closeModal"
-            :modal="maintainImportShow">
-          <div slot="main" class="modal-main">
-            <h3 style="margin-bottom:20px;">维护导入</h3>
-            <Form ref="form" :model="formData" :label-width="10" :rules="rule">
-              <div class="container">
-                <Form-item label="品牌名称：" :label-width="100"  required>
-                    <Select v-model="maintainImportData.brandId" placeholder="品牌名称*">
-                        <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                    </Select> 
-                </Form-item>
-                <Form-item label="已印刷码包：" :label-width="100"  required>
-                    <div class='upDate' style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;">
-                        <Upload :action="url" 
-                          :show-upload-list=false
-                          :on-success='handleSuccess'
-                          :on-error='handleError'
-                          >
-                          <Icon type="ios-folder" size='14' color='#53a3f4'></Icon>
-                          {{uploadText}}
-                        </Upload>
-                    </div>
-                </Form-item>
-                <div class='demo' @click='dowland'> 
-                    <Icon type="ios-paper-outline" size='14' color='#ff8a34'></Icon>
-                    <span>下载导入模版</span>
-                </div>
-              </div>
-            </Form>
-            <div class="maintain-footer">
-              <Button type="text" @click="closeModal">取消</Button>
-              <Button type="text" @click="uploadExcel">确定</Button>
-            </div>
+        </Form>
+        <div class="maintain-footer">
+          <Button type="text" @click="closeModal">取消</Button>
+          <Button type="text" @click="uploadExcel">确定</Button>
+        </div>
+      </div>
+    </myModal>
+
+    <!-- 修改备注 -->
+    <myModal class="myModal" height="130" @close="closeModal" :modal="modifyMemo">
+      <div slot="main" class="modal-main">
+        <h3 style="margin-bottom:10px;">修改印刷备注</h3>
+
+        <Form ref="form" :model="formData" :label-width="10" :rules="rule">
+          <div class="container">
+            <Form-item label="印刷备注：" :label-width="100">
+              <Input v-model="memo" placeholder="请输入印刷备注"/>
+            </Form-item>
           </div>
-        </myModal>
+        </Form>
+        <div class="maintain-footer">
+          <Button type="text" @click="closeModal">取消</Button>
+          <Button type="text" @click="modifyMemos">确定</Button>
+        </div>
+      </div>
+    </myModal>
 
-        <!-- 修改备注 -->
-        <myModal class="myModal"
-            height="130"
-            @close="closeModal"
-            :modal="modifyMemo">
-          <div slot="main" class="modal-main">
-            <h3 style="margin-bottom:10px;">修改印刷备注</h3>
+    <!-- 修改标贴编号 -->
+    <myModal class="myModal" height="130" @close="closeModal" :modal="labelNumberShow">
+      <div slot="main" class="modal-main">
+        <h3 style="margin-bottom:10px;">修改标贴编号</h3>
 
-            <Form ref="form" :model="formData" :label-width="10" :rules="rule">
-              <div class="container">
-                <Form-item label="印刷备注：" :label-width="100">
-                  <Input v-model="memo" placeholder="请输入印刷备注" /> 
-                </Form-item>
-              </div>
-            </Form>
-            <div class="maintain-footer">
-              <Button type="text" @click="closeModal">取消</Button>
-              <Button type="text" @click="modifyMemos">确定</Button>
-            </div>
+        <Form ref="form" :model="formData" :label-width="10" :rules="rule">
+          <div class="container">
+            <Form-item label="标贴编号：" :label-width="100" required>
+              <Input v-model="labelNumber" placeholder="请输入标贴编号"/>
+            </Form-item>
           </div>
-        </myModal>
+        </Form>
+        <div class="maintain-footer">
+          <Button type="text" @click="closeModal">取消</Button>
+          <Button type="text" @click="modifyLabel">确定</Button>
+        </div>
+      </div>
+    </myModal>
 
-        <!-- 修改标贴编号 -->
-        <myModal class="myModal"
-            height="130"
-            @close="closeModal"
-            :modal="labelNumberShow">
-          <div slot="main" class="modal-main">
-            <h3 style="margin-bottom:10px;">修改标贴编号</h3>
+    <!-- 印刷报废数 -->
 
-            <Form ref="form" :model="formData" :label-width="10" :rules="rule">
-              <div class="container">
-                <Form-item label="标贴编号：" :label-width="100"  required>
-                    <Input v-model="labelNumber" placeholder="请输入标贴编号" /> 
-                </Form-item>
-              </div>
-            </Form>
-            <div class="maintain-footer">
-              <Button type="text" @click="closeModal">取消</Button>
-              <Button type="text" @click="modifyLabel">确定</Button>
-            </div>
-          </div>
-        </myModal>
+    <myModal class="myModal" width="800" @close="closeModal" :modal="paintScrapeShow">
+      <div slot="main" class="modal-main">
+        <h3 style="margin-bottom:10px;">印刷报废数</h3>
+        <Table
+          ref="tableScrap"
+          maxHeight="200"
+          :columns="paintScrapeColoms"
+          :data="paintScrapeData"
+          disabled-hover
+        ></Table>
 
-        <!-- 印刷报废数 -->
-
-        <myModal class="myModal"
-            width='800'
-            @close="closeModal"
-            :modal="paintScrapeShow">
-          <div slot="main" class="modal-main">
-            <h3 style="margin-bottom:10px;">印刷报废数</h3>
-            <Table ref="tableScrap" maxHeight='200' :columns="paintScrapeColoms" :data="paintScrapeData" disabled-hover></Table>
-            
-            <div class="maintain-footer">
-              <Button type="text" @click="uploadExcelScrap">导出</Button>
-              <Button type="text" @click="closeModal">关闭</Button>
-            </div>
-          </div>
-        </myModal>
+        <div class="maintain-footer">
+          <Button type="text" @click="uploadExcelScrap">导出</Button>
+          <Button type="text" @click="closeModal">关闭</Button>
+        </div>
+      </div>
+    </myModal>
   </div>
 </template>
 
@@ -341,61 +382,28 @@
 import area from "../../config/china_code_data.js";
 
 import {
-  dispalyShowStatus,
-  dispalyExamineSuggesteStatus,
-  displayParketCheckStatus
+  dispalyExamineSuggesteStatus
 } from "@/util/ENUMS.js";
-import dataRange from "../../components/data-rang.vue";
-import exportBtn from "../../components/Button/export-btn.vue";
-import detailBtn from "../../components/Button/detail-btn.vue";
-import myModal from "../../components/Modal/my-modal.vue";
-import importBtn from "../../components/Button/import-btn.vue";
+import dataRange from "@/components/data-rang.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
+import detailBtn from "@/components/Button/detail-btn.vue";
+import myModal from "@/components/Modal/my-modal.vue";
+import importBtn from "@/components/Button/import-btn.vue";
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
 import config from "../../util/config.js";
 import {
-  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
-  typeQueryActivityGroupVOByBrandId, //根据活动包名ID获取陈列活动列表
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
-const image = require("../../assets/image/edit.png");
-import { displayApplyDetail } from "@/api/activity-manage/display-activity-manage.js"; //api
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
-export default {
-  name:"code-printing-and-scrap-keepAlive",
-  data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
+import { validateStart, validateEnd } from "@/util/index.js";//验证规则
 
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
+const image = require("../../assets/image/edit.png");
+export default {
+  name: "code-printing-and-scrap-keepAlive",
+  data() {
     return {
       url: config.uploadWorkerExcel,
       maintainImportShow: false,
@@ -470,8 +478,8 @@ export default {
       threeLeverList: [], //三级组织数据
       fourLeverList: [], //四级组织数据
       showQuery: false,
-      groupName:"",
-      activityName:"",
+      groupName: "",
+      activityName: "",
       start: {
         time: "",
         hour: ""
@@ -569,8 +577,8 @@ export default {
                     position: "absolute",
                     top: 0,
                     right: 0,
-                    width:"18px",
-                    height:"18px"
+                    width: "18px",
+                    height: "18px"
                   },
                   on: {
                     click: () => {
@@ -674,7 +682,7 @@ export default {
                       verticalAlign: "center"
                     }
                   },
-                  params.row.memo?params.row.memo:'无'
+                  params.row.memo ? params.row.memo : "无"
                 ),
                 h("img", {
                   attrs: {
@@ -687,8 +695,8 @@ export default {
                     position: "absolute",
                     top: 0,
                     right: 0,
-                    width:"18px",
-                    height:"18px"
+                    width: "18px",
+                    height: "18px"
                   },
                   on: {
                     click: () => {
@@ -783,7 +791,7 @@ export default {
           minWidth: 80,
           align: "center",
           render: (h, params) => {
-            return h("div", that.Global.createTime(params.row.uploadTime));
+            return h("div", this.Global.createTime(params.row.uploadTime));
           }
         },
         {
@@ -832,7 +840,7 @@ export default {
       activityList: []
     };
   },
-  components: { dataRange, exportBtn, detailBtn, myModal,importBtn },
+  components: { dataRange, exportBtn, detailBtn, myModal, importBtn },
   created() {
     this.Global.doPostNoLoading(
       "condition/queryBrands.json",
@@ -852,14 +860,14 @@ export default {
   },
   watch: {},
   methods: {
-    getActivityName(val){
-      this.activityName = ""
-      if(!val)return
+    getActivityName(val) {
+      this.activityName = "";
+      if (!val) return;
       this.activityList.forEach(item => {
-        if(item.id == val){
-          this.activityName = item.name
+        if (item.id == val) {
+          this.activityName = item.name;
         }
-      })
+      });
     },
     uploadExcelScrap() {
       this.$refs.tableScrap.exportCsv({
@@ -954,10 +962,10 @@ export default {
     },
     getActivityList(value) {
       this.groupList.forEach(item => {
-        if(item.id == value){
-          this.groupName = item.groupName
+        if (item.id == value) {
+          this.groupName = item.groupName;
         }
-      })
+      });
       this.activityList = [];
       this.formData.activityId = "";
       if (!value) return;
@@ -968,7 +976,6 @@ export default {
           Object.entries(res).forEach(item => {
             this.activityList.push({ id: Number(item[0]), name: item[1] });
           });
-
         }
       );
     },
@@ -1046,7 +1053,7 @@ export default {
         data["status"] = 1;
       } else {
         data["status"] = 2;
-        delete data['status']
+        delete data["status"];
       }
       this.Global.deleteEmptyProperty(data);
       this.Global.doPost("codepackage/scancodeallrecord.json", data, res => {
@@ -1082,7 +1089,7 @@ export default {
         data["status"] = 1;
       } else {
         data["status"] = 2;
-        delete data['status']
+        delete data["status"];
       }
       this.Global.deleteEmptyProperty(data);
       var url = this.Global.getExportUrl(

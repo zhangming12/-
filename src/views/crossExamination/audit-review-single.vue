@@ -417,30 +417,17 @@
           </transition>
         </Form>
       </div>
-
-      <!-- <div class="export" style="overflow:hidden;" v-if="storeGoodsList && storeGoodsList.length">
-            <span @click="handleAllSurePage">全选</span>
-            <span @click="handleBatchSure">批量确认</span>
-            <span @click="riskShow">风险预警</span>
-      </div>-->
       <div
         class="box clear container"
         style="width:100%;padding-top:30px;"
         v-if="storeGoodsList && storeGoodsList.length"
       >
-        <!-- <CheckboxGroup size="large" v-model="social"> -->
         <div class="card" v-for="(item,index) in storeGoodsList" :key="index">
           <div class="card-top">
             <div class="card-left">
               <template v-if="item && item.checkStatus != -1">
-                <!-- <div class="check-box">
-                                <Checkbox  size="large" :label="index">
-                                    <span style="display:none;"></span>
-                                </Checkbox>
-                </div>-->
                 <div class="video-box">
                   <div class="video">
-                    <!-- v-if="item.fileType == 'radio'" -->
                     <div class="video-main" v-if="item.fileType == 'radio'">
                       <video :src="item.firstRadio.radioUrl" v-if="item.firstRadio" controls></video>
                       <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
@@ -459,7 +446,6 @@
                     </div>
                   </div>
                   <div class="video">
-                    <!-- v-if="item.fileType == 'radio'" -->
                     <div class="video-main" v-if="item.fileType == 'radio'">
                       <video :src="item.radioUrl" v-if="item.radioUrl" controls></video>
                       <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
@@ -500,7 +486,6 @@
                       </div>
                       <div class="item-box">
                         <span>上传渠道：</span>
-                        <!-- <span>门店</span> -->
                         <span>{{ item.radioChannel | storeOrWorker}}</span>
                       </div>
                     </Col>
@@ -792,11 +777,7 @@ import myTooltip from "@/components/tooltip/tooltip.vue";
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
   name: "audit-review-single-keepAlive",
   components: {

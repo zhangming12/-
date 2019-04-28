@@ -65,81 +65,98 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">客户信息</h2> -->
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-                <Row>
-                    <Col span="7">  
-                        <Form-item label="品牌名称:" prop="brandId" required>
-                            <Select v-model="formData.brandId" placeholder="请选择">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select> 
-                        </Form-item>
-                        <Form-item label="用户ID:" prop="userId">
-                            <Input v-model.trim="formData.userId" placeholder="请输入用户ID"></Input>
-                        </Form-item>  
-                                           
-                        <!-- <Form-item label="区域:" prop="areaCode">
+    <!-- <h2 class="Title">客户信息</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+        <Row>
+          <Col span="7">
+            <Form-item label="品牌名称:" prop="brandId" required>
+              <Select v-model="formData.brandId" placeholder="请选择">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="用户ID:" prop="userId">
+              <Input v-model.trim="formData.userId" placeholder="请输入用户ID"></Input>
+            </Form-item>
+
+            <!-- <Form-item label="区域:" prop="areaCode">
                             <Cascader  placeholder="请选择区域"  :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
-                        </Form-item> -->
-                        
-                        
-                    </Col>
-                    <Col span="7">
-                        
-                        <Form-item label="姓名:" prop="realName">
-                            <Input v-model.trim="formData.realName"  placeholder="请输入姓名" ></Input>
-                        </Form-item>
-                        <Form-item label="手机号码:" prop="phone">
-                            <Input v-model.trim="formData.phone" placeholder="请输入手机号"></Input>
-                        </Form-item>
-                        
-                    </Col>
-                    <Col span="7">
-                        <Form-item label="昵称:" prop="nickName">
-                            <Input v-model.trim="formData.nickName" placeholder="请输入昵称"></Input>
-                        </Form-item>
-                        <Form-item label="状态:" placeholder="请选择状态" prop="isBlack">
-                            <Radio-group v-model="formData.isBlack">
-                                <Radio label="0">正常</Radio>
-                                <Radio label="1">异常</Radio>
-                            </Radio-group>
-                        </Form-item>
-                    </Col>
-                    <Col span='2' offset="1" style="margin-top:10px">
-                        <!-- <Button @click="submit('form')" type="primary">查询</Button> -->
-                        <div class="searchBox">
-                          <Button @click="submit('form')" class="btn-search  search_btn" type="primary">查询</Button>
-                          <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
-                          <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button>
-                        </div>
-                    </Col>
-                </Row>
-                <transition name="fade">
-                  <Row v-if="showQuery">
-                    <Col span='7'>
-                      <Form-item label="区域" prop="areaCode">
-                          <Cascader :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
-                      </Form-item>
-                    </Col>
-                  </Row>
-                </transition>
-            </Form>
-      </div>
-      <div class="box" style="margin-top: 15px;padding-bottom:20px">
-        <div class='contentTop'>
-            <Button @click="exportExcel" class="btn-export" icon="ios-download-outline" type="primary">导出</Button>
-        </div>
-        <Table :columns="columns1" :loading="tableLoading" :data="pageData" disabled-hover></Table>
-        <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+            </Form-item>-->
+          </Col>
+          <Col span="7">
+            <Form-item label="姓名:" prop="realName">
+              <Input v-model.trim="formData.realName" placeholder="请输入姓名"></Input>
+            </Form-item>
+            <Form-item label="手机号码:" prop="phone">
+              <Input v-model.trim="formData.phone" placeholder="请输入手机号"></Input>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="昵称:" prop="nickName">
+              <Input v-model.trim="formData.nickName" placeholder="请输入昵称"></Input>
+            </Form-item>
+            <Form-item label="状态:" placeholder="请选择状态" prop="isBlack">
+              <Radio-group v-model="formData.isBlack">
+                <Radio label="0">正常</Radio>
+                <Radio label="1">异常</Radio>
+              </Radio-group>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:10px">
+            <!-- <Button @click="submit('form')" type="primary">查询</Button> -->
+            <div class="searchBox">
+              <Button @click="submit('form')" class="btn-search search_btn" type="primary">查询</Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-up"
+                v-if="showQuery"
+              ></Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-down"
+                v-else
+              ></Button>
             </div>
+          </Col>
+        </Row>
+        <transition name="fade">
+          <Row v-if="showQuery">
+            <Col span="7">
+              <Form-item label="区域" prop="areaCode">
+                <Cascader :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
+              </Form-item>
+            </Col>
+          </Row>
+        </transition>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;padding-bottom:20px">
+      <div class="contentTop">
+        <Button
+          @click="exportExcel"
+          class="btn-export"
+          icon="ios-download-outline"
+          type="primary"
+        >导出</Button>
+      </div>
+      <Table :columns="columns1" :loading="tableLoading" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      <Modal v-model="memoStatus" title="备注" @on-ok="ok" loading>
-        <Input placeholder="请输入备注信息" v-model="memo" autofocus></Input>
-      </Modal>
+    </div>
+    <Modal v-model="memoStatus" title="备注" @on-ok="ok" loading>
+      <Input placeholder="请输入备注信息" v-model="memo" autofocus></Input>
+    </Modal>
   </div>
 </template>
 
@@ -149,7 +166,6 @@ export default {
   name: "customer-infor-keepAlive",
 
   data() {
-    var that = this;
     return {
       showQuery: false,
       formData: {
@@ -300,8 +316,8 @@ export default {
                       this.$Modal.confirm({
                         title: "警告",
                         content: handle.content,
-                        onOk: function() {
-                          that.userBlack(
+                        onOk: () => {
+                          this.userBlack(
                             params.row.userId,
                             params.row.brandId,
                             params.row.isBlack
@@ -346,8 +362,8 @@ export default {
                       this.$Modal.confirm({
                         title: "警告",
                         content: limit.content,
-                        onOk: function() {
-                          that.userLimit(
+                        onOk: () => {
+                          this.userLimit(
                             params.row.userId,
                             params.row.brandId,
                             params.row.isLimit
@@ -443,7 +459,6 @@ export default {
       );
     },
     userLimit(userId, brandId, isLimit) {
-      var that = this;
       var url = "";
       if (isLimit == 0) {
         url = "report/userDelIndefinite.json";
@@ -464,27 +479,6 @@ export default {
     },
     showMemo(userId, brandId) {
       this.memoStatus = !this.memoStatus;
-      // this.$Modal.confirm({
-      //     title: '备注',
-      //     render: (h) => {
-      //         return h('Input',{
-      //             props: {
-      //                 value: this.memo,
-      //                 autofocus: true,
-      //                 placeholder: '请输入备注信息',
-      //                 key: 'memo'
-      //             },
-      //             on: {
-      //                 input: (val) => {
-      //                     this.memo = val;
-      //                 }
-      //             }
-      //         })
-      //     },
-      //     onOk: function(){
-      //         that.getUserMemo(userId,brandId)
-      //     }
-      // })
     },
     ok() {
       this.getUserMemo(this.selectUserId, this.selectBrandId);
@@ -499,7 +493,7 @@ export default {
           userType: "C"
         },
         () => {
-          this.memoStatus = !that.memoStatus;
+          this.memoStatus = !this.memoStatus;
           this.init();
         }
       );

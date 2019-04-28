@@ -492,7 +492,6 @@ textarea.ivu-input {
 </template>
 
 <script>
-// import BMap from 'BMap';
 import {
   getBrandStoreSignDetialInfo,
   brandStoreSignFirstAudit,
@@ -514,7 +513,6 @@ export default {
   name:"protocol-report-examine",
 
   data() {
-    const that = this;
     return {
       vertical: 0,
       examineType: null,

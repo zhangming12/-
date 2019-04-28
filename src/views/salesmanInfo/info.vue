@@ -16,57 +16,64 @@
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">业代关联门店统计</h2> -->
-        <div class="box">
-            <Form ref="form" :model="formData" :label-width="88" :rules="rules" >
-                <Row>
-                    <Col span='10'>
-                        <Form-item label='品牌名称:' prop='brandId'>
-                           <Select v-model="formData.brandId" placeholder="请选择">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>
-                        <Form-item label='业代姓名:' prop='workerName'>
-                            <Input v-model='formData.workerName' placeholder="请输入业代姓名"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col span='10' offset='1'> 
-                        <Form-item label='手机号码:' prop='phone'>
-                            <Input v-model='formData.phone' placeholder="请输入手机号码"></Input>
-                        </Form-item>
-                        <Form-item label='客户编号:' >
-                            <Input v-model='formData.joinCode' placeholder="请输入客户编号"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col span="2" offset='1' style="margin-top:24px">
-                        <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
-                    </Col>                                                                
-                </Row>
-            </Form>           
-        </div>
-        <div class="box" style='margin-top: 15px;overflow: hidden;'>
-            <div class='contentTop'>
-                <Button @click="exportExcel" class="btn-export ivu-btn" icon="ios-download-outline" type="primary">导出</Button>
-               
-            </div>
-            <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-            <div style="margin: 10px;overflow: hidden">
-                <div style="float: right;">
-                    <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-                </div>
-            </div>
-        </div>
+  <div id="Main">
+    <!-- <h2 class="Title">业代关联门店统计</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88" :rules="rules">
+        <Row>
+          <Col span="10">
+            <Form-item label="品牌名称:" prop="brandId">
+              <Select v-model="formData.brandId" placeholder="请选择">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="业代姓名:" prop="workerName">
+              <Input v-model="formData.workerName" placeholder="请输入业代姓名"></Input>
+            </Form-item>
+          </Col>
+          <Col span="10" offset="1">
+            <Form-item label="手机号码:" prop="phone">
+              <Input v-model="formData.phone" placeholder="请输入手机号码"></Input>
+            </Form-item>
+            <Form-item label="客户编号:">
+              <Input v-model="formData.joinCode" placeholder="请输入客户编号"></Input>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:24px">
+            <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
+          </Col>
+        </Row>
+      </Form>
     </div>
+    <div class="box" style="margin-top: 15px;overflow: hidden;">
+      <div class="contentTop">
+        <Button
+          @click="exportExcel"
+          class="btn-export ivu-btn"
+          icon="ios-download-outline"
+          type="primary"
+        >导出</Button>
+      </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import config from "../../util/config.js";
 export default {
-  name:"info-keepAlive",
+  name: "info-keepAlive",
 
   data() {
-    const that = this;
     const validatePhone = (rule, value, callback) => {
       // 验证手机号码
       if (value == "") {
@@ -74,7 +81,7 @@ export default {
       } else {
         if (!this.Global.checkPhone(value)) {
           callback(new Error("请输入正确手机号码"));
-        }else {
+        } else {
           callback();
         }
       }
@@ -176,7 +183,7 @@ export default {
           title: "地址",
           key: "address",
           align: "center",
-          tooltip:true,
+          tooltip: true,
           minWidth: 140
         }
       ],

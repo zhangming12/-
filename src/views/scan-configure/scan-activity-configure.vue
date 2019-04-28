@@ -190,41 +190,10 @@
   opacity: 1;
   background: #f3f3f3;
 }
-.myModal {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  .modal-main {
-    box-sizing: border-box;
-    padding: 10px;
-    width: 100%;
-    height: 100%;
-    h3 {
-      text-align: center;
-      font-size: 14px;
-    }
-    .modal-table {
-      max-height: 500px;
-      overflow-y: auto;
-      margin-top: 10px;
-      .modal-table-top {
-        // overflow: hidden;
-        height: 30px;
-        line-height: 30px;
-        .numColor {
-          color: @primary-color;
-        }
-      }
-    }
-  }
-}
 .grayDiv {
   background-color: #f3f3f3;
   opacity: 1;
   cursor: not-allowed;
-  // color: red;
 }
 </style>
 
@@ -265,9 +234,8 @@
                   <Col span="11">
                     <data-range
                       :dis="type == 'look'"
-                      @dataChange="startTimeChange"
                       hour="00:00"
-                      :time="formData1.startTime"
+                      v-model="formData1.startTime"
                       start
                     ></data-range>
                   </Col>
@@ -276,8 +244,7 @@
                       placeholder="结束时间"
                       :dis="type == 'look'"
                       hour="24:00"
-                      @dataChange="endTimeChange"
-                      :time="formData1.endTime"
+                      v-model="formData1.endTime"
                     ></data-range>
                   </Col>
                 </Row>
@@ -297,7 +264,7 @@
                     <img src="../../assets/image/imgBg.png" alt v-else>
                     <div class="zhezhao" @click.stop.prevent="zhezhaoClick" v-if="type == 'look'"></div>
                   </Upload>
-                  <span>(建议尺寸:210px*170px)</span>
+                  <span>(建议尺寸:210*170)</span>
                 </div>
               </Form-item>
             </Col>
@@ -414,7 +381,6 @@
                             :value="item.id"
                           >{{item.name}}</Option>
                         </Select>
-                        <!-- <Input v-else-if="item.presentType == 1" v-model="item.goodsName" placeholder="折扣内容" name="content" /> -->
                         <input
                           :disabled="type == 'look'"
                           v-else-if="item.presentType == 2"
@@ -483,10 +449,9 @@
                         <Form-item label="折扣有效期:" required>
                           <data-range
                             :dis="type == 'look'"
-                            @dataChange="timeChange"
                             placement="bottom"
                             hour="00:00"
-                            :time="item.endWinTime"
+                            v-model="item.endWinTime"
                             start
                           ></data-range>
                         </Form-item>
@@ -511,7 +476,7 @@
                                 v-if="type == 'look'"
                               ></div>
                             </Upload>
-                            <span>(建议尺寸:210px*170px)</span>
+                            <span>(建议尺寸:210*170)</span>
                           </div>
                         </Form-item>
                       </Col>
@@ -676,28 +641,11 @@
           </Row>
         </Form>
       </div>
-      <!-- <myModal class="myModal" :modal="treeShow" @close="closeModal"
-            height='420'
-          >
-            <div slot="main" class="modal-main" style='height: 400px; overflow-y:auto;'>
-                <div style='height: 400px; overflow-y:auto;'>
-                    <Tree :data="areaData" ref='tree' multiple show-checkbox></Tree>
-                </div>
-                <div class="maintain-footer">
-                  <Button type="text" @click="closeModal">取消</Button>
-                  <Button type="text" @click="areaList">确定</Button>
-                </div>
-            </div>
-      </myModal>-->
       <Modal v-model="treeShow" @on-ok="areaList">
         <div style="height: 400px; overflow-y:auto;">
           <div style="height: 400px; overflow-y:auto;">
             <Tree :data="areaData" ref="tree" multiple show-checkbox></Tree>
           </div>
-          <!-- <div class="maintain-footer">
-                  <Button type="text" @click="closeModal">取消</Button>
-                  <Button type="text" @click="areaList">确定</Button>
-          </div>-->
         </div>
       </Modal>
       <!-- 底部按钮 -->
@@ -712,53 +660,22 @@
 
 <script>
 import fieldNameDes from "@/components/field-name-description.vue";
-import dataRange from "../../components/data-rang.vue";
-import exportBtn from "../../components/Button/export-btn.vue";
-import detailBtn from "../../components/Button/detail-btn.vue";
-import saveBtn from "../../components/Button/save-btn.vue";
-import myModal from "@/components/Modal/my-modal.vue";
+import dataRange from "@/components/data-range/data-range.vue";
+import saveBtn from "@/components/Button/save-btn.vue";
 import upData from "@/assets/js/upload.js";
-import hhTable from "@/components/table/table.vue";
 import PROJECT_CONFIG from "@/util/config.js";
 import area from "@/config/areaCode.js";
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW,
   EDFAULT_END_TIME
 } from "@/util/index.js"; //搜索条件默认时间
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
+
 export default {
   name: "scan-activity-configure",
 
   data() {
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       activityId: "",
       type: "", //add 新建  look 详情  modify 修改
@@ -800,14 +717,6 @@ export default {
       areaName: "",
       activeIndex: 0,
       upData: upData,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "00:00"
-      },
       columns1: [],
       groupList: [],
       formData: {
@@ -852,10 +761,6 @@ export default {
   },
   components: {
     dataRange,
-    exportBtn,
-    detailBtn,
-    myModal,
-    hhTable,
     saveBtn,
     fieldNameDes
   },
@@ -931,15 +836,6 @@ export default {
           }
         }
       }
-      // this.areaData.forEach(item => {
-
-      //   item.checked = false;
-      //   if (item.children && item.children.length) {
-      //     item.children.forEach(val => {
-      //       val.checked = false;
-      //     });
-      //   }
-      // });
     },
     conficChange(val) {
       if (val == "kong") {
@@ -1075,19 +971,9 @@ export default {
         data["groupId"] = this.groupId;
         data["operateType"] = this.allsave ? 2 : this.type == "add" ? 1 : 2;
         data["startTime"] = this.Global.createTime(this.formData1.startTime);
-        if (this.start.hour == "24:00") {
-          data["startTime"] = this.Global.setHoursData(
-            this.start.time,
-            this.start.hour
-          );
-        }
+
         data["endTime"] = this.Global.createTime(this.formData1.endTime);
-        if (this.end.hour == "24:00") {
-          data["endTime"] = this.Global.setHoursData(
-            this.end.time,
-            this.end.hour
-          );
-        }
+
         if (this.type == "modify" || this.allsave) {
           data["activityId"] = this.formData1["id"];
         }
@@ -1202,9 +1088,7 @@ export default {
             return reject();
           }
           obj["endWinTime"] = this.Global.createTime(item.endWinTime);
-          if (item.hour == "24:00") {
-            obj["endWinTime"] = this.Global.setHoursData(item.time, item.hour);
-          }
+
           list.push(obj);
         });
         let data = {};
@@ -1408,12 +1292,10 @@ export default {
     beforeUpload(res) {
       this.img1TimeStr = Date.now();
       this.upData["key"] = "ecuda/image/" + this.img1TimeStr + res.name;
-      // return false
     },
     beforeUpload2(res) {
       this.img2TimeStr = Date.now();
       this.upData["key"] = "ecuda/image/" + this.img2TimeStr + res.name;
-      // return false
     },
     UploadLogoUrl(response, file, fileList) {
       //陈列图片
@@ -1430,36 +1312,6 @@ export default {
         "ecuda/image/" +
         this.img2TimeStr +
         file.name;
-    },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData1.startTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    timeChange(value) {
-      this.presentList[this.activeIndex].hour = value.hour;
-      this.presentList[this.activeIndex].time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.presentList[this.activeIndex].endWinTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData1.endTime = this.Global.setHoursData(value.time, value.hour);
     }
   }
 };

@@ -110,74 +110,92 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">返利统计汇总</h2> -->
-		<div class="box">
-			<Form ref="form" :model="formData" :label-width="85">
-				<Row>
-					<Col span="7">
-            <Form-item label="周期:"    >
-                <Date-picker style="width:100%;" v-model="formData.cycle" type="month" placeholder="选择周期"></Date-picker>
+  <div id="Main">
+    <!-- <h2 class="Title">返利统计汇总</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="85">
+        <Row>
+          <Col span="7">
+            <Form-item label="周期:">
+              <Date-picker
+                style="width:100%;"
+                v-model="formData.cycle"
+                type="month"
+                placeholder="选择周期"
+              ></Date-picker>
             </Form-item>
             <Form-item label="用户ID:">
-                  <Input v-model.trim="formData.storeId" placeholder="请输入用户ID"></Input>
-              </Form-item>
-            
-					</Col>
-					<Col span="7">
-            <Form-item     label="品牌名称:" prop="brandId">
-                <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue" clearable>
-                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                </Select>
+              <Input v-model.trim="formData.storeId" placeholder="请输入用户ID"></Input>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="品牌名称:" prop="brandId">
+              <Select
+                v-model="formData.brandId"
+                placeholder="请选择"
+                @on-change="changeValue"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
             </Form-item>
             <Form-item label="区域">
-                <Cascader :data="areaData" v-model="formData.areaCode" change-on-select placeholder="请选择区域"></Cascader>
+              <Cascader
+                :data="areaData"
+                v-model="formData.areaCode"
+                change-on-select
+                placeholder="请选择区域"
+              ></Cascader>
             </Form-item>
-            
-					</Col>
-					<Col span="7">
-            <Form-item     label="活动名称:" prop="activityId">
-                <Select v-model="formData.activityId" placeholder="请选择活动" clearable>
-                    <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                </Select>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动名称:" prop="activityId">
+              <Select v-model="formData.activityId" placeholder="请选择活动" clearable>
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
             </Form-item>
-            
-					</Col>
-					<Col span='2' offset="1" style="margin-top:20px">
-            <Button @click="submit()" class="btn-search  search_btn" type="primary">查询</Button>
-					
-
-					</Col>
-				</Row>
-			</Form>
-		</div>
-		<div class="box" style='margin-top: 15px;overflow: hidden;padding-bottom:20px;'>
-			<div class='contentTop'>
-				<Button class="btn-export" icon="ios-download-outline" @click="exportExcel" type="primary">导出</Button>
-			</div>
-			<Table :columns="columns" :data="pageData" disabled-hover></Table>
-
-		</div>
-		<div style="margin: 10px;overflow: hidden">
-			<div style="float: right;">
-				<Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-			</div>
-		</div>
-	</div>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:20px">
+            <Button @click="submit()" class="btn-search search_btn" type="primary">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;overflow: hidden;padding-bottom:20px;">
+      <div class="contentTop">
+        <Button
+          class="btn-export"
+          icon="ios-download-outline"
+          @click="exportExcel"
+          type="primary"
+        >导出</Button>
+      </div>
+      <Table :columns="columns" :data="pageData" disabled-hover></Table>
+    </div>
+    <div style="margin: 10px;overflow: hidden">
+      <div style="float: right;">
+        <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { monitorRecord } from "@/util/ENUMS.js";
 import area from "@/config/china_code_data.js";
 import {
-  queryActivityGroupVOByBrandId, //根据品牌ID获取活动包
-  queryActivityVOByGroupId, //根据活动包ID获取陈列活动列表
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
-  name:"statistical-summary-rebate-keepAlive",
+  name: "statistical-summary-rebate-keepAlive",
 
   data() {
     return {

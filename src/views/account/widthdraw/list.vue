@@ -44,75 +44,77 @@
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">转出&提现</h2> -->
-        <div class="box">
-            <Row>
-                <Col span="12">
-                    <div id="money">
-                        <label>品牌： </label>
-                        <div class="inputBox">
-                            <Select v-model="brandId" placeholder="请选择品牌" @on-change="changeBrand">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </div>
-                    </div>
-                    <div id="money">
-                        <label>汇款银行： </label>
-                        <div class="inputBox">
-                            <Input placeholder="请输入汇款银行" v-model.trim="bankName"></Input>
-                        </div>
-                    </div>
-                    <div id="money">
-                        <label>转出金额： </label>
-                        <div class="inputBox">
-                            <Input @on-change="NumberToChinese" placeholder="请输入转入金额" v-model.trim="money"></Input>
-                        </div>
-                        <span>元</span>
-                    </div>
-                    <div id="money" style="position: relative;">
-                        <label style="float: left;">备注：</label>
-                        <div class="inputBox">
-                            <Input  v-model.trim="memo"></Input>
-                            <!-- <Input type="textarea" :autosize="{minRows: 5,maxRows: 7}" v-model.trim="memo"></Input> -->
-                        </div>
-                    </div>
-                </Col>
-                <Col span="12">
-                    <div id="money">
-                        <label>账户余额： </label>
-                        <span>{{ allMoney }}元</span>
-                    </div>
-                    <div id="money">
-                        <label>汇款单号： </label>
-                        <div class="inputBox">
-                            <Input placeholder="请输入汇款单号" v-model.trim="remitNo"></Input>
-                        </div>
-                    </div> 
-                    <div id="money">
-                        <label>确认转出金额：</label>
-                        <div class="inputBox">
-                            <!-- <Input placeholder="请输入转入金额" v-model.trim="money" :disabled="true"></Input> -->
-                            <Input v-model.trim="text" placeholder="请输入转入金额" :readonly="true"></Input>
-                        </div>
-                        <!-- <span>元</span> -->
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col span="24" style="text-align: center;">
-                    <Button  class="btn-search" type="primary" @click="submit">转出</Button> 
-                </Col>
-            </Row>
-
-            
-        </div>
+  <div id="Main">
+    <!-- <h2 class="Title">转出&提现</h2> -->
+    <div class="box">
+      <Row>
+        <Col span="12">
+          <div id="money">
+            <label>品牌：</label>
+            <div class="inputBox">
+              <Select v-model="brandId" placeholder="请选择品牌" @on-change="changeBrand">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </div>
+          </div>
+          <div id="money">
+            <label>汇款银行：</label>
+            <div class="inputBox">
+              <Input placeholder="请输入汇款银行" v-model.trim="bankName"></Input>
+            </div>
+          </div>
+          <div id="money">
+            <label>转出金额：</label>
+            <div class="inputBox">
+              <Input @on-change="NumberToChinese" placeholder="请输入转入金额" v-model.trim="money"></Input>
+            </div>
+            <span>元</span>
+          </div>
+          <div id="money" style="position: relative;">
+            <label style="float: left;">备注：</label>
+            <div class="inputBox">
+              <Input v-model.trim="memo"></Input>
+              <!-- <Input type="textarea" :autosize="{minRows: 5,maxRows: 7}" v-model.trim="memo"></Input> -->
+            </div>
+          </div>
+        </Col>
+        <Col span="12">
+          <div id="money">
+            <label>账户余额：</label>
+            <span>{{ allMoney }}元</span>
+          </div>
+          <div id="money">
+            <label>汇款单号：</label>
+            <div class="inputBox">
+              <Input placeholder="请输入汇款单号" v-model.trim="remitNo"></Input>
+            </div>
+          </div>
+          <div id="money">
+            <label>确认转出金额：</label>
+            <div class="inputBox">
+              <!-- <Input placeholder="请输入转入金额" v-model.trim="money" :disabled="true"></Input> -->
+              <Input v-model.trim="text" placeholder="请输入转入金额" :readonly="true"></Input>
+            </div>
+            <!-- <span>元</span> -->
+          </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col span="24" style="text-align: center;">
+          <Button class="btn-search" type="primary" @click="submit">转出</Button>
+        </Col>
+      </Row>
     </div>
+  </div>
 </template>
 
 <script>
 export default {
-  name:"widthdraw-list-keepAlive",
+  name: "widthdraw-list-keepAlive",
   data() {
     return {
       money: "",
@@ -197,8 +199,7 @@ export default {
       result += result.charAt(result.length - 1) == "元" ? "整" : "";
       this.text = result;
     },
-    submit: function(name) {
-      var that = this;
+    submit(name) {
       if (this.brandId == "") {
         this.$Message.error("请选择品牌");
         return false;
@@ -233,24 +234,23 @@ export default {
             bankName: this.bankName
           }
         },
-        function(res) {
-          that.$Message.success("转出申请已提交");
+        res => {
+          this.$Message.success("转出申请已提交");
         }
       );
     },
     changeBrand: function() {
       this.allBlance();
     },
-    allBlance: function() {
-      var that = this;
+    allBlance() {
       this.Global.doPost(
         "brandAccount/getBrandAcount.json",
         this.brandId,
-        function(res) {
+        res => {
           if (res) {
-            that.allMoney = res.usedBalance;
+            this.allMoney = res.usedBalance;
           } else {
-            that.allMoney = 0;
+            this.allMoney = 0;
           }
         }
       );

@@ -26,7 +26,6 @@
   overflow: hidden;
   .title {
     display: inline-block;
-    float: left;
     height: 228px;
     line-height: 228px;
   }
@@ -143,212 +142,213 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">陈列活动门店明细</h2> -->
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-                <Row>
-                    <Col span="12">
-                        <Form-item label="陈列周期:" required>
-                            <Row>
-                                <Col span="11">
-                                    <Form-item prop="queryStartTime">
-                                    <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                                    </Form-item>
-                                </Col>
-                                <Col span="2" style="text-align: center;">至</Col>
-                                <Col span="11">
-                                    <Form-item prop="queryEndTime">
-                                        <data-range placeholder="结束时间" hour="24:00" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                                    </Form-item>
-                                </Col>
-                            </Row>
-                        </Form-item>
-                        
-                        
-                        <Form-item label="陈列活动:" prop="activityId">
-                             <Select v-model="formData.activityId" placeholder="请选择" clearable>
-                                <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                            </Select> 
-                        </Form-item>
-                        
-                    </Col>
-                    <Col span="8" offset="1">
-                        <Form-item label="品牌名称:">
-                            <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue" clearable>
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select> 
-                        </Form-item>
-                        <Form-item label="店铺ID:" >
-                            <Input v-model.trim="formData.storeId" placeholder="请输入店铺ID" clearable></Input>
-                        </Form-item>
-                        
-                        
-                    </Col>
-                    <Col span='2' offset="1" style="margin-top:20px">
-                        <!-- <Button @click="submit('form')" class="btn-search" type="primary">查询</Button> -->
-                        <div class="searchBox">
-                          <Button @click="submit('form')" class="btn-search  search_btn" type="primary">查询</Button>
-                          <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
-                          <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button>
-                          </div>
-                    </Col>
-                </Row>
-                <transition name="fade">
-                  <Row v-if="showQuery">
-                    <Col span='12'>
-                      <Form-item label="客户编号:">
-                            <Input v-model.trim="formData.joinCode" placeholder="请输入客户编号" clearable></Input>
-                      </Form-item>  
-                    </Col>
-                    <Col span='8' offset="1">
-                      <Form-item label="审核状态:">
-                          <Select v-model="formData.checkStatus" placeholder="请选择" clearable>
-                              <Option value="0">审核中</Option>
-                              <Option value="1">视频通过</Option>
-                              <Option value="2">审核不通过</Option>
-                              <Option value="3">退回需重传</Option>
-                              <Option value="4">通过已发奖</Option>
-                          </Select>
-                      </Form-item>
-                  
-                    </Col>
-                  </Row>
-                </transition>
+    <!-- <h2 class="Title">陈列活动门店明细</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+        <Row>
+          <Col span="12">
+            <Form-item label="陈列周期:" required>
+              <Row>
+                <Col span="11">
+                  <Form-item prop="queryStartTime">
+                    <data-range
+                      @dataChange="startTimeChange"
+                      hour="00:00"
+                      :time="formData.queryStartTime"
+                      start
+                    ></data-range>
+                  </Form-item>
+                </Col>
+                <Col span="2" style="text-align: center;">至</Col>
+                <Col span="11">
+                  <Form-item prop="queryEndTime">
+                    <data-range
+                      placeholder="结束时间"
+                      hour="24:00"
+                      @dataChange="endTimeChange"
+                      :time="formData.queryEndTime"
+                    ></data-range>
+                  </Form-item>
+                </Col>
+              </Row>
+            </Form-item>
+
+            <Form-item label="陈列活动:" prop="activityId">
+              <Select v-model="formData.activityId" placeholder="请选择" clearable>
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="8" offset="1">
+            <Form-item label="品牌名称:">
+              <Select
+                v-model="formData.brandId"
+                placeholder="请选择"
+                @on-change="changeValue"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="店铺ID:">
+              <Input v-model.trim="formData.storeId" placeholder="请输入店铺ID" clearable></Input>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:20px">
+            <!-- <Button @click="submit('form')" class="btn-search" type="primary">查询</Button> -->
+            <div class="searchBox">
+              <Button @click="submit('form')" class="btn-search search_btn" type="primary">查询</Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-up"
+                v-if="showQuery"
+              ></Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-down"
+                v-else
+              ></Button>
+            </div>
+          </Col>
+        </Row>
+        <transition name="fade">
+          <Row v-if="showQuery">
+            <Col span="12">
+              <Form-item label="客户编号:">
+                <Input v-model.trim="formData.joinCode" placeholder="请输入客户编号" clearable></Input>
+              </Form-item>
+            </Col>
+            <Col span="8" offset="1">
+              <Form-item label="审核状态:">
+                <Select v-model="formData.checkStatus" placeholder="请选择" clearable>
+                  <Option value="0">审核中</Option>
+                  <Option value="1">视频通过</Option>
+                  <Option value="2">审核不通过</Option>
+                  <Option value="3">退回需重传</Option>
+                  <Option value="4">通过已发奖</Option>
+                </Select>
+              </Form-item>
+            </Col>
+          </Row>
+        </transition>
+      </Form>
+    </div>
+
+    <div class="box" style="margin-top: 15px;padding-bottom:20px">
+      <div v-if="pageData">
+        <div id="shopInfor">
+          <div class="child">
+            <Form :model="pageData" label-position="right" :label-width="88">
+              <Row>
+                <Col span="6">
+                  <FormItem label="店铺名称">
+                    <span>{{pageData.storeName }}</span>
+                  </FormItem>
+                  <FormItem label="分组名称:">
+                    <span>{{pageData.displayGroup}}</span>
+                  </FormItem>
+                  <FormItem label="不通过数:">
+                    <span>{{pageData.notPassCount}}</span>
+                  </FormItem>
+                </Col>
+                <Col span="6">
+                  <FormItem label="店主姓名:">
+                    <span>{{pageData.name}}</span>
+                  </FormItem>
+                  <FormItem label="陈列折扣:">
+                    <span>{{pageData.totalAmount?pageData.totalAmount:0}}</span>
+                  </FormItem>
+                  <FormItem label="通过未发奖数:">
+                    <span>{{pageData.passCount}}</span>
+                  </FormItem>
+                </Col>
+                <Col span="6">
+                  <FormItem label="联系电话:">
+                    <span>{{pageData.storePhone}}</span>
+                  </FormItem>
+                  <FormItem label="上传数:">
+                    <span>{{pageData.uploadCount}}</span>
+                  </FormItem>
+
+                  <FormItem label="奖励已发放:">
+                    <span>{{pageData.awardPrizes}}</span>
+                  </FormItem>
+                </Col>
+                <Col span="6">
+                  <FormItem label="地址:">
+                    <span>{{pageData.storeAddress}}</span>
+                  </FormItem>
+                  <FormItem label="待审核数:">
+                    <span>{{pageData.notAudit}}</span>
+                  </FormItem>
+                </Col>
+              </Row>
             </Form>
-      </div>
-      
-        <div class="box" style="margin-top: 15px;padding-bottom:20px">
-            <div v-if="pageData">
-                <div id="shopInfor">
-                    <div class='child'>
-                        <Form :model="pageData" label-position="right" :label-width="88">
-                            <Row>
-                                <Col span="6">
-                                    <FormItem label="店铺名称">
-                                        <span>{{pageData.storeName }}</span>
-                                    </FormItem>
-                                    <FormItem label="分组名称:">
-                                        <span>{{pageData.displayGroup}}</span>
-                                    </FormItem>  
-                                    <FormItem label="不通过数:">
-                                        <span>{{pageData.notPassCount}}</span>
-                                    </FormItem>                                                          
-                                </Col>
-                                <Col span="6"  >
-                                    <FormItem label="店主姓名:">
-                                        <span>{{pageData.name}}</span>
-                                    </FormItem>
-                                    <FormItem label="陈列折扣:">
-                                        <span>{{pageData.totalAmount?pageData.totalAmount:0}}</span>
-                                    </FormItem>
-                                    <FormItem label="通过未发奖数:">
-                                        <span>{{pageData.passCount}}</span>
-                                    </FormItem>                                                                        
-                                </Col>
-                                <Col span="6">
-                                    <FormItem label="联系电话:">  
-                                        <span>{{pageData.storePhone}}</span>
-                                    </FormItem>
-                                    <FormItem label="上传数:">  
-                                        <span>{{pageData.uploadCount}}</span>
-                                    </FormItem>  
-                                    
-                                    <FormItem label="奖励已发放:">
-                                        <span>{{pageData.awardPrizes}}</span>
-                                    </FormItem>
-                                </Col>
-                                <Col span="6"  >
-                                    <FormItem label="地址:">
-                                        <span>{{pageData.storeAddress}}</span>
-                                    </FormItem>
-                                    <FormItem label="待审核数:">
-                                        <span>{{pageData.notAudit}}</span>
-                                    </FormItem>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </div>
+          </div>
+        </div>
+        <div id="shopGoodsList">
+          <Row>
+            <Col
+              span="6"
+              class="shopGood"
+              v-for="(item,index) in pageData.displayStoreVideo"
+              :key="index"
+            >
+              <div class="videoBox">
+                <div class="date">
+                  <span>{{ item.startTime | dateTranslate }}至{{ item.endTime | dateTranslate }}</span>
+                  <span
+                    :class="[item.checkStatus == 2 ? 'notPass' : item.checkStatus == 0 || item.checkStatus == 1001 || item.checkStatus == 1002 || item.checkStatus == 1003 || item.checkStatus == 2001?'waiting':item.checkStatus == 1 || item.checkStatus == 4?'pass':'']"
+                  >{{ item.checkStatus | displayCheck }}</span>
                 </div>
-                <div id="shopGoodsList">
-                    <Row >
-                        <Col span="6" class="shopGood" v-for="(item,index) in pageData.displayStoreVideo" :key='index'>
-                            <div class="videoBox">
-                                <div class='date'>
-                                    <span>{{ item.startTime | dateTranslate }}至{{ item.endTime | dateTranslate }}</span>
-                                    <span :class="[item.checkStatus == 2 ? 'notPass' : item.checkStatus == 0 || item.checkStatus == 1001 || item.checkStatus == 1002 || item.checkStatus == 1003 || item.checkStatus == 2001?'waiting':item.checkStatus == 1 || item.checkStatus == 4?'pass':'']"
-                                    >{{ item.checkStatus | displayCheck }}</span>
-                                </div>
-                                <div class='showVideo'>
-                                    
-                                    <video :src="item.radioUrl" :ref='"playVideo" + index'  controls></video>
-                                    <!-- <div class='mask' @click='video' @dblclick="dbVideo" :ref='"mask" + index' :data-id='index'>
+                <div class="showVideo">
+                  <video :src="item.radioUrl" :ref=""playVideo" + index" controls></video>
+                  <!-- <div class='mask' @click='video' @dblclick="dbVideo" :ref='"mask" + index' :data-id='index'>
                                         <div class='maskTxt'>
                                             <p>点击播放</p>
                                             <p>双击放大</p>
                                         </div>                                       
-                                    </div> -->
-                                </div>
-                                <!-- <div class='superscript'
+                  </div>-->
+                </div>
+                <!-- <div class='superscript'
                                      :class="[item.checkStatus == 2 ? 'notPass' : item.checkStatus == 0 || item.checkStatus == 1001 || item.checkStatus == 1002 || item.checkStatus == 1003 || item.checkStatus == 2001?'waiting':item.checkStatus == 1 || item.checkStatus == 4?'pass':'']"
                                 >                                    
                                     <span>·····{{ item.checkStatus | displayCheck }}·····</span>
-                                </div> -->
-                            </div>
-                        </Col>
-                    </Row>
-                </div>
-            </div>
-            <div v-else style='text-align: center;'>
-                暂无数据  
-            </div>
+                </div>-->
+              </div>
+            </Col>
+          </Row>
         </div>
+      </div>
+      <div v-else style="text-align: center;">暂无数据</div>
+    </div>
   </div>
 </template>
 
 <script>
 // import {EDFAULT_STARTTIME,EDFAULT_ENDTIME} from '@/util/index.js'; //搜索条件默认时间
-import dataRange from "../../../components/data-rang.vue";
+import dataRange from "@/components/data-rang.vue";
 
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import { displayApplyStoreDetail } from "@/api/activity-manage/display-activity-manage.js"; //api
 import { getDisplayActivityListDoQuery } from "@/api/common.js";
+import { validateStart, validateEnd } from "@/util/index.js";//验证规则
 
 export default {
   name: "display-store-detail-keepAlive",
   data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       showQuery: false,
       start: {
@@ -430,8 +430,7 @@ export default {
     changePage: function(size) {
       this.init();
     },
-    init: function(currentPage, pageSize) {
-      var that = this;
+    init(currentPage, pageSize) {
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
@@ -457,7 +456,7 @@ export default {
       }
       displayApplyStoreDetail(data).then(res => {
         if (res.status === 1) {
-          that.pageData = res.data;
+          this.pageData = res.data;
         }
       });
     },

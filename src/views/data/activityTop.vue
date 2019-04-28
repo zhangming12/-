@@ -109,158 +109,150 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">活动排行榜</h2> -->
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-                <Row>
-                    <Col span="12">
-                        <Form-item label="时间:" required>
-                          <Row>
-                            <Col span="11">
-                                <Form-item prop="queryStartTime">
-                                  <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                                </Form-item>
-                            </Col>
-                            <Col span="2" style="text-align: center;">至</Col>
-                            <Col span="11">
-                                <Form-item prop="queryEndTime">
-                                    <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                                </Form-item>
-                            </Col>
-                        </Row>
-                        </Form-item>
-                        <Form-item label="活动包名:" prop="groupId" required>
-                            <Select v-model="formData.groupId" placeholder="请选择活动包名" @on-change="getActivityList">
-                                <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </Col>
-                    <Col span="8" offset="1">
-                        <Form-item label="品牌名称:" prop="brandId" required>
-                            <Select v-model="formData.brandId" placeholder="请选择品牌" @on-change="changeValue">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>   
-                        <Form-item label="活动名称:" prop="activityId">
-                            <Select v-model="formData.activityId" placeholder="请选择活动">
-                                <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                            </Select>
-                        </Form-item>                    
-                    </Col>
-                    <Col span="2" offset="1" style="margin-top:24px">
-                        <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-                    </Col>
-                </Row>
-            </Form>
+    <!-- <h2 class="Title">活动排行榜</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+        <Row>
+          <Col span="12">
+            <Form-item label="时间:" required>
+              <Row>
+                <Col span="11">
+                  <Form-item prop="queryStartTime">
+                    <data-range
+                      @dataChange="startTimeChange"
+                      hour="00:00"
+                      :time="formData.queryStartTime"
+                      start
+                    ></data-range>
+                  </Form-item>
+                </Col>
+                <Col span="2" style="text-align: center;">至</Col>
+                <Col span="11">
+                  <Form-item prop="queryEndTime">
+                    <data-range
+                      hour="24:00"
+                      placeholder="结束时间"
+                      @dataChange="endTimeChange"
+                      :time="formData.queryEndTime"
+                    ></data-range>
+                  </Form-item>
+                </Col>
+              </Row>
+            </Form-item>
+            <Form-item label="活动包名:" prop="groupId" required>
+              <Select v-model="formData.groupId" placeholder="请选择活动包名" @on-change="getActivityList">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="8" offset="1">
+            <Form-item label="品牌名称:" prop="brandId" required>
+              <Select v-model="formData.brandId" placeholder="请选择品牌" @on-change="changeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="活动名称:" prop="activityId">
+              <Select v-model="formData.activityId" placeholder="请选择活动">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:24px">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+
+    <div style="float:right;margin-top:10px;margin-right:20px;">
+      <i-button class="btn" @click="exportExcel" type="info" style="float:right;">导出</i-button>
+    </div>
+
+    <h2 class="Title" style="margin-top: 20px;float:left;width:200px;">区域活动排行榜</h2>
+    <div class="areaBox">
+      <div id="province">
+        <ul>
+          <li>
+            <span>排名</span>
+            <span>省</span>
+            <span>参与量</span>
+            <span>用户</span>
+          </li>
+          <li v-for="(item,index) in provinceList" :key="index">
+            <span>{{ index + 1}}</span>
+            <span>{{ item.province }}</span>
+            <span>{{ item.winCount }}</span>
+            <span>{{ item.winUserCount }}</span>
+          </li>
+        </ul>
       </div>
-      
-      <div style="float:right;margin-top:10px;margin-right:20px;">
-        <i-button class="btn" @click="exportExcel" type="info" style="float:right;">导出</i-button>
+      <div id="city">
+        <ul>
+          <li>
+            <span>排名</span>
+            <span>省</span>
+            <span>市</span>
+            <span>参与量</span>
+            <span>用户</span>
+          </li>
+          <li v-for="(item,index) in cityList" :key="index">
+            <span>{{ index + 1}}</span>
+            <span>{{ item.province }}</span>
+            <span>{{ item.city }}</span>
+            <span>{{ item.winCount }}</span>
+            <span>{{ item.winUserCount }}</span>
+          </li>
+        </ul>
       </div>
-      
-      <h2 class="Title" style="margin-top: 20px;float:left;width:200px;">区域活动排行榜</h2>
-      <div class="areaBox">
-        <div id="province">
-            <ul>
-                <li>
-                    <span>排名</span>
-                    <span>省</span>
-                    <span>参与量</span>
-                    <span>用户</span>
-                </li>
-                <li v-for="(item,index) in provinceList" :key="index" >
-                      <span>{{ index + 1}}</span>
-                      <span>{{ item.province }}</span>
-                      <span>{{ item.winCount }}</span>
-                      <span>{{ item.winUserCount }}</span>
-                  </li>
-            </ul>
-        </div>
-        <div id="city">
-            <ul>
-                <li>
-                    <span>排名</span>
-                    <span>省</span>
-                    <span>市</span> 
-                    <span>参与量</span>
-                    <span>用户</span>
-                </li>
-                <li v-for="(item,index) in cityList" :key="index" >
-                    <span>{{ index + 1}}</span>
-                    <span>{{ item.province }}</span>
-                    <span>{{ item.city }}</span>
-                    <span>{{ item.winCount }}</span>
-                    <span>{{ item.winUserCount }}</span>
-                </li>
-            </ul>
-        </div>
-        <div id="area">
-            <ul>
-                <li>
-                    <span>排名</span>
-                    <span>省</span>
-                    <span>市</span>
-                    <span>区</span>
-                    <span>参与量</span>
-                    <span>用户</span>
-                </li>
-                <li v-for="(item,index) in areaList" :key="index"  >
-                    <span>{{ index + 1}}</span>
-                    <span>{{ item.province }}</span>
-                    <span>{{ item.city }}</span>
-                    <span>{{ item.area }}</span>
-                    <span>{{ item.winCount }}</span>
-                    <span>{{ item.winUserCount }}</span>
-                </li>
-            </ul>
-        </div>
+      <div id="area">
+        <ul>
+          <li>
+            <span>排名</span>
+            <span>省</span>
+            <span>市</span>
+            <span>区</span>
+            <span>参与量</span>
+            <span>用户</span>
+          </li>
+          <li v-for="(item,index) in areaList" :key="index">
+            <span>{{ index + 1}}</span>
+            <span>{{ item.province }}</span>
+            <span>{{ item.city }}</span>
+            <span>{{ item.area }}</span>
+            <span>{{ item.winCount }}</span>
+            <span>{{ item.winUserCount }}</span>
+          </li>
+        </ul>
       </div>
+    </div>
   </div>
 </template>
 
 <script>
-import dataRange from "../../components/data-rang.vue";
-import {
-  typeQueryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
-  typeQueryActivityVOByGroupId //根据活动包名ID获取陈列活动列表
-} from "@/api/common.js";
+import dataRange from "@/components/data-rang.vue";
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
+import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+
 export default {
-  name:"activityTop-keepAlive",
+  name: "activityTop-keepAlive",
 
   data() {
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       groupList: [],
       formData: {
@@ -273,13 +265,8 @@ export default {
       rule: {
         queryStartTime: [{ validator: validateStart }],
         queryEndTime: [{ validator: validateEnd }],
-        brandId: [
-            {required: true, message: "请选择品牌"}
-            
-        ],
-        groupId: [
-            {message: '请选择活动包名称',required: true}
-        ]
+        brandId: [{ required: true, message: "请选择品牌" }],
+        groupId: [{ message: "请选择活动包名称", required: true }]
       },
       start: {
         time: "",
@@ -308,7 +295,7 @@ export default {
         Object.entries(res).forEach(item => {
           this.brandList.push({ id: Number(item[0]), brandName: item[1] });
         });
-        if(this.brandList && this.brandList.length){
+        if (this.brandList && this.brandList.length) {
           this.formData.brandId = this.brandList[0].id;
           this.changeValue(this.formData.brandId);
         }
@@ -319,7 +306,7 @@ export default {
     getActivityList(value) {
       this.activityList = [];
       this.formData.activityId = "";
-      if(!value) return ;
+      if (!value) return;
       this.Global.doPostNoLoading(
         "condition/queryActivity.json",
         { date: 7, activityType: 1, scope: "a", groupId: value },
@@ -329,16 +316,11 @@ export default {
           });
         }
       );
-      // typeQueryActivityVOByGroupId({ groupId: value, type: 1 }).then(res => {
-      //   if (res && res.status == 1) {
-      //     this.activityList = res.data;
-      //   }
-      // });
     },
     changeValue(value) {
       this.groupList = [];
       this.formData.groupId = "";
-      if(!value) return
+      if (!value) return;
       this.Global.doPostNoLoading(
         "condition/queryGroup.json",
         { activityType: 1, scope: "a", brandId: value, channel: "B" },

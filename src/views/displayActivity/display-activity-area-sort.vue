@@ -263,219 +263,334 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">陈列活动区域排行榜</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" :model="formData" :label-width="10" :rules="rule">
-              <div class="container">
-                <div class="btn-left w18">
-                  <Form-item  required>
-                      <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
-                          <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                      </Select> 
-                  </Form-item>
+    <!-- <h2 class="Title">陈列活动区域排行榜</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10" :rules="rule">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required>
+                <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="groupId" required>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="活动包名*"
+                  @on-change="getActivityList"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in groupList"
+                    :key="index"
+                  >{{ item.groupName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="queryStartTime" required>
+                <data-range
+                  @dataChange="startTimeChange"
+                  hour="00:00"
+                  :time="formData.queryStartTime"
+                  start
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="queryEndTime" required>
+                <data-range
+                  hour="24:00"
+                  @dataChange="endTimeChange"
+                  placeholder="结束时间"
+                  :time="formData.queryEndTime"
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item>
+                <Select v-model="formData.activityId" placeholder="活动名称" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in activityList"
+                    :key="index"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w10">
+              <div class="searchBox">
+                <div class="btn-left search-left" @click="showQuery=!showQuery">
+                  <button type="button">
+                    {{showQuery?'收起':'更多'}}
+                    <Icon
+                      type="ios-arrow-down"
+                      size="14"
+                      style="margin-top:-2px;"
+                      v-if="!showQuery"
+                    />
+                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
+                  </button>
                 </div>
-                <div class="btn-left w18">
-                  <Form-item  prop="groupId" required>
-                      <Select v-model="formData.groupId" placeholder="活动包名*" @on-change="getActivityList" clearable>
-                          <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                      </Select>
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item  prop="queryStartTime" required>
-                      <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item  prop="queryEndTime" required>
-                      <data-range hour="24:00"  @dataChange="endTimeChange" placeholder="结束时间" :time="formData.queryEndTime"></data-range>
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item>                             
-                      <Select v-model="formData.activityId" placeholder="活动名称" clearable>
-                          <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                      </Select> 
-                  </Form-item>
-                </div>
-                <div class="btn-left w10">
-                  <div class="searchBox">
-                    <div class="btn-left search-left" @click="showQuery=!showQuery">
-                      <button type="button">
-                      {{showQuery?'收起':'更多'}}
-                        <Icon type="ios-arrow-down" size="14" style="margin-top:-2px;" v-if="!showQuery"/>
-                        <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
-                      </button>
-                    </div>
-                    <div class="btn-right search-right" @click="submit('form')">
-                      <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                    </div>
-                  </div>
+                <div class="btn-right search-right" @click="submit('form')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
                 </div>
               </div>
-              <transition name="fade">
-                <div class="container" v-if="showQuery">
-                  <div class="btn-left w18">
-                    <Form-item required>
-                      <Select v-model="formData.oneLevel"  placeholder="一级组织" @on-change="oneLevelChange" clearable>
-                          <Option :value="item.id" v-for="(item,index) in oneLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                      </Select> 
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item  required>
-                      <Select v-model="formData.twoLevel" placeholder="二级组织" @on-change="twoLevelChange" clearable>
-                          <Option :value="item.id" v-for="(item,index) in twoLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                      </Select> 
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item  required>
-                      <Select v-model="formData.threeLevel" placeholder="三级组织" clearable @on-change="threeLevelChange">
-                          <Option :value="item.id" v-for="(item,index) in threeLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                      </Select> 
-                    </Form-item>
-                  </div>
-                </div>
-              </transition>
-          </Form>
+            </div>
+          </div>
+          <transition name="fade">
+            <div class="container" v-if="showQuery">
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Select
+                    v-model="formData.oneLevel"
+                    placeholder="一级组织"
+                    @on-change="oneLevelChange"
+                    clearable
+                  >
+                    <Option :value="item.id" v-for="(item,index) in oneLeverList" :key="index">
+                      <span :title="item.areaName" class="text-overflow">{{item.areaName}}</span>
+                    </Option>
+                  </Select>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Select
+                    v-model="formData.twoLevel"
+                    placeholder="二级组织"
+                    @on-change="twoLevelChange"
+                    clearable
+                  >
+                    <Option :value="item.id" v-for="(item,index) in twoLeverList" :key="index">
+                      <span :title="item.areaName" class="text-overflow">{{item.areaName}}</span>
+                    </Option>
+                  </Select>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Select
+                    v-model="formData.threeLevel"
+                    placeholder="三级组织"
+                    clearable
+                    @on-change="threeLevelChange"
+                  >
+                    <Option :value="item.id" v-for="(item,index) in threeLeverList" :key="index">
+                      <span :title="item.areaName" class="text-overflow">{{item.areaName}}</span>
+                    </Option>
+                  </Select>
+                </Form-item>
+              </div>
+            </div>
+          </transition>
+        </Form>
+      </div>
+      <div class="table-box box" ref="tableBox">
+        <div class="contentTop">
+          <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
+          <exportBtn class="btn-right" @btnClick="exportExcel"/>
         </div>
-        <div class="table-box box" ref="tableBox">
-            <div class="contentTop">
-              <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
-              <exportBtn  class="btn-right" @btnClick="exportExcel" />
-            </div>
-            <!-- 排行榜 -->
-            <div class="ranking-list" ref="rankingList">
-                <div class="ranking-container">
-                    <div id="fourLevel"  v-if="formData.threeLevel">
-                      <div class="top">
-                          <div class="top-img">
-                              <img src="../../assets/image/fourLevel10.png" class="top-img" alt="本周业代关联门店扫码量排行榜">
-                          </div>
-                      </div>
-                      <ul>
-                          <li>
-                              <span class="ranking">排名</span>
-                              <span>一级组织</span>
-                              <span>二级组织</span>
-                              <span>三级组织</span>
-                              <span>四级组织</span>
-                              <span @click="orderType = 1" class="sort">上传数<Icon class="icon" type="ios-funnel" :color="orderType == 1?'#ff9900':'#17233d'"></Icon></span>
-                              <span @click="orderType = 2" class="sort">门店数<Icon class="icon" type="ios-funnel" :color="orderType == 2?'#ff9900':'#17233d'"></Icon></span>
-                          </li>
-                          <li v-for="(item,index) in fourLevelData" :key="index" >
-                            <span class="ranking">{{ index + 1}}</span>
-                            <span :title="item.oneLevel">{{ item.oneLevel }}</span>
-                            <span :title="item.twoLevel">{{ item.twoLevel }}</span>
-                            <span :title="item.threeLevel">{{ item.threeLevel }}</span>
-                            <span :title="item.fourLevel">{{ item.fourLevel }}</span>
-                            <span>{{ item.winCount }}</span>
-                            <span>{{ item.winUserCount }}</span>
-                          </li>
-                      </ul>
-                    </div>
-                    <div id="threeLevel" v-else-if="formData.twoLevel">
-                      <div class="top">
-                          <div class="top-img">
-                              <img src="../../assets/image/threeLevel10.png" class="top-img" alt="本周业代关联门店扫码量排行榜">
-                          </div>
-                      </div>
-                      <ul>
-                          <li>
-                              <span class="ranking">排名</span>
-                              <span>一级组织</span>
-                              <span>二级组织</span>
-                              <span>三级组织</span>
-                              <span @click="orderType = 1" class="sort">上传数<Icon class="icon" type="ios-funnel" :color="orderType == 1?'#ff9900':'#17233d'"></Icon></span>
-                              <span @click="orderType = 2" class="sort">门店数<Icon class="icon" type="ios-funnel" :color="orderType == 2?'#ff9900':'#17233d'"></Icon></span>
-                          </li>
-                          <li v-for="(item,index) in fourLevelData" :key="index" >
-                                  <span class="ranking">{{ index + 1}}</span>
-                                  <span :title="item.oneLevel">{{ item.oneLevel }}</span>
-                                  <span :title="item.twoLevel">{{ item.twoLevel }}</span>
-                                  <span :title="item.threeLevel">{{ item.threeLevel }}</span>
-                                  <span>{{ item.winCount }}</span>
-                                  <span>{{ item.winUserCount }}</span>
-                              </li>
-                      </ul>
-                    </div>
-                    <div id="twoLevel" v-else-if="formData.oneLevel">
-                      <div class="top">
-                          <div class="top-img">
-                              <img src="../../assets/image/twoLevel10.png" class="top-img" alt="本周业代关联门店扫码量排行榜">
-                          </div>
-                      </div>
-                      <ul>
-                          <li>
-                              <span class="ranking">排名</span>
-                              <span>一级组织</span>
-                              <span >二级组织</span>
-                              <span @click="orderType = 1" class="sort">上传数<Icon class="icon" type="ios-funnel" :color="orderType == 1?'#ff9900':'#17233d'"></Icon></span>
-                              <span @click="orderType = 2" class="sort">门店数<Icon class="icon" type="ios-funnel" :color="orderType == 2?'#ff9900':'#17233d'"></Icon></span>
-                          </li>
-                          <li v-for="(item,index) in fourLevelData" :key="index" >
-                                  <span class="ranking">{{ index + 1}}</span>
-                                  <span :title="item.oneLevel">{{ item.oneLevel }}</span>
-                                  <span :title="item.twoLevel">{{ item.twoLevel }}</span>
-                                  <!-- <span>{{ item.threeLevel }}</span> -->
-                                  <span>{{ item.winCount }}</span>
-                                  <span>{{ item.winUserCount }}</span>
-                              </li>
-                      </ul>
-                    </div>
-                    <div id="oneLevel" v-else>
-                      <div class="top">
-                          <div class="top-img">
-                              <img src="../../assets/image/oneLevel10.png" class="top-img" alt="本周业代关联门店扫码量排行榜">
-                          </div>
-                      </div>
-                      <ul>
-                          <li>
-                              <span class="ranking">排名</span>
-                              <span>一级组织</span>
-                              <span @click="orderType = 1" class="sort">上传数<Icon class="icon" type="ios-funnel" :color="orderType == 1?'#ff9900':'#17233d'"></Icon></span>
-                              <span @click="orderType = 2" class="sort">门店数<Icon class="icon" type="ios-funnel" :color="orderType == 2?'#ff9900':'#17233d'"></Icon></span>
-                          </li>
-                          <li v-for="(item,index) in fourLevelData" :key="index" >
-                                  <span class="ranking">{{ index + 1}}</span>
-                                  <span :title="item.oneLevel">{{ item.oneLevel }}</span>
-                                  <span>{{ item.winCount }}</span>
-                                  <span>{{ item.winUserCount }}</span>
-                              </li>
-                      </ul>
-                    </div>
+        <!-- 排行榜 -->
+        <div class="ranking-list" ref="rankingList">
+          <div class="ranking-container">
+            <div id="fourLevel" v-if="formData.threeLevel">
+              <div class="top">
+                <div class="top-img">
+                  <img
+                    src="../../assets/image/fourLevel10.png"
+                    class="top-img"
+                    alt="本周业代关联门店扫码量排行榜"
+                  >
                 </div>
-
+              </div>
+              <ul>
+                <li>
+                  <span class="ranking">排名</span>
+                  <span>一级组织</span>
+                  <span>二级组织</span>
+                  <span>三级组织</span>
+                  <span>四级组织</span>
+                  <span @click="orderType = 1" class="sort">
+                    上传数
+                    <Icon
+                      class="icon"
+                      type="ios-funnel"
+                      :color="orderType == 1?'#ff9900':'#17233d'"
+                    ></Icon>
+                  </span>
+                  <span @click="orderType = 2" class="sort">
+                    门店数
+                    <Icon
+                      class="icon"
+                      type="ios-funnel"
+                      :color="orderType == 2?'#ff9900':'#17233d'"
+                    ></Icon>
+                  </span>
+                </li>
+                <li v-for="(item,index) in fourLevelData" :key="index">
+                  <span class="ranking">{{ index + 1}}</span>
+                  <span :title="item.oneLevel">{{ item.oneLevel }}</span>
+                  <span :title="item.twoLevel">{{ item.twoLevel }}</span>
+                  <span :title="item.threeLevel">{{ item.threeLevel }}</span>
+                  <span :title="item.fourLevel">{{ item.fourLevel }}</span>
+                  <span>{{ item.winCount }}</span>
+                  <span>{{ item.winUserCount }}</span>
+                </li>
+              </ul>
             </div>
+            <div id="threeLevel" v-else-if="formData.twoLevel">
+              <div class="top">
+                <div class="top-img">
+                  <img
+                    src="../../assets/image/threeLevel10.png"
+                    class="top-img"
+                    alt="本周业代关联门店扫码量排行榜"
+                  >
+                </div>
+              </div>
+              <ul>
+                <li>
+                  <span class="ranking">排名</span>
+                  <span>一级组织</span>
+                  <span>二级组织</span>
+                  <span>三级组织</span>
+                  <span @click="orderType = 1" class="sort">
+                    上传数
+                    <Icon
+                      class="icon"
+                      type="ios-funnel"
+                      :color="orderType == 1?'#ff9900':'#17233d'"
+                    ></Icon>
+                  </span>
+                  <span @click="orderType = 2" class="sort">
+                    门店数
+                    <Icon
+                      class="icon"
+                      type="ios-funnel"
+                      :color="orderType == 2?'#ff9900':'#17233d'"
+                    ></Icon>
+                  </span>
+                </li>
+                <li v-for="(item,index) in fourLevelData" :key="index">
+                  <span class="ranking">{{ index + 1}}</span>
+                  <span :title="item.oneLevel">{{ item.oneLevel }}</span>
+                  <span :title="item.twoLevel">{{ item.twoLevel }}</span>
+                  <span :title="item.threeLevel">{{ item.threeLevel }}</span>
+                  <span>{{ item.winCount }}</span>
+                  <span>{{ item.winUserCount }}</span>
+                </li>
+              </ul>
+            </div>
+            <div id="twoLevel" v-else-if="formData.oneLevel">
+              <div class="top">
+                <div class="top-img">
+                  <img src="../../assets/image/twoLevel10.png" class="top-img" alt="本周业代关联门店扫码量排行榜">
+                </div>
+              </div>
+              <ul>
+                <li>
+                  <span class="ranking">排名</span>
+                  <span>一级组织</span>
+                  <span>二级组织</span>
+                  <span @click="orderType = 1" class="sort">
+                    上传数
+                    <Icon
+                      class="icon"
+                      type="ios-funnel"
+                      :color="orderType == 1?'#ff9900':'#17233d'"
+                    ></Icon>
+                  </span>
+                  <span @click="orderType = 2" class="sort">
+                    门店数
+                    <Icon
+                      class="icon"
+                      type="ios-funnel"
+                      :color="orderType == 2?'#ff9900':'#17233d'"
+                    ></Icon>
+                  </span>
+                </li>
+                <li v-for="(item,index) in fourLevelData" :key="index">
+                  <span class="ranking">{{ index + 1}}</span>
+                  <span :title="item.oneLevel">{{ item.oneLevel }}</span>
+                  <span :title="item.twoLevel">{{ item.twoLevel }}</span>
+                  <!-- <span>{{ item.threeLevel }}</span> -->
+                  <span>{{ item.winCount }}</span>
+                  <span>{{ item.winUserCount }}</span>
+                </li>
+              </ul>
+            </div>
+            <div id="oneLevel" v-else>
+              <div class="top">
+                <div class="top-img">
+                  <img src="../../assets/image/oneLevel10.png" class="top-img" alt="本周业代关联门店扫码量排行榜">
+                </div>
+              </div>
+              <ul>
+                <li>
+                  <span class="ranking">排名</span>
+                  <span>一级组织</span>
+                  <span @click="orderType = 1" class="sort">
+                    上传数
+                    <Icon
+                      class="icon"
+                      type="ios-funnel"
+                      :color="orderType == 1?'#ff9900':'#17233d'"
+                    ></Icon>
+                  </span>
+                  <span @click="orderType = 2" class="sort">
+                    门店数
+                    <Icon
+                      class="icon"
+                      type="ios-funnel"
+                      :color="orderType == 2?'#ff9900':'#17233d'"
+                    ></Icon>
+                  </span>
+                </li>
+                <li v-for="(item,index) in fourLevelData" :key="index">
+                  <span class="ranking">{{ index + 1}}</span>
+                  <span :title="item.oneLevel">{{ item.oneLevel }}</span>
+                  <span>{{ item.winCount }}</span>
+                  <span>{{ item.winUserCount }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-            <!-- 左右按钮 -->
-            <!-- <div class="toLeft" @click="toLeft">
+        <!-- 左右按钮 -->
+        <!-- <div class="toLeft" @click="toLeft">
                 <Icon type="chevron-left" size='20' color="#ffffff"></Icon>
             </div>
             <div class="toRight" @click="toRight">
                 <Icon type="chevron-right" size='20' color="#ffffff"></Icon>
-            </div> -->
-            
-        </div>
-        <fieldNameDes/>
+        </div>-->
       </div>
-      
-      <myModal class="myModal"
-            @close="closeModal"
-            :modal="myModalisShow"
-        >
-          <div slot="main" class="modal-main">
-            <h3>近一周导出历史</h3>
-            <div class="modal-table">
-              <div class="modal-table-top">
-                <span class="btn-left">此表共包含<span class='numColor'>100</span>条数据</span>
-              </div>
-              <Table :columns="columns" :data="pageData" disabled-hover></Table>
-            </div>
+      <fieldNameDes/>
+    </div>
+
+    <myModal class="myModal" @close="closeModal" :modal="myModalisShow">
+      <div slot="main" class="modal-main">
+        <h3>近一周导出历史</h3>
+        <div class="modal-table">
+          <div class="modal-table-top">
+            <span class="btn-left">
+              此表共包含
+              <span class="numColor">100</span>条数据
+            </span>
           </div>
-        </myModal>
+          <Table :columns="columns" :data="pageData" disabled-hover></Table>
+        </div>
+      </div>
+    </myModal>
   </div>
 </template>
 
@@ -483,59 +598,26 @@
 import area from "../../config/china_code_data.js";
 
 import {
-  dispalyShowStatus,
-  dispalyExamineSuggesteStatus,
-  displayParketCheckStatus
+  dispalyExamineSuggesteStatus
 } from "@/util/ENUMS.js";
-import dataRange from "../../components/data-rang.vue";
-import exportBtn from "../../components/Button/export-btn.vue";
-import detailBtn from "../../components/Button/detail-btn.vue";
-import myModal from "../../components/Modal/my-modal.vue";
+import dataRange from "@/components/data-rang.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
+import detailBtn from "@/components/Button/detail-btn.vue";
+import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
 import {
-  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
-  typeQueryActivityGroupVOByBrandId, //根据活动包名ID获取陈列活动列表
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
-import { displayApplyDetail } from "@/api/activity-manage/display-activity-manage.js"; //api
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
-export default {
-  name:"display-activity-area-sort-keepAlive",
-  data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
+import { validateStart, validateEnd } from "@/util/index.js";//验证规则
 
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
+export default {
+  name: "display-activity-area-sort-keepAlive",
+  data() {
     return {
       myModalisShow: false,
       timer: null,
@@ -597,7 +679,7 @@ export default {
           minWidth: 80,
           align: "center",
           render: (h, params) => {
-            return h("div", that.Global.createTime(params.row.uploadTime));
+            return h("div", this.Global.createTime(params.row.uploadTime));
           }
         },
         {
@@ -648,7 +730,7 @@ export default {
       activityList: []
     };
   },
-  components: { dataRange, exportBtn, detailBtn, myModal,fieldNameDes },
+  components: { dataRange, exportBtn, detailBtn, myModal, fieldNameDes },
   watch: {
     orderType(cval, oval) {
       if (cval == oval) {
@@ -775,11 +857,6 @@ export default {
           });
         }
       );
-      // typeQueryActivityVOByGroupId({ groupId: value, type: 3 }).then(res => {
-      //   if (res && res.status == 1) {
-      //     this.activityList = res.data;
-      //   }
-      // });
     },
     endTimeChange(value) {
       this.end.hour = value.hour;
@@ -911,7 +988,6 @@ export default {
         res => {
           if (res && res.status == 1) {
             this.oneLeverList = res.data;
-            
           }
         }
       );

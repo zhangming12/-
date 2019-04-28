@@ -8,7 +8,9 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import { router } from './router'
+import {
+    router
+} from './router'
 import store from './store/store'
 import iView from 'iview'
 import Util from './util/util.js'
@@ -20,6 +22,7 @@ import 'es6-promise/auto'
 
 
 Vue.config.productionTip = false;
+// Vue.config.silent = true; //取消所有的日志警告
 Vue.use(iView);
 Vue.prototype.Global = Util;
 /* 
@@ -91,40 +94,8 @@ var vm = new Vue({
     router,
     store,
     template: '<App/>',
-    components: { App }
+    components: {
+        App
+    }
 })
-
-
-function formatComponentName(vm) {
-    if (vm.$root === vm) return 'root';
-
-    var name = vm._isVue ? (vm.$options && vm.$options.name) || (vm.$options && vm.$options._componentTag) : vm.name;
-    return (name ? 'component <' + name + '>' : 'anonymous component') + (vm._isVue && vm.$options && vm.$options.__file ? ' at ' + (vm.$options && vm.$options.__file) : '');
-
-}
-
-
-// var fundebug = require("fundebug-javascript");
-// fundebug.apikey = "6164e297f359373a9076ababffd02aac46f12f3e315f5184723947b24b067a6b";
-//   开发 development
-//   测试 test
-//   生产 production
-
-// fundebug.releasestage = "production";//开发环境
-// fundebug.silent = true;//安静模式true,否则为false
-// Vue.config.errorHandler = function(err, vm, info)
-// {
-//   var componentName = formatComponentName(vm);
-//   var propsData = vm.$options && vm.$options.propsData;
-
-//   fundebug.notifyError(err,
-//   {
-//       metaData:
-//       {
-//           componentName: componentName,
-//           propsData: propsData,
-//           info: info
-//       }
-//    });
-// };
 export default vm

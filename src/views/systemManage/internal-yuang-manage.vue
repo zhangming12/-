@@ -166,12 +166,12 @@
 </template>
 
 <script>
-import dataRange from "../../components/data-rang.vue";
+import dataRange from "@/components/data-rang.vue";
 
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
 import area from "@/config/china_code_data.js";
 import QRCode from "qrcodejs2";

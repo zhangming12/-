@@ -79,132 +79,170 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title" v-if=" examineType == 'director' ">业务员协议查报</h2>
-		<h2 class="Title" v-else-if=" examineType == 'department' ">市场部协议查报</h2> -->
-		<div class="box">
-			<Form ref="form" :model="formData" :label-width="80">
-				<Row>
-					<Col span='12'>
-						<Form-item label="提交时间"    >
-							<Row>
-								<Col span="11">
-									<Form-item prop="queryStartTime">
-									<data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-									</Form-item>
-								</Col>
-								<Col span="2" style="text-align: center;">至</Col>
-								<Col span="11">
-									<Form-item prop="queryEndTime">
-										<data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-									</Form-item>
-								</Col>
-							</Row>
-						</Form-item>
-					</Col>
-					<Col span='9'>
-						<Form-item label="客户编号">
-							<Input v-model="formData.joinCode"></Input>
-						</Form-item>
-					</Col>
-					<Col span="2" offset="1">
-						<div class="searchBox">
-							<Button @click="submit('form')" class="btn-search  search_btn" type="primary">查询</Button>
-              <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
-              <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button>
-						</div>
-					</Col>
-					<Col span="21">
-						<Row>
-							<Col span='8'>
-								<Form-item label="状态">
-									<Select v-model="formData.checkStatus" clearable>
-										<Option value="0">待审核</Option>
-										<Option value="1001">一审通过</Option>
-										<Option value="3">退回</Option>
-										<Option value="1">审核通过</Option>
-									</Select>
-								</Form-item>
-								
-							</Col>
-							<Col span='8'>
-								<Form-item label="BAP渠道">                             
-									<Select v-model="formData.bapChannel" clearable>
-										<Option v-for="(item, key, index) in protocolBapChannel" :value="key" :key="index">{{ item }}</Option>
-									</Select>
-								</Form-item>
-							</Col>
-							<Col span='8'>
-								<Form-item label="路线编号">
-									<Input v-model="formData.salesRoute"></Input>
-								</Form-item>
-								
-							</Col>
-						</Row>
-					</Col>
-					
-				</Row>
-				<transition name="fade">
-					<Row v-if="showQuery">
-						<Col span='7'>
-						<Form-item label="签约属性">
-							<Select v-model="formData.signAttr" clearable>
-								<Option v-for="(item, key, index) in protocolSignAttr" :value="key" :key="index">{{ item }}</Option>
-							</Select>
-						</Form-item>
-						<Form-item label="营业部">
-							<Input v-model="formData.busiDept"></Input>
-						</Form-item>
-						</Col>
-						<Col span='7'>
-
-						<Form-item label="销售部">
-							<Select v-model="formData.salesDept" clearable>
-								<Option v-for="(item, key, index) in protocolSalesDept" :value="key" :key="index">{{ item }}</Option>
-							</Select>
-						</Form-item>
-						<Form-item label="协议类型">
-							<Select v-model="formData.protClass" clearable>
-								<Option v-for="(item, key, index) in protClassArrList" :value="key" :key="index">{{ item }}</Option>
-							</Select>
-						</Form-item>
-						</Col>
-						<Col span='7'>
-						<Form-item label="大区">
-							<Input v-model="formData.salesRegion"></Input>
-						</Form-item>
-						
-						</Col>
-						<Col span='7'>
-						
-						</Col>
-					</Row>
-				</transition>
-			</Form>
-		</div>
-		<div class="box" style="padding-bottom:20px">
-			<div class='contentTop'>
-				<Button class="btn-right" @click="exportExcel" type="success">导出</Button>
-				<Button @click="uploadExcel" class="btn-right" :disabled="isUpload" type="primary" style="margin-right: 12px;">导入</Button>
-				<wpicture-upload :wordUploadFlag='wordUploadFlag' @wordPicturnUploadSuccess='picturnUploadSuccess'></wpicture-upload>
-				<div class='demo' @click='exportExcel'>
-					<Icon type="ios-paper-outline" size='14' color='@primary-color'></Icon>
-					<span>下载模版</span>
-				</div>
-			</div>
-			<Table :columns="columns" :data="pageData" disabled-hover></Table>
-			<div style="margin: 10px;overflow: hidden">
-				<div style="float: right;">
-					<Page :total="pageNum" :current="1" @on-change="changePage"></Page>
-				</div>
-			</div>
-		</div>
-	</div>
+  <div id="Main">
+    <!-- <h2 class="Title" v-if=" examineType == 'director' ">业务员协议查报</h2>
+    <h2 class="Title" v-else-if=" examineType == 'department' ">市场部协议查报</h2>-->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="80">
+        <Row>
+          <Col span="12">
+            <Form-item label="提交时间">
+              <Row>
+                <Col span="11">
+                  <Form-item prop="queryStartTime">
+                    <data-range
+                      @dataChange="startTimeChange"
+                      hour="00:00"
+                      :time="formData.queryStartTime"
+                      start
+                    ></data-range>
+                  </Form-item>
+                </Col>
+                <Col span="2" style="text-align: center;">至</Col>
+                <Col span="11">
+                  <Form-item prop="queryEndTime">
+                    <data-range
+                      hour="24:00"
+                      placeholder="结束时间"
+                      @dataChange="endTimeChange"
+                      :time="formData.queryEndTime"
+                    ></data-range>
+                  </Form-item>
+                </Col>
+              </Row>
+            </Form-item>
+          </Col>
+          <Col span="9">
+            <Form-item label="客户编号">
+              <Input v-model="formData.joinCode"></Input>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1">
+            <div class="searchBox">
+              <Button @click="submit('form')" class="btn-search search_btn" type="primary">查询</Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-up"
+                v-if="showQuery"
+              ></Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-down"
+                v-else
+              ></Button>
+            </div>
+          </Col>
+          <Col span="21">
+            <Row>
+              <Col span="8">
+                <Form-item label="状态">
+                  <Select v-model="formData.checkStatus" clearable>
+                    <Option value="0">待审核</Option>
+                    <Option value="1001">一审通过</Option>
+                    <Option value="3">退回</Option>
+                    <Option value="1">审核通过</Option>
+                  </Select>
+                </Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="BAP渠道">
+                  <Select v-model="formData.bapChannel" clearable>
+                    <Option
+                      v-for="(item, key, index) in protocolBapChannel"
+                      :value="key"
+                      :key="index"
+                    >{{ item }}</Option>
+                  </Select>
+                </Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="路线编号">
+                  <Input v-model="formData.salesRoute"></Input>
+                </Form-item>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+        <transition name="fade">
+          <Row v-if="showQuery">
+            <Col span="7">
+              <Form-item label="签约属性">
+                <Select v-model="formData.signAttr" clearable>
+                  <Option
+                    v-for="(item, key, index) in protocolSignAttr"
+                    :value="key"
+                    :key="index"
+                  >{{ item }}</Option>
+                </Select>
+              </Form-item>
+              <Form-item label="营业部">
+                <Input v-model="formData.busiDept"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="销售部">
+                <Select v-model="formData.salesDept" clearable>
+                  <Option
+                    v-for="(item, key, index) in protocolSalesDept"
+                    :value="key"
+                    :key="index"
+                  >{{ item }}</Option>
+                </Select>
+              </Form-item>
+              <Form-item label="协议类型">
+                <Select v-model="formData.protClass" clearable>
+                  <Option
+                    v-for="(item, key, index) in protClassArrList"
+                    :value="key"
+                    :key="index"
+                  >{{ item }}</Option>
+                </Select>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="大区">
+                <Input v-model="formData.salesRegion"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7"></Col>
+          </Row>
+        </transition>
+      </Form>
+    </div>
+    <div class="box" style="padding-bottom:20px">
+      <div class="contentTop">
+        <Button class="btn-right" @click="exportExcel" type="success">导出</Button>
+        <Button
+          @click="uploadExcel"
+          class="btn-right"
+          :disabled="isUpload"
+          type="primary"
+          style="margin-right: 12px;"
+        >导入</Button>
+        <wpicture-upload
+          :wordUploadFlag="wordUploadFlag"
+          @wordPicturnUploadSuccess="picturnUploadSuccess"
+        ></wpicture-upload>
+        <div class="demo" @click="exportExcel">
+          <Icon type="ios-paper-outline" size="14" color="@primary-color"></Icon>
+          <span>下载模版</span>
+        </div>
+      </div>
+      <Table :columns="columns" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
-
 import {
   queryBrandStoreSignProtFirstList,
   queryBrandStoreSignSecondAuditList,
@@ -230,27 +268,22 @@ import {
 //   EDFAULT_ENDTIME,
 //   EDFAULT_STARTSAMETIME
 // } from "@/util/index.js"; //搜索条件默认时间
-import dataRange from "../../../components/data-rang.vue";
+import dataRange from "@/components/data-rang.vue";
 
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import config from "@/util/config.js";
 
 import wpictureUpload from "@/components/word-picture-upload.vue";
 // import index from 'vue';
 
 export default {
-  name:"examine-director-keepAlive",
+  name: "examine-director-keepAlive",
 
   components: {
     wpictureUpload,
     dataRange
   },
   data() {
-    const that = this;
     return {
       start: {
         time: "",
@@ -288,7 +321,7 @@ export default {
           width: 160,
           align: "center",
           render: (h, params) => {
-            return h("div", that.Global.createTime(params.row.signTime));
+            return h("div", this.Global.createTime(params.row.signTime));
           }
         },
         {
@@ -437,15 +470,6 @@ export default {
             return h("div", protocolIsSodaSales[params.row.isSodaSales]);
           }
         },
-        // {
-        //     title: 'RB、sspert专卖',
-        //     key: 'joinTime',
-        //     width: 160,
-        //     align: 'center',
-        //     render: (h, params) => {
-        //         return that.Global.createTime(params.row.joinTime);
-        //     }
-        // },
         {
           title: "三项协议1",
           key: "protContent",
@@ -760,7 +784,10 @@ export default {
       if (value.hour == "24:00") {
         return;
       }
-      this.formData.queryEndTime = this.Global.setHoursData(value.time, value.hour);
+      this.formData.queryEndTime = this.Global.setHoursData(
+        value.time,
+        value.hour
+      );
     },
     formDataInit() {
       this.formData.queryStartTime = EDFAULT_STARTTIME;

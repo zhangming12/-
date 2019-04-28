@@ -48,22 +48,6 @@
     }
   }
 }
-.searchBox {
-  overflow: hidden;
-  .search_btn {
-    float: left;
-    width: 50px;
-    padding: 5px 14px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .search_icon {
-    float: left;
-    padding: 5px 10px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-}
 //活动奖励
 .activityPresent {
   overflow: hidden;
@@ -93,178 +77,245 @@
   border-radius: 4px;
   transition: all 0.2s linear;
 }
+.searchBox {
+  overflow: hidden;
+  .search_btn {
+    float: left;
+    width: 50px;
+    padding: 5px 14px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .search_icon {
+    float: left;
+    padding: 5px 10px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">陈列推广活动参与明细</h2> -->
-		<div class="box">
-			<Form ref="form" :model="formData" :label-width="85">
-				<Row>
-					<Col span="7">
+  <div id="Main">
+    <!-- <h2 class="Title">陈列推广活动参与明细</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="85">
+        <Row>
+          <Col span="7">
             <Form-item label="品牌名称:" prop="brandId" required>
-                <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
-                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                </Select>
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
             </Form-item>
             <Form-item label="分组名称:" prop="presentId">
-                <Select v-model="formData.presentId" placeholder="请选择" clearable>
-                    <Option :value="item.id" v-for="(item,index) in presentNameList" :key="index">{{ item.activityTag }}</Option>
-                </Select>
+              <Select v-model="formData.presentId" placeholder="请选择" clearable>
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in presentNameList"
+                  :key="index"
+                >{{ item.activityTag }}</Option>
+              </Select>
             </Form-item>
-					</Col>
-					<Col span="7">
+          </Col>
+          <Col span="7">
             <Form-item label="活动包名:" prop="groupId">
-                <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
-                    <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                </Select>
+              <Select
+                v-model="formData.groupId"
+                placeholder="请选择"
+                @on-change="getActivityList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
             </Form-item>
             <Form-item label="用户ID:">
-                <Input v-model.trim="formData.storeId" placeholder="请输入用户ID"></Input>
+              <Input v-model.trim="formData.storeId" placeholder="请输入用户ID"></Input>
             </Form-item>
-					</Col>
-					<Col span="7">
+          </Col>
+          <Col span="7">
             <Form-item label="活动名称:" prop="activityId">
-                <Select v-model="formData.activityId" placeholder="请选择" @on-change="getpresentList" clearable>
-                    <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                </Select>
+              <Select
+                v-model="formData.activityId"
+                placeholder="请选择"
+                @on-change="getpresentList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
             </Form-item>
             <Form-item label="客户编号:" prop="joinCode">
-                <Input v-model.trim="formData.joinCode" placeholder="请输入客户编号"></Input>
+              <Input v-model.trim="formData.joinCode" placeholder="请输入客户编号"></Input>
             </Form-item>
-
-					</Col>
-					<Col span='2' offset="1" style="margin-top:20px">
+          </Col>
+          <Col span="2" offset="1" style="margin-top:20px">
             <div class="searchBox">
-                <Button @click="submit('form')" class="btn-search  search_btn" type="primary">查询</Button>
-                <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
-                <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button>
+              <Button @click="submit('form')" class="btn-search search_btn" type="primary">查询</Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-up"
+                v-if="showQuery"
+              ></Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-down"
+                v-else
+              ></Button>
             </div>
-					</Col>
-				</Row>
+          </Col>
+        </Row>
         <transition name="fade">
-					<Row v-if="showQuery">
-						<Col span='7'>
+          <Row v-if="showQuery">
+            <Col span="7">
               <Form-item label="状态:">
-                  <Select v-model="formData.showStatus" placeholder="请选择" clearable>
-                      <Option :value="item.value" v-for="(item,index) in statuList" :key="index">{{ item.text }}</Option>
-                  </Select>
+                <Select v-model="formData.showStatus" placeholder="请选择" clearable>
+                  <Option
+                    :value="item.value"
+                    v-for="(item,index) in statuList"
+                    :key="index"
+                  >{{ item.text }}</Option>
+                </Select>
               </Form-item>
               <Form-item label="三级分类:">
-                  <Input v-model.trim="formData.busiOffice" placeholder="请输入三级分类"></Input>
+                <Input v-model.trim="formData.busiOffice" placeholder="请输入三级分类"></Input>
               </Form-item>
-						</Col>
-						<Col span='7'>
+            </Col>
+            <Col span="7">
               <Form-item label="一级分类:">
-                  <Input v-model.trim="formData.salesDept" placeholder="请输入一级分类"></Input>
+                <Input v-model.trim="formData.salesDept" placeholder="请输入一级分类"></Input>
               </Form-item>
               <Form-item label="四级分类:">
-                  <Input v-model.trim="formData.busiDept" placeholder="请输入四级分类"></Input>
+                <Input v-model.trim="formData.busiDept" placeholder="请输入四级分类"></Input>
               </Form-item>
-						</Col>
-            <Col span='7'>
-                <Form-item label="二级分类:">
-                    <Input v-model.trim="formData.salesRegion" placeholder="请输入二级分类"></Input>
-                </Form-item>
-						</Col>
-					</Row>
-				</transition>
-			</Form>
-		</div>
-		<div class="box" style='margin-top: 15px;overflow: hidden;'>
-      <div class='contentTop'>
-          <Button class="btn-export" icon="ios-download-outline" @click="exportExcel" type="primary">导出</Button>
-          <Button @click="importShow = true" class="btn-export" icon="android-add" type="info">导入</Button>
-          <div class='demo' @click='dowland'> 
-              <Icon type="ios-paper-outline" size='14' color='#ff8a34'></Icon>
-              <span>下载模版</span>
-          </div>
+            </Col>
+            <Col span="7">
+              <Form-item label="二级分类:">
+                <Input v-model.trim="formData.salesRegion" placeholder="请输入二级分类"></Input>
+              </Form-item>
+            </Col>
+          </Row>
+        </transition>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;overflow: hidden;">
+      <div class="contentTop">
+        <Button
+          class="btn-export"
+          icon="ios-download-outline"
+          @click="exportExcel"
+          type="primary"
+        >导出</Button>
+        <Button @click="importShow = true" class="btn-export" icon="android-add" type="info">导入</Button>
+        <div class="demo" @click="dowland">
+          <Icon type="ios-paper-outline" size="14" color="#ff8a34"></Icon>
+          <span>下载模版</span>
+        </div>
       </div>
-			<Table :columns="columns1" :data="pageData" disabled-hover></Table>
-
-		</div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+    </div>
     <div style="margin: 10px;overflow: hidden">
       <div style="float: right;">
         <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
       </div>
     </div>
-        <!-- //上传 -->
-        <Modal
-          v-model="importShow">
-          <h2 style="text-align:center;">上传参与业代名单</h2>
-          <i-Form>
-            <Form-item label='品牌名称:' prop='brandId' :label-width='72'>
-              <Select v-model="importModelData.brandId" placeholder="请选择">
-                  <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-              </Select>
-            </Form-item>
-            <div class='upDate' style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;">
-                <Upload :action="url" 
-                  :show-upload-list=false
-                  :on-success='handleSuccess'
-                  :on-error='handleError'
-                  >
-                  <Icon type="ios-folder" size='14' color='#53a3f4'></Icon>
-                  {{ uploadText }}
-                </Upload>
-                
-            </div>
-            
-          </i-Form>
-          <div slot="footer" style="text-align:center;">
-            <i-button type="text" @click="cancel">取消</i-button>
-            <i-button type="success" @click="uploadExcel">确定</i-button>
-          </div>
-        </Modal>
-        <!-- //修改 -->
-        <Modal
-          v-model="modifyShow">
-          <h2 style="text-align:center;">修改活动</h2>
-          <i-Form :label-width="88">
-            <Form-item label="活动时间:" required>
-                <Row>
-                    <Col span="8">
-                      <Form-item>
-                          <Date-picker type="datetime" placeholder="选择日期" v-model="modifyData.startTime"></Date-picker>
-                      </Form-item>
-                    </Col>
-                    <Col span="2" style="text-align:center"> 至 </Col>
-                    <Col span="8">
-                      <Form-item>
-                        <Date-picker type="datetime" placeholder="选择日期" v-model="modifyData.endTime" @on-change='dataChange'></Date-picker>
-                      </Form-item>
-                    </Col>
-                </Row>
-            </Form-item>
-            <Form-item label="活动折扣:" required>
-                <span style="float:left;">产品规格名称</span>
-                <input style="width:100px;float:left;" type="number" min="1" max="4999.99" class="numberInput" v-model.trim="modifyData.activityPresent">
-                <span style="float:left;">份</span>
-            </Form-item>
-            
-          </i-Form>
-          <div slot="footer" style="text-align:center;">
-            <i-button type="text" @click="cancel">取消</i-button>
-            <i-button type="success" @click="modifyTime">确定</i-button>
-          </div>
-        </Modal>
-	</div>
+    <!-- //上传 -->
+    <Modal v-model="importShow">
+      <h2 style="text-align:center;">上传参与业代名单</h2>
+      <i-Form>
+        <Form-item label="品牌名称:" prop="brandId" :label-width="72">
+          <Select v-model="importModelData.brandId" placeholder="请选择">
+            <Option
+              :value="item.id"
+              v-for="(item,index) in brandList"
+              :key="index"
+            >{{ item.brandName }}</Option>
+          </Select>
+        </Form-item>
+        <div
+          class="upDate"
+          style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;"
+        >
+          <Upload
+            :action="url"
+            :show-upload-list="false"
+            :on-success="handleSuccess"
+            :on-error="handleError"
+          >
+            <Icon type="ios-folder" size="14" color="#53a3f4"></Icon>
+            {{ uploadText }}
+          </Upload>
+        </div>
+      </i-Form>
+      <div slot="footer" style="text-align:center;">
+        <i-button type="text" @click="cancel">取消</i-button>
+        <i-button type="success" @click="uploadExcel">确定</i-button>
+      </div>
+    </Modal>
+    <!-- //修改 -->
+    <Modal v-model="modifyShow">
+      <h2 style="text-align:center;">修改活动</h2>
+      <i-Form :label-width="88">
+        <Form-item label="活动时间:" required>
+          <Row>
+            <Col span="8">
+              <Form-item>
+                <Date-picker type="datetime" placeholder="选择日期" v-model="modifyData.startTime"></Date-picker>
+              </Form-item>
+            </Col>
+            <Col span="2" style="text-align:center">至</Col>
+            <Col span="8">
+              <Form-item>
+                <Date-picker
+                  type="datetime"
+                  placeholder="选择日期"
+                  v-model="modifyData.endTime"
+                  @on-change="dataChange"
+                ></Date-picker>
+              </Form-item>
+            </Col>
+          </Row>
+        </Form-item>
+        <Form-item label="活动折扣:" required>
+          <span style="float:left;">产品规格名称</span>
+          <input
+            style="width:100px;float:left;"
+            type="number"
+            min="1"
+            max="4999.99"
+            class="numberInput"
+            v-model.trim="modifyData.activityPresent"
+          >
+          <span style="float:left;">份</span>
+        </Form-item>
+      </i-Form>
+      <div slot="footer" style="text-align:center;">
+        <i-button type="text" @click="cancel">取消</i-button>
+        <i-button type="success" @click="modifyTime">确定</i-button>
+      </div>
+    </Modal>
+  </div>
 </template>
 <script>
 import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_START_7AGOTIME
-} from "@/util/index.js"; //搜索条件默认时间
-import { participationStatus } from "@/util/ENUMS.js";
-import { displayCheckStatus } from "@/util/ENUMS.js";
-import {
-  queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
-  queryActivityVOByGroupId, //根据活动包名ID获取陈列活动列表
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
 export default {
-  name:"display-activities-participate-detail-keepAlive",
+  name: "display-activities-participate-detail-keepAlive",
   data() {
     return {
       importShow: false,

@@ -2,29 +2,50 @@
 // @import "../../config/index.less";
 </style>
 <template>
-  <!-- <Tree :data="data5" show-checkbox :render="renderContent"></Tree> -->
   <div id="Main">
-    <div class="main-container">
-      <my-tooltip :auditPolicy="auditPolicy"/>
-    </div>
-    <Button type="primary" @click="show">显示</Button>
+    <audit-bar :barData="barData"></audit-bar>
+    <Badge text="new">
+      <a href="#" class="demo-badge">ceshi</a>
+    </Badge>
+    <no-data :noneStatus="noneStatus"/>
+    <upload-file/>
   </div>
 </template>
 <script>
-import myTooltip from "@/components/tooltip/tooltip.vue";
+import noData from "@/components/NoData/no-data.vue";
+import uploadFile from "@/components/uploadFile/upload-file.vue";
+import auditBar from "@/components/auditItem/audit-bar.vue";
 export default {
   data() {
     return {
-      isShow: false,
-      auditPolicy: ""
+      barData: [
+        {
+          name: "总数",
+          value: 1
+        },
+        {
+          name: "已审核",
+          value: "12"
+        },
+        {
+          name: "通过数",
+          value: "12"
+        },
+        {
+          name: "不通过",
+          value: "12"
+        },
+        {
+          name: "通过率",
+          value: "12"
+        }
+      ],
+      noneStatus: true,
+      time: ""
     };
   },
-  components: { myTooltip },
+  components: { auditBar, noData, uploadFile },
   mounted() {},
-  methods: {
-    show() {
-      this.isShow = true;
-    }
-  }
+  methods: {}
 };
 </script>

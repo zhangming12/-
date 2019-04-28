@@ -3,9 +3,7 @@
 
 .box {
   width: 100%;
-  // box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
-  // padding: 30px 20px;
   padding-bottom: 0;
   background: #fff;
 }
@@ -17,104 +15,70 @@
 .ivu-form-item-content {
   width: 400px;
 }
-.searchBox {
-  overflow: hidden;
-  .search_btn {
-    float: left;
-    width: 50px;
-    padding: 5px 14px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .search_icon {
-    float: left;
-    padding: 5px 10px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-}
 </style>
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">客户信息</h2> -->
+    <!-- <h2 class="Title">客户信息</h2> -->
 
-      <div class="main-container">
-        <div class="box">
-              <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-                  <Row>
-                      <Col span="7"> 
-                          <Form-item label="门店ID:" prop="storeId">
-                              <Input clearable v-model.trim="formData.storeId" placeholder="请输入门店ID"></Input>
-                          </Form-item>
-                      </Col>
-                      <Col span="7">
-                          
-                          <Form-item label="门店编号:" prop="realName">
-                              <Input clearable v-model.trim="formData.joinCode" placeholder="请输入门店编号"></Input>
-                          </Form-item>
-                          
-                      </Col>
-                      <Col span="7">
-                          <Form-item label="手机号:" prop="nickName">
-                              <Input clearable v-model.trim="formData.phone" placeholder="请输入手机号"></Input>
-                          </Form-item>
-                      </Col>
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+          <Row>
+            <Col span="7">
+              <Form-item label="门店ID:" prop="storeId">
+                <Input clearable v-model.trim="formData.storeId" placeholder="请输入门店ID"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="门店编号:" prop="realName">
+                <Input clearable v-model.trim="formData.joinCode" placeholder="请输入门店编号"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="手机号:" prop="nickName">
+                <Input clearable v-model.trim="formData.phone" placeholder="请输入手机号"></Input>
+              </Form-item>
+            </Col>
 
-                      <Col span='2' offset="1" style="margin-top: 0px;">
-                          <!-- <Button @click="submit('form')" type="primary" class="btn-search">查询</Button> -->
-                          <div class="searchBox">
-                            <Button @click="submit('form')" class="btn-search  search_btn" type="primary">查询</Button>
-                            <!-- <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
-                            <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button> -->
-                          </div>
-                      </Col>
-                  </Row>
-                  <!-- <transition name="fade">
-                    <Row v-if="showQuery">
-                      <Col span='7'>
-                        <Form-item label="手机号码:" prop="phone">
-                              <Input v-model.trim="formData.phone" placeholder="请输入手机号码"></Input>
-                          </Form-item>
-                      </Col>
-                    </Row>
-                  </transition> -->
-              </Form>
-        </div>
-        <div class="box" style="margin-top: 15px;padding:10px">
-          <!-- <div class='contentTop'>
-              <Button @click="goToLog" class="btn-right" type="primary">停售日志</Button>
-          </div> -->
-          <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-          
-        </div>
-        <div style="margin: 10px;overflow: hidden" class="page-box">
-              <div style="float: right;">
-                  <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+            <Col span="2" offset="1" style="margin-top: 0px;">
+              <div class="searchBox">
+                <Button @click="submit('form')" class="btn-search search_btn" type="primary">查询</Button>
               </div>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+      <div class="box" style="margin-top: 15px;padding:10px">
+        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      </div>
+      <div style="margin: 10px;overflow: hidden" class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      <Modal v-model="memoStatus" title="备注" @on-ok="ok" loading>
-        <Input placeholder="请输入备注信息" v-model="memo" autofocus></Input>
-      </Modal>
-      <Modal v-model="showMore" >
-        <h3 slot="header" style="text-align:center;">修改</h3>
-        <Form :label-width="85">
-          <Form-item label="门店名称:" prop="storeName">
-            <Input placeholder="请输入门店名称" v-model="addData.storeName"></Input>
-          </Form-item>
-          <Form-item label="姓名:" prop="name">
-            <Input placeholder="请输入姓名" v-model="addData.name"></Input>
-          </Form-item>
-          <Form-item label="手机号:" prop="phone">
-            <Input placeholder="请输入手机号" v-model="addData.phone"></Input>
-          </Form-item>
-        </Form>
-        <div slot="footer" style="text-align:center">
-            <i-button type="error" @click="showMore = false">取消</i-button>
-            <i-button type="success" @click="sureChange">确定</i-button>
-        </div>
-		</Modal>
+    </div>
+    <Modal v-model="memoStatus" title="备注" @on-ok="ok" loading>
+      <Input placeholder="请输入备注信息" v-model="memo" autofocus></Input>
+    </Modal>
+    <Modal v-model="showMore">
+      <h3 slot="header" style="text-align:center;">修改</h3>
+      <Form :label-width="85">
+        <Form-item label="门店名称:" prop="storeName">
+          <Input placeholder="请输入门店名称" v-model="addData.storeName"></Input>
+        </Form-item>
+        <Form-item label="姓名:" prop="name">
+          <Input placeholder="请输入姓名" v-model="addData.name"></Input>
+        </Form-item>
+        <Form-item label="手机号:" prop="phone">
+          <Input placeholder="请输入手机号" v-model="addData.phone"></Input>
+        </Form-item>
+      </Form>
+      <div slot="footer" style="text-align:center">
+        <i-button type="error" @click="showMore = false">取消</i-button>
+        <i-button type="success" @click="sureChange">确定</i-button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -305,8 +269,8 @@ export default {
                         phone: params.row.phone,
                         address: params.row.address,
                         areaName: params.row.areaName,
-                        joinCode:params.row.joinCode,
-                        locate:params.row.locate
+                        joinCode: params.row.joinCode,
+                        locate: params.row.locate
                       };
                       this.showMore = true;
                     }
@@ -335,7 +299,10 @@ export default {
                           onOk: () => {
                             this.Global.doPost(
                               "tool/doActivateStopStore.json",
-                              {joinCode:params.row.joinCode,brandId:params.row.brandId},
+                              {
+                                joinCode: params.row.joinCode,
+                                brandId: params.row.brandId
+                              },
                               res => {
                                 this.$Message.success("操作成功");
                                 this.init();
@@ -393,25 +360,31 @@ export default {
         }
       }
       let { phone, storeId, storeName, name, address } = this.addData;
-      let data = { phone, storeId, storeName, name, address, memo:"openPhone" };
+      let data = {
+        phone,
+        storeId,
+        storeName,
+        name,
+        address,
+        memo: "openPhone"
+      };
       // this.Global.deleteEmptyProperty(data);
-      data['isOnePhone'] = 0;
+      data["isOnePhone"] = 0;
       // this.getBrandIds()
-      
+
       this.Global.doPost("store/doSettingStore.json", data, res => {
         this.$Message.success("修改成功");
         this.showMore = false;
         this.init();
       });
     },
-    getBrandIds(){
-      let userData = window.sessionStorage.getItem("user")
-      let brandIds = ""
-      if(userData){
-        brandIds = Object.keys(JSON.parse(userData).brands).join()
+    getBrandIds() {
+      let userData = window.sessionStorage.getItem("user");
+      let brandIds = "";
+      if (userData) {
+        brandIds = Object.keys(JSON.parse(userData).brands).join();
       }
-      return brandIds
-
+      return brandIds;
     },
     submit(name) {
       this.$refs[name].validate(valid => {
@@ -436,8 +409,8 @@ export default {
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
-      data['brandIds'] = this.getBrandIds();
-      data['isOnePhone'] = 0;
+      data["brandIds"] = this.getBrandIds();
+      data["isOnePhone"] = 0;
       this.Global.doPost("store/querySettingStoreData.json", data, res => {
         this.pageNum = res.items;
         this.pageData = res.datalist;

@@ -20,13 +20,13 @@
 
 <template>
   <div id="Main">
-      <h2 class="Title">河北金银铜活动新老用户情况统计</h2>
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-                <Row>
-                    <Col span="12">
-                        <Form-item label="时间" required>
-                            <!-- <Row>
+    <h2 class="Title">河北金银铜活动新老用户情况统计</h2>
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+        <Row>
+          <Col span="12">
+            <Form-item label="时间" required>
+              <!-- <Row>
                                 <Col span="11">
                                     <Form-item prop="startTime">
                                         <Date-picker type="datetime" placeholder="选择时间" v-model="formData.startTime" ></Date-picker>
@@ -38,81 +38,110 @@
                                         <Date-picker type="datetime" placeholder="选择时间" v-model="formData.endTime"></Date-picker>
                                     </Form-item>
                                 </Col>
-                            </Row> -->
-                            <Row>
-                              <Col span="11">
-                                  <Form-item prop="startTime">
-                                    <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.startTime" start></data-range>
-                                  </Form-item>
-                              </Col>
-                              <Col span="2" style="text-align: center;">至</Col>
-                              <Col span="11">
-                                  <Form-item prop="endTime">
-                                      <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.endTime"></data-range>
-                                  </Form-item>
-                              </Col>
-                          </Row>
-                        </Form-item>
+              </Row>-->
+              <Row>
+                <Col span="11">
+                  <Form-item prop="startTime">
+                    <data-range
+                      @dataChange="startTimeChange"
+                      hour="00:00"
+                      :time="formData.startTime"
+                      start
+                    ></data-range>
+                  </Form-item>
+                </Col>
+                <Col span="2" style="text-align: center;">至</Col>
+                <Col span="11">
+                  <Form-item prop="endTime">
+                    <data-range
+                      hour="24:00"
+                      placeholder="结束时间"
+                      @dataChange="endTimeChange"
+                      :time="formData.endTime"
+                    ></data-range>
+                  </Form-item>
+                </Col>
+              </Row>
+            </Form-item>
 
-                        <Form-item label="活动包名:" prop="groupId">
-                            <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
-                                <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                            </Select>
-                        </Form-item> 
+            <Form-item label="活动包名:" prop="groupId">
+              <Select
+                v-model="formData.groupId"
+                placeholder="请选择"
+                @on-change="getActivityList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
 
-                        <Form-item label="区域" prop="areaCode">
-                            <Cascader :data="areaData" v-model="formData.areaCode" change-on-select ></Cascader>
-                        </Form-item>
-                        
-                        <!-- <Form-item label="一级分类：">
+            <Form-item label="区域" prop="areaCode">
+              <Cascader :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
+            </Form-item>
+
+            <!-- <Form-item label="一级分类：">
                              <Select v-model="formData.activityId" placeholder="请选择"  >
                                 <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
                             </Select>
-                        </Form-item> -->
-                        <!-- <Form-item label="三级分类：">
+            </Form-item>-->
+            <!-- <Form-item label="三级分类：">
                              <Select v-model="formData.activityId" placeholder="请选择"  >
                                 <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
                             </Select>
-                        </Form-item> -->
-                        
-                    </Col>
-                    <Col span="8" offset="1">
-                        
-                        <Form-item label="品牌名称" prop="brandId">
-                          <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue" clearable>
-                            <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                          </Select>
-                        </Form-item>
-                        <Form-item label="活动名称" prop="brandId">
-                            <Select v-model="formData.activityId" placeholder="请选择"  clearable>
-                                <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                            </Select>
-                        </Form-item>
-    
-                        <!-- <Form-item label="二级分类：">
+            </Form-item>-->
+          </Col>
+          <Col span="8" offset="1">
+            <Form-item label="品牌名称" prop="brandId">
+              <Select
+                v-model="formData.brandId"
+                placeholder="请选择"
+                @on-change="changeValue"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="活动名称" prop="brandId">
+              <Select v-model="formData.activityId" placeholder="请选择" clearable>
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+
+            <!-- <Form-item label="二级分类：">
                              <Select v-model="formData.activityId" placeholder="请选择"  >
                                 <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
                             </Select>
-                        </Form-item> -->
-                    </Col>
-                    <Col span='2' offset="1" style="margin-top:58px"> 
-                        <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-                    </Col>
-                </Row>
-            </Form>
+            </Form-item>-->
+          </Col>
+          <Col span="2" offset="1" style="margin-top:58px">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;padding-bottom:20px">
+      <div class="contentTop">
+        <Button @click="exportExcel" class="btn-right" icon="ios-download-outline" type="primary">导出</Button>
       </div>
-      <div class="box" style="margin-top: 15px;padding-bottom:20px">
-        
-        <div class='contentTop'>
-            <Button @click="exportExcel" class="btn-right" icon="ios-download-outline" type="primary">导出</Button>
-        </div>
-        <Table :columns="columns" :data="pageData" disabled-hover></Table>
-        <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-            </div>
+      <Table :columns="columns" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -127,42 +156,15 @@ import {
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
-import { displayActivityType } from "@/util/ENUMS.js";
+import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+
 export default {
-  name:"hbGoldActivityUser-keepAlive",
+  name: "hbGoldActivityUser-keepAlive",
 
   data() {
     const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.endTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("endTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.startTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       start: {
         time: "",

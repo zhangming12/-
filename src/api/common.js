@@ -20,25 +20,6 @@ export function doQueryProvinceCityAll(level, id) {
         data
     })
 }
-
-/**
- * @desc 获取用户全部品牌
- * @param {Number} status
- * @return {ObjList} 品牌数组
- * 
- */
-export function getBrandsListDoQuery() {
-    let data = {
-        data: {
-            status: 1
-        }
-    }
-    return fetch({
-        url: '/brand/doQueryWithPage.json',
-        method: 'post',
-        data
-    })
-}
 /**
  * @desc 根据品牌ID获取活动列表
  * @param {String} 品牌ID 
@@ -114,7 +95,7 @@ export function getRoleResource(id) {
  * @param {String}
  * @return {ArrayList}
  */
-export function removeRoleResource (id) {
+export function removeRoleResource(id) {
     let data = {
         data: id
     };
@@ -130,7 +111,7 @@ export function removeRoleResource (id) {
  * @param {String}
  * @return {ArrayList}
  */
-export function doDelete (id) {
+export function doDelete(id) {
     let data = {
         data: id
     };
@@ -168,23 +149,6 @@ export function queryActivityPresentVOByactivityId(id) {
     };
     return fetch({
         url: '/displayYxtg/queryActivityPresentVOByactivityId.json',
-        method: 'post',
-        data
-    })
-}
-
-/**
- * @desc 根据品牌ID及活动id获取活动月序列表
- * @param {String} 品牌ID 
- * @param {String} 活动ID
- * @return {ArrayList} 月序列表
- */
-export function getActivityMonthDict(objList) {
-    let data = {
-        data: objList
-    }
-    return fetch({
-        url: '/report/getActivityMonthDict.json',
         method: 'post',
         data
     })

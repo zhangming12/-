@@ -17,59 +17,60 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">客户实时资产</h2> -->
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-                
-                <Row>
-                    <Col span="7">
-                        <Form-item label="品牌名称:" prop="brandId">
-                            <Select v-model="formData.brandId" placeholder="请选择品牌">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>  
-                        </Form-item>
+    <!-- <h2 class="Title">客户实时资产</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+        <Row>
+          <Col span="7">
+            <Form-item label="品牌名称:" prop="brandId">
+              <Select v-model="formData.brandId" placeholder="请选择品牌">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
 
-                        <Form-item label="昵称:" prop="nickName">
-                            <Input v-model.trim="formData.nickName" placeholder="请输入昵称"></Input>
-                        </Form-item>
-                        
-                    </Col>
-                    <Col span="7">
-                        <Form-item label="用户ID:" prop="userId">
-                            <Input v-model.trim="formData.userId" placeholder="请输入用户ID"></Input>
-                        </Form-item>
-                        <Form-item label="手机号码:" prop="phone">
-                            <Input v-model.trim="formData.phone" placeholder="请输入手机号码"></Input>
-                        </Form-item>
-                        
-                    </Col>
-                    <Col span="7">
-                        
-                        <Form-item label="姓名:" props="realName">
-                            <Input v-model.trim="formData.realName" placeholder="请输入姓名"></Input>
-                        </Form-item>
-                        
-                    </Col>
-                    <Col span='2' offset="1" style="margin-top: 24px;">
-                        <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-                    </Col>
-                </Row>
-            </Form>
+            <Form-item label="昵称:" prop="nickName">
+              <Input v-model.trim="formData.nickName" placeholder="请输入昵称"></Input>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="用户ID:" prop="userId">
+              <Input v-model.trim="formData.userId" placeholder="请输入用户ID"></Input>
+            </Form-item>
+            <Form-item label="手机号码:" prop="phone">
+              <Input v-model.trim="formData.phone" placeholder="请输入手机号码"></Input>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="姓名:" props="realName">
+              <Input v-model.trim="formData.realName" placeholder="请输入姓名"></Input>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1" style="margin-top: 24px;">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;padding-bottom:20px">
+      <div class="contentTop">
+        <Button
+          @click="exportExcel"
+          class="btn-export"
+          icon="ios-download-outline"
+          type="primary"
+        >导出</Button>
       </div>
-      <div class="box" style="margin-top: 15px;padding-bottom:20px">
-        <!-- <div class="export">
-            <div @click="exportExcel"><Icon type="ios-download-outline" size="14"></Icon>导出</div>
-        </div> -->
-        <div class='contentTop'>
-            <Button @click="exportExcel" class="btn-export" icon="ios-download-outline" type="primary">导出</Button>
-        </div>
-        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-        <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-            </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -78,7 +79,6 @@ export default {
   name: "userAsset-keepAlive",
 
   data() {
-    const that = this;
     return {
       formData: {},
       page: 1,
@@ -112,7 +112,7 @@ export default {
           key: "goodsType",
           align: "center",
           render: (h, params) => {
-            return that.goodsType(params.row.goodsType);
+            return this.goodsType(params.row.goodsType);
           }
         },
         {
@@ -163,8 +163,7 @@ export default {
     goodsType: function(data) {
       return this.Global.ENUMS.goodsType[data];
     },
-    init: function() {
-      var that = this;
+    init() {
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       if (JSON.stringify(data) == "{}") {
@@ -174,16 +173,13 @@ export default {
       data["userType"] = "B";
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
-      this.Global.doPost("report/userPrizeListReport.json", data, function(
-        res
-      ) {
-        that.pageNum = res.items;
-        that.pageData = res.datalist;
-        that.page = res.page;
+      this.Global.doPost("report/userPrizeListReport.json", data, res => {
+        this.pageNum = res.items;
+        this.pageData = res.datalist;
+        this.page = res.page;
       });
     },
-    exportExcel: function() {
-      var that = this;
+    exportExcel() {
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       if (JSON.stringify(data) == "{}") {
@@ -195,11 +191,8 @@ export default {
         "report/userPrizeListExport.json",
         data
       );
-      console.log(url);
       window.open(url);
     }
   }
 };
 </script>
-
-

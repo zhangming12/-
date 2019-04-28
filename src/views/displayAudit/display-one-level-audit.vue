@@ -305,420 +305,546 @@
 </style>
 
 <template>
-	<div id="Main" @click="closeAlertBox">
-		<!-- <h2 class="Title" v-if="displayExamineType == 'A'">陈列一级审核</h2> -->
+  <div id="Main" @click="closeAlertBox">
+    <!-- <h2 class="Title" v-if="displayExamineType == 'A'">陈列一级审核</h2> -->
     <div class="main-container">
-        <div class="box">
-            <Form ref="form" :model="formData" :label-width="10">
-                <div class="container">
-                        
-                    <div class="btn-left w18">
-                        <Form-item  prop="queryStartTime" required>
-                            <data-range @dataChange="startTimeChange" placeholder="申请开始时间" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item  prop="queryEndTime" required>
-                            <data-range hour="24:00" placeholder="申请结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item required prop="brandId">
-                            <Select v-model="formData.brandId" placeholder="品牌名称"  @on-change="changeValue">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item prop="groupId" required>
-                            <Select v-model="formData.groupId" placeholder="活动名称" @on-change="getActivityList" clearable>
-                                <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                            </Select>
-                        </Form-item> 
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item prop="activityId">
-                            <Select v-model="formData.activityId" placeholder="子活动名称" @on-change="getpresentList" clearable>
-                                <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w10">
-                        <div class="searchBox">
-                            <div class="btn-left search-left" @click="showQuery=!showQuery">
-                            <button type="button">
-                                {{showQuery?'收起':'更多'}}
-                                <Icon type="ios-arrow-down" size="14" style="margin-top:-2px;" v-if="!showQuery"/>
-                                <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
-                            </button>
-                            </div>
-                            <div class="btn-right search-right" @click="submit('search')">
-                            <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                            </div>
-                        </div>
-                    </div>
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item prop="queryStartTime" required>
+                <data-range
+                  @dataChange="startTimeChange"
+                  placeholder="申请开始时间"
+                  hour="00:00"
+                  :time="formData.queryStartTime"
+                  start
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="queryEndTime" required>
+                <data-range
+                  hour="24:00"
+                  placeholder="申请结束时间"
+                  @dataChange="endTimeChange"
+                  :time="formData.queryEndTime"
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required prop="brandId">
+                <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="groupId" required>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="活动名称"
+                  @on-change="getActivityList"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in groupList"
+                    :key="index"
+                  >{{ item.groupName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="activityId">
+                <Select
+                  v-model="formData.activityId"
+                  placeholder="子活动名称"
+                  @on-change="getpresentList"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in activityList"
+                    :key="index"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w10">
+              <div class="searchBox">
+                <div class="btn-left search-left" @click="showQuery=!showQuery">
+                  <button type="button">
+                    {{showQuery?'收起':'更多'}}
+                    <Icon
+                      type="ios-arrow-down"
+                      size="14"
+                      style="margin-top:-2px;"
+                      v-if="!showQuery"
+                    />
+                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
+                  </button>
                 </div>
-                <transition name="fade">
-                    <div class="container" v-if="showQuery">
-                        <div class="btn-left w18">
-                            <Form-item prop="presentId">
-                                <Select v-model="formData.presentId" placeholder="子活动分组" clearable>
-                                    <Option :value="item.id" v-for="(item,index) in presentNameList" :key="index">{{ item.activityTag }}</Option>
-                                </Select>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item>
-                                <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item required>
-                                <Input v-model.trim="formData.storeName" placeholder="门店名称"></Input>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item required>
-                                <Input v-model.trim="formData.salesRoute" placeholder="销售路线"></Input>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item prop="activityId">
-                                <Select v-model="formData.warning" placeholder="是否预警" clearable>
-                                    <Option value="1" >是</Option>
-                                    <Option value="0" >否</Option>
-                                </Select>
-                            </Form-item>
-                        </div>
-                    </div>
-                </transition>
-            </Form>
-        </div>
+                <div class="btn-right search-right" @click="submit('search')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <transition name="fade">
+            <div class="container" v-if="showQuery">
+              <div class="btn-left w18">
+                <Form-item prop="presentId">
+                  <Select v-model="formData.presentId" placeholder="子活动分组" clearable>
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in presentNameList"
+                      :key="index"
+                    >{{ item.activityTag }}</Option>
+                  </Select>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item>
+                  <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input v-model.trim="formData.storeName" placeholder="门店名称"></Input>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input v-model.trim="formData.salesRoute" placeholder="销售路线"></Input>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item prop="activityId">
+                  <Select v-model="formData.warning" placeholder="是否预警" clearable>
+                    <Option value="1">是</Option>
+                    <Option value="0">否</Option>
+                  </Select>
+                </Form-item>
+              </div>
+            </div>
+          </transition>
+        </Form>
+      </div>
 
-        <div class="export" style="overflow:hidden;" v-if="storeGoodsList && storeGoodsList.length">
-            <!-- <span @click="handleAllSurePage">全选</span> -->
-            <span @click="handleBatchSure">批量确认</span>
-        </div>
-        <div class="box" style="width:100%;padding:40px 10px 10px;" v-if="storeGoodsList && storeGoodsList.length">
-          <CheckboxGroup size="large" v-model="social">
-            <div class="card" v-for="(item,index) in storeGoodsList" :key="index">
-                <div class="card-top">
-                <div class="card-left">
-                    
-                    <template v-if="item.store && item.store.checkStatus != -1" >
-                        <div class="check-box">
-                            <Checkbox v-if="item.store.checkStatus == 0" size="large" :label="index + '-store'">
-                                <span style="display:none;"></span>
-                            </Checkbox>
-                        </div>
-                        <div class="video-box">
-                            <div class="video">
-                                <div class="video-main">
-                                    <video :src="item.store.firstRadio.radioUrl" v-if="item.store.firstRadio" controls></video>
-                                    <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
-                                    <img class="triangle" src="../../assets/image/triangle-first.jpg">
-                                </div>
-                                
-                            </div>
-                            <div class="video">
-                                <div class="video-main">
-                                    <video :src="item.store.radioUrl" v-if="item.store.radioUrl" controls></video>
-                                    <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
-                                    <img class="triangle" src="../../assets/image/triangle-this.jpg">
-                                </div>
-                                
-                            </div>
-                        </div>
-                        <div class="content-box">
-                            <Row style="width:100%;">
-                                <Col span="8">
-                                <div class="item-box">
-                                    <p>
-                                        <span>提交时间：</span>
-                                        <span>{{ item.store.uploadTime  | formatYearMonth}}</span>
-                                    </p>
-                                    
-                                </div>
-                                <div class="item-box">
-                                    <p :title="item.store.presentName">
-                                        <span>活动分组：</span>
-                                        <span>{{ item.store.presentName }}</span>
-                                    </p>
-                                </div>
-                                <div class="item-box">
-                                    <p :title="item.store.workerName">
-                                        <span>业代姓名：</span>
-                                        <span>{{ item.store.workerName }}</span>
-                                    </p>
-                                </div>
-                                <div class="item-box">
-                                    <span>审核状态：</span>
-                                    <span :class="item.store.checkStatus == 1001 || item.store.checkStatus == 2001 || item.store.checkStatus == 1? 'successColor' : item.store.checkStatus == 1002 || item.store.checkStatus == 2 ? 'primaryColor' : item.store.checkStatus == 1003 || item.store.checkStatus == 3 ? 'warnColor' :''">{{ item.store.checkStatus | checkStatusFilter }}</span>
-                                </div>
-                                </Col>
-                                <Col span="8">
-                                <div class="item-box">
-                                    <p :title="getWeek(item.store.startTime,item.store.endTime)">
-                                      <span>上传周期：</span>
-                                      <span>{{ getWeek(item.store.startTime,item.store.endTime) }}</span>
-                                    </p>
-                                </div>
-                                <div class="item-box">
-                                    <span>客户编号：</span>
-                                    <span>{{ item.store.joinCode }}</span>
-                                </div>
-                                <div class="item-box">
-                                    <span>销售路线：</span>
-                                    <span>{{ item.store.salesRoute }}</span>
-                                </div>
-                                <div class="item-box">
-                                    <span>拍摄人员：</span>
-                                    <span>{{ item.store.uploadChannel | storeOrWorker}}</span>
-                                </div>
-                                </Col>
-                                <Col span="8">
-                                <div class="item-box">
-                                    <span>活动名称：</span>
-                                    <span>{{ item.store.activityName }}</span>
-                                </div>
-                                <div class="item-box">
-                                    <span>门店名称：</span>
-                                    <span>{{ item.store.storeName }}</span>
-                                </div>
-                                <div class="item-box">
-                                  <p :title="item.store.locate">
-                                    <span>预警编码：</span>
-                                    <span :class="item.store.locate ? 'warnColor' : ''">{{ item.store.locate ? item.store.locate :"无" }}</span>
-                                  </p>
-                                </div>
-                                </Col>
-                                <Col span="23">
-                                <div class="item-box">
-                                    <span class="status">审核状态：</span>
-                                    <RadioGroup  v-model="item['store'].status" @on-change="radioChange"> 
-                                        <Radio :disabled="item.store.checkStatus != 0" :label="index + '-store-1001'">通过</Radio>
-                                        <Radio :disabled="item.store.checkStatus != 0" :label="index + '-store-1002'">不通过</Radio>
-                                        <Radio :disabled="item.store.checkStatus != 0" :label="index + '-store-1003'">退回</Radio>
-                                    </RadioGroup>
-                                </div>
-                                <div class="item-box">
-                                    <span class="status">审核意见：</span>
-                                    <Input :disabled="item.store.checkStatus != 0" v-model.trim="item['store'].checkMessage" placeholder="审核意见"></Input>
-                                </div>
-                                <div class="item-box">
-                                    <span class="status">内部备注：</span>
-                                    <Input :disabled="item.store.checkStatus != 0" v-model.trim="item['store'].memo" placeholder="内部备注"></Input>
-                                </div>
-                                </Col>
-                            </Row>
-                        </div>
-                        <div class="btn-box">
-                            <Button class="lookDetail" @click="handleLookDetail(item,'store')" style="margin-right:10px;">查看详情</Button>
-                            <Button v-if="item.store.checkStatus == 0" type="primary" @click="save(item,index,'store')">保存</Button>
-                        </div>
-                    </template>
-                    <div class="no-upload" v-else>
-                        <img src="../../assets/image/no-video.jpg" alt="暂未上传视频">
-                        <p>暂未上传视频</p>
+      <div class="export" style="overflow:hidden;" v-if="storeGoodsList && storeGoodsList.length">
+        <!-- <span @click="handleAllSurePage">全选</span> -->
+        <span @click="handleBatchSure">批量确认</span>
+      </div>
+      <div
+        class="box"
+        style="width:100%;padding:40px 10px 10px;"
+        v-if="storeGoodsList && storeGoodsList.length"
+      >
+        <CheckboxGroup size="large" v-model="social">
+          <div class="card" v-for="(item,index) in storeGoodsList" :key="index">
+            <div class="card-top">
+              <div class="card-left">
+                <template v-if="item.store && item.store.checkStatus != -1">
+                  <div class="check-box">
+                    <Checkbox
+                      v-if="item.store.checkStatus == 0"
+                      size="large"
+                      :label="index + '-store'"
+                    >
+                      <span style="display:none;"></span>
+                    </Checkbox>
+                  </div>
+                  <div class="video-box">
+                    <div class="video">
+                      <div class="video-main">
+                        <video
+                          :src="item.store.firstRadio.radioUrl"
+                          v-if="item.store.firstRadio"
+                          controls
+                        ></video>
+                        <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
+                        <img class="triangle" src="../../assets/image/triangle-first.jpg">
+                      </div>
                     </div>
-                </div>
-                <div class="card-right">
-                    
-                    <template v-if="item.worker && item.worker.checkStatus != -1" >
-                        <div class="check-box">
-                            <Checkbox v-if="item.worker.checkStatus == 0" size="large" :label="index + '-worker'">
-                                <span style="display:none;"></span>
-                            </Checkbox>
-                        </div>
-                        <div class="video-box">
-                        <div class="video">
-                            <div class="video-main">
-                                <video :src="item.worker.firstRadio.radioUrl" v-if="item.worker.firstRadio" controls></video>
-                                <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
-                                <img class="triangle" src="../../assets/image/triangle-first.jpg">
-                            </div>
-                            
-                        </div>
-                        <div class="video">
-                            <div class="video-main">
-                                <video :src="item.worker.radioUrl" v-if="item.worker.radioUrl" controls></video>
-                                <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
-                                <img class="triangle" src="../../assets/image/triangle-this.jpg">
-                            </div>
-                            
-                        </div>
-                        </div>
-                        <div class="content-box">
-                            <Row style="width:100%;">
-                                <Col span="8">
-                                <div class="item-box">
-                                    <p>
-                                        <span>提交时间：</span>
-                                        <span>{{ item.worker.uploadTime  | formatYearMonth}}</span>
-                                    </p>
-                                    
-                                </div>
-                                <div class="item-box">
-                                    <p :title="item.worker.presentName">
-                                        <span>活动分组：</span>
-                                        <span>{{ item.worker.presentName }}</span>
-                                    </p>
-                                </div>
-                                <div class="item-box">
-                                    <p :title="item.worker.workerName">
-                                        <span>业代姓名：</span>
-                                        <span>{{ item.worker.workerName }}</span>
-                                    </p>
-                                </div>
-                                <div class="item-box">
-                                    <span>审核状态：</span>
-                                    <span :class="item.worker.checkStatus == 1001 || item.worker.checkStatus == 2001 || item.worker.checkStatus == 1? 'successColor' : item.worker.checkStatus == 1002 || item.worker.checkStatus == 2 ? 'primaryColor' : item.worker.checkStatus == 1003 || item.worker.checkStatus == 3 ? 'warnColor' :''">{{ item.worker.checkStatus | checkStatusFilter }}</span>
-                                </div>
-                                </Col>
-                                <Col span="8">
-                                <div class="item-box">
-                                    <p :title="getWeek(item.worker.startTime,item.worker.endTime)">
-                                      <span>上传周期：</span>
-                                      <span>{{ getWeek(item.worker.startTime,item.worker.endTime) }}</span>
-                                    </p>
-                                </div>
-                                <div class="item-box">
-                                    <span>客户编号：</span>
-                                    <span>{{ item.worker.joinCode }}</span>
-                                </div>
-                                <div class="item-box">
-                                    <span>销售路线：</span>
-                                    <span>{{ item.worker.salesRoute }}</span>
-                                </div>
-                                <div class="item-box">
-                                    <span>拍摄人员：</span>
-                                    <span>{{ item.worker.uploadChannel | storeOrWorker}}</span>
-                                </div>
-                                </Col>
-                                <Col span="8">
-                                <div class="item-box">
-                                    <span>活动名称：</span>
-                                    <span>{{ item.worker.activityName }}</span>
-                                </div>
-                                <div class="item-box">
-                                    <span>门店名称：</span>
-                                    <span>{{ item.worker.storeName }}</span>
-                                </div>
-                                <div class="item-box">
-                                    <p :title="item.worker.locate">
-                                        <span>预警编码：</span>
-                                        <span :class="item.worker.locate ? 'warnColor' : ''">{{ item.worker.locate ? item.worker.locate :"无" }}</span>
-                                    </p>
-                                </div>
-                                </Col>
-                                <Col span="23">
-                                <div class="item-box">
-                                    <span class="status">审核状态：</span>
-                                    <RadioGroup v-model="item['worker'].status" @on-change="radioChange"> 
-                                        <Radio :disabled="item.worker.checkStatus != 0" :label="index + '-worker-1001'">通过</Radio>
-                                        <Radio :disabled="item.worker.checkStatus != 0" :label="index + '-worker-1002'">不通过</Radio>
-                                        <Radio :disabled="item.worker.checkStatus != 0" :label="index + '-worker-1003'">退回</Radio>
-                                    </RadioGroup>
-                                </div>
-                                <div class="item-box">
-                                    <span class="status">审核意见：</span>
-                                    <Input :disabled="item.worker.checkStatus != 0" v-model.trim="item['worker'].checkMessage" placeholder="审核意见"></Input>
-                                </div>
-                                <div class="item-box">
-                                    <span class="status">内部备注：</span>
-                                    <Input :disabled="item.worker.checkStatus != 0" v-model.trim="item['worker'].memo" placeholder="内部备注"></Input>
-                                </div>
-                                </Col>
-                            </Row>
-                        </div>
-                        <div class="btn-box">
-                            <Button class="lookDetail" @click="handleLookDetail(item,'worker')" style="margin-right:10px;">查看详情</Button>
-                            <Button v-if="item.worker.checkStatus == 0" type="primary" @click="save(item,index,'worker')">保存</Button>
-                        </div>
-                    </template>
-                    <div class="no-upload" v-else>
-                        <img src="../../assets/image/no-video.jpg" alt="暂未上传视频">
-                        <p>暂未上传视频</p>
+                    <div class="video">
+                      <div class="video-main">
+                        <video :src="item.store.radioUrl" v-if="item.store.radioUrl" controls></video>
+                        <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
+                        <img class="triangle" src="../../assets/image/triangle-this.jpg">
+                      </div>
                     </div>
-                </div>
-                </div>
-                <div class="card-bottom">
-                  <Row>
-                      <Col span="8" offset="1">
-                        <div class="card-bottom-container">
-                            <span>风险类型：</span>
-                            <Select v-model="item.riskType" placeholder="风险类型">
-                              <Option value="no">无</Option>
-                              <Option value="V">视频异常</Option>
-                            </Select>
+                  </div>
+                  <div class="content-box">
+                    <Row style="width:100%;">
+                      <Col span="8">
+                        <div class="item-box">
+                          <p>
+                            <span>提交时间：</span>
+                            <span>{{ item.store.uploadTime | formatYearMonth}}</span>
+                          </p>
+                        </div>
+                        <div class="item-box">
+                          <p :title="item.store.presentName">
+                            <span>活动分组：</span>
+                            <span>{{ item.store.presentName }}</span>
+                          </p>
+                        </div>
+                        <div class="item-box">
+                          <p :title="item.store.workerName">
+                            <span>业代姓名：</span>
+                            <span>{{ item.store.workerName }}</span>
+                          </p>
+                        </div>
+                        <div class="item-box">
+                          <span>审核状态：</span>
+                          <span
+                            :class="item.store.checkStatus == 1001 || item.store.checkStatus == 2001 || item.store.checkStatus == 1? 'successColor' : item.store.checkStatus == 1002 || item.store.checkStatus == 2 ? 'primaryColor' : item.store.checkStatus == 1003 || item.store.checkStatus == 3 ? 'warnColor' :''"
+                          >{{ item.store.checkStatus | checkStatusFilter }}</span>
                         </div>
                       </Col>
-                      <Col span="8" offset="1">
-                        <div class="card-bottom-container">
-                            <span>风险描述:</span>
-                            <Input v-model.trim="item.riskDes" placeholder="风险描述"></Input>
+                      <Col span="8">
+                        <div class="item-box">
+                          <p :title="getWeek(item.store.startTime,item.store.endTime)">
+                            <span>上传周期：</span>
+                            <span>{{ getWeek(item.store.startTime,item.store.endTime) }}</span>
+                          </p>
+                        </div>
+                        <div class="item-box">
+                          <span>客户编号：</span>
+                          <span>{{ item.store.joinCode }}</span>
+                        </div>
+                        <div class="item-box">
+                          <span>销售路线：</span>
+                          <span>{{ item.store.salesRoute }}</span>
+                        </div>
+                        <div class="item-box">
+                          <span>拍摄人员：</span>
+                          <span>{{ item.store.uploadChannel | storeOrWorker}}</span>
                         </div>
                       </Col>
-                      <Col span="3" offset="1">
-                        <div class="card-bottom-container">
-                            <span class="btn" @click="saveWarning(item,index)">保存</span>
+                      <Col span="8">
+                        <div class="item-box">
+                          <span>活动名称：</span>
+                          <span>{{ item.store.activityName }}</span>
+                        </div>
+                        <div class="item-box">
+                          <span>门店名称：</span>
+                          <span>{{ item.store.storeName }}</span>
+                        </div>
+                        <div class="item-box">
+                          <p :title="item.store.locate">
+                            <span>预警编码：</span>
+                            <span
+                              :class="item.store.locate ? 'warnColor' : ''"
+                            >{{ item.store.locate ? item.store.locate :"无" }}</span>
+                          </p>
                         </div>
                       </Col>
-                  </Row>
+                      <Col span="23">
+                        <div class="item-box">
+                          <span class="status">审核状态：</span>
+                          <RadioGroup v-model="item['store'].status" @on-change="radioChange">
+                            <Radio
+                              :disabled="item.store.checkStatus != 0"
+                              :label="index + '-store-1001'"
+                            >通过</Radio>
+                            <Radio
+                              :disabled="item.store.checkStatus != 0"
+                              :label="index + '-store-1002'"
+                            >不通过</Radio>
+                            <Radio
+                              :disabled="item.store.checkStatus != 0"
+                              :label="index + '-store-1003'"
+                            >退回</Radio>
+                          </RadioGroup>
+                        </div>
+                        <div class="item-box">
+                          <span class="status">审核意见：</span>
+                          <Input
+                            :disabled="item.store.checkStatus != 0"
+                            v-model.trim="item['store'].checkMessage"
+                            placeholder="审核意见"
+                          ></Input>
+                        </div>
+                        <div class="item-box">
+                          <span class="status">内部备注：</span>
+                          <Input
+                            :disabled="item.store.checkStatus != 0"
+                            v-model.trim="item['store'].memo"
+                            placeholder="内部备注"
+                          ></Input>
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+                  <div class="btn-box">
+                    <Button
+                      class="lookDetail"
+                      @click="handleLookDetail(item,'store')"
+                      style="margin-right:10px;"
+                    >查看详情</Button>
+                    <Button
+                      v-if="item.store.checkStatus == 0"
+                      type="primary"
+                      @click="save(item,index,'store')"
+                    >保存</Button>
+                  </div>
+                </template>
+                <div class="no-upload" v-else>
+                  <img src="../../assets/image/no-video.jpg" alt="暂未上传视频">
+                  <p>暂未上传视频</p>
                 </div>
+              </div>
+              <div class="card-right">
+                <template v-if="item.worker && item.worker.checkStatus != -1">
+                  <div class="check-box">
+                    <Checkbox
+                      v-if="item.worker.checkStatus == 0"
+                      size="large"
+                      :label="index + '-worker'"
+                    >
+                      <span style="display:none;"></span>
+                    </Checkbox>
+                  </div>
+                  <div class="video-box">
+                    <div class="video">
+                      <div class="video-main">
+                        <video
+                          :src="item.worker.firstRadio.radioUrl"
+                          v-if="item.worker.firstRadio"
+                          controls
+                        ></video>
+                        <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
+                        <img class="triangle" src="../../assets/image/triangle-first.jpg">
+                      </div>
+                    </div>
+                    <div class="video">
+                      <div class="video-main">
+                        <video :src="item.worker.radioUrl" v-if="item.worker.radioUrl" controls></video>
+                        <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
+                        <img class="triangle" src="../../assets/image/triangle-this.jpg">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="content-box">
+                    <Row style="width:100%;">
+                      <Col span="8">
+                        <div class="item-box">
+                          <p>
+                            <span>提交时间：</span>
+                            <span>{{ item.worker.uploadTime | formatYearMonth}}</span>
+                          </p>
+                        </div>
+                        <div class="item-box">
+                          <p :title="item.worker.presentName">
+                            <span>活动分组：</span>
+                            <span>{{ item.worker.presentName }}</span>
+                          </p>
+                        </div>
+                        <div class="item-box">
+                          <p :title="item.worker.workerName">
+                            <span>业代姓名：</span>
+                            <span>{{ item.worker.workerName }}</span>
+                          </p>
+                        </div>
+                        <div class="item-box">
+                          <span>审核状态：</span>
+                          <span
+                            :class="item.worker.checkStatus == 1001 || item.worker.checkStatus == 2001 || item.worker.checkStatus == 1? 'successColor' : item.worker.checkStatus == 1002 || item.worker.checkStatus == 2 ? 'primaryColor' : item.worker.checkStatus == 1003 || item.worker.checkStatus == 3 ? 'warnColor' :''"
+                          >{{ item.worker.checkStatus | checkStatusFilter }}</span>
+                        </div>
+                      </Col>
+                      <Col span="8">
+                        <div class="item-box">
+                          <p :title="getWeek(item.worker.startTime,item.worker.endTime)">
+                            <span>上传周期：</span>
+                            <span>{{ getWeek(item.worker.startTime,item.worker.endTime) }}</span>
+                          </p>
+                        </div>
+                        <div class="item-box">
+                          <span>客户编号：</span>
+                          <span>{{ item.worker.joinCode }}</span>
+                        </div>
+                        <div class="item-box">
+                          <span>销售路线：</span>
+                          <span>{{ item.worker.salesRoute }}</span>
+                        </div>
+                        <div class="item-box">
+                          <span>拍摄人员：</span>
+                          <span>{{ item.worker.uploadChannel | storeOrWorker}}</span>
+                        </div>
+                      </Col>
+                      <Col span="8">
+                        <div class="item-box">
+                          <span>活动名称：</span>
+                          <span>{{ item.worker.activityName }}</span>
+                        </div>
+                        <div class="item-box">
+                          <span>门店名称：</span>
+                          <span>{{ item.worker.storeName }}</span>
+                        </div>
+                        <div class="item-box">
+                          <p :title="item.worker.locate">
+                            <span>预警编码：</span>
+                            <span
+                              :class="item.worker.locate ? 'warnColor' : ''"
+                            >{{ item.worker.locate ? item.worker.locate :"无" }}</span>
+                          </p>
+                        </div>
+                      </Col>
+                      <Col span="23">
+                        <div class="item-box">
+                          <span class="status">审核状态：</span>
+                          <RadioGroup v-model="item['worker'].status" @on-change="radioChange">
+                            <Radio
+                              :disabled="item.worker.checkStatus != 0"
+                              :label="index + '-worker-1001'"
+                            >通过</Radio>
+                            <Radio
+                              :disabled="item.worker.checkStatus != 0"
+                              :label="index + '-worker-1002'"
+                            >不通过</Radio>
+                            <Radio
+                              :disabled="item.worker.checkStatus != 0"
+                              :label="index + '-worker-1003'"
+                            >退回</Radio>
+                          </RadioGroup>
+                        </div>
+                        <div class="item-box">
+                          <span class="status">审核意见：</span>
+                          <Input
+                            :disabled="item.worker.checkStatus != 0"
+                            v-model.trim="item['worker'].checkMessage"
+                            placeholder="审核意见"
+                          ></Input>
+                        </div>
+                        <div class="item-box">
+                          <span class="status">内部备注：</span>
+                          <Input
+                            :disabled="item.worker.checkStatus != 0"
+                            v-model.trim="item['worker'].memo"
+                            placeholder="内部备注"
+                          ></Input>
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+                  <div class="btn-box">
+                    <Button
+                      class="lookDetail"
+                      @click="handleLookDetail(item,'worker')"
+                      style="margin-right:10px;"
+                    >查看详情</Button>
+                    <Button
+                      v-if="item.worker.checkStatus == 0"
+                      type="primary"
+                      @click="save(item,index,'worker')"
+                    >保存</Button>
+                  </div>
+                </template>
+                <div class="no-upload" v-else>
+                  <img src="../../assets/image/no-video.jpg" alt="暂未上传视频">
+                  <p>暂未上传视频</p>
+                </div>
+              </div>
             </div>
-          </CheckboxGroup>
-        </div>
-        <div class="noData" v-else>暂无数据</div>
-        <div class="page-box">
-            <div style="float: right;">
-                <Page :total="pageNum" :page-size='pageSize' :current="page" @on-change="changePage"></Page>
+            <div class="card-bottom">
+              <Row>
+                <Col span="8" offset="1">
+                  <div class="card-bottom-container">
+                    <span>风险类型：</span>
+                    <Select v-model="item.riskType" placeholder="风险类型">
+                      <Option value="no">无</Option>
+                      <Option value="V">视频异常</Option>
+                    </Select>
+                  </div>
+                </Col>
+                <Col span="8" offset="1">
+                  <div class="card-bottom-container">
+                    <span>风险描述:</span>
+                    <Input v-model.trim="item.riskDes" placeholder="风险描述"></Input>
+                  </div>
+                </Col>
+                <Col span="3" offset="1">
+                  <div class="card-bottom-container">
+                    <span class="btn" @click="saveWarning(item,index)">保存</span>
+                  </div>
+                </Col>
+              </Row>
             </div>
+          </div>
+        </CheckboxGroup>
+      </div>
+      <div class="noData" v-else>暂无数据</div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :page-size="pageSize" :current="page" @on-change="changePage"></Page>
         </div>
+      </div>
     </div>
-		<Modal v-model="goodsStausShow" width="600" id="goodsStausShow" style="position:relative;z-index:1000000;">
-			<p slot="header" style="color:#f60;text-align:center">
-				<span>{{formItem.storeName}}</span>
-			</p>
-			<div>
-				<Form :model="formItem" :label-width="60">
-					<FormItem label="状态:">
-						<RadioGroup  v-model="formItem.checkStatus" @on-change="handleIsPass">
-							<Radio label="1001">通过</Radio>
-							<Radio label="1002">不通过</Radio>
-							<Radio label="1003">退回</Radio>
-						</RadioGroup>
-					</FormItem>
-          
-					<div id="examine-right" v-show="!activityIsPass">
-						<span style="color:#ff8a34">可输入原因,并反馈给门店</span>
-						<Input v-model="checkMessage" style="width:220px" placeholder="请输入原因"></Input>
-					</div>
-					<div id="examine-right" v-show="activityIsPass">
-						<span style="color:#ff8a34">输入不通过的原因,并反馈给门店，要求重新提交</span>
+    <Modal
+      v-model="goodsStausShow"
+      width="600"
+      id="goodsStausShow"
+      style="position:relative;z-index:1000000;"
+    >
+      <p slot="header" style="color:#f60;text-align:center">
+        <span>{{formItem.storeName}}</span>
+      </p>
+      <div>
+        <Form :model="formItem" :label-width="60">
+          <FormItem label="状态:">
+            <RadioGroup v-model="formItem.checkStatus" @on-change="handleIsPass">
+              <Radio label="1001">通过</Radio>
+              <Radio label="1002">不通过</Radio>
+              <Radio label="1003">退回</Radio>
+            </RadioGroup>
+          </FormItem>
+
+          <div id="examine-right" v-show="!activityIsPass">
+            <span style="color:#ff8a34">可输入原因,并反馈给门店</span>
+            <Input v-model="checkMessage" style="width:220px" placeholder="请输入原因"></Input>
+          </div>
+          <div id="examine-right" v-show="activityIsPass">
+            <span style="color:#ff8a34">输入不通过的原因,并反馈给门店，要求重新提交</span>
             <FormItem label="审核意见:" :label-width="70">
               <Input @on-change="wordFilter"></Input>
             </FormItem>
             <RadioGroup v-model="checkMessage" vertical class="radio">
-                <!-- <Radio v-for="(val,i) in getDisplayExamineWord(saveData.brandId,saveData.activityId)" :key="i" :label="val.word">{{val.word}}</Radio> -->
-                <Radio v-if="i < 10" v-for="(val,i) in displayExamineWordList" :key="i" :label="val.word">{{val.word}}</Radio>        
-                <Radio label="2">其他
-                    <Input v-model="refuseReason" placeholder="请输入原因"></Input>
-                </Radio>
+              <!-- <Radio v-for="(val,i) in getDisplayExamineWord(saveData.brandId,saveData.activityId)" :key="i" :label="val.word">{{val.word}}</Radio> -->
+              <Radio
+                v-if="i < 10"
+                v-for="(val,i) in displayExamineWordList"
+                :key="i"
+                :label="val.word"
+              >{{val.word}}</Radio>
+              <Radio label="2">
+                其他
+                <Input v-model="refuseReason" placeholder="请输入原因"></Input>
+              </Radio>
             </RadioGroup>
-					</div>
-					<FormItem label="备注" style="margin-right: 30px;">
-						<Input v-model="formItem.memo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"></Input>
-					</FormItem>
-				</Form>
-			</div>
-			<div slot="footer">
-				<Button type="success" @click="handleCloseModal">返回</Button>
-				<Button type="warning" @click="handleSaveEidtGooodsStatu">确定</Button>
-			</div>
-
-		</Modal>
-	</div>
+          </div>
+          <FormItem label="备注" style="margin-right: 30px;">
+            <Input
+              v-model="formItem.memo"
+              type="textarea"
+              :autosize="{minRows: 2,maxRows: 5}"
+              placeholder="请输入备注"
+            ></Input>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="success" @click="handleCloseModal">返回</Button>
+        <Button type="warning" @click="handleSaveEidtGooodsStatu">确定</Button>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -726,19 +852,10 @@ import dataRange from "@/components/data-rang.vue";
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import { displayExamineWord } from "@/util/displayExamineWord.js"; //审核话术
 import qs from "qs";
 import { displayCheckStatus } from "@/util/ENUMS.js";
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
-import {
-  queryYxtgFirstAudit, //一审查询
-  queryYxtgSecondAudit //二审查询
-} from "@/api/activity-manage/display-apply-examine.js";
 export default {
   name: "display-one-level-audit-keepAlive",
   components: {
@@ -1195,7 +1312,9 @@ export default {
         return;
       }
       var data = this.Global.JsonChange(this.formData);
-      data["queryStartTime"] = this.Global.createTime(this.formData.queryStartTime);
+      data["queryStartTime"] = this.Global.createTime(
+        this.formData.queryStartTime
+      );
       if (this.start.hour == "24:00") {
         data["queryStartTime"] = this.Global.setHoursData(
           this.start.time,
@@ -1271,14 +1390,6 @@ export default {
         path: "/displayResultOneEdit",
         query: queryParams
       });
-      // return;
-      // window.open(
-      //   location.origin +
-      //     location.pathname +
-      //     "#" +
-      //     "/displayResultOneEdit?" +
-      //     qs.stringify(queryParams)
-      // );
     },
     skuClick(val) {
       let { id } = val;
@@ -1440,7 +1551,7 @@ export default {
         str = "退回";
       } else if (val == 0) {
         str = "未审核";
-      }else if(val == 1){
+      } else if (val == 1) {
         str = "终审通过";
       }
       return str;

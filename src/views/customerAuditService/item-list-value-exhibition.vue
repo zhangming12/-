@@ -539,7 +539,6 @@ export default {
       formDatas: {},
       activityList: [],
       presentList: [],
-      noneStatus: false,
       formData: {
         brandId: "",
         flag: true,

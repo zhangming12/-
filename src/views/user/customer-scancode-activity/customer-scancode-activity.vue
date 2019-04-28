@@ -17,58 +17,61 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">客户扫码活动分布</h2> -->
-        <div class="box">
-                <Form ref="form" :model="formData" :label-width="60" :rules="rule">
-                    <Row>
-                        <Col span="7">
-                            <Form-item label="品牌名称" prop="brandId" :label-width="90">
-                                <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
-                                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                                </Select>  
-                            </Form-item>           
-                        </Col>   
-                        <Col span="7">
-                            <Form-item label="活动包名" prop="groupId" :label-width="90">
-                                <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList">
-                                    <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                                </Select>  
-                            </Form-item>           
-                        </Col> 
-                        <Col span="7"> 
-                            <Form-item label="活动名称" prop="activityId" :label-width="90" >
-                                <Select v-model="formData.activityId" placeholder="请选择" @on-change="changeActivity">
-                                    <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                                </Select>  
-                            </Form-item> 
-                        </Col>   
-                        <Col span='2' offset="1" >
-                            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-                        </Col>
-                    </Row>
-                </Form>
-        </div>
-        <div class="box" style="margin-top: 15px;padding-bottom:20px">
-            <div id="scancodeActivity" :style="{height: '600px'}"></div>
-        
-        </div>
-        
-        
-        
+    <!-- <h2 class="Title">客户扫码活动分布</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="60" :rules="rule">
+        <Row>
+          <Col span="7">
+            <Form-item label="品牌名称" prop="brandId" :label-width="90">
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动包名" prop="groupId" :label-width="90">
+              <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动名称" prop="activityId" :label-width="90">
+              <Select v-model="formData.activityId" placeholder="请选择" @on-change="changeActivity">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;padding-bottom:20px">
+      <div id="scancodeActivity" :style="{height: '600px'}"></div>
+    </div>
   </div>
 </template>
 
 <script>
-import {
-  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
-  typeQueryActivityGroupVOByBrandId //根据活动包名ID获取陈列活动列表
-} from "@/api/common.js";
 import echarts from "echarts";
 export default {
   name: "customer-scancode-activity-keepAlive",
 
   data() {
-    const that = this;
     return {
       formData: {
         brandId: "",
@@ -112,22 +115,14 @@ export default {
   },
   methods: {
     drawLine() {
-      var that = this;
       // 基于准备好的dom，初始化echarts实例
       this.myChart = echarts.init(document.getElementById("scancodeActivity"));
       let option = {
         baseOption: {
           timeline: {
-            // y: 0,
             axisType: "category",
-            // realtime: false,
-            // loop: false,
             autoPlay: false, //自动播放
-            // currentIndex: 2,
             playInterval: 1000,
-            // controlStyle: {
-            //     position: 'left'
-            // },
             data: [],
             label: {
               formatter: function(s) {
@@ -187,13 +182,12 @@ export default {
         options: []
       };
       this.myChart.setOption(option, true);
-      this.myChart.on("timelinechanged", function(timeLineIndex) {
-        console.log("切换");
-        that.searchIndex = timeLineIndex.currentIndex;
-        that.changeTime();
+      this.myChart.on("timelinechanged", timeLineIndex => {
+        this.searchIndex = timeLineIndex.currentIndex;
+        this.changeTime();
       });
     },
-    submit: function(name) {
+    submit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.init();
@@ -231,30 +225,26 @@ export default {
         }
       });
     },
-    changeTime: function(time) {
-      var that = this;
+    changeTime(time) {
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       data["queryStartTime"] = this.timeLine[this.searchIndex][0];
       data["queryEndTime"] = this.timeLine[this.searchIndex][1];
-      that.Global.doPost("report/storeScanDistribution.json", data, function(
-        res
-      ) {
-        that.lineChart(res);
+      this.Global.doPost("report/storeScanDistribution.json", data, res => {
+        this.lineChart(res);
       });
     },
-    lineChart: function(res) {
-      var that = this;
-      that.myChart.setOption({
+    lineChart(res) {
+      this.myChart.setOption({
         baseOption: {
           xAxis: [
             {
-              data: that.getData(res).x_data
+              data: this.getData(res).x_data
             }
           ],
           series: [
             {
-              data: that.getData(res).series_data
+              data: this.getData(res).series_data
             }
           ]
         }
@@ -295,16 +285,6 @@ export default {
           }
         }
       );
-      // typeQueryActivityGroupVOByBrandId({ brandId: value, groupType: 1 }).then(
-      //   res => {
-      //     if (res && res.status == 1) {
-      //       this.groupList = res.data;
-      //       if (res && res.length) {
-      //         this.formData.groupId = res.data[0].id;
-      //       }
-      //     }
-      //   }
-      // );
     },
     getActivityList(value) {
       this.activityList = [];
@@ -319,14 +299,6 @@ export default {
           });
         }
       );
-      // typeQueryActivityVOByGroupId({ groupId: value, type: 1 }).then(res => {
-      //   if (res && res.status == 1) {
-      //     this.activityList = res.data;
-      //     if (res && res.length) {
-      //       this.formData.activityId = res.data[0].id;
-      //     }
-      //   }
-      // });
     },
     changeActivity: function(value) {
       this.formData.activityName = value.label;

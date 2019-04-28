@@ -24,37 +24,38 @@
   <div id="Main">
     <!-- <h2 class="Title" id="Title">业代关联门店分布</h2> -->
     <div class="box">
-        <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-            <Row>
-                <Col span="10">
-                    <Form-item label="品牌名称:" prop="brandId" :label-width="90" >
-                        <Select v-model="formData.brandId" placeholder="请选择" @on-change="brandChangeValue">
-                            <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                        </Select>  
-                    </Form-item> 
-                            
-                </Col>   
-                <Col span="10" offset="1" > 
-                </Col>   
-                <Col span='2' offset="1" >
-                    <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-                </Col>
-            </Row>
-        </Form>
+      <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+        <Row>
+          <Col span="10">
+            <Form-item label="品牌名称:" prop="brandId" :label-width="90">
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="brandChangeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="10" offset="1"></Col>
+          <Col span="2" offset="1">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
+      </Form>
     </div>
     <div class="box" style="margin-top: 15px;padding-bottom:20px">
-        <div id="scancodeActivity" :style="{height: '600px'}"></div>
-    </div>  
+      <div id="scancodeActivity" :style="{height: '600px'}"></div>
+    </div>
   </div>
 </template>
 
 <script>
 import echarts from "echarts";
 export default {
-  name:"salesman-relate-store-keepAlive",
+  name: "salesman-relate-store-keepAlive",
 
   data() {
-    const that = this;
     return {
       formData: {
         brandId: "",

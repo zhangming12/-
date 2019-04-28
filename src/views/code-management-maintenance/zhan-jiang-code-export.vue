@@ -249,7 +249,7 @@
 import fieldNameDes from "@/components/field-name-description.vue";
 import hhTable from "@/components/table/table.vue";
 import myModal from "@/components/Modal/my-modal.vue";
-import importBtn from "../../components/Button/import-btn.vue";
+import importBtn from "@/components/Button/import-btn.vue";
 import config from "@/util/config.js";
 export default {
   name: "zhan-jiang-code-export-keepAlive",

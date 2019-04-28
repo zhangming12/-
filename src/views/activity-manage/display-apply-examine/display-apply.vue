@@ -23,23 +23,6 @@
 .demo-table-info-column {
   min-width: 100px;
 }
-
-.searchBox {
-  overflow: hidden;
-  .search_btn {
-    float: left;
-    width: 50px;
-    padding: 5px 14px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .search_icon {
-    float: left;
-    padding: 5px 10px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-}
 </style>
 
 <template>
@@ -48,112 +31,6 @@
     <div class="main-container">
       <div class="box">
         <Form ref="form" :model="formData" :label-width="10" :rules="rule">
-          <!-- <Row>
-            <Col span="12">
-              <Form-item label="申请时间:" required>
-                <Row>
-                  <Col span="11">
-                    <Form-item prop="queryStartTime">
-                      <data-range
-                        @dataChange="startTimeChange"
-                        hour="00:00"
-                        :time="formData.queryStartTime"
-                        start
-                      ></data-range>
-                    </Form-item>
-                  </Col>
-                  <Col span="2" style="text-align: center;">至</Col>
-                  <Col span="11">
-                    <Form-item prop="queryEndTime">
-                      <data-range
-                        hour="24:00"
-                        placeholder="结束时间"
-                        @dataChange="endTimeChange"
-                        :time="formData.queryEndTime"
-                      ></data-range>
-                    </Form-item>
-                  </Col>
-                </Row>
-              </Form-item>
-              <Form-item label="活动包名:" prop="groupId" required>
-                <Select
-                  v-model="formData.groupId"
-                  placeholder="请选择"
-                  @on-change="getActivityList"
-                  clearable
-                >
-                  <Option
-                    :value="item.id"
-                    v-for="(item,index) in groupList"
-                    :key="index"
-                  >{{ item.groupName }}</Option>
-                </Select>
-              </Form-item>
-            </Col>
-            <Col span="8" offset="1">
-              <Form-item label="品牌名称:" prop="brandId" required>
-                <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
-                  <Option
-                    :value="item.id"
-                    v-for="(item,index) in brandList"
-                    :key="index"
-                  >{{ item.brandName }}</Option>
-                </Select>
-              </Form-item>
-              <Form-item label="陈列活动:" prop="brandId">
-                <Select v-model="formData.activityId" placeholder="请选择">
-                  <Option
-                    :value="item.id"
-                    v-for="(item,index) in activityList"
-                    :key="index"
-                  >{{ item.name }}</Option>
-                </Select>
-              </Form-item>
-            </Col>
-            <Col span="2" offset="1" style="margin-top:20px">
-              <div class="searchBox">
-                <Button @click="submit('form')" class="btn-search search_btn" type="primary">查询</Button>
-                <Button
-                  @click="showQuery=!showQuery"
-                  class="search_icon"
-                  type="primary"
-                  icon="ios-arrow-up"
-                  v-if="showQuery"
-                ></Button>
-                <Button
-                  @click="showQuery=!showQuery"
-                  class="search_icon"
-                  type="primary"
-                  icon="ios-arrow-down"
-                  v-else
-                ></Button>
-              </div>
-            </Col>
-          </Row>
-          <transition name="fade">
-            <Row v-if="showQuery">
-              <Col span="12">
-                <Form-item label="状态:">
-                  <Select v-model="formData.displayApplyStatus" clearable>
-                    <Option value="0">待审核</Option>
-                    <Option value="1">通过</Option>
-                    <Option value="2">不通过</Option>
-                  </Select>
-                </Form-item>
-                <Form-item label="店铺ID:">
-                  <Input v-model="formData.storeId" placeholder="请输入店铺ID"></Input>
-                </Form-item>
-              </Col>
-              <Col span="8" offset="1">
-                <Form-item label="区域:">
-                  <Cascader :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
-                </Form-item>
-                <Form-item label="客户编号:">
-                  <Input v-model="formData.joinCode" placeholder="请输入客户编号"></Input>
-                </Form-item>
-              </Col>
-            </Row>
-          </transition>-->
           <div class="container">
             <div class="btn-left w18">
               <Form-item prop="queryStartTime">
@@ -289,54 +166,17 @@
 </template>
 
 <script>
-import {
-  queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
-  queryActivityVOByGroupId //根据活动包名ID获取陈列活动列表
-} from "@/api/common.js";
-import area from "../../../config/china_code_data.js";
+import area from "@/config/china_code_data.js";
 import { displayApplyStatus } from "@/util/ENUMS.js";
 import { queryDisPlayApplyAudit } from "@/api/activity-manage/display-apply-examine.js"; //api
-import dataRange from "../../../components/data-rang.vue";
+import dataRange from "@/components/data-rang.vue";
 
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
   name: "display-apply-keepAlive",
   data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       showQuery: false,
       groupList: [],
@@ -348,14 +188,12 @@ export default {
         displayApplyStatus: "",
         storeId: "",
         areaCode: []
-        // queryTime: [EDFAULT_STARTTIME, EDFAULT_ENDTIME]
       },
       page: 1,
       pageNum: 0,
       rule: {
         queryStartTime: [{ validator: validateStart }],
         queryEndTime: [{ validator: validateEnd }]
-        // queryTime: [{ required: true, message: "选择日期跟时间" }]
       },
       start: {
         time: "",
@@ -600,8 +438,7 @@ export default {
         value.hour
       );
     },
-    init: function(currentPage, pageSize) {
-      var that = this;
+    init(currentPage, pageSize) {
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime

@@ -63,67 +63,74 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">CNY</h2> -->
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="80" :rules="rule">
-                <Row>
-                    <Col span='7'>
-                        <Form-item label="活动时间" required prop="queryTime">
-                            <DatePicker  v-model="formData.queryTime" placeholder="选择日期跟时间" type="datetimerange" style="width:100%" ></DatePicker>
-                        </Form-item>
-                        <Form-item label="签到地址"  >
-                            <Input  v-model="formData.signAddress"></Input> 
-                        </Form-item> 
-                    </Col>
-                    <Col span='7' >                                                 
-                        <Form-item label="业代姓名">
-                            <Input  v-model="formData.workerName"></Input> 
-                        </Form-item>
-                        <Form-item label="状态">
-                            <Select v-model="formData.signStatus" clearable>
-                                <Option value="">全部</Option>
-                                <Option value="0">未签到</Option>                                
-                                <Option value="1">已签到</Option>
-                                <Option value="2">迟到</Option>                                
-                                <Option value="3">待签到</Option>                                
-                            </Select>
-                        </Form-item>                  
-                    </Col>
-                    <Col span='7'>                         
-                        <Form-item label="业代手机">
-                            <Input  v-model="formData.phone"></Input> 
-                        </Form-item>                  
-                    </Col>
-                    <Col span="2" offset="1" style="margin-top:24px">
-                        <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
-                    </Col>
-                </Row>
-            </Form>
-      </div>
-      <div class="box" style="padding-bottom:20px">        
-        <div class='contentTop'> 
-            <Button @click="exportExcel" class="btn-right"  :disabled="isUpload" type="primary">导出</Button>            
-            <Button @click="uploadExcel" class="btn-right" style="margin-right:10px" type="primary">上传</Button>
-            
-            <wpicture-upload  :wordUploadFlag='wordUploadFlag'  @wordPicturnUploadSuccess='picturnUploadSuccess'></wpicture-upload>
-            <div class='demo' @click='exportTemplate'> 
-                <Icon type="ios-paper-outline" size='14' color='#ff8a34'></Icon>
-                <span>下载模版</span>
-            </div>
-            <Button @click="ceshiDownload" class="btn-right" style="margin-right:10px" type="primary">测试</Button>
+    <!-- <h2 class="Title">CNY</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="80" :rules="rule">
+        <Row>
+          <Col span="7">
+            <Form-item label="活动时间" required prop="queryTime">
+              <DatePicker
+                v-model="formData.queryTime"
+                placeholder="选择日期跟时间"
+                type="datetimerange"
+                style="width:100%"
+              ></DatePicker>
+            </Form-item>
+            <Form-item label="签到地址">
+              <Input v-model="formData.signAddress"></Input>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="业代姓名">
+              <Input v-model="formData.workerName"></Input>
+            </Form-item>
+            <Form-item label="状态">
+              <Select v-model="formData.signStatus" clearable>
+                <Option value>全部</Option>
+                <Option value="0">未签到</Option>
+                <Option value="1">已签到</Option>
+                <Option value="2">迟到</Option>
+                <Option value="3">待签到</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="业代手机">
+              <Input v-model="formData.phone"></Input>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:24px">
+            <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="box" style="padding-bottom:20px">
+      <div class="contentTop">
+        <Button @click="exportExcel" class="btn-right" :disabled="isUpload" type="primary">导出</Button>
+        <Button @click="uploadExcel" class="btn-right" style="margin-right:10px" type="primary">上传</Button>
+
+        <wpicture-upload
+          :wordUploadFlag="wordUploadFlag"
+          @wordPicturnUploadSuccess="picturnUploadSuccess"
+        ></wpicture-upload>
+        <div class="demo" @click="exportTemplate">
+          <Icon type="ios-paper-outline" size="14" color="#ff8a34"></Icon>
+          <span>下载模版</span>
         </div>
-        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-        <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
-            </div>
+        <Button @click="ceshiDownload" class="btn-right" style="margin-right:10px" type="primary">测试</Button>
+      </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 import {
   querySignRecord, //列表
   cnySignRecordImport,
@@ -134,6 +141,7 @@ import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索�
 import config from "@/util/config.js";
 import { CNYSignStatus } from "@/util/ENUMS.js";
 import wpictureUpload from "@/components/word-picture-upload.vue";
+import { validateStart, validateEnd } from "@/util/index.js";//验证规则
 
 export default {
   name: "CNY-sign-report-keepAlive",
@@ -142,34 +150,6 @@ export default {
     wpictureUpload
   },
   data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       formData: {
         workerName: "",
@@ -196,7 +176,7 @@ export default {
           key: "signTime",
           align: "center",
           render: (h, params) => {
-            return h("div", that.Global.createTime(params.row.signTime));
+            return h("div", this.Global.createTime(params.row.signTime));
           }
         },
         {
@@ -225,7 +205,7 @@ export default {
           align: "center",
           render: (h, params) => {
             if (params.row.realSignTime) {
-              return h("div", that.Global.createTime(params.row.realSignTime));
+              return h("div", this.Global.createTime(params.row.realSignTime));
             }
             return "";
           }
@@ -288,8 +268,6 @@ export default {
   },
   created: function() {},
   methods: {
-    
-
     ceshiDownload() {
       this.Global.downloadFile("download.file", "", res => {
         console.log(res);
@@ -308,8 +286,7 @@ export default {
     changePage: function(size) {
       this.init(size, 10);
     },
-    init: function(currentPage, pageSize) {
-      var that = this;
+    init(currentPage, pageSize) {
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryTime[0]
@@ -353,8 +330,7 @@ export default {
       this.uploadUrl = val;
       this.wordUploadFlag = val1;
     },
-    exportExcel: function() {
-      var that = this;
+    exportExcel() {
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryTime[0]

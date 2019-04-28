@@ -22,44 +22,65 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">客户行为分析</h2> -->
-        <div class="box">
-          <Form ref="form" :model="formData" :label-width="60" :rules="rule">
-              <Row>
-                  <Col span="7">
-                      <Form-item label="品牌名称" prop="brandId" :label-width="90">
-                          <Select v-model="formData.brandId" placeholder="请选择" @on-change="brandChangeValue">
-                              <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                          </Select>  
-                      </Form-item>           
-                  </Col>   
-                  <Col span="7">
-                      <Form-item label="活动包名" prop="groupId" :label-width="90">
-                          <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList">
-                              <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                          </Select>  
-                      </Form-item>           
-                  </Col> 
-                  <Col span="7"> 
-                      <Form-item label="活动名称" prop="activityId" :label-width="90" >
-                          <Select v-model="formData.activityId" placeholder="请选择" @on-change="activetyChangeValue">
-                              <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                          </Select>  
-                      </Form-item> 
-                  </Col>   
-                  <Col span='2' offset="1" >
-                      <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-                  </Col>
-              </Row>
-          </Form>
-        </div>
-        <h2 class="center-title">更新时间：{{updateTime}}（周更新）</h2>
-        <div style="overflow: hidden;">
-            <weekScanCodeTime style='float:right; width: 48%;' :weekScanCodeTimeDataList='weekScanCodeTimeDataList'></weekScanCodeTime>
-            <dayScanCodeTime style='float:left; width: 48%;' :dayScanCodeTimeDataList='dayScanCodeTimeDataList'></dayScanCodeTime>
-        </div>
-        <areDistribuite :areDistribuiteDataList='areDistribuiteDataList'></areDistribuite>
-        
+    <!-- <h2 class="Title">客户行为分析</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="60" :rules="rule">
+        <Row>
+          <Col span="7">
+            <Form-item label="品牌名称" prop="brandId" :label-width="90">
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="brandChangeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动包名" prop="groupId" :label-width="90">
+              <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动名称" prop="activityId" :label-width="90">
+              <Select
+                v-model="formData.activityId"
+                placeholder="请选择"
+                @on-change="activetyChangeValue"
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <h2 class="center-title">更新时间：{{updateTime}}（周更新）</h2>
+    <div style="overflow: hidden;">
+      <weekScanCodeTime
+        style="float:right; width: 48%;"
+        :weekScanCodeTimeDataList="weekScanCodeTimeDataList"
+      ></weekScanCodeTime>
+      <dayScanCodeTime
+        style="float:left; width: 48%;"
+        :dayScanCodeTimeDataList="dayScanCodeTimeDataList"
+      ></dayScanCodeTime>
+    </div>
+    <areDistribuite :areDistribuiteDataList="areDistribuiteDataList"></areDistribuite>
   </div>
 </template>
 
@@ -67,15 +88,11 @@
 import dayScanCodeTime from "./day-scancode-time.vue"; //日扫码量时段分布
 import weekScanCodeTime from "./week-scancode-time.vue"; //周扫码量时段分布
 import areDistribuite from "./top-are-distribute.vue"; //TOP30区域分布
-import {
-  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
-  typeQueryActivityGroupVOByBrandId //根据活动包名ID获取陈列活动列表
-} from "@/api/common.js";
+
 export default {
-  name:"customer-behavior-analysis-keepAlive",
+  name: "customer-behavior-analysis-keepAlive",
 
   data() {
-    const that = this;
     return {
       formData: {
         brandId: "",
@@ -86,7 +103,7 @@ export default {
       },
       rule: {
         brandId: [{ required: true, message: "请选择品牌名称" }],
-        groupId: [{ required: true, message: "请选择活动包名" }],
+        groupId: [{ required: true, message: "请选择活动包名" }]
         // activityId: [{ required: true, message: "请选择活动名称" }]
       },
       brandList: [],
@@ -112,7 +129,7 @@ export default {
         Object.entries(res).forEach(item => {
           this.brandList.push({ id: Number(item[0]), brandName: item[1] });
         });
-        if(this.brandList && this.brandList.length){
+        if (this.brandList && this.brandList.length) {
           this.formData.brandId = this.brandList[0].id;
           this.brandChangeValue(this.formData.brandId);
         }
@@ -130,7 +147,6 @@ export default {
       });
     },
     init() {
-      var that = this;
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       if (JSON.stringify(data) == "{}") {
@@ -142,12 +158,12 @@ export default {
       this.Global.doPost(
         "report/storeDayHourScanDistribution.json",
         data,
-        function(res) {
+        res => {
           let datalist = res;
           let hour = [];
           let scanCount = [];
           let dayScanCodeTimeDataList = {};
-          that.updateTime = res[0].queryEndTime; //更新时间
+          this.updateTime = res[0].queryEndTime; //更新时间
           if (datalist) {
             for (var key in datalist) {
               hour.push(datalist[key]["hour"]);
@@ -155,7 +171,7 @@ export default {
             }
             dayScanCodeTimeDataList.hour = hour;
             dayScanCodeTimeDataList.scanCount = scanCount;
-            that.dayScanCodeTimeDataList = dayScanCodeTimeDataList;
+            this.dayScanCodeTimeDataList = dayScanCodeTimeDataList;
           }
         }
       );
@@ -163,7 +179,7 @@ export default {
       this.Global.doPost(
         "report/storeWeekDayHourScanDistribution.json",
         data,
-        function(res) {
+        res => {
           if (res) {
             console.log(res);
             let datalist = res;
@@ -178,30 +194,26 @@ export default {
               weekScanCodeTimeDataList.push(item);
             }
 
-            that.weekScanCodeTimeDataList = weekScanCodeTimeDataList;
+            this.weekScanCodeTimeDataList = weekScanCodeTimeDataList;
           }
         }
       );
       //区域扫码分布
-      this.Global.doPost(
-        "report/storeAreaScanDistribution.json",
-        data,
-        function(res) {
-          let datalist = res;
-          let areaName = []; //区域
-          let scanCount = []; //门店扫码量
-          let areDistribuiteDataList = {};
-          if (datalist) {
-            for (var key in datalist) {
-              areaName.push(datalist[key]["areaName"]);
-              scanCount.push(datalist[key]["scanCount"]);
-            }
-            areDistribuiteDataList.areaName = areaName;
-            areDistribuiteDataList.scanCount = scanCount;
-            that.areDistribuiteDataList = areDistribuiteDataList;
+      this.Global.doPost("report/storeAreaScanDistribution.json", data, res => {
+        let datalist = res;
+        let areaName = []; //区域
+        let scanCount = []; //门店扫码量
+        let areDistribuiteDataList = {};
+        if (datalist) {
+          for (var key in datalist) {
+            areaName.push(datalist[key]["areaName"]);
+            scanCount.push(datalist[key]["scanCount"]);
           }
+          areDistribuiteDataList.areaName = areaName;
+          areDistribuiteDataList.scanCount = scanCount;
+          this.areDistribuiteDataList = areDistribuiteDataList;
         }
-      );
+      });
     },
     brandChangeValue(value) {
       let brandList = this.brandList;
@@ -213,7 +225,7 @@ export default {
       }
       this.groupList = [];
       this.formData.groupId = "";
-      if(!value) return
+      if (!value) return;
       this.Global.doPost(
         "condition/queryGroup.json",
         { activityType: 1, scope: "a", brandId: value },
@@ -231,7 +243,7 @@ export default {
     getActivityList(value) {
       this.activityList = [];
       this.formData.activityId = "";
-      if(!value) return ;
+      if (!value) return;
       this.Global.doPost(
         "condition/queryActivity.json",
         { date: 7, activityType: 1, scope: "a", groupId: value },

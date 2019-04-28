@@ -92,75 +92,94 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">返利月度清算发放</h2> -->
-		<div class="box">
-			<Form ref="form" :model="formData" :label-width="85">
-				<Row>
-					<Col span="9">
-            <Form-item label="周期:"    >
-                <Date-picker style="width:100%;" v-model="formData.cycle" type="month" placeholder="选择周期"></Date-picker>
+  <div id="Main">
+    <!-- <h2 class="Title">返利月度清算发放</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="85">
+        <Row>
+          <Col span="9">
+            <Form-item label="周期:">
+              <Date-picker
+                style="width:100%;"
+                v-model="formData.cycle"
+                type="month"
+                placeholder="选择周期"
+              ></Date-picker>
             </Form-item>
             <Form-item label="用户ID:">
-                <Input v-model.trim="formData.storeId" placeholder="请输入用户ID"></Input>
+              <Input v-model.trim="formData.storeId" placeholder="请输入用户ID"></Input>
             </Form-item>
-            
-					</Col>
-					<Col span="6">
-            <Form-item     label="品牌名称:" prop="brandId">
-                <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue" clearable>
-                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                </Select>
+          </Col>
+          <Col span="6">
+            <Form-item label="品牌名称:" prop="brandId">
+              <Select
+                v-model="formData.brandId"
+                placeholder="请选择"
+                @on-change="changeValue"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
             </Form-item>
             <Form-item label="区域">
-                <Cascader :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
+              <Cascader :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
             </Form-item>
-            
-					</Col>
-					<Col span="6">
-            <Form-item     label="活动名称:" prop="activityId">
-                <Select v-model="formData.activityId" placeholder="请选择" clearable>
-                    <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                </Select>
+          </Col>
+          <Col span="6">
+            <Form-item label="活动名称:" prop="activityId">
+              <Select v-model="formData.activityId" placeholder="请选择" clearable>
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
             </Form-item>
-            
-					</Col>
-					<Col span='2' offset="1" style="margin-top:20px">
-            <Button @click="submit()" class="btn-search  search_btn" type="primary">查询</Button>
-
-					</Col>
-				</Row>
-				
-			</Form>
-		</div>
-		<div class="box" style='margin-top: 15px;overflow: hidden;padding-bottom:20px;'>
-			<div class='contentTop'>
-				<Button class="btn-export" icon="ios-download-outline" @click="exportExcel" type="primary">导出</Button>
-        <Button class="btn-export" style="width:100px;" icon="ios-download-outline" @click="updateWinStatus" type="success">发放奖励</Button>
-			</div>
-			<Table :columns="columns1" :data="pageData" disabled-hover></Table>
-
-		</div>
-		<div style="margin: 10px;overflow: hidden">
-			<div style="float: right;">
-				<Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-			</div>
-		</div>
-	</div>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:20px">
+            <Button @click="submit()" class="btn-search search_btn" type="primary">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;overflow: hidden;padding-bottom:20px;">
+      <div class="contentTop">
+        <Button
+          class="btn-export"
+          icon="ios-download-outline"
+          @click="exportExcel"
+          type="primary"
+        >导出</Button>
+        <Button
+          class="btn-export"
+          style="width:100px;"
+          icon="ios-download-outline"
+          @click="updateWinStatus"
+          type="success"
+        >发放奖励</Button>
+      </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+    </div>
+    <div style="margin: 10px;overflow: hidden">
+      <div style="float: right;">
+        <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { monitorRecord } from "@/util/ENUMS.js";
 import area from "@/config/china_code_data.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
-  queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
-  queryActivityVOByGroupId, //根据活动包名ID获取陈列活动列表
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
-  name:"monthly-settlementp-keepAlive",
+  name: "monthly-settlementp-keepAlive",
 
   data() {
     return {
@@ -282,7 +301,10 @@ export default {
           align: "center",
           minWidth: 100,
           render: (h, params) => {
-            return h("div", this.formatYearMonth(params.row.createTime).slice(0,7));
+            return h(
+              "div",
+              this.formatYearMonth(params.row.createTime).slice(0, 7)
+            );
           }
         },
         {
@@ -397,7 +419,7 @@ export default {
         Object.entries(res).forEach(item => {
           this.brandList.push({ id: Number(item[0]), brandName: item[1] });
         });
-        if(this.brandList && this.brandList.length){
+        if (this.brandList && this.brandList.length) {
           this.formData.brandId = this.brandList[0].id;
           this.changeValue(this.formData.brandId);
         }
@@ -409,8 +431,8 @@ export default {
     changeValue(value) {
       this.activityList = [];
       this.formData.activityId = "";
-      if(!value) {
-        return
+      if (!value) {
+        return;
       }
       this.Global.doPostNoLoading(
         "condition/queryActivity.json",
@@ -419,7 +441,7 @@ export default {
           Object.entries(res).forEach(item => {
             this.activityList.push({ id: Number(item[0]), name: item[1] });
           });
-          if(this.activityList.length){
+          if (this.activityList.length) {
             this.formData.activityId = this.activityList[0].id;
           }
         }
@@ -552,29 +574,27 @@ export default {
 
           if (res.datalist && res.datalist[0].presentList) {
             for (let i = 0; i < res.datalist[0].presentList.length; i++) {
-              columns.push(
-                {
-                  title: res.datalist[0].presentList[i].activityTag,
-                  key: `jieTiName${i}`,
-                  align: "center",
-                  minWidth: 120,
-                  render:(h,f) =>{
-                    let str = ""
-                    if(f.row[`goodsName${i}`] === null ){
-                      str = ""
-                    }else{
-                      str = f.row[`jieTiName${i}`];
-                    }
-                    return h("div",str);
+              columns.push({
+                title: res.datalist[0].presentList[i].activityTag,
+                key: `jieTiName${i}`,
+                align: "center",
+                minWidth: 120,
+                render: (h, f) => {
+                  let str = "";
+                  if (f.row[`goodsName${i}`] === null) {
+                    str = "";
+                  } else {
+                    str = f.row[`jieTiName${i}`];
                   }
+                  return h("div", str);
                 }
-              );
+              });
             }
 
             for (let i = 0; i < res.datalist.length; i++) {
               let obj = {};
               obj = res.datalist[i];
-              res.datalist[i].createTime = this.formData.cycle
+              res.datalist[i].createTime = this.formData.cycle;
 
               for (let j = 0; j < res.datalist[0].presentList.length; j++) {
                 obj[`jieTiName${j}`] = res.datalist[i].presentList[j].minAmount;

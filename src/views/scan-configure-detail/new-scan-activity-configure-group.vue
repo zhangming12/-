@@ -113,92 +113,94 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">扫码活动配置(活动包)</h2> -->
-      <div class="main-container">
-        <div class="box" @keyup.enter="submit">
-          <Form ref="form" class="form" :model="formData" :label-width="10" :rules="rule">
-              <div class="container">
-                <div class="btn-left w18">
-                  <Form-item  required>
-                      <Select v-model="formData.brandId" placeholder="品牌名称*">
-                          <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                      </Select> 
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item>
-                          <Select v-model="formData.showStatus" placeholder="状态" clearable>
-                              <Option value="1">未开始</Option>
-                              <Option value="2">进行中</Option>
-                              <Option value="3">已结束</Option>
-                          </Select>
-                      </Form-item>
-                </div>
-                
-              </div>
-              <div class="btn-left w10">
-                  <div class="searchBox">
-                    <div class="btn-right search-right" @click="submit('form')">
-                      <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                    </div>
-                  </div>
-                </div>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">此表共包含<span class='numColor'>{{pageNum}}</span>条数据</span>
-              
-              <!-- <addNewBtn class="btn-right ml20" @btnClick="addNewGroup" /> -->
-              <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
+    <!-- <h2 class="Title">扫码活动配置(活动包)</h2> -->
+    <div class="main-container">
+      <div class="box" @keyup.enter="submit">
+        <Form ref="form" class="form" :model="formData" :label-width="10" :rules="rule">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required>
+                <Select v-model="formData.brandId" placeholder="品牌名称*">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
             </div>
-            <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-            
-        </div>
-        <div class="page-box">
-          <div style="float: right;">
-            <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+            <div class="btn-left w18">
+              <Form-item>
+                <Select v-model="formData.showStatus" placeholder="状态" clearable>
+                  <Option value="1">未开始</Option>
+                  <Option value="2">进行中</Option>
+                  <Option value="3">已结束</Option>
+                </Select>
+              </Form-item>
+            </div>
           </div>
+          <div class="btn-left w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+              </div>
+            </div>
+          </div>
+        </Form>
+      </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            此表共包含
+            <span class="numColor">{{pageNum}}</span>条数据
+          </span>
+
+          <!-- <addNewBtn class="btn-right ml20" @btnClick="addNewGroup" /> -->
+          <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
+        </div>
+        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      
-      <myModal class="myModal"
-          @close="closeModal"
-          :modal="myModalisShow">
-        <div slot="main" class="modal-main">
-          <h3>近一周导出历史</h3>
-          <div class="modal-table">
-            <div class="modal-table-top">
-              <span class="btn-left">此表共包含<span class='numColor'>100</span>条数据</span>
-            </div>
-            <Table :columns="columns" :data="pageData" disabled-hover></Table>
+    </div>
+
+    <myModal class="myModal" @close="closeModal" :modal="myModalisShow">
+      <div slot="main" class="modal-main">
+        <h3>近一周导出历史</h3>
+        <div class="modal-table">
+          <div class="modal-table-top">
+            <span class="btn-left">
+              此表共包含
+              <span class="numColor">100</span>条数据
+            </span>
           </div>
+          <Table :columns="columns" :data="pageData" disabled-hover></Table>
         </div>
-      </myModal>
+      </div>
+    </myModal>
   </div>
 </template>
 
 <script>
 import { queryDisPlayApplyAudit } from "@/api/activity-manage/display-apply-examine.js"; //api
-import dataRange from "../../components/data-rang.vue";
-import exportBtn from "../../components/Button/export-btn.vue";
-import addNewBtn from "../../components/Button/addNew-btn.vue";
-import myModal from "../../components/Modal/my-modal.vue";
+import dataRange from "@/components/data-rang.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
+import addNewBtn from "@/components/Button/addNew-btn.vue";
+import myModal from "@/components/Modal/my-modal.vue";
 
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
 import {
-  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
-  typeQueryActivityGroupVOByBrandId, //根据活动包名ID获取陈列活动列表
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
-import { displayApplyDetail } from "@/api/activity-manage/display-activity-manage.js"; //api
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
-  name:"scan-activity-configure-group",
+  name: "scan-activity-configure-group",
 
   data() {
     return {
@@ -286,32 +288,32 @@ export default {
                 },
                 "详情"
               ),
-            //   h(
-            //     "Button",
-            //     {
-            //       props: {
-            //         type: "text",
-            //         size: "small"
-            //       },
-            //       style: {
-            //         marginRight: "5px"
-            //       },
-            //       on: {
-            //         click: () => {
-            //           let queryParams = {
-            //             groupId: params.row.id,
-            //             type: "modify"
-            //           };
+              //   h(
+              //     "Button",
+              //     {
+              //       props: {
+              //         type: "text",
+              //         size: "small"
+              //       },
+              //       style: {
+              //         marginRight: "5px"
+              //       },
+              //       on: {
+              //         click: () => {
+              //           let queryParams = {
+              //             groupId: params.row.id,
+              //             type: "modify"
+              //           };
 
-            //           this.$router.push({
-            //             path: "/scanGroupConfigure",
-            //             query: queryParams
-            //           });
-            //         }
-            //       }
-            //     },
-            //     "修改"
-            //   ),
+              //           this.$router.push({
+              //             path: "/scanGroupConfigure",
+              //             query: queryParams
+              //           });
+              //         }
+              //       }
+              //     },
+              //     "修改"
+              //   ),
               h(
                 "Button",
                 {

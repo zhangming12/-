@@ -62,32 +62,6 @@
 .ivu-radio-wrapper {
   margin-right: 30px;
 }
-.searchBox {
-  overflow: hidden;
-  .search-left,
-  .search-right {
-    width: 50%;
-  }
-  .search-left {
-    button {
-      outline: none;
-      border: none;
-      width: 60px;
-      height: 30px;
-      line-height: 30px;
-      background: #ffffff;
-      margin-left: 10px;
-      cursor: pointer;
-      color: @primary-color;
-    }
-  }
-  .search-right {
-    img {
-      cursor: pointer;
-      margin-left: 10px;
-    }
-  }
-}
 .myModal {
   position: absolute;
   width: 100%;
@@ -170,42 +144,45 @@
     <div class="main-container">
       <div class="box">
         <Form ref="form" class="form" :model="formData" :label-width="10">
-            <div class="container">
-              <div class="btn-left w18">
-                <Form-item  required>
-                  <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                </Form-item>
-              </div>
-              <div class="btn-left w18">
-                <Form-item  required>
-                    <data-range hour="24:00" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range> 
-                </Form-item>
-              </div>
-              <div class="btn-left w18">
-                <Form-item  required>
-                  <Select v-model="formData.brandId" placeholder="品牌名称*">
-                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                  </Select> 
-                </Form-item>
-              </div>
-              <div class="btn-left w18">
-                <Form-item  prop="groupId">
-                  <Select v-model="formData.reviewedStatus" placeholder="请选择状态" clearable>
-                    <Option :value="1">通过</Option>
-                    <Option :value="2">不通过</Option>
-                    <Option :value="0">未审核</Option>
-                  </Select>
-                </Form-item>
-              </div>
-              
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required>
+                <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
+              </Form-item>
             </div>
-            <div class="btn-left w10">
-              <div class="searchBox">
-                <div class="btn-right search-right" @click="submit('form')">
-                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <data-range hour="24:00" v-model="formData.queryEndTime"></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <Select v-model="formData.brandId" placeholder="品牌名称*">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="groupId">
+                <Select v-model="formData.reviewedStatus" placeholder="请选择状态" clearable>
+                  <Option :value="1">通过</Option>
+                  <Option :value="2">不通过</Option>
+                  <Option :value="0">未审核</Option>
+                </Select>
+              </Form-item>
+            </div>
+          </div>
+          <div class="btn-left w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
               </div>
             </div>
+          </div>
         </Form>
       </div>
       <div class="table-box box">
@@ -217,31 +194,25 @@
         </div>
       </div>
     </div>
-      
+
     <!-- 审核 -->
-    <myModal class="myModal"
-        @close="closeModal"
-        :modal="myModalisShow">
+    <myModal class="myModal" @close="closeModal" :modal="myModalisShow">
       <div slot="main" class="modal-main">
         <h3>审核</h3>
         <Form ref="formItem" :model="formItem" :label-width="88">
-          <Form-item label="审核状态："  required>
-              <RadioGroup v-model="formItem.reviewedStatus">
-                    <Radio :label="1">
-                        通过
-                    </Radio>
-                    <Radio :label="2">
-                        不通过
-                    </Radio>
-                    <!-- <Radio :label="0">
+          <Form-item label="审核状态：" required>
+            <RadioGroup v-model="formItem.reviewedStatus">
+              <Radio :label="1">通过</Radio>
+              <Radio :label="2">不通过</Radio>
+              <!-- <Radio :label="0">
                         未审核
-                    </Radio> -->
-              </RadioGroup>
+              </Radio>-->
+            </RadioGroup>
           </Form-item>
           <Form-item label="审核意见：">
-              <textarea v-model.trim="formItem.reviewedMemo" name="" id="textarea" placeholder="请输入审核意见"></textarea>
+            <textarea v-model.trim="formItem.reviewedMemo" name id="textarea" placeholder="请输入审核意见"></textarea>
           </Form-item>
-      </Form>
+        </Form>
         <div class="maintain-footer">
           <Button type="text" @click="closeModal">取消</Button>
           <Button type="text" @click="sureMethod">确定</Button>
@@ -252,58 +223,18 @@
 </template>
 
 <script>
-import dataRange from "../../components/data-rang.vue";
-import exportBtn from "../../components/Button/export-btn.vue";
-import detailBtn from "../../components/Button/detail-btn.vue";
-import myModal from "../../components/Modal/my-modal.vue";
-import importBtn from "../../components/Button/import-btn.vue";
+import dataRange from "@/components/data-range/data-range.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
+import detailBtn from "@/components/Button/detail-btn.vue";
+import myModal from "@/components/Modal/my-modal.vue";
+import importBtn from "@/components/Button/import-btn.vue";
 import { bankList } from "@/util/ENUMS.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
-  name:"audit-brand-capital-change-keepAlive",
+  name: "audit-brand-capital-change-keepAlive",
   data() {
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       myModalisShow: false,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME,
@@ -443,20 +374,15 @@ export default {
 
   components: { dataRange, myModal },
   created() {
-    this.Global.doPostNoLoading(
-      "condition/queryBrands.json",
-      {},
-      res => {
-        this.brandList = [];
-        Object.entries(res).forEach(item => {
-          this.brandList.push({ id: Number(item[0]), brandName: item[1] });
-        });
-        if (this.brandList && this.brandList.length) {
-          this.formData.brandId = this.brandList[0].id;
-          
-        }
+    this.Global.doPostNoLoading("condition/queryBrands.json", {}, res => {
+      this.brandList = [];
+      Object.entries(res).forEach(item => {
+        this.brandList.push({ id: Number(item[0]), brandName: item[1] });
+      });
+      if (this.brandList && this.brandList.length) {
+        this.formData.brandId = this.brandList[0].id;
       }
-    );
+    });
   },
   watch: {
     myModalisShow(val) {
@@ -492,28 +418,6 @@ export default {
     },
     closeModal() {
       this.myModalisShow = false;
-    },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
     },
     submit(name) {
       if (!this.formData.queryStartTime) {
@@ -551,20 +455,9 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
 
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
+
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
       this.Global.deleteEmptyProperty(data);

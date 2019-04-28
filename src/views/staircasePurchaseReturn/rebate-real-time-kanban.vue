@@ -194,7 +194,6 @@ html {
       .legendBox {
         display: flex;
         height: 40px;
-        // padding: 10px 0;
         width: 100%;
         justify-content: space-around;
         margin-bottom: 13px;
@@ -277,14 +276,12 @@ html {
       }
       .bar-box {
         width: 100%;
-        // height: calc(~"(100% - 240px)");
         height: calc(~"(68% - 60px)");
         .boxs {
           width: 100%;
           margin: 10px auto;
           border: 4px solid #082883;
           box-shadow: inset 0 0 40px #082883;
-          // padding: 8px 0;
           height: 48%;
           position: relative;
           .left-top-box,
@@ -379,7 +376,6 @@ html {
             #yesterdayPicture,
             #fridayPicture,
             #presentPicture {
-              // width: 100%;
               position: absolute;
               top: 0px;
               left: 0px;
@@ -396,184 +392,200 @@ html {
 </style>
 
 <template>
-    <div id="MainBox">
-      <div id="Main" @click="closeSelect">
-        <div class="mainTop">
-          <div class="logo" >
-              <img class="gdYxtg" src="../../assets/image/gdtgLogo.png" alt="">
-              <span>X</span>
-              <img class="hzHuihe" src="../../assets/image/eDianJia.png" alt="">
-          </div>
-
-          <div class="top-middle-box">
-              <div class="select-box" style="margin-right:20px;">
-                  <div @click="mainShow" class="select-top-box">
-                      <span v-if="!formData.brandName">阶梯返利活动</span>
-                      <span v-if="formData.brandName">{{formData.brandName}}</span>
-                      <div class="select-top-extra">
-                          <Icon type="arrow-down-b" size="20"  v-show="!selectMainShow" @click="mainShow" color="#FFD300"></Icon>
-                          <Icon type="arrow-up-b" v-show="selectMainShow" @click="mainShow" size="20" color="#FFD300"></Icon>
-                      </div>
-                  </div>
-                  <div v-show="selectMainShow" class="select-main-box">
-                      <ul>
-                          <li @click="liClick(item.brandId,item.brandName,$event)" v-for="(item ,index) in brandList" :key="index">
-                              {{item.brandName}}
-                          </li>
-                      </ul>
-                  </div>
-              </div> 
-              <div class="select-box" style="margin-right:20px;">
-                  <div @click="activityShow" class="select-top-box">
-                      <span v-show="!formData.activityName">请选择活动</span>
-                      <span v-show="formData.activityName">{{formData.activityName}}</span>
-                      <div class="select-top-extra">
-                          <Icon type="arrow-down-b" size="20"  v-show="!activityIsShow" @click="activityShow" color="#FFD300"></Icon>
-                          <Icon type="arrow-up-b" v-show="activityIsShow" @click="activityShow" size="20" color="#FFD300"></Icon>
-                      </div>
-                  </div>
-                  <div v-show="activityIsShow" class="select-main-box">
-                      <ul>
-                          <li @click="activityClick(item.slaveActivityId,item.slaveActivityName,$event)" v-for="(item ,index) in activityList" :key="index">
-                              {{item.slaveActivityName}}
-                          </li>
-                      </ul>
-                  </div>
-              </div> 
-
-              <div class="refreshBox" style="margin-left:20px;">
-                <span>更新时间:</span>
-                <span>{{refreshTime}}</span>
-                <img @click="reflashData" src="../../assets/image/shuaxin.png" alt="">
-              </div>
-          </div>
-
-          <div class="bigOrSmall">
-              <router-link to='/rebateRealTimeKanban1' v-if="bigStatus">
-                <!-- <Icon type="arrow-expand" size="22" color="#fff" class='small'></Icon> -->
-                <Icon type="ios-expand" size="22" color="#fff" class='small'/>
-              </router-link>
-              <router-link to='/rebateRealTimeKanban' v-else>
-                  <!-- <Icon type="arrow-shrink" size="22" color="#fff" class='big'></Icon> -->
-                  <Icon type="ios-contract" size="22" color="#fff" class='big'/>
-              </router-link>
-          </div>
-          
+  <div id="MainBox">
+    <div id="Main" @click="closeSelect">
+      <div class="mainTop">
+        <div class="logo">
+          <img class="gdYxtg" src="../../assets/image/gdtgLogo.png" alt>
+          <span>X</span>
+          <img class="hzHuihe" src="../../assets/image/eDianJia.png" alt>
         </div>
-        <div class="main-box">
 
-          <div class="main-left-box">
-            <div class="mapTitile">
-                粤西扫码门店数量显示
-              <div class="left"></div>
-              <div class="right"></div>
+        <div class="top-middle-box">
+          <div class="select-box" style="margin-right:20px;">
+            <div @click="mainShow" class="select-top-box">
+              <span v-if="!formData.brandName">阶梯返利活动</span>
+              <span v-if="formData.brandName">{{formData.brandName}}</span>
+              <div class="select-top-extra">
+                <Icon
+                  type="arrow-down-b"
+                  size="20"
+                  v-show="!selectMainShow"
+                  @click="mainShow"
+                  color="#FFD300"
+                ></Icon>
+                <Icon
+                  type="arrow-up-b"
+                  v-show="selectMainShow"
+                  @click="mainShow"
+                  size="20"
+                  color="#FFD300"
+                ></Icon>
+              </div>
             </div>
-            <div id="scancodeActivity"></div>
+            <div v-show="selectMainShow" class="select-main-box">
+              <ul>
+                <li
+                  @click="liClick(item.brandId,item.brandName,$event)"
+                  v-for="(item ,index) in brandList"
+                  :key="index"
+                >{{item.brandName}}</li>
+              </ul>
+            </div>
+          </div>
+          <div class="select-box" style="margin-right:20px;">
+            <div @click="activityShow" class="select-top-box">
+              <span v-show="!formData.activityName">请选择活动</span>
+              <span v-show="formData.activityName">{{formData.activityName}}</span>
+              <div class="select-top-extra">
+                <Icon
+                  type="arrow-down-b"
+                  size="20"
+                  v-show="!activityIsShow"
+                  @click="activityShow"
+                  color="#FFD300"
+                ></Icon>
+                <Icon
+                  type="arrow-up-b"
+                  v-show="activityIsShow"
+                  @click="activityShow"
+                  size="20"
+                  color="#FFD300"
+                ></Icon>
+              </div>
+            </div>
+            <div v-show="activityIsShow" class="select-main-box">
+              <ul>
+                <li
+                  @click="activityClick(item.slaveActivityId,item.slaveActivityName,$event)"
+                  v-for="(item ,index) in activityList"
+                  :key="index"
+                >{{item.slaveActivityName}}</li>
+              </ul>
+            </div>
           </div>
 
-          <div class="main-right-box">
-              <div class="legendBox barPcturelengend">
-                <div class="legendBoxItem">
-                   <div class="legendBoxItems">
-                      <div style="backgroundColor:#00E78C;"></div>
-                      <p>今日新用户: <span>{{barPictureLengedData[0]}}</span>  家</p>
-                   </div>
-                </div>
-                 <div class="legendBoxItem">
-                   <div class="legendBoxItems">
-                      <div style="backgroundColor:#0066FF;"></div>
-                      <p>今日老用户: <span>{{barPictureLengedData[1]}}</span>  家</p>
-                   </div>
-                    
-                 </div>
-                 <div class="legendBoxItem" style="width:100px;">
-                   <div class="legendBoxItems" style="margin-top:-2px;">
-                      <div class="totalItem" style="backgroundColor:#001146;">
-                        <div class="cicle"></div>
-                        <div class="line"></div>
-                      </div>
-                      <p>累计</p>
-                   </div>
-                    
-                 </div>
+          <div class="refreshBox" style="margin-left:20px;">
+            <span>更新时间:</span>
+            <span>{{refreshTime}}</span>
+            <img @click="reflashData" src="../../assets/image/shuaxin.png" alt>
+          </div>
+        </div>
+
+        <div class="bigOrSmall">
+          <router-link to="/rebateRealTimeKanban1" v-if="bigStatus">
+            <Icon type="ios-expand" size="22" color="#fff" class="small"/>
+          </router-link>
+          <router-link to="/rebateRealTimeKanban" v-else>
+            <Icon type="ios-contract" size="22" color="#fff" class="big"/>
+          </router-link>
+        </div>
+      </div>
+      <div class="main-box">
+        <div class="main-left-box">
+          <div class="mapTitile">
+            粤西扫码门店数量显示
+            <div class="left"></div>
+            <div class="right"></div>
+          </div>
+          <div id="scancodeActivity"></div>
+        </div>
+
+        <div class="main-right-box">
+          <div class="legendBox barPcturelengend">
+            <div class="legendBoxItem">
+              <div class="legendBoxItems">
+                <div style="backgroundColor:#00E78C;"></div>
+                <p>
+                  今日新用户:
+                  <span>{{barPictureLengedData[0]}}</span> 家
+                </p>
               </div>
-              <div class="barPcture" ref="barPcture"></div>
-
-              <div class="legendBox" style="width:30px;">
-                 <!-- <div class="legendBoxItem" v-for="(item,index) in lengendData" :key="index">
-                   <div class="legendBoxItems">
-                      <div :style="styleMethod(index)"></div>
-                      <p>{{item}}</p>
-                   </div>
-                    
-                 </div> -->
+            </div>
+            <div class="legendBoxItem">
+              <div class="legendBoxItems">
+                <div style="backgroundColor:#0066FF;"></div>
+                <p>
+                  今日老用户:
+                  <span>{{barPictureLengedData[1]}}</span> 家
+                </p>
               </div>
-
-              <div class="bar-box">
-                <div class="boxs" style="margin-bottom:20px;">
-                  <div class="container-box" style="border:none;">
-                      <div id="yesterdayPicture" ref="yesterdayPicture"></div>
-                  </div>
-                  <div class="container-box" style="border:none;">
-                      <div class="title-left title">
-                          本期阶梯返利占比
-                          <div class="title-left-left"></div>
-                          <div class="title-left-right"></div>
-                      </div>
-                      <div id="todayPicture" ref="todayPicture"></div>
-                  </div>
-                  <div style="border-right:none;" class="container-box">
-                    <div id="fridayPicture" ref="fridayPicture"></div>
-                  </div>
-                  <div class="left-top-box"></div>
-                  <div class="left-bottom-box"></div>
-                  <div class="right-top-box"></div>
-                  <div class="right-bottom-box"></div>
+            </div>
+            <div class="legendBoxItem" style="width:100px;">
+              <div class="legendBoxItems" style="margin-top:-2px;">
+                <div class="totalItem" style="backgroundColor:#001146;">
+                  <div class="cicle"></div>
+                  <div class="line"></div>
                 </div>
-                <div id="box" class="boxs">
-                  <div class="container-box">
-                      <div id="totalPicture" ref="totalPicture"></div>
-                      <div class="title-left title">
-                          累计返利占比
-                          <div class="title-left-left"></div>
-                          <div class="title-left-right"></div>
-                      </div>
-
-
-                      <div class="top-right"></div>
-                      <div class="bottom-right"></div>
-                  </div>
-                  <div class="container-box">
-                      <div class="title-left title">
-                          累计奖励分布
-                          <div class="title-left-left"></div>
-                          <div class="title-left-right"></div>
-                      </div>
-                      <div class="top-right"></div>
-                      <div class="bottom-right"></div>
-                      <div id="presentPicture" ref="presentPicture"></div>
-                  </div>
-                  <div style="border-right:none;" class="container-box">
-                      <div class="title-left title">
-                          累计关联门店占比
-                          <div class="title-left-left"></div>
-                          <div class="title-left-right"></div>
-                      </div>
-                      <div id="totalPicture" ref="yibiaotu"></div>
-                  </div>
-                  <div class="left-top-box"></div>
-                  <div class="left-bottom-box"></div>
-                  <div class="right-top-box"></div>
-                  <div class="right-bottom-box"></div>
-                </div>
+                <p>累计</p>
               </div>
-              
+            </div>
+          </div>
+          <div class="barPcture" ref="barPcture"></div>
+
+          <div class="legendBox" style="width:30px;"></div>
+
+          <div class="bar-box">
+            <div class="boxs" style="margin-bottom:20px;">
+              <div class="container-box" style="border:none;">
+                <div id="yesterdayPicture" ref="yesterdayPicture"></div>
+              </div>
+              <div class="container-box" style="border:none;">
+                <div class="title-left title">
+                  本期阶梯返利占比
+                  <div class="title-left-left"></div>
+                  <div class="title-left-right"></div>
+                </div>
+                <div id="todayPicture" ref="todayPicture"></div>
+              </div>
+              <div style="border-right:none;" class="container-box">
+                <div id="fridayPicture" ref="fridayPicture"></div>
+              </div>
+              <div class="left-top-box"></div>
+              <div class="left-bottom-box"></div>
+              <div class="right-top-box"></div>
+              <div class="right-bottom-box"></div>
+            </div>
+            <div id="box" class="boxs">
+              <div class="container-box">
+                <div id="totalPicture" ref="totalPicture"></div>
+                <div class="title-left title">
+                  累计返利占比
+                  <div class="title-left-left"></div>
+                  <div class="title-left-right"></div>
+                </div>
+
+                <div class="top-right"></div>
+                <div class="bottom-right"></div>
+              </div>
+              <div class="container-box">
+                <div class="title-left title">
+                  累计奖励分布
+                  <div class="title-left-left"></div>
+                  <div class="title-left-right"></div>
+                </div>
+                <div class="top-right"></div>
+                <div class="bottom-right"></div>
+                <div id="presentPicture" ref="presentPicture"></div>
+              </div>
+              <div style="border-right:none;" class="container-box">
+                <div class="title-left title">
+                  累计关联门店占比
+                  <div class="title-left-left"></div>
+                  <div class="title-left-right"></div>
+                </div>
+                <div id="totalPicture" ref="yibiaotu"></div>
+              </div>
+              <div class="left-top-box"></div>
+              <div class="left-bottom-box"></div>
+              <div class="right-top-box"></div>
+              <div class="right-bottom-box"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    
-    
+  </div>
 </template>
 
 <script>
@@ -584,7 +596,7 @@ import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索�
 import guangdong from "@/assets/yuedong.json";
 
 export default {
-  name:"rebate-real-time-kanban",
+  name: "rebate-real-time-kanban",
 
   data() {
     return {
@@ -730,10 +742,12 @@ export default {
   },
   beforeDestroy() {
     this.activityList = [];
-    window.removeEventListener('resize',this.reload);
+    window.removeEventListener("resize", this.reload);
   },
   methods: {
-    reload(){location.reload();},
+    reload() {
+      location.reload();
+    },
     //刷新
     reflashData() {
       // this.refreshTime = this.initializationTime();
@@ -943,13 +957,7 @@ export default {
             name: "Top 5",
             type: "effectScatter",
             coordinateSystem: "geo",
-            data: convertData(
-              data
-              // .sort(function(a, b) {
-              //   return b.value - a.value;
-              // })
-              // .slice(0, 5)
-            ),
+            data: convertData(data),
             symbolSize: function(val) {
               if (val[2] == 0) {
                 val[2] = 1;
@@ -1457,7 +1465,6 @@ export default {
             fontSize: 10
           },
           data: lengendData
-          // selected:selectedData
         },
         color: ["#FE1F08", "#26A7D9", "#00E78C", "#6901FB", "#0066FF"],
         series: [
@@ -1775,7 +1782,7 @@ export default {
           }
         ]
       };
-      var value_ = (100 - value) * 266 / 360;
+      var value_ = ((100 - value) * 266) / 360;
       option.title.text = value + "%";
       option.series[1].data[0].value = value_;
       option.series[1].data[1].value = 100 - value_;
@@ -1803,233 +1810,229 @@ export default {
         return false;
       }
       let data = {
-        // brandId: this.formData.brandId,
         activityId: this.formData.activityId
       };
 
-      this.Global.doPostNoLoading("ladder/ladderRebateReport.json", data, res => {
-        console.log(res);
-        let lengendData = [];
-        //更新时间
-        if (res.updateTime) {
-          this.refreshTime = this.Global.createTime(res.updateTime);
-        }
-        //关联门店
-        if (res.refStore) {
-          let value = res.refStore.refStore / res.refStore.totalStore;
-          value = (100 * value).toFixed(2);
-          this.drawYiBiaoPan(value);
-        }
-        //获取15天内新老客户数
-        if (res.dailyUser) {
-          let xAxis = [];
-          res.dailyUser.x_month_day.forEach(item => {
-            xAxis.push(item.slice(5));
-          });
-          let oldUserData = [];
-          let newUserData = [];
-          let totalUaerData = [];
-          // let legendData = [];
-
-          let keys = Object.keys(res.dailyUser.y_data_list);
-
-          keys.forEach(item => {
-            oldUserData.push(res.dailyUser.y_data_list[item].hisUser);
-            newUserData.push(res.dailyUser.y_data_list[item].newUser);
-            totalUaerData.push(res.dailyUser.y_data_list[item].totalUser);
-          });
-          this.barPictureLengedData = [];
-          this.barPictureLengedData = [
-            newUserData[newUserData.length - 1],
-            oldUserData[oldUserData.length - 1]
-          ];
-          this.drawBarPicture(xAxis, oldUserData, newUserData, totalUaerData);
-        }
-        //今日数据
-        if (res.ladderCount.todayModel) {
-          let todaysubtext = "";
-          let todayData = [];
-          let todayLendata = [];
-          if (!res.ladderCount.todayModel.totalScanCount) {
-            res.ladderCount.todayModel.totalScanCount = "暂无奖励";
+      this.Global.doPostNoLoading(
+        "ladder/ladderRebateReport.json",
+        data,
+        res => {
+          console.log(res);
+          let lengendData = [];
+          //更新时间
+          if (res.updateTime) {
+            this.refreshTime = this.Global.createTime(res.updateTime);
           }
-          // ${res.ladderCount.todayModel.totalScanCount}/
-          todaysubtext = `${res.ladderCount.todayModel.totalUserCount}家`;
-
-          let todayKey = Object.keys(
-            res.ladderCount.todayModel.ladderDetailMap
-          );
-          let todayValue = Object.values(
-            res.ladderCount.todayModel.ladderDetailMap
-          );
-          // this.lengendData = [];
-          for (let i = 0; i < todayKey.length; i++) {
-            todayData.push({
-              value: todayValue[i],
-              name: this.lengedf(todayKey[i])
+          //关联门店
+          if (res.refStore) {
+            let value = res.refStore.refStore / res.refStore.totalStore;
+            value = (100 * value).toFixed(2);
+            this.drawYiBiaoPan(value);
+          }
+          //获取15天内新老客户数
+          if (res.dailyUser) {
+            let xAxis = [];
+            res.dailyUser.x_month_day.forEach(item => {
+              xAxis.push(item.slice(5));
             });
-            // this.lengendData.push({
-            //   name: this.lengedf(todayKey[i])
-            // });
-            lengendData.push(this.lengedf(todayKey[i]));
-            todayLendata.push(this.lengedf(todayKey[i]));
-          }
-          if(todayData && todayData.length){
-            this.drawLineToday(todayData, todaysubtext, todayLendata);
-          }else{
-            this.drawLineToday();
-          }
-          
-        }
-        //昨日数据
-        if (res.ladderCount.yestModel) {
-          let yesterdaysubtext = "";
-          let yesterdayData = [];
-          let yesLenData = [];
-          if (!res.ladderCount.yestModel.totalScanCount) {
-            res.ladderCount.yestModel.totalScanCount = "暂无奖励";
-          }
-          // ${res.ladderCount.yestModel.totalScanCount}/
-          yesterdaysubtext = `${res.ladderCount.yestModel.totalUserCount}家`;
+            let oldUserData = [];
+            let newUserData = [];
+            let totalUaerData = [];
 
-          let yestKey = Object.keys(res.ladderCount.yestModel.ladderDetailMap);
-          let yestValue = Object.values(
-            res.ladderCount.yestModel.ladderDetailMap
-          );
+            let keys = Object.keys(res.dailyUser.y_data_list);
 
-          for (let i = 0; i < yestKey.length; i++) {
-            yesterdayData.push({
-              value: yestValue[i],
-              name: this.lengedf(yestKey[i])
+            keys.forEach(item => {
+              oldUserData.push(res.dailyUser.y_data_list[item].hisUser);
+              newUserData.push(res.dailyUser.y_data_list[item].newUser);
+              totalUaerData.push(res.dailyUser.y_data_list[item].totalUser);
             });
-            lengendData.push(this.lengedf(yestKey[i]));
-            yesLenData.push(this.lengedf(yestKey[i]));
+            this.barPictureLengedData = [];
+            this.barPictureLengedData = [
+              newUserData[newUserData.length - 1],
+              oldUserData[oldUserData.length - 1]
+            ];
+            this.drawBarPicture(xAxis, oldUserData, newUserData, totalUaerData);
           }
-          if (yesterdayData && yesterdayData.length) {
-            this.drawLineyesterday(yesterdayData, yesterdaysubtext, yesLenData);
+          //今日数据
+          if (res.ladderCount.todayModel) {
+            let todaysubtext = "";
+            let todayData = [];
+            let todayLendata = [];
+            if (!res.ladderCount.todayModel.totalScanCount) {
+              res.ladderCount.todayModel.totalScanCount = "暂无奖励";
+            }
+            todaysubtext = `${res.ladderCount.todayModel.totalUserCount}家`;
+
+            let todayKey = Object.keys(
+              res.ladderCount.todayModel.ladderDetailMap
+            );
+            let todayValue = Object.values(
+              res.ladderCount.todayModel.ladderDetailMap
+            );
+            for (let i = 0; i < todayKey.length; i++) {
+              todayData.push({
+                value: todayValue[i],
+                name: this.lengedf(todayKey[i])
+              });
+              lengendData.push(this.lengedf(todayKey[i]));
+              todayLendata.push(this.lengedf(todayKey[i]));
+            }
+            if (todayData && todayData.length) {
+              this.drawLineToday(todayData, todaysubtext, todayLendata);
+            } else {
+              this.drawLineToday();
+            }
+          }
+          //昨日数据
+          if (res.ladderCount.yestModel) {
+            let yesterdaysubtext = "";
+            let yesterdayData = [];
+            let yesLenData = [];
+            if (!res.ladderCount.yestModel.totalScanCount) {
+              res.ladderCount.yestModel.totalScanCount = "暂无奖励";
+            }
+            yesterdaysubtext = `${res.ladderCount.yestModel.totalUserCount}家`;
+
+            let yestKey = Object.keys(
+              res.ladderCount.yestModel.ladderDetailMap
+            );
+            let yestValue = Object.values(
+              res.ladderCount.yestModel.ladderDetailMap
+            );
+
+            for (let i = 0; i < yestKey.length; i++) {
+              yesterdayData.push({
+                value: yestValue[i],
+                name: this.lengedf(yestKey[i])
+              });
+              lengendData.push(this.lengedf(yestKey[i]));
+              yesLenData.push(this.lengedf(yestKey[i]));
+            }
+            if (yesterdayData && yesterdayData.length) {
+              this.drawLineyesterday(
+                yesterdayData,
+                yesterdaysubtext,
+                yesLenData
+              );
+            } else {
+              this.drawLineyesterday();
+            }
+          }
+
+          //上周五数据
+          if (res.ladderCount.lastModel) {
+            let fridaysubtext = "";
+            let fridayData = [];
+            let friData = [];
+            if (!res.ladderCount.lastModel.totalScanCount) {
+              res.ladderCount.lastModel.totalScanCount = "暂无奖励";
+            }
+            fridaysubtext = `${res.ladderCount.lastModel.totalUserCount}家`;
+
+            let fridayKey = Object.keys(
+              res.ladderCount.lastModel.ladderDetailMap
+            );
+            let fridayValue = Object.values(
+              res.ladderCount.lastModel.ladderDetailMap
+            );
+
+            for (let i = 0; i < fridayKey.length; i++) {
+              fridayData.push({
+                value: fridayValue[i],
+                name: this.lengedf(fridayKey[i])
+              });
+              lengendData.push(this.lengedf(fridayKey[i]));
+              friData.push(this.lengedf(fridayKey[i]));
+            }
+            if (fridayData && fridayData.length) {
+              this.drawLinefriday(fridayData, fridaysubtext, friData);
+            } else {
+              this.drawLinefriday();
+            }
+          }
+
+          //累计数据
+          if (res.ladderCount.allModel) {
+            let totalsubtext = "";
+            let totalData = [];
+            let totalLengedData = [];
+            if (!res.ladderCount.allModel.totalScanCount) {
+              res.ladderCount.allModel.totalScanCount = "暂无折扣";
+            }
+            totalsubtext = `${res.ladderCount.allModel.totalUserCount}家`;
+            let totalKey = Object.keys(
+              res.ladderCount.allModel.ladderDetailMap
+            );
+            let totalValue = Object.values(
+              res.ladderCount.allModel.ladderDetailMap
+            );
+
+            for (let i = 0; i < totalKey.length; i++) {
+              totalData.push({
+                value: totalValue[i],
+                name: this.lengedf(totalKey[i])
+              });
+              totalLengedData.push(this.lengedf(totalKey[i]));
+              lengendData.push(this.lengedf(totalKey[i]));
+            }
+            if (totalData && totalData.length) {
+              this.drawLineTotal(totalData, totalsubtext, totalLengedData);
+            } else {
+              this.drawLineTotal();
+            }
+          }
+          this.lengendData = [...new Set(lengendData)];
+          //奖励分布数据
+
+          if (res.ladderPrize) {
+            let presentData = [];
+            let personData = [];
+            if (res.ladderPrize.liquTotalCount > 0) {
+              personData.push({
+                name: "待算",
+                value: res.ladderPrize.liquTotalCount
+              });
+            }
+            if (res.ladderPrize.unliquTotalCount > 0) {
+              personData.push({
+                name: "已算",
+                value: res.ladderPrize.unliquTotalCount
+              });
+            }
+
+            presentData.push({
+              value: res.ladderPrize.unsendCount,
+              name: "待提取"
+            });
+            presentData.push({
+              value: res.ladderPrize.receiveCount,
+              name: "已提取"
+            });
+            presentData.push({
+              value: res.ladderPrize.unliquCount,
+              name: "待清算"
+            });
+            this.drawLinepresentPicture(presentData, personData);
           } else {
-            this.drawLineyesterday();
+            this.drawLinepresentPicture();
           }
-          // this.drawLineyesterday(yesterdayData, yesterdaysubtext,yesLenData);
+          //地图数据
+          if (res.dailyArea && res.dailyArea.length) {
+            let mapData = [];
+
+            for (let i = 0; i < res.dailyArea.length; i++) {
+              mapData.push({
+                name: res.dailyArea[i].bizKey,
+                value: res.dailyArea[i].bizValue
+              });
+            }
+
+            this.drawLine(mapData);
+          } else {
+            this.drawLine();
+          }
         }
-
-        //上周五数据
-        if (res.ladderCount.lastModel) {
-          let fridaysubtext = "";
-          let fridayData = [];
-          let friData = [];
-          if (!res.ladderCount.lastModel.totalScanCount) {
-            res.ladderCount.lastModel.totalScanCount = "暂无奖励";
-          }
-          // ${res.ladderCount.lastModel.totalScanCount}/
-          fridaysubtext = `${res.ladderCount.lastModel.totalUserCount}家`;
-
-          let fridayKey = Object.keys(
-            res.ladderCount.lastModel.ladderDetailMap
-          );
-          let fridayValue = Object.values(
-            res.ladderCount.lastModel.ladderDetailMap
-          );
-
-          for (let i = 0; i < fridayKey.length; i++) {
-            fridayData.push({
-              value: fridayValue[i],
-              name: this.lengedf(fridayKey[i])
-            });
-            lengendData.push(this.lengedf(fridayKey[i]));
-            friData.push(this.lengedf(fridayKey[i]));
-          }
-          if(fridayData && fridayData.length){
-            this.drawLinefriday(fridayData, fridaysubtext, friData);
-          }else{
-            this.drawLinefriday();
-          }
-          
-        }
-
-        //累计数据
-        if (res.ladderCount.allModel) {
-          let totalsubtext = "";
-          let totalData = [];
-          let totalLengedData = [];
-          if (!res.ladderCount.allModel.totalScanCount) {
-            res.ladderCount.allModel.totalScanCount = "暂无折扣";
-          }
-          totalsubtext = `${res.ladderCount.allModel.totalUserCount}家`;
-          // ${res.ladderCount.allModel.totalScanCount}
-          let totalKey = Object.keys(res.ladderCount.allModel.ladderDetailMap);
-          let totalValue = Object.values(
-            res.ladderCount.allModel.ladderDetailMap
-          );
-
-          for (let i = 0; i < totalKey.length; i++) {
-            totalData.push({
-              value: totalValue[i],
-              name: this.lengedf(totalKey[i])
-            });
-            totalLengedData.push(this.lengedf(totalKey[i]));
-            lengendData.push(this.lengedf(totalKey[i]));
-          }
-          if(totalData && totalData.length){
-            this.drawLineTotal(totalData, totalsubtext, totalLengedData);
-          }
-          else{
-            this.drawLineTotal();
-          }
-          
-        }
-        // this.lengendData = [];
-        this.lengendData = [...new Set(lengendData)];
-        //奖励分布数据
-
-        if (res.ladderPrize) {
-          let presentData = [];
-          let personData = [];
-          if (res.ladderPrize.liquTotalCount > 0) {
-            personData.push({
-              name: "待算",
-              value: res.ladderPrize.liquTotalCount
-            });
-          }
-          if (res.ladderPrize.unliquTotalCount > 0) {
-            personData.push({
-              name: "已算",
-              value: res.ladderPrize.unliquTotalCount
-            });
-          }
-
-          presentData.push({
-            value: res.ladderPrize.unsendCount,
-            name: "待提取"
-          });
-          presentData.push({
-            value: res.ladderPrize.receiveCount,
-            name: "已提取"
-          });
-          presentData.push({
-            value: res.ladderPrize.unliquCount,
-            name: "待清算"
-          });
-          this.drawLinepresentPicture(presentData, personData);
-        } else {
-          this.drawLinepresentPicture();
-        }
-        //地图数据
-        if (res.dailyArea && res.dailyArea.length) {
-          let mapData = [];
-
-          for (let i = 0; i < res.dailyArea.length; i++) {
-            mapData.push({
-              name: res.dailyArea[i].bizKey,
-              value: res.dailyArea[i].bizValue
-            });
-          }
-
-          this.drawLine(mapData);
-        } else {
-          this.drawLine();
-        }
-      });
+      );
     },
     closeSelect(e) {
       if (
@@ -2052,8 +2055,6 @@ export default {
     getActivityList(val) {
       this.activityList = [];
       this.Global.doPostNoLoading("ladder/queryActivityList.json", val, res => {
-        console.log(res);
-
         if (res && res.length) {
           this.activityList = res;
           this.formData.activityName = res[0].slaveActivityName;
@@ -2131,10 +2132,5 @@ export default {
       return str;
     }
   }
-  // filters: {
-  //   lengedFilter(val) {
-  //     return this.lengedf(val)
-  //   }
-  // }
 };
 </script>

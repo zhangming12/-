@@ -57,48 +57,66 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">上传视频统计导出</h2> -->
+    <!-- <h2 class="Title">上传视频统计导出</h2> -->
     <div class="box">
       <Form ref="form" :model="formData" :label-width="88">
-          <Row>
-              <Col span="10">  
-                    <Form-item label="品牌名称" prop="brandId"    >
-                      <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
-                          <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                      </Select>
-                  </Form-item>                     
-                    <Form-item label="活动名称"    >
-                      <Select v-model="formData.activityId" placeholder="请选择" @on-change="activityChangeValue">
-                          <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                      </Select>
-                  </Form-item> 
-                  
-                  
-              </Col>
-              <Col span="10" offset="1">
-                  <Form-item label="活动包名:" prop="groupId"    >
-                      <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
-                          <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                      </Select>
-                  </Form-item>
-                    
-                  <Form-item label="时间">
-                      <datachange @dataRangChange='dataRangChange'></datachange>    
-                  </Form-item>                    
+        <Row>
+          <Col span="10">
+            <Form-item label="品牌名称" prop="brandId">
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="活动名称">
+              <Select
+                v-model="formData.activityId"
+                placeholder="请选择"
+                @on-change="activityChangeValue"
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="10" offset="1">
+            <Form-item label="活动包名:" prop="groupId">
+              <Select
+                v-model="formData.groupId"
+                placeholder="请选择"
+                @on-change="getActivityList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
 
-              </Col>
-              <Col span="2" offset="1" >
-                  <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-              </Col>
-          </Row>
+            <Form-item label="时间">
+              <datachange @dataRangChange="dataRangChange"></datachange>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
       </Form>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>
-import dataRange from "../../components/data-rang.vue";
-import datachange from "../../components/data-picker.vue";
+import dataRange from "@/components/data-rang.vue";
+import datachange from "@/components/data-picker.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
   typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
@@ -237,7 +255,6 @@ export default {
     },
 
     activityChangeValue(value) {
-      let that = this;
       let activityList = this.activityList; //品牌列表
       for (var i = 0; i < activityList.length; i++) {
         if (value == activityList[i].id) {
@@ -250,19 +267,16 @@ export default {
           this.getTimeDataList(); //获取活动周序列表
         }, 500);
       } else {
-        that.timeDataList = [];
+        this.timeDataList = [];
       }
     },
     getTimeDataList() {
       //获取活动周序列表
-      let that = this;
       let data = {
-        brandId: that.formData.brandId,
-        activityId: that.formData.activityId
+        brandId: this.formData.brandId,
+        activityId: this.formData.activityId
       };
-      that.Global.doPost("report/getActivityMonthDict.json", data, function(
-        res
-      ) {
+      this.Global.doPost("report/getActivityMonthDict.json", data, res => {
         if (res) {
           let timeDataList = [];
           for (const key in res) {
@@ -271,8 +285,8 @@ export default {
             };
             timeDataList.push(item);
           }
-          that.timeDataList = timeDataList;
-          that.formData.queryMonth = timeDataList[0].queryMonth;
+          this.timeDataList = timeDataList;
+          this.formData.queryMonth = timeDataList[0].queryMonth;
         }
       });
     },

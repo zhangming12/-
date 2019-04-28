@@ -256,7 +256,6 @@ footer {
 </template>
 
 <script>
-import { dispalyExamineRecStatus } from "@/util/ENUMS.js";
 import { formatYearMonth, formatDate, formatYear } from "@/filters/filters.js";
 
 import { getLoongActivityInfo } from "@/api/landLoong-activity-manage/landLoong-activity-manage.js";

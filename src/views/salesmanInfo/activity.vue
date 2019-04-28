@@ -82,7 +82,6 @@ export default {
   name:"activity-keepAlive",
 
   data() {
-    const that = this;
     const validatePhone = (rule, value, callback) => {
       // 验证手机号码
       if (value == "") {
@@ -136,7 +135,7 @@ export default {
           render: (h, params) => {
             return h(
               "div",
-              that.Global.ENUMS.workerType[params.row.bindStatus]
+              this.Global.ENUMS.workerType[params.row.bindStatus]
             );
           }
         },
@@ -260,9 +259,7 @@ export default {
     changeValue(value) {
       this.activityList = [];
       this.Global.getActivityList(value, res => {
-        //    that.$nextTick(function(){
         this.activityList = res.datalist;
-        //    })
         this.formData.activityId = res.datalist[0].id;
       });
     }

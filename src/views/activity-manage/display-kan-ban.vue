@@ -208,12 +208,12 @@ html {
 
 <script>
 import echarts from "echarts";
-import selectBox from "../../components/select-box.vue";
+import selectBox from "@/components/select-box.vue";
 import area from "@/config/china_code_data.js";
 import {
   queryActivityVOByGroupId //根据活动包名ID获取陈列活动列表
 } from "@/api/common.js";
-import selectBoxVue from "../../components/select-box.vue";
+import selectBoxVue from "@/components/select-box.vue";
 
 export default {
   data() {
@@ -1546,22 +1546,6 @@ export default {
           });
         }
       );
-
-      // queryActivityVOByGroupId(val).then(res => {
-      //   if (res && res.status == 1) {
-      //     if (res.data && res.data.length) {
-      //       for (let i = 0; i < res.data.length; i++) {
-      //         this.activityList.push({
-      //           label: res.data[i].name,
-      //           value: res.data[i].id
-      //         });
-      //       }
-      //     } else {
-      //       this.activityList = [];
-      //       // this.$Message.error("该活动包名下暂无活动");
-      //     }
-      //   }
-      // });
     },
     activityClick(val) {
       this.init();

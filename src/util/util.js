@@ -99,6 +99,11 @@ let util = {
                 }
             })
     },
+    getConfig() {
+        let session = window.sessionStorage.getItem("user");
+        let config = JSON.parse(session).config;
+        return config;
+    },
     downloadFile(method, params, option, errorType) {
 
         this.ajax.post(method, this.getPramsData(params))

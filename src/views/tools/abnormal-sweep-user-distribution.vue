@@ -7,13 +7,10 @@
 .footerBottun {
   position: fixed;
   bottom: 15px;
-  // width: 100%;
   right: 70px;
 }
 .box {
-  // position: relative;
   width: 100%;
-  // box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
   padding: 30px 20px;
   padding-bottom: 0;
@@ -40,7 +37,6 @@
   overflow: hidden;
   .title {
     display: inline-block;
-    float: left;
     height: 150px;
     line-height: 150px;
   }
@@ -82,7 +78,6 @@
   overflow: hidden;
   .title {
     display: inline-block;
-    float: left;
     height: 120px;
     line-height: 120px;
   }
@@ -122,7 +117,6 @@
   overflow: hidden;
   .title {
     display: inline-block;
-    float: left;
     height: 228px;
     line-height: 228px;
   }
@@ -158,13 +152,11 @@
   margin-top: 10px;
   overflow: hidden;
   .title {
-    float: left;
     display: inline-block;
     height: 30px;
     line-height: 30px;
   }
   #examine-left {
-    //float: left;
     width: 450px;
     .ivu-radio-group-vertical .ivu-radio-wrapper {
       display: inline;
@@ -173,7 +165,6 @@
   }
 
   #examine-right {
-    //float: left;
     margin: 4px;
     margin-top: 10px;
     margin-left: 10px;
@@ -289,51 +280,78 @@ footer {
 </style>
 
 <template>
-    <div id="Main">
-        <div class="box">
-          <Form ref="form" :model="formData" :label-width="88">
-            <Row>
-              <Col span="7">
-                <Form-item label="品牌名称"    >
-                  <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
-                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                  </Select>
-                </Form-item>
-                <Form-item label="开始时间"     >
-                  <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime"  placeholder="选择开始时间" start></data-range>
-                
-                </Form-item>
-              </Col>
-              <Col span="7">
-                <Form-item label="活动包名"    >
-                  <Select v-model="formData.groupId" placeholder="活动包名" @on-change="getActivityList" clearable>
-                    <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                  </Select>
-                </Form-item>
-                <Form-item label="结束时间"     >
-                  <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                </Form-item>
-              </Col>
-              <Col span="7">
-                <Form-item label="活动名称"    >
-                  <Select v-model="formData.oneLevel" placeholder="活动名称" multiple clearable>
-                    <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                  </Select>
-                </Form-item>
-                <Form-item label="门店ID"    >
-                    <Input type="text" clearable v-model.trim="formData.storeId" placeholder="门店ID"></Input>
-                </Form-item>
-              </Col>
-              <Col span="2" offset='1'>
-                <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-              </Col>
-            </Row>
-          </Form>
-            <!-- 地图预警 -->
-            <div class="form-title" style="margin-top:10px;">地图预警</div>
-            <div id="container"></div>
-        </div>   
+  <div id="Main">
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88">
+        <Row>
+          <Col span="7">
+            <Form-item label="品牌名称">
+              <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="开始时间">
+              <data-range
+                @dataChange="startTimeChange"
+                hour="00:00"
+                :time="formData.queryStartTime"
+                placeholder="选择开始时间"
+                start
+              ></data-range>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动包名">
+              <Select
+                v-model="formData.groupId"
+                placeholder="活动包名"
+                @on-change="getActivityList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="结束时间">
+              <data-range
+                hour="24:00"
+                placeholder="结束时间"
+                @dataChange="endTimeChange"
+                :time="formData.queryEndTime"
+              ></data-range>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动名称">
+              <Select v-model="formData.oneLevel" placeholder="活动名称" multiple clearable>
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="门店ID">
+              <Input type="text" clearable v-model.trim="formData.storeId" placeholder="门店ID"></Input>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+      <!-- 地图预警 -->
+      <div class="form-title" style="margin-top:10px;">地图预警</div>
+      <div id="container"></div>
     </div>
+  </div>
 </template>
 
 <script>

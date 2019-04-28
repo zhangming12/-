@@ -263,7 +263,7 @@
 </template>
 
 <script>
-import myModal from "../../components/Modal/my-modal.vue";
+import myModal from "@/components/Modal/my-modal.vue";
 export default {
   name:"brand-capital-account-warning-keepAlive",
   data() {

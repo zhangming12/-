@@ -70,125 +70,127 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">码包激活预警</h2> -->
-		<div class="box">
-			<Form ref="form" :model="formData" :label-width="85">
-				<Row>
-					<Col span="21">
+  <div id="Main">
+    <!-- <h2 class="Title">码包激活预警</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="85">
+        <Row>
+          <Col span="21">
             <Row>
-                <Col span="16">
-                    <Form-item label="时间:" required>
-                        <Row>
-                            <Col span="11">
-                                <Form-item prop="queryStartTime">
-                                    <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                                </Form-item>
-                            </Col>
-                            <Col span="2" style="text-align: center;">至</Col>
-                            <Col span="11">
-                                <Form-item prop="queryEndTime">
-                                    <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                                </Form-item>
-                            </Col>
-                        </Row>
-                    </Form-item>
-                </Col>
-                <Col span="8">
-                    <Form-item label="品牌名称:" prop="brandId">
-                        <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue" clearable>
-                            <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                        </Select>
-                    </Form-item>
-                </Col>
+              <Col span="16">
+                <Form-item label="时间:" required>
+                  <Row>
+                    <Col span="11">
+                      <Form-item prop="queryStartTime">
+                        <data-range
+                          @dataChange="startTimeChange"
+                          hour="00:00"
+                          :time="formData.queryStartTime"
+                          start
+                        ></data-range>
+                      </Form-item>
+                    </Col>
+                    <Col span="2" style="text-align: center;">至</Col>
+                    <Col span="11">
+                      <Form-item prop="queryEndTime">
+                        <data-range
+                          hour="24:00"
+                          placeholder="结束时间"
+                          @dataChange="endTimeChange"
+                          :time="formData.queryEndTime"
+                        ></data-range>
+                      </Form-item>
+                    </Col>
+                  </Row>
+                </Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="品牌名称:" prop="brandId">
+                  <Select
+                    v-model="formData.brandId"
+                    placeholder="请选择"
+                    @on-change="changeValue"
+                    clearable
+                  >
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in brandList"
+                      :key="index"
+                    >{{ item.brandName }}</Option>
+                  </Select>
+                </Form-item>
+              </Col>
             </Row>
             <Row>
-                <Col span="8">
-                    <Form-item label="活动包名:" prop="groupId">
-                        <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
-                            <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                        </Select>
-                    </Form-item>
-                </Col>
-                <Col span="8">
-                    <Form-item label="活动名称:" prop="activityId">
-                        <Select v-model="formData.activityId" placeholder="请选择" @on-change="getpresentList" clearable>
-                            <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                        </Select>
-                    </Form-item>
-                </Col>
-                <Col span="8">
-                    <Form-item label="码包号:" prop="packageNo">
-                        <Input v-model.trim="formData.packageNo" placeholder="请输入码包号"></Input>
-                    </Form-item>
-                </Col>
+              <Col span="8">
+                <Form-item label="活动包名:" prop="groupId">
+                  <Select
+                    v-model="formData.groupId"
+                    placeholder="请选择"
+                    @on-change="getActivityList"
+                    clearable
+                  >
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in groupList"
+                      :key="index"
+                    >{{ item.groupName }}</Option>
+                  </Select>
+                </Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="活动名称:" prop="activityId">
+                  <Select
+                    v-model="formData.activityId"
+                    placeholder="请选择"
+                    @on-change="getpresentList"
+                    clearable
+                  >
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in activityList"
+                      :key="index"
+                    >{{ item.name }}</Option>
+                  </Select>
+                </Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="码包号:" prop="packageNo">
+                  <Input v-model.trim="formData.packageNo" placeholder="请输入码包号"></Input>
+                </Form-item>
+              </Col>
             </Row>
-					</Col>
-          <Col span='2' offset="1">
-              <Button @click="submit()" class="btn-search  search_btn" type="primary">查询</Button>
-					</Col>
-				</Row>
-			</Form>
-		</div>
-		<div class="box" style='margin-top: 15px;overflow: hidden;padding-bottom:20px;'>
-			<Table :columns="columns1" :data="pageData" disabled-hover></Table>
-
-		</div>
-		<div style="margin: 10px;overflow: hidden">
-			<div style="float: right;">
-				<Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-			</div>
-		</div>
-	</div>
+          </Col>
+          <Col span="2" offset="1">
+            <Button @click="submit()" class="btn-search search_btn" type="primary">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;overflow: hidden;padding-bottom:20px;">
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+    </div>
+    <div style="margin: 10px;overflow: hidden">
+      <div style="float: right;">
+        <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import dataRange from "../../components/data-rang.vue";
+import dataRange from "@/components/data-rang.vue";
 
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
-import { monitorRecord } from "@/util/ENUMS.js";
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
   queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
   queryActivityVOByGroupId, //根据活动包名ID获取陈列活动列表
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
-  name:"code-warning-keepAlive",
+  name: "code-warning-keepAlive",
 
   data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       start: {
         time: "",
@@ -210,7 +212,7 @@ export default {
       columns1: [
         {
           title: "序号",
-          type:"index",
+          type: "index",
           align: "center",
           minWidth: 70
         },
@@ -227,31 +229,31 @@ export default {
           title: "扫码地",
           key: "areaName",
           align: "center",
-          minWidth: 120,
+          minWidth: 120
         },
         {
           title: "品牌名称",
           key: "brandName",
           align: "center",
-          minWidth: 120,
+          minWidth: 120
         },
         {
           title: "活动包名",
           key: "groupName",
           align: "center",
-          minWidth: 120,
+          minWidth: 120
         },
         {
           title: "活动名称",
           key: "activityName",
           align: "center",
-          minWidth: 150,
+          minWidth: 150
         },
         {
           title: "码包号",
           key: "packageNo",
           align: "center",
-          minWidth: 120,
+          minWidth: 120
         }
       ],
       pageNum: 0, //总页数
@@ -264,16 +266,12 @@ export default {
     };
   },
   created() {
-    this.Global.doPostNoLoading(
-      "condition/queryBrands.json",
-      {},
-      res => {
-        this.brandList = [];
-        Object.entries(res).forEach(item => {
-          this.brandList.push({ id: Number(item[0]), brandName: item[1] });
-        });
-      }
-    );
+    this.Global.doPostNoLoading("condition/queryBrands.json", {}, res => {
+      this.brandList = [];
+      Object.entries(res).forEach(item => {
+        this.brandList.push({ id: Number(item[0]), brandName: item[1] });
+      });
+    });
   },
   mounted() {},
   components: {
@@ -297,7 +295,10 @@ export default {
       if (value.hour == "24:00") {
         return;
       }
-      this.formData.queryEndTime = this.Global.setHoursData(value.time, value.hour);
+      this.formData.queryEndTime = this.Global.setHoursData(
+        value.time,
+        value.hour
+      );
     },
     dataChange(val) {
       this.formData.queryEndTime = val.slice(0, 11) + "23:59:59";
@@ -362,15 +363,11 @@ export default {
       }
       this.Global.deleteEmptyProperty(data);
 
-      this.Global.doPost(
-        "codepackage/qrRisk.json",
-        data,
-        res => {
-          this.pageNum = res.items;
-          this.page = res.page;
-          this.pageData = res.datalist;
-        }
-      );
+      this.Global.doPost("codepackage/qrRisk.json", data, res => {
+        this.pageNum = res.items;
+        this.page = res.page;
+        this.pageData = res.datalist;
+      });
     }
   }
 };

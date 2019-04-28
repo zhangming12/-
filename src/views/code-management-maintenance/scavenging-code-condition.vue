@@ -361,7 +361,7 @@
 </template>
 
 <script>
-import exportBtn from "../../components/Button/export-btn.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
 export default {
   name:"scavenging-code-condition-keepAlive",
 

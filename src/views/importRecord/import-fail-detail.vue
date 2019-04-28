@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import exportBtn from "../../components/Button/export-btn.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
 export default {
   data() {
     return {

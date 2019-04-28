@@ -278,18 +278,18 @@
 
 <script>
 import fieldNameDes from "@/components/field-name-description.vue";
-import dataRange from "../../components/data-rang.vue";
-import exportBtn from "../../components/Button/export-btn.vue";
-import detailBtn from "../../components/Button/detail-btn.vue";
-import saveBtn from "../../components/Button/save-btn.vue";
-import myModal from "../../components/Modal/my-modal.vue";
+import dataRange from "@/components/data-rang.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
+import detailBtn from "@/components/Button/detail-btn.vue";
+import saveBtn from "@/components/Button/save-btn.vue";
+import myModal from "@/components/Modal/my-modal.vue";
 import upData from "@/assets/js/upload.js";
 import hhTable from "@/components/table/table.vue";
 import PROJECT_CONFIG from "@/util/config.js";
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
 export default {
   name: "scan-group-configure",

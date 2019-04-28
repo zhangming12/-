@@ -85,61 +85,87 @@
 </style>
 
 <template>
-    <div id="tableBox">
-            <table cellspacing="0" cellpadding="0" border="0" id="table">
-                <colgroup>
-                    <col v-for="(item, index) in getAllColumns(columns)" :key="index" :width="headWidth(item)">
-                </colgroup>
-                <tr v-for="(c,n) in handleColumns()" :key="n">
-                    <th :colspan="item.colSpan" :rowspan="item.rowSpan" v-for="(item,index) in c" :key="index">{{ item.title }}</th>
-                </tr>
-            </table>
-            <table v-if="pageData.length > 0" cellspacing="0" cellpadding="0" border="0" id="table">
-                <colgroup>
-                    <col v-for="(item, index) in getAllColumns(columns)" :key="index" :width="headWidth(item)">
-                </colgroup>
-                <template v-for="(item,index) in pageData">
-                    <tr class="table-td">
-                        <td v-for="column in getAllColumns(columns)">
-                            <div class="td">
-                                <template v-if="!column.render">
-                                    <template v-if="column.tooltip">
-                                        <Tooltip transfer :content="item[column.key]" :max-width="250" :disabled="!showTooltip" class="ivu-table-cell-tooltip">
-                                            <span ref="content" class="over" @mouseover.stop="handleTooltipIn($event)" @mouseout.stop="handleTooltipOut">{{ item[column.key] }}</span>
-                                        </Tooltip>
-                                    </template>
-                                    <span v-else>
-                                        {{ item[column.key] }}
-                                    </span>
-                                </template>
-                                <Render v-if="column.render" :row="item" :column="column" :index="index" :render="column.render"></Render>
-                                <span v-if="column.type === 'index'">
-                                    {{ index + 1 }}
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="more" v-if="rowExpanded(index)">
-                        <td :colspan="getAllColumns(columns).length">
-                            <ul id="moreBox">
-                                <li :class="'moreLi' + index + i" v-for="(item,i) in showList" :key="i" >
-                                    <!-- {{item.title}}：{{ pageData[index][item.key] }} -->
-                                    <!-- {{item.title}}：{{ objData[item.key] }} -->
-                                    
-                                    <Tooltip :max-width="250"  v-if="pageData[index][item.key] && pageData[index][item.key] != '暂无数据'" placement="bottom-start" transfer :content="pageData[index][item.key]" >
-                                      <span  class="moreBox-span" >{{item.title}}：{{ pageData[index][item.key] }}</span>
-                                    </Tooltip>
-                                    <span v-else class="moreBox-span" >{{item.title}}：{{ pageData[index][item.key] }}</span>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
+  <div id="tableBox">
+    <table cellspacing="0" cellpadding="0" border="0" id="table">
+      <colgroup>
+        <col v-for="(item, index) in getAllColumns(columns)" :key="index" :width="headWidth(item)">
+      </colgroup>
+      <tr v-for="(c,n) in handleColumns()" :key="n">
+        <th
+          :colspan="item.colSpan"
+          :rowspan="item.rowSpan"
+          v-for="(item,index) in c"
+          :key="index"
+        >{{ item.title }}</th>
+      </tr>
+    </table>
+    <table v-if="pageData.length > 0" cellspacing="0" cellpadding="0" border="0" id="table">
+      <colgroup>
+        <col v-for="(item, index) in getAllColumns(columns)" :key="index" :width="headWidth(item)">
+      </colgroup>
+      <template v-for="(item,index) in pageData">
+        <tr class="table-td">
+          <td v-for="column in getAllColumns(columns)">
+            <div class="td">
+              <template v-if="!column.render">
+                <template v-if="column.tooltip">
+                  <Tooltip
+                    transfer
+                    :content="item[column.key]"
+                    :max-width="250"
+                    :disabled="!showTooltip"
+                    class="ivu-table-cell-tooltip"
+                  >
+                    <span
+                      ref="content"
+                      class="over"
+                      @mouseover.stop="handleTooltipIn($event)"
+                      @mouseout.stop="handleTooltipOut"
+                    >{{ item[column.key] }}</span>
+                  </Tooltip>
                 </template>
-            </table>
-            <div v-else id="noneList" :class="{noneData: noneStatus, noneSearch: !noneStatus}">
-                {{ noneStatus?'暂无数据':'请搜索后查询' }}
+                <span v-else>{{ item[column.key] }}</span>
+              </template>
+              <Render
+                v-if="column.render"
+                :row="item"
+                :column="column"
+                :index="index"
+                :render="column.render"
+              ></Render>
+              <span v-if="column.type === 'index'">{{ index + 1 }}</span>
             </div>
-    </div>
+          </td>
+        </tr>
+        <tr class="more" v-if="rowExpanded(index)">
+          <td :colspan="getAllColumns(columns).length">
+            <ul id="moreBox">
+              <li :class="'moreLi' + index + i" v-for="(item,i) in showList" :key="i">
+                <!-- {{item.title}}：{{ pageData[index][item.key] }} -->
+                <!-- {{item.title}}：{{ objData[item.key] }} -->
+
+                <Tooltip
+                  :max-width="250"
+                  v-if="pageData[index][item.key] && pageData[index][item.key] != '暂无数据'"
+                  placement="bottom-start"
+                  transfer
+                  :content="pageData[index][item.key]"
+                >
+                  <span class="moreBox-span">{{item.title}}：{{ pageData[index][item.key] }}</span>
+                </Tooltip>
+                <span v-else class="moreBox-span">{{item.title}}：{{ pageData[index][item.key] }}</span>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </template>
+    </table>
+    <div
+      v-else
+      id="noneList"
+      :class="{noneData: noneStatus, noneSearch: !noneStatus}"
+    >{{ noneStatus?'未搜索到您要的内容，请重新选择查询！':'请选择您需要的搜索条件，点击查询。' }}</div>
+  </div>
 </template>
 
 <script>

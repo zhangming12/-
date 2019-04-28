@@ -57,130 +57,155 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">金银铜清算</h2> -->
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="88">
-                <Row>
-                    <Col span="7">
-                        <Form-item label="品牌名称:" prop="brandId"    >
-                            <Select v-model="formData.brandId"  placeholder="请选择" @on-change="changeValue">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select> 
-                        </Form-item>                        
-                        <Form-item label="结算周期:" prop="periodMonth">
-                            <Select v-model="formData.periodMonth"  placeholder="请选择时间">
-                                <Option :value="item.queryMonth" v-for="(item,index) in timeDataList" :key="index" >{{ item.queryMonth}}</Option>
-                            </Select>
-                        </Form-item>
-                        
-                        
-                    </Col>
-                    <Col span="7">
-                        <Form-item label="活动包名:" prop="groupId"    >
-                          <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
-                            <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                          </Select>
-                        </Form-item>
-                        <Form-item label="客户编号:">
-                             <Input v-model="formData.joinCode" placeholder="请输入客户编号"></Input>
-                        </Form-item>
-                        
-                    </Col>
-                    <Col span="7">
-                    
-                        <Form-item label="陈列活动:">
-                             <Select v-model="formData.activityId" placeholder="请选择" @on-change="getActivityMonthDict">
-                                <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                            </Select> 
-                        </Form-item>                       
-                        <Form-item label="门店名称:">
-                             <Input v-model="formData.storeName" placeholder="请输入门店名称"></Input>
-                        </Form-item>
-                        
-                    </Col>
-                    <Col span='2' offset="1" style="margin-top:20px">
-                        <div class="searchBox">
-                          <Button @click="submit('form')" class="btn-search  search_btn" type="primary">查询</Button>
-                          <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
-                          <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button>  
-                        </div>
-                    </Col>
-                </Row>
-                <transition name="fade">
-                  <Row v-if="showQuery">
-                    <Col span='7'>
-                        <Form-item label="分组名称:">
-                             <Input v-model="formData.activityTag" placeholder="请输入分组名称"></Input>
-                        </Form-item>
-                        <Form-item label="用户ID:">
-                             <Input v-model="formData.storeId" placeholder="请输入用户ID"></Input>
-                        </Form-item>
-                        <Form-item label="业代姓名:">
-                             <Input v-model="formData.workerName" placeholder="请输入业代姓名"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col span='7'>
-                        <Form-item label="业代手机:">
-                             <Input v-model="formData.workerPhone" placeholder="请输入业代手机"></Input>
-                        </Form-item>
-                        <Form-item label="上传次数:">                            
-                            <Col span="11">
-                                <Select v-model="formData.uploadCountOper" >
-                                    <Option value="<" label='<'></Option>
-                                    <Option value="=" label='='></Option>
-                                    <Option value=">" label='>'></Option>
-                                </Select>                              
-                            </Col>
-                            <Col span="2" style="text-align: center">至</Col>
-                            <Col span="11">
-                                <Input v-model="formData.uploadCount" ></Input>
-                            </Col>
-                        </Form-item>
-                  
-                    </Col>
-                    <Col span='7'>
-                        <Form-item label="区域:">
-                              <div @click='showTree' class='area'>{{areaName}}</div>
-                              <!-- <Input v-model="formData.areaName" placeholder="请选择区域"></Input> -->
-                        </Form-item>
-                        <Form-item label="合格次数:">
-                            
-                             <Col span="11">
-                                <Select v-model="formData.auditCountOper" >
-                                    <Option value="<" label='<'></Option>
-                                    <Option value="=" label='='></Option>
-                                    <Option value=">" label='>'></Option>
-                                </Select>                              
-                            </Col>
-                            <Col span="2" style="text-align: center">至</Col>
-                            <Col span="11">
-                                <Input v-model="formData.auditCount" ></Input>
-                            </Col>
-                        </Form-item>
-                    </Col>
-                    
-                  </Row>
-                </transition>
-            </Form>
-      </div>
-      <div class="box" style="margin-top: 15px;padding-bottom:20px">
-        <div class="contentTop">
-            <Button @click="exportExcel" class="btn-right"  icon="ios-download-outline"  type="primary">导出</Button>
-            <Button @click="handleAllAward" class="btn-right"   type="primary">全部发奖</Button>
-            <Button @click="handleClearDisplayActivity" class="btn-right" type="primary">清算费用</Button>
-        </div>
-        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-        <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+    <!-- <h2 class="Title">金银铜清算</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88">
+        <Row>
+          <Col span="7">
+            <Form-item label="品牌名称:" prop="brandId">
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="结算周期:" prop="periodMonth">
+              <Select v-model="formData.periodMonth" placeholder="请选择时间">
+                <Option
+                  :value="item.queryMonth"
+                  v-for="(item,index) in timeDataList"
+                  :key="index"
+                >{{ item.queryMonth}}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动包名:" prop="groupId">
+              <Select
+                v-model="formData.groupId"
+                placeholder="请选择"
+                @on-change="getActivityList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="客户编号:">
+              <Input v-model="formData.joinCode" placeholder="请输入客户编号"></Input>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="陈列活动:">
+              <Select v-model="formData.activityId" placeholder="请选择">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="门店名称:">
+              <Input v-model="formData.storeName" placeholder="请输入门店名称"></Input>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:20px">
+            <div class="searchBox">
+              <Button @click="submit('form')" class="btn-search search_btn" type="primary">查询</Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-up"
+                v-if="showQuery"
+              ></Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-down"
+                v-else
+              ></Button>
             </div>
+          </Col>
+        </Row>
+        <transition name="fade">
+          <Row v-if="showQuery">
+            <Col span="7">
+              <Form-item label="分组名称:">
+                <Input v-model="formData.activityTag" placeholder="请输入分组名称"></Input>
+              </Form-item>
+              <Form-item label="用户ID:">
+                <Input v-model="formData.storeId" placeholder="请输入用户ID"></Input>
+              </Form-item>
+              <Form-item label="业代姓名:">
+                <Input v-model="formData.workerName" placeholder="请输入业代姓名"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="业代手机:">
+                <Input v-model="formData.workerPhone" placeholder="请输入业代手机"></Input>
+              </Form-item>
+              <Form-item label="上传次数:">
+                <Col span="11">
+                  <Select v-model="formData.uploadCountOper">
+                    <Option value="<" label="<"></Option>
+                    <Option value="=" label="="></Option>
+                    <Option value=">" label=">"></Option>
+                  </Select>
+                </Col>
+                <Col span="2" style="text-align: center">至</Col>
+                <Col span="11">
+                  <Input v-model="formData.uploadCount"></Input>
+                </Col>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="区域:">
+                <div @click="showTree" class="area">{{areaName}}</div>
+                <!-- <Input v-model="formData.areaName" placeholder="请选择区域"></Input> -->
+              </Form-item>
+              <Form-item label="合格次数:">
+                <Col span="11">
+                  <Select v-model="formData.auditCountOper">
+                    <Option value="<" label="<"></Option>
+                    <Option value="=" label="="></Option>
+                    <Option value=">" label=">"></Option>
+                  </Select>
+                </Col>
+                <Col span="2" style="text-align: center">至</Col>
+                <Col span="11">
+                  <Input v-model="formData.auditCount"></Input>
+                </Col>
+              </Form-item>
+            </Col>
+          </Row>
+        </transition>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;padding-bottom:20px">
+      <div class="contentTop">
+        <Button @click="exportExcel" class="btn-right" icon="ios-download-outline" type="primary">导出</Button>
+        <Button @click="handleAllAward" class="btn-right" type="primary">全部发奖</Button>
+        <Button @click="handleClearDisplayActivity" class="btn-right" type="primary">清算费用</Button>
+      </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      <Modal v-model='treeShow' @on-ok="areaList">
-            <div style='height: 400px; overflow-y:auto;'>
-                <Tree :data="areaData" ref='tree' multiple show-checkbox></Tree>
-            </div>
-        </Modal>
+    </div>
+    <Modal v-model="treeShow" @on-ok="areaList">
+      <div style="height: 400px; overflow-y:auto;">
+        <Tree :data="areaData" ref="tree" multiple show-checkbox></Tree>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -190,7 +215,6 @@ let auditCountQualified = {
   "0": "不合格"
 };
 import {
-  queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
   queryActivityVOByGroupId //根据活动包名ID获取陈列活动列表
 } from "@/api/common.js";
 import area from "@/config/areaCode.js";
@@ -200,16 +224,12 @@ import {
   callDisplayAwardPrice //全部发奖
 } from "@/api/activity-manage/display-activity-manage.js";
 import {
-  getDisplayActivityListDoQuery, //陈列活动
-  getActivityMonthDict //获取活动月序列表
-} from "@/api/common.js";
-import {
   mergeGiveAwardStatus,
   mergeGiveAwardCheckStatus,
   mergeGiveAwardRecStatus
 } from "@/util/ENUMS.js";
 export default {
-  name:"gold-silver-copper-liquidation-keepAlive",
+  name: "gold-silver-copper-liquidation-keepAlive",
 
   data() {
     return {
@@ -451,11 +471,10 @@ export default {
       res => {
         this.brandList = [];
         Object.entries(res).forEach(item => {
-          this.brandList.push({id:Number(item[0]),brandName:item[1]})
-        })
-        this.formData.brandId = this.brandList[0].id
+          this.brandList.push({ id: Number(item[0]), brandName: item[1] });
+        });
+        this.formData.brandId = this.brandList[0].id;
         this.changeValue(this.formData.brandId);
-        
       }
     );
   },
@@ -471,15 +490,13 @@ export default {
     changePage: function(size) {
       this.init(size, 10);
     },
-    init: function(currentPage, pageSize) {
-      var that = this;
+    init(currentPage, pageSize) {
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = currentPage;
       data["pageSize"] = pageSize;
       data["areaCode"] = this.bizAreaList;
       this.Global.deleteEmptyProperty(data);
-      console.log(data);
       queryDisplayLiquidateRecord(data).then(res => {
         if (res.status == 1) {
           this.pageNum = res.data.items;
@@ -488,8 +505,7 @@ export default {
         }
       });
     },
-    exportExcel: function() {
-      var that = this;
+    exportExcel() {
       var data = this.Global.JsonChange(this.formData);
       if (
         !this.formData.brandId ||
@@ -509,11 +525,6 @@ export default {
     },
     changeValue(value) {
       this.groupList = [];
-      // queryActivityGroupVOByBrandId(value).then(res => {
-      //   if (res && res.status == 1) {
-      //     this.groupList = res.data;
-      //   }
-      // });
       this.Global.doPost(
         "displayYxtg/queryDisplayYxtgActivityGroupList.json",
         {
@@ -548,25 +559,6 @@ export default {
           this.timeDataList = timeDataList;
         }
       });
-    },
-    getActivityMonthDict(val) {
-      //   let params = {
-      //     brandId: this.formData.brandId,
-      //     activityId: val
-      //   };
-      //   getActivityMonthDict(params).then(res => {
-      //     console.log(res);
-      //     if (res && res.data) {
-      //       let timeDataList = [];
-      //       for (const key in res.data) {
-      //         let item = {
-      //           queryMonth: res.data[key]
-      //         };
-      //         timeDataList.push(item);
-      //       }
-      //       this.timeDataList = timeDataList;
-      //     }
-      //   });
     },
     handleClearDisplayActivity() {
       console.log(this.formData);

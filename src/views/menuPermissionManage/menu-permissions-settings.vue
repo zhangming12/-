@@ -52,26 +52,25 @@
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">菜单权限设置</h2> -->
-        <div class="main-container">
-          <div class="box" style='margin-top: 15px;overflow: hidden;'>
-              <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-          </div>
-        </div>
+  <div id="Main">
+    <!-- <h2 class="Title">菜单权限设置</h2> -->
+    <div class="main-container">
+      <div class="box" style="margin-top: 15px;overflow: hidden;">
+        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 import config from "../../util/config.js";
-import { getBrandsList } from "@/util/index.js"; //获取品牌
 export default {
-  name:"menu-permissions-settings-keepAlive",
+  name: "menu-permissions-settings-keepAlive",
 
   data() {
     return {
-      pageSize:10,
-      page:1,
+      pageSize: 10,
+      page: 1,
       columns1: [
         {
           title: "序号",
@@ -103,7 +102,7 @@ export default {
                     click: () => {
                       let queryParams = {
                         brandId: params.row.id,
-                        brandName:params.row.brandName
+                        brandName: params.row.brandName
                       };
 
                       this.$router.push({
@@ -127,12 +126,6 @@ export default {
     };
   },
   created() {
-
-    // getBrandsList()
-    //   .then(res => {
-    //     this.pageData = res.data.datalist;
-    //   })
-
     this.Global.doPostNoLoading("condition/queryAllBrands.json", "", res => {
       this.pageData = [];
       Object.entries(res).forEach(item => {

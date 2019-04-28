@@ -24,106 +24,79 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">陈列申请概况统计</h2> -->
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-                <Row>
-                    <Col span="12">
-                        <Form-item label="申请时间" required prop="queryTime">
-                            <!-- <DatePicker  v-model="formData.queryTime" placeholder="选择日期跟时间" type="datetimerange" ></DatePicker> -->
-                            <Row>
-                                <Col span="11">
-                                    <Form-item prop="queryStartTime">
-                                      <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                                    </Form-item>
-                                </Col>
-                                <Col span="2" style="text-align: center;">至</Col>
-                                <Col span="11">
-                                    <Form-item prop="queryEndTime">
-                                        <data-range hour="24:00" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                                    </Form-item>
-                                </Col>
-                            </Row>
-                        </Form-item>
-                        <Form-item label="陈列活动" prop="brandId" required>
-                            <Select v-model="formData.activityId" placeholder="请选择" clearable>
-                                <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                            </Select> 
-                        </Form-item>                       
-                    </Col>
-                    <Col span="8" offset="1">
-                    <Form-item label="品牌名称" required>
-                        <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
-                            <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                        </Select> 
-                    </Form-item>
-                    
-                    </Col>
-                    <Col span='2' offset="1" style="margin-top:24px">
-                        <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
-                    </Col>
-                </Row>
-            </Form>
+    <!-- <h2 class="Title">陈列申请概况统计</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+        <Row>
+          <Col span="12">
+            <Form-item label="申请时间" required prop="queryTime">
+              <!-- <DatePicker  v-model="formData.queryTime" placeholder="选择日期跟时间" type="datetimerange" ></DatePicker> -->
+              <Row>
+                <Col span="11">
+                  <Form-item prop="queryStartTime">
+                    <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
+                  </Form-item>
+                </Col>
+                <Col span="2" style="text-align: center;">至</Col>
+                <Col span="11">
+                  <Form-item prop="queryEndTime">
+                    <data-range hour="24:00" v-model="formData.queryEndTime"></data-range>
+                  </Form-item>
+                </Col>
+              </Row>
+            </Form-item>
+            <Form-item label="陈列活动" prop="brandId" required>
+              <Select v-model="formData.activityId" placeholder="请选择" clearable>
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="8" offset="1">
+            <Form-item label="品牌名称" required>
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:24px">
+            <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;padding-bottom:20px">
+      <div class="contentTop">
+        <Button @click="exportExcel" class="btn-right" icon="ios-download-outline" type="primary">导出</Button>
       </div>
-      <div class="box" style="margin-top: 15px;padding-bottom:20px">
-        <div class="contentTop">
-
-            <Button @click="exportExcel" class="btn-right"  icon="ios-download-outline"  type="primary">导出</Button>
-        </div>
-        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-        <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-            </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { dispalyShowStatus } from "@/util/ENUMS.js";
 import { getDisplayActivityListDoQuery } from "@/api/common.js";
-import dataRange from "../../../components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import { displayApplyProfileStatistics } from "@/api/activity-manage/display-activity-manage.js";
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
-  name:"apply-survey-statistics-keepAlive",
+  name: "apply-survey-statistics-keepAlive",
   data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       start: {
         time: "",
@@ -185,7 +158,7 @@ export default {
       activityList: []
     };
   },
-  components: {dataRange},
+  components: { dataRange },
   created() {
     this.columns1 = this.columns1.concat(this.defaultList);
     this.Global.doPostNoLoading(
@@ -196,7 +169,7 @@ export default {
         Object.entries(res).forEach(item => {
           this.brandList.push({ id: Number(item[0]), brandName: item[1] });
         });
-        if(this.brandList && this.brandList.length){
+        if (this.brandList && this.brandList.length) {
           this.formData.brandId = this.brandList[0].id;
           this.changeValue(this.formData.brandId);
         }
@@ -215,50 +188,15 @@ export default {
     changePage: function(size) {
       this.init(size, 10);
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(value.time, value.hour);
-    },
     init(currentPage, pageSize) {
-      var that = this;
       var data = this.Global.JsonChange(this.formData);
-      // data["queryStartTime"] = this.Global.createTime(
-      //   this.formData.queryTime[0]
-      // );
-      // data["queryEndTime"] = this.Global.createTime(this.formData.queryTime[1]);
 
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
 
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
+
       this.Global.deleteEmptyProperty(data);
       delete data.queryTime;
       data["currentPage"] = currentPage;
@@ -269,7 +207,7 @@ export default {
           this.pageData = res.data.datalist;
           this.page = res.data.page;
           this.columns1 = [];
-          this.columns1 = that.columns1.concat(that.defaultList);
+          this.columns1 = this.columns1.concat(this.defaultList);
           if (res.data.datalist.length == 0) {
             return;
           }
@@ -347,25 +285,11 @@ export default {
       });
     },
     exportExcel() {
-      var that = this;
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
 
       this.Global.deleteEmptyProperty(data);
       delete data.queryTime;
@@ -375,19 +299,8 @@ export default {
       );
       window.open(url);
     },
-    changeValue: function(value) {
-      var that = this;
+    changeValue(value) {
       this.activityList = [];
-      let brandList = this.brandList;
-      //    for (var i = 0 ; i < brandList.length ; i++) {
-      //        if(value == brandList[i].id){
-      //            this.formData.brandName=brandList[i].brandName;
-      //        }
-      //    }
-      //    this.Global.getActivityList(value,function(res){
-      //        that.activityList = res.datalist;
-      //        that.formData.activityId=res.datalist[0].id;
-      //    })
       getDisplayActivityListDoQuery(value).then(res => {
         if (res && res.status == 1) {
           this.activityList = res.data.datalist;

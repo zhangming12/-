@@ -62,74 +62,89 @@
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">功能权限设置</h2> -->
-        
-        <div class="box">
-            <!-- 品牌 -->
-            <Form :model="formData" label-position="left" :label-width="72">
-            <div class="form-title" style="margin-bottom:10px;">
-                品牌 : <span> {{brandName}}</span>
-            </div>
-            <!-- 选择可用菜单 -->
-            <div class="form-title">选择可用菜单</div>
-                <Form>
-                    <Checkbox-group  v-model="menu" v-if="menuDataList">
-                      <Row>
-                          <Col span="8" style="margin-bottom:20px;" v-for="(item,index) in menuDataList" :key="item.id">
-                              <Row type="flex" align="middle" style="height:80px;">
-                                <Col span="8" style="height:80px;">
-                                    <Checkbox :label="item.id" style="position:relative;top:30px;">
-                                      <div class="imgBox">
-                                        <img :src="item.resIcon" alt="" class="menuImg">
-                                        <p class="menuName">{{item.resName}}</p>
-                                      </div>
-                                      
-                                    </Checkbox>
-                                </Col>
-                                <Col span="5" style="height:30px;">
-                                    <FormItem label="序号:" :label-width=40>
-                                      <!-- <InputNumber :max="20" :min="1" :step="1" style="width:100%;" ></InputNumber> -->
-                                      <input type="number" min="1" max="20" class="numberInput" v-model.number="menuList[index].orderIndex">
-                                    </FormItem>
-                                </Col>
-                                <Col span="9" offset=1 style="height:30px;">
-                                    <Input placeholder="请输入文字角标" v-if="item.iconSign == 3" v-model="menuList[index].resourceText" :maxlength='4'></Input>
-                                </Col>
-                              </Row>
-                          </Col>
-                      </Row>
-                    </Checkbox-group>
-                </Form>
-                
-                <div style="text-align:center;margin:20px 0;">
-                  <i-button type="success" @click="cancel" style="margin-right:10px;">取消</i-button>
-                  <i-button type="primary" @click="submit" style="margin-left:10px;">确定</i-button>
-              </div>
-            </Form> 
-            <!-- 操作日志  -->
-            <div class="form-title" style="margin-top:18px;">操作日志</div>
-            <div style="padding:10px;">
-              <p style="text-indent:20px;" v-for="(item,index) in logList" :key="index">
-                <span>{{index+1}},</span>
-                <span>{{item.createTime | formatDate}}</span>
-                <span>{{item.userName}}</span>
-                设置了
-                <span>{{item.params}}</span>
-                品牌
-                ，增加了
-                <span>{{item.result}}</span>
-            </p>
-            </div>
-        </div>    
+  <div id="Main">
+    <!-- <h2 class="Title">功能权限设置</h2> -->
+
+    <div class="box">
+      <!-- 品牌 -->
+      <Form :model="formData" label-position="left" :label-width="72">
+        <div class="form-title" style="margin-bottom:10px;">
+          品牌 :
+          <span>{{brandName}}</span>
+        </div>
+        <!-- 选择可用菜单 -->
+        <div class="form-title">选择可用菜单</div>
+        <Form>
+          <Checkbox-group v-model="menu" v-if="menuDataList">
+            <Row>
+              <Col
+                span="8"
+                style="margin-bottom:20px;"
+                v-for="(item,index) in menuDataList"
+                :key="item.id"
+              >
+                <Row type="flex" align="middle" style="height:80px;">
+                  <Col span="8" style="height:80px;">
+                    <Checkbox :label="item.id" style="position:relative;top:30px;">
+                      <div class="imgBox">
+                        <img :src="item.resIcon" alt class="menuImg">
+                        <p class="menuName">{{item.resName}}</p>
+                      </div>
+                    </Checkbox>
+                  </Col>
+                  <Col span="5" style="height:30px;">
+                    <FormItem label="序号:" :label-width="40">
+                      <!-- <InputNumber :max="20" :min="1" :step="1" style="width:100%;" ></InputNumber> -->
+                      <input
+                        type="number"
+                        min="1"
+                        max="20"
+                        class="numberInput"
+                        v-model.number="menuList[index].orderIndex"
+                      >
+                    </FormItem>
+                  </Col>
+                  <Col span="9" offset="1" style="height:30px;">
+                    <Input
+                      placeholder="请输入文字角标"
+                      v-if="item.iconSign == 3"
+                      v-model="menuList[index].resourceText"
+                      :maxlength="4"
+                    ></Input>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Checkbox-group>
+        </Form>
+
+        <div style="text-align:center;margin:20px 0;">
+          <i-button type="success" @click="cancel" style="margin-right:10px;">取消</i-button>
+          <i-button type="primary" @click="submit" style="margin-left:10px;">确定</i-button>
+        </div>
+      </Form>
+      <!-- 操作日志  -->
+      <div class="form-title" style="margin-top:18px;">操作日志</div>
+      <div style="padding:10px;">
+        <p style="text-indent:20px;" v-for="(item,index) in logList" :key="index">
+          <span>{{index+1}},</span>
+          <span>{{item.createTime | formatDate}}</span>
+          <span>{{item.userName}}</span>
+          设置了
+          <span>{{item.params}}</span>
+          品牌
+          ，增加了
+          <span>{{item.result}}</span>
+        </p>
+      </div>
     </div>
+  </div>
 </template>
 <script>
-import { dispalyExamineRecStatus } from "@/util/ENUMS.js";
 import { getRoleResource } from "@/api/common.js";
 
 export default {
-  name:"menu-settings",
+  name: "menu-settings",
 
   data() {
     return {

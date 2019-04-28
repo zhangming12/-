@@ -193,57 +193,20 @@
 import area from "../../../config/china_code_data.js";
 
 import {
-  dispalyShowStatus,
   dispalyExamineSuggesteStatus,
   displayParketCheckStatus,
   liquidationState,
   receiveState
 } from "@/util/ENUMS.js";
-import dataRange from "../../../components/data-rang.vue";
+import dataRange from "@/components/data-rang.vue";
 
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import { displayApplyDetail } from "@/api/activity-manage/display-activity-manage.js"; //api
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
-import {
-  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
-  typeQueryActivityGroupVOByBrandId //根据活动包名ID获取陈列活动列表
-} from "@/api/common.js";
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
+
 export default {
   name: "display-partake-detail3-keepAlive",
   data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       showQuery: false,
       start: {
@@ -285,7 +248,7 @@ export default {
           width: 150,
           align: "center",
           render: (h, params) => {
-            return h("div", that.Global.createTime(params.row.uploadTime));
+            return h("div", this.Global.createTime(params.row.uploadTime));
           }
         },
         {
@@ -296,9 +259,9 @@ export default {
           render: (h, params) => {
             return h(
               "div",
-              that.Global.formatYear(params.row.startTime) +
+              this.Global.formatYear(params.row.startTime) +
                 "至" +
-                that.Global.formatYear(params.row.endTime)
+                this.Global.formatYear(params.row.endTime)
             );
           }
         },
@@ -559,12 +522,6 @@ export default {
           });
         }
       );
-      // if(!value) return
-      // typeQueryActivityVOByGroupId({ groupId: value, type: 3 }).then(res => {
-      //   if (res && res.status == 1) {
-      //     this.activityList = res.data;
-      //   }
-      // });
     },
     init(currentPage, pageSize) {
       var data = this.Global.JsonChange(this.formData);
@@ -644,16 +601,6 @@ export default {
           }
         }
       );
-      // typeQueryActivityGroupVOByBrandId({ brandId: value, groupType: 3 }).then(
-      //   res => {
-      //     if (res && res.status == 1) {
-      //       this.groupList = res.data;
-      //       if(res.data && res.data.length){
-      //         this.formData.groupId = res.data[0].id
-      //       }
-      //     }
-      //   }
-      // );
     },
     handleEdit() {
       this.$router.push({

@@ -6,28 +6,28 @@ import fetch from '@/util/fetch';
  * @return {Array}
  */
 
-export function queryDisplayList(dataList){
+export function queryDisplayList(dataList) {
     let data = {
-        data:dataList
+        data: dataList
     }
     return fetch({
-        url:'display/queryDisplayList.json',
-        method:'post',
+        url: 'display/queryDisplayList.json',
+        method: 'post',
         data
     })
- }
+}
 
 /**
  * @desc 陈列活动管理——陈列活动参与明细 列表查询
  */
 
-export function displayApplyDetail(dataList){
+export function displayApplyDetail(dataList) {
     let data = {
-        data:dataList
+        data: dataList
     }
     return fetch({
-        url:'display/displayApplyDetail.json',
-        method:'post',
+        url: 'display/displayApplyDetail.json',
+        method: 'post',
         data
     })
 }
@@ -36,13 +36,13 @@ export function displayApplyDetail(dataList){
  * @desc 陈列活动管理——陈列活动参与明细2 列表查询
  */
 
-export function displayApplyDetailTwo(dataList){
+export function displayApplyDetailTwo(dataList) {
     let data = {
-        data:dataList
+        data: dataList
     }
     return fetch({
-        url:'display/displayApplyDetailTwo.json',
-        method:'post',
+        url: 'display/displayApplyDetailTwo.json',
+        method: 'post',
         data
     })
 }
@@ -53,13 +53,13 @@ export function displayApplyDetailTwo(dataList){
  * @return {ArrayList} 
  */
 
-export function workerStoreDisplayStatistics(dataList){
+export function workerStoreDisplayStatistics(dataList) {
     let data = {
-        data:dataList
+        data: dataList
     }
     return fetch({
-        url:'report/workerStoreDisplayStatistics.json',
-        method:'post',
+        url: 'report/workerStoreDisplayStatistics.json',
+        method: 'post',
         data
     })
 }
@@ -70,13 +70,13 @@ export function workerStoreDisplayStatistics(dataList){
  * @return {ArrayList} 
  */
 
-export function displayApplyStoreDetail(dataList){
+export function displayApplyStoreDetail(dataList) {
     let data = {
-        data:dataList
+        data: dataList
     }
     return fetch({
-        url:'display/displayApplyStoreDetail.json',
-        method:'post',
+        url: 'display/displayApplyStoreDetail.json',
+        method: 'post',
         data
     })
 }
@@ -87,9 +87,9 @@ export function displayApplyStoreDetail(dataList){
  * @return {Promise}
  */
 
-export function displayApplyProfileStatistics(dataList){
+export function displayApplyProfileStatistics(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/report/displayApplyProfileStatistics.json',
@@ -103,9 +103,9 @@ export function displayApplyProfileStatistics(dataList){
  * @return {Promise}
  */
 
-export function storeDisplayUploadScanGrowthCurve(dataList){
+export function storeDisplayUploadScanGrowthCurve(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/report/storeDisplayUploadScanGrowthCurve.json',
@@ -119,9 +119,9 @@ export function storeDisplayUploadScanGrowthCurve(dataList){
  * @return {Promise}
  */
 
-export function workerDisplayUploadCompletionRateRanking(dataList){
+export function workerDisplayUploadCompletionRateRanking(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/report/workerDisplayUploadCompletionRateRanking.json',
@@ -135,9 +135,9 @@ export function workerDisplayUploadCompletionRateRanking(dataList){
  * @return {Promise}
  */
 
-export function workerDisplayUploadPerformanceRanking(dataList){
+export function workerDisplayUploadPerformanceRanking(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/report/workerDisplayUploadPerformanceRanking.json',
@@ -152,9 +152,9 @@ export function workerDisplayUploadPerformanceRanking(dataList){
  * @return {Promise}
  */
 
-export function queryDisplayRetailPurchases(dataList){
+export function queryDisplayRetailPurchases(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/display/queryDisplayRetailPurchases.json',
@@ -168,9 +168,9 @@ export function queryDisplayRetailPurchases(dataList){
  * @return {Promise}
  */
 
-export function displayRetailPurchases(dataList){
+export function displayRetailPurchases(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/display/displayRetailPurchases.json',
@@ -185,9 +185,9 @@ export function displayRetailPurchases(dataList){
  * @return {Promise}
  */
 
-export function queryDisplayLiquidateRecord(dataList){
+export function queryDisplayLiquidateRecord(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         // url: '/display/queryDisplayLiquidateRecord.json',
@@ -203,9 +203,9 @@ export function queryDisplayLiquidateRecord(dataList){
  * @return {Promise}
  */
 
-export function callLiquidateByActivityId(dataList){
+export function callLiquidateByActivityId(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/display/callLiquidateByActivityId.json',
@@ -220,9 +220,9 @@ export function callLiquidateByActivityId(dataList){
  * @return {Promise}
  */
 
-export function callDisplayAwardPrice(dataList){
+export function callDisplayAwardPrice(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/display/callDisplayAwardPrice.json',
@@ -237,9 +237,9 @@ export function callDisplayAwardPrice(dataList){
  * @return {Promise}
  */
 
-export function displayTrackStatistics(dataList){
+export function displayTrackStatistics(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/report/displayTrackStatistics.json',
@@ -249,9 +249,9 @@ export function displayTrackStatistics(dataList){
 }
 
 
-export function displayTrackStatisticsForPeriod(dataList){
+export function displayTrackStatisticsForPeriod(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/report/displayTrackStatisticsForPeriod.json',
@@ -266,9 +266,9 @@ export function displayTrackStatisticsForPeriod(dataList){
  * @return {Promise}
  */
 
-export function querySignRecord(dataList){
+export function querySignRecord(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/cnySignRecord/querySignRecord.json',
@@ -283,9 +283,9 @@ export function querySignRecord(dataList){
  * @return {Promise}
  */
 
-export function signDoDelete(dataList){
+export function signDoDelete(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/cnySignRecord/doDelete.json',
@@ -300,9 +300,9 @@ export function signDoDelete(dataList){
  * @return {Promise}
  */
 
-export function cnySignRecordImport(dataList){
+export function cnySignRecordImport(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/cnySignRecord/cnySignRecordImport.json',
@@ -316,9 +316,9 @@ export function cnySignRecordImport(dataList){
  * @return {Promise}
  */
 
-export function signLightMap(dataList){
+export function signLightMap(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/cnySignRecord/signLightMap.json',
@@ -326,9 +326,9 @@ export function signLightMap(dataList){
         data
     })
 }
-export function signLightMap1(dataList){
+export function signLightMap1(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/cnySignRecord/signLightMap.json',
@@ -337,9 +337,9 @@ export function signLightMap1(dataList){
     })
 }
 
-export function cnySignCount(dataList){
+export function cnySignCount(dataList) {
     let data = {
-        data:dataList,
+        data: dataList,
     }
     return fetch({
         url: '/cnySignRecord/cnySignCount.json',
@@ -347,21 +347,3 @@ export function cnySignCount(dataList){
         data
     })
 }
-
-/**
- * @desc 陈列活动管理——广东陈列清算奖励
- * @param {Object} 
- * @return {Promise}
- */
-
-export function gdDisplayClear(dataList){
-    let data = {
-        data:dataList,
-    }
-    return fetch({
-        url: '/displayYxtg/queryDisplayLiquidateRecord.json',
-        method: 'post',
-        data
-    })
-}
-

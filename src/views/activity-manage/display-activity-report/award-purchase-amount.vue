@@ -67,180 +67,175 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">陈列活动进货量管理</h2> -->
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="80" :rules="rule">
+    <!-- <h2 class="Title">陈列活动进货量管理</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="80" :rules="rule">
+        <Row>
+          <Col span="21">
+            <Row>
+              <Col span="14">
+                <Form-item label="时间:" required>
+                  <Row>
+                    <Col span="11">
+                      <Form-item prop="queryStartTime">
+                        <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
+                      </Form-item>
+                    </Col>
+                    <Col span="2" style="text-align: center;">至</Col>
+                    <Col span="11">
+                      <Form-item prop="queryEndTime">
+                        <data-range placeholder="结束时间" hour="24:00" v-model="formData.queryEndTime"></data-range>
+                      </Form-item>
+                    </Col>
+                  </Row>
+                </Form-item>
+              </Col>
+              <Col span="10">
+                <Form-item label="品牌名称:" required>
+                  <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in brandList"
+                      :key="index"
+                    >{{ item.brandName }}</Option>
+                  </Select>
+                </Form-item>
+              </Col>
+              <Col span="24">
                 <Row>
-                    <Col span='21'> 
-                        <Row>
-                          <Col span='14'>
-                              <Form-item label="时间:" required>
-                                <Row>
-                                    <Col span="11">
-                                        <Form-item prop="queryStartTime">
-                                          <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                                        </Form-item>
-                                    </Col>
-                                    <Col span="2" style="text-align: center;">至</Col>
-                                    <Col span="11">
-                                        <Form-item prop="queryEndTime">
-                                            <data-range placeholder="结束时间" hour="24:00" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                                        </Form-item>
-                                    </Col>
-                                </Row>
-                              </Form-item>
-                          </Col>
-                          <Col span='10'>
-                              <Form-item label="品牌名称:" required>
-                                  <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
-                                      <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                                  </Select>  
-                              </Form-item>
-                          </Col>
-                          <Col span="24">
-                            <Row>
-                              <Col span='8'>
-                                  <Form-item label="活动包名:" prop="groupId" required>
-                                      <Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
-                                          <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                                      </Select>
-                                  </Form-item> 
-                              </Col>
-                              <Col span='8'>
-                                  <Form-item label="活动名称:" prop="activityId">
-                                    <Select v-model="formData.activityId" placeholder="请选择" @on-change="getpresentList" clearable>
-                                      <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                                    </Select>
-                                  </Form-item>
-                              </Col>
-                              <Col span='8'>
-                                  <Form-item label="客户编号:" prop="areaCode">
-                                      <Input  v-model="formData.joinCode" placeholder="请输入客户编号"></Input> 
-                                  </Form-item> 
-                              </Col>
-                            </Row>
-                          </Col>
-                          
-                        </Row>              
-                    </Col>
-                    <Col span="2" offset="1" style="margin-top:24px">
-                        <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
-                    </Col>
+                  <Col span="8">
+                    <Form-item label="活动包名:" prop="groupId" required>
+                      <Select
+                        v-model="formData.groupId"
+                        placeholder="请选择"
+                        @on-change="getActivityList"
+                        clearable
+                      >
+                        <Option
+                          :value="item.id"
+                          v-for="(item,index) in groupList"
+                          :key="index"
+                        >{{ item.groupName }}</Option>
+                      </Select>
+                    </Form-item>
+                  </Col>
+                  <Col span="8">
+                    <Form-item label="活动名称:" prop="activityId">
+                      <Select
+                        v-model="formData.activityId"
+                        placeholder="请选择"
+                        @on-change="getpresentList"
+                        clearable
+                      >
+                        <Option
+                          :value="item.id"
+                          v-for="(item,index) in activityList"
+                          :key="index"
+                        >{{ item.name }}</Option>
+                      </Select>
+                    </Form-item>
+                  </Col>
+                  <Col span="8">
+                    <Form-item label="客户编号:" prop="areaCode">
+                      <Input v-model="formData.joinCode" placeholder="请输入客户编号"></Input>
+                    </Form-item>
+                  </Col>
                 </Row>
-            </Form>
-      </div>
-      <div class="box" style="padding-bottom:20px">        
-        <div class='contentTop'>
-            <i-button class="btn" @click="exportUserExcel" type="info" style="width:120px;">导出客户名单</i-button>
-                <i-button class="btn"  @click="exportAllExcel" type="success">导出</i-button>
-            <Button @click="uploadExcel" class="btn-right"  :disabled="isUpload" type="primary">上传</Button> 
-            
-            <wpicture-upload  :wordUploadFlag='wordUploadFlag'  @wordPicturnUploadSuccess='picturnUploadSuccess'></wpicture-upload>
-            <div class='demo' @click='exportExcel'> 
-                <Icon type="ios-paper-outline" size='14' color='#ff8a34'></Icon>
-                <span>下载模版</span>
-            </div>
+              </Col>
+            </Row>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:24px">
+            <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="box" style="padding-bottom:20px">
+      <div class="contentTop">
+        <i-button class="btn" @click="exportUserExcel" type="info" style="width:120px;">导出客户名单</i-button>
+        <i-button class="btn" @click="exportAllExcel" type="success">导出</i-button>
+        <Button @click="uploadExcel" class="btn-right" :disabled="isUpload" type="primary">上传</Button>
+
+        <wpicture-upload
+          :wordUploadFlag="wordUploadFlag"
+          @wordPicturnUploadSuccess="picturnUploadSuccess"
+        ></wpicture-upload>
+        <div class="demo" @click="exportExcel">
+          <Icon type="ios-paper-outline" size="14" color="#ff8a34"></Icon>
+          <span>下载模版</span>
         </div>
-        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-        <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
-            </div>
+      </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
         </div>
       </div>
-      <Modal v-model="updatePush" >
-            <h3 slot="header" style="text-align:center;">进货量更新推送</h3>
-            <Form :label-width="85">
-                <Form-item label="品牌名称:" prop="brandId">
-						<Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue" clearable>
-							<Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-						</Select>
-					</Form-item>
-                <Form-item label="活动包名:" prop="groupId">
-						<Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
-							<Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-						</Select>
-					</Form-item>
-                    <Form-item label="进货量更新时间:" prop="" :label-width="120">
-						<span></span>
-					</Form-item>
-            </Form>
-            <div slot="footer" style="text-align:center">
-                <i-button type="error" @click="close">取消</i-button>
-                <i-button type="success" @click="">发送</i-button>
-            </div>
-		</Modal>
+    </div>
+    <Modal v-model="updatePush">
+      <h3 slot="header" style="text-align:center;">进货量更新推送</h3>
+      <Form :label-width="85">
+        <Form-item label="品牌名称:" prop="brandId">
+          <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue" clearable>
+            <Option
+              :value="item.id"
+              v-for="(item,index) in brandList"
+              :key="index"
+            >{{ item.brandName }}</Option>
+          </Select>
+        </Form-item>
+        <Form-item label="活动包名:" prop="groupId">
+          <Select
+            v-model="formData.groupId"
+            placeholder="请选择"
+            @on-change="getActivityList"
+            clearable
+          >
+            <Option
+              :value="item.id"
+              v-for="(item,index) in groupList"
+              :key="index"
+            >{{ item.groupName }}</Option>
+          </Select>
+        </Form-item>
+        <Form-item label="进货量更新时间:" prop :label-width="120">
+          <span></span>
+        </Form-item>
+      </Form>
+      <div slot="footer" style="text-align:center">
+        <i-button type="error" @click="close">取消</i-button>
+        <i-button type="success" @click>发送</i-button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
 import {
-  queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
-  queryActivityVOByGroupId, //根据活动包名ID获取陈列活动列表
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 import {
   queryDisplayRetailPurchases, //列表
   displayRetailPurchases //导入
 } from "@/api/activity-manage/display-activity-manage.js";
 
-import dataRange from "../../../components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import config from "@/util/config.js";
 
 import wpictureUpload from "@/components/word-picture-upload.vue";
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
-  name:"award-purchase-amount-keepAlive",
+  name: "award-purchase-amount-keepAlive",
   components: {
     wpictureUpload,
     dataRange
   },
   data() {
-    const that = this;
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       updatePush: false,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME,
@@ -352,21 +347,6 @@ export default {
             return h("div", this.Global.createTime(params.row.createTime));
           }
         }
-        // {
-        //   title: "进货SKU",
-        //   key: "joinClass",
-        //   width: 130,
-        //   align: "center"
-        // },
-        // {
-        //   title: "进货时间",
-        //   key: "joinTime",
-        //   width: 160,
-        //   align: "center",
-        //   render: (h, params) => {
-        //     return h("div", that.Global.createTime(params.row.joinTime));
-        //   }
-        // }
       ],
       pageData: [],
       keyList: [],
@@ -389,7 +369,7 @@ export default {
         Object.entries(res).forEach(item => {
           this.brandList.push({ id: Number(item[0]), brandName: item[1] });
         });
-        if(this.brandList && this.brandList.length){
+        if (this.brandList && this.brandList.length) {
           this.formData.brandId = this.brandList[0].id;
           this.changeValue(this.formData.brandId);
         }
@@ -413,54 +393,16 @@ export default {
         }
       });
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(value.time, value.hour);
-    },
     changePage(size) {
       this.init(size, 10);
     },
     init(currentPage, pageSize) {
       var data = this.Global.JsonChange(this.formData);
-      // data["queryStartTime"] = this.Global.createTime(
-      //   this.formData.queryStartTime
-      // );
-      // data["queryEndTime"] = this.Global.createTime(
-      //   this.formData.queryEndTime.getTime() + (24 * 3600000 - 1000)
-      // );
-
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
+
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = currentPage;
       data["pageSize"] = pageSize;
@@ -488,7 +430,6 @@ export default {
         return false;
       }
 
-      
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       var url = this.Global.getExportUrl(
@@ -499,30 +440,11 @@ export default {
     },
     exportAllExcel() {
       var data = this.Global.JsonChange(this.formData);
-      // data["queryStartTime"] = this.Global.createTime(
-      //   this.formData.queryStartTime
-      // );
-      // data["queryEndTime"] = this.Global.createTime(
-      //   this.formData.queryEndTime.getTime() + (24 * 3600000 - 1000)
-      // );
-
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
+
       delete data["brandName"];
       this.Global.deleteEmptyProperty(data);
       var url = this.Global.getExportUrl(
@@ -534,7 +456,7 @@ export default {
     changeValue(value) {
       this.groupList = [];
       this.formData.groupId = "";
-      if(!value) return;
+      if (!value) return;
       this.Global.doPostNoLoading(
         "condition/queryGroup.json",
         { date: 7, activityType: 3, scope: "a", brandId: value },
@@ -548,16 +470,11 @@ export default {
           }
         }
       );
-      // queryActivityGroupVOByBrandId(value).then(res => {
-      //   if (res && res.status == 1) {
-      //     this.groupList = res.data;
-      //   }
-      // });
     },
     getActivityList(value) {
       this.activityList = [];
       this.formData.activityId = "";
-      if(!value) return ;
+      if (!value) return;
       this.Global.doPostNoLoading(
         "condition/queryActivity.json",
         { date: 7, activityType: 3, scope: "a", groupId: value },
@@ -613,24 +530,11 @@ export default {
           this.isUpload = false;
         }
       });
-      // this.Global.doPost('worker/uploadBrandWorker.json',{
-      //     loadFilePath: this.uploadUrl,
-      //     brandId: that.activityData.brandId,
-      //     activityId: that.activityData.id,
-      //     brandName: that.activityData.brandName
-      // },function(){
-      //     that.init();
-      //     that.uploadText =  '上传参与业代名单';
-      // })
     },
     picturnUploadSuccess(val, val1) {
-      // if(val){
       this.uploadUrl = val;
       this.wordUploadFlag = val1;
-      // }
     }
   }
 };
 </script>
-
-

@@ -110,131 +110,140 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">陈列折扣使用情况跟踪-品牌及经销商</h2> -->
-		<div class="box">
-			<Form ref="form" :model="formData" :label-width="85">
-				<Row>
-					<Col span="7">
+  <div id="Main">
+    <!-- <h2 class="Title">陈列折扣使用情况跟踪-品牌及经销商</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="85">
+        <Row>
+          <Col span="7">
             <Form-item label="品牌名称:" prop="brandId">
-              <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue" clearable>
-                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
+              <Select
+                v-model="formData.brandId"
+                placeholder="请选择"
+                @on-change="changeValue"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
               </Select>
             </Form-item>
             <Form-item label="分组名称:" prop="presentId">
               <Select v-model="formData.presentId" placeholder="请选择" clearable>
-                <Option :value="item.id" v-for="(item,index) in presentNameList" :key="index">{{ item.activityTag }}</Option>
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in presentNameList"
+                  :key="index"
+                >{{ item.activityTag }}</Option>
               </Select>
             </Form-item>
-					</Col>
-					<Col span="7">
-					<Form-item label="活动包名:" prop="groupId">
-						<Select v-model="formData.groupId" placeholder="请选择" @on-change="getActivityList" clearable>
-							<Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-						</Select>
-					</Form-item>
-					<Form-item label="折扣名称:" prop="goodsName">
-						<Input v-model.trim="formData.goodsName" placeholder="请输入折扣名称"></Input>
-					</Form-item>
-
-					</Col>
-					<Col span="7">
-					<Form-item label="活动名称:" prop="activityId">
-						<Select v-model="formData.activityId" placeholder="请选择" @on-change="getpresentList" clearable>
-							<Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-						</Select>
-					</Form-item>
-          <Form-item label="线路编号:">
-            <Input v-model.trim="formData.salesRoute" placeholder="请输入线路编号"></Input>
-          </Form-item>
-          <!-- <Form-item label="经销商名称:" prop="supervisorId">
+          </Col>
+          <Col span="7">
+            <Form-item label="活动包名:" prop="groupId">
+              <Select
+                v-model="formData.groupId"
+                placeholder="请选择"
+                @on-change="getActivityList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="折扣名称:" prop="goodsName">
+              <Input v-model.trim="formData.goodsName" placeholder="请输入折扣名称"></Input>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动名称:" prop="activityId">
+              <Select
+                v-model="formData.activityId"
+                placeholder="请选择"
+                @on-change="getpresentList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in activityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="线路编号:">
+              <Input v-model.trim="formData.salesRoute" placeholder="请输入线路编号"></Input>
+            </Form-item>
+            <!-- <Form-item label="经销商名称:" prop="supervisorId">
             <Input v-model.trim="formData.supervisorId" placeholder="请输入经销商编号"></Input>
-          </Form-item> -->
-					</Col>
-					<Col span='2' offset="1" style="margin-top:20px">
-					<div class="searchBox">
-						<Button @click="submit()" class="btn-search  search_btn" type="primary">查询</Button>
-            <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
-                <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button>
-						</div>
-
-					</Col>
-				</Row>
-				<transition name="fade">
-					<Row v-if="showQuery">
-						<Col span='7'>
-            <Form-item label="业代编号:">
-							<Input v-model.trim="formData.workerId" placeholder="请输入业代编号"></Input>
-						</Form-item>
-						</Col>
-						<Col span='7'></Col>
-						<Col span='7'></Col>
-					</Row>
-				</transition>
-			</Form>
-		</div>
-		<div class="box" style='margin-top: 15px;overflow: hidden;'>
-			<div class='contentTop'>
-				<Button class="btn-export" icon="ios-download-outline" @click="exportExcel" type="primary">导出</Button>
-			</div>
-			<Table :columns="columns1" :data="pageData" disabled-hover></Table>
-
-		</div>
-		<div style="margin: 10px;overflow: hidden">
-			<div style="float: right;">
-				<Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-			</div>
-		</div>
-		<!-- <Modal v-model="showVideoPlay" transfer class-name="vertical-center-modal" >
+            </Form-item>-->
+          </Col>
+          <Col span="2" offset="1" style="margin-top:20px">
+            <div class="searchBox">
+              <Button @click="submit()" class="btn-search search_btn" type="primary">查询</Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-up"
+                v-if="showQuery"
+              ></Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-down"
+                v-else
+              ></Button>
+            </div>
+          </Col>
+        </Row>
+        <transition name="fade">
+          <Row v-if="showQuery">
+            <Col span="7">
+              <Form-item label="业代编号:">
+                <Input v-model.trim="formData.workerId" placeholder="请输入业代编号"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7"></Col>
+            <Col span="7"></Col>
+          </Row>
+        </transition>
+      </Form>
+    </div>
+    <div class="box" style="margin-top: 15px;overflow: hidden;">
+      <div class="contentTop">
+        <Button
+          class="btn-export"
+          icon="ios-download-outline"
+          @click="exportExcel"
+          type="primary"
+        >导出</Button>
+      </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+    </div>
+    <div style="margin: 10px;overflow: hidden">
+      <div style="float: right;">
+        <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+      </div>
+    </div>
+    <!-- <Modal v-model="showVideoPlay" transfer class-name="vertical-center-modal" >
 			<video :src="radioUrl" controls></video>
       <div slot="footer" style="display:none;"></div>
-		</Modal> -->
-	</div>
+    </Modal>-->
+  </div>
 </template>
 
 <script>
 import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-  EDFAULT_START_7AGOTIME
-} from "@/util/index.js"; //搜索条件默认时间
-import { monitorRecord } from "@/util/ENUMS.js";
-import {
-  queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
-  queryActivityVOByGroupId, //根据活动包名ID获取陈列活动列表
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
   name: "display-prizes-racking-keepAlive",
   data() {
-    const validateStart = (rule, value, callback) => {
-      // 验证开始时间
-      if (value == "") {
-        callback(new Error("请输入开始时间"));
-      } else {
-        if (this.formData.queryEndTime !== "") {
-          // 对结束时间单独验证
-          this.$refs.form.validateField("queryEndTime");
-        }
-        callback();
-      }
-    };
-    const validateEnd = (rule, value, callback) => {
-      // 验证结束时间
-      if (value == "") {
-        callback(new Error("请输入结束时间"));
-      } else {
-        const str = new Date(this.formData.queryStartTime).getTime();
-        const end = new Date(value).getTime();
-        if (end < str) {
-          // 判断开始时间是否大于结束时间
-          callback(new Error("开始时间大于结束时间"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       showQuery: false,
       formData: {

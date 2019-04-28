@@ -137,105 +137,127 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">经销商管理</h2> -->
-      <div class="main-container">
-        <div class="box" >
-          <Form ref="form" @keyup.enter="submit" class="form" :model="formData" :label-width="10" :rules="rule">
-              <div class="container">
-                <div class="btn-left w18">
-                  <Form-item  required>
-                    <Select v-model="formData.brandId" placeholder="品牌名称" clearable>
-                        <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                    </Select>
-                  </Form-item>
-                </div>
-                <!-- <div class="btn-left w18">
+    <!-- <h2 class="Title">经销商管理</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form
+          ref="form"
+          @keyup.enter="submit"
+          class="form"
+          :model="formData"
+          :label-width="10"
+          :rules="rule"
+        >
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required>
+                <Select v-model="formData.brandId" placeholder="品牌名称" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <!-- <div class="btn-left w18">
                   <Form-item  required>
                     <Select v-model="formData.brandId" placeholder="经销商名称" @on-change="queryDistributorList">
                         <Option :value="item.id" v-for="(item,index) in distributorList" :key="index">{{ item.distributor }}</Option>
                     </Select>
                   </Form-item>
-                </div> -->
-                
-                
-              </div>
-              <div class="btn-left w10">
-                <div class="searchBox">
-                  <div class="btn-right search-right" @click="submit('form')">
-                    <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                  </div>
-                </div>
-              </div>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">此表共包含<span class='numColor'>{{ pageNum }}</span>条数据</span>
-              
-              <addNewBtn class="btn-right ml20" @btnClick="showModal" />
-              <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
-            </div>
-            <!-- <Table :columns="columns1" :data="pageData" disabled-hover></Table> -->
-            <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" ></hhTable>
-        </div>
-        <div class="page-box">
-          <div style="float: right;">
-            <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+            </div>-->
           </div>
+          <div class="btn-left w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+              </div>
+            </div>
+          </div>
+        </Form>
+      </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            此表共包含
+            <span class="numColor">{{ pageNum }}</span>条数据
+          </span>
+
+          <addNewBtn class="btn-right ml20" @btnClick="showModal"/>
+          <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
+        </div>
+        <!-- <Table :columns="columns1" :data="pageData" disabled-hover></Table> -->
+        <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      
-      <myModal class="myModal"
-          @close="closeModal"
-          width="520"
-          :modal="myModalisShow">
-        <div slot="main" class="modal-main">
-          <h3>{{type == 'modify' ? '修改经销商' :type == 'look' ? '查看经销商' :'新建经销商'}}</h3>
-          <div class="modal-table">
-              <Form ref="form" :model="formDatas" :label-width="88">
-                  <Form-item label="品牌名称" required>
-                      <Select :disabled="type != 'add' " v-model="formDatas.brandId" placeholder="品牌名称" @on-change='getBrandName'>
-                        <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                      </Select>
-                  </Form-item>
-                  <Form-item label="经销商名称" required>
-                      <Input :disabled="type == 'look'" v-model.trim="formDatas.merchantName" placeholder="经销商名称" />
-                  </Form-item>
-                  <Form-item label="经销商描述" required>
-                      <Input :disabled="type == 'look'" v-model.trim="formDatas.summary" placeholder="经销商描述" />
-                  </Form-item>
-                  <div class="modal-fotter" style="text-align:center;">
-                      <Button @click="closeModal" type="default">取消</Button>
-                      <Button v-if="type != 'look'" @click="saveNewPresent" type="default">确定</Button>
-                  </div>
-              </Form>
-          </div>
+    </div>
+
+    <myModal class="myModal" @close="closeModal" width="520" :modal="myModalisShow">
+      <div slot="main" class="modal-main">
+        <h3>{{type == 'modify' ? '修改经销商' :type == 'look' ? '查看经销商' :'新建经销商'}}</h3>
+        <div class="modal-table">
+          <Form ref="form" :model="formDatas" :label-width="88">
+            <Form-item label="品牌名称" required>
+              <Select
+                :disabled="type != 'add' "
+                v-model="formDatas.brandId"
+                placeholder="品牌名称"
+                @on-change="getBrandName"
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="经销商名称" required>
+              <Input
+                :disabled="type == 'look'"
+                v-model.trim="formDatas.merchantName"
+                placeholder="经销商名称"
+              />
+            </Form-item>
+            <Form-item label="经销商描述" required>
+              <Input
+                :disabled="type == 'look'"
+                v-model.trim="formDatas.summary"
+                placeholder="经销商描述"
+              />
+            </Form-item>
+            <div class="modal-fotter" style="text-align:center;">
+              <Button @click="closeModal" type="default">取消</Button>
+              <Button v-if="type != 'look'" @click="saveNewPresent" type="default">确定</Button>
+            </div>
+          </Form>
         </div>
-      </myModal>
+      </div>
+    </myModal>
   </div>
 </template>
 
 <script>
 import { queryDisPlayApplyAudit } from "@/api/activity-manage/display-apply-examine.js"; //api
-import dataRange from "../../components/data-rang.vue";
-import exportBtn from "../../components/Button/export-btn.vue";
-import addNewBtn from "../../components/Button/addNew-btn.vue";
-import myModal from "../../components/Modal/my-modal.vue";
+import dataRange from "@/components/data-rang.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
+import addNewBtn from "@/components/Button/addNew-btn.vue";
+import myModal from "@/components/Modal/my-modal.vue";
 import hhTable from "@/components/table/table.vue";
 import upData from "@/assets/js/upload.js";
 import PROJECT_CONFIG from "@/util/config.js";
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
 import {
-  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
-  typeQueryActivityGroupVOByBrandId, //根据活动包名ID获取陈列活动列表
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
-import { displayApplyDetail } from "@/api/activity-manage/display-activity-manage.js"; //api
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
   name: "distributor-manage-keepAlive",
   data() {

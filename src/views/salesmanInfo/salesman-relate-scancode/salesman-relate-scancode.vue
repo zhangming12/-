@@ -62,7 +62,6 @@ export default {
   name:"salesman-relate-scancode-keepAlive",
 
   data() {
-    const that = this;
     return {
       formData: {
         brandId: "",

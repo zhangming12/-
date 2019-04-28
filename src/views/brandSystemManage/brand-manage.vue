@@ -155,141 +155,159 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">品牌管理</h2> -->
-      <div class="main-container">
-        
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">此表共包含<span class='numColor'>{{ pageNum }}</span>条数据</span>
-              
-              <addNewBtn class="btn-right ml20" @btnClick="showModal" />
-              <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
-            </div>
-            <!-- <Table :columns="columns1" :data="pageData" disabled-hover></Table> -->
-            <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" ></hhTable>
+    <!-- <h2 class="Title">品牌管理</h2> -->
+    <div class="main-container">
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            此表共包含
+            <span class="numColor">{{ pageNum }}</span>条数据
+          </span>
+
+          <addNewBtn class="btn-right ml20" @btnClick="showModal"/>
+          <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
         </div>
-        <div class="page-box">
-          <div style="float: right;">
-            <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        <!-- <Table :columns="columns1" :data="pageData" disabled-hover></Table> -->
+        <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
+    </div>
+    <!-- 新建/修改品牌 -->
+    <myModal class="myModal" @close="closeModal" width="520" :modal="myModalisShow">
+      <div slot="main" class="modal-main">
+        <h3>{{type == 'modify' ? '修改品牌信息' : type == 'look' ? '查看品牌' :'新建品牌'}}</h3>
+        <div class="modal-table">
+          <Form ref="form" :model="formDatas" :label-width="88">
+            <Form-item label="品牌名称" required>
+              <!-- <Select :disabled="type == 'look'" v-model="formDatas.brandId" placeholder="品牌名称">
+                        <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
+              </Select>-->
+              <Input
+                :disabled="type == 'modify'"
+                v-model.trim="formDatas.brandName"
+                placeholder="品牌名称"
+              />
+            </Form-item>
+            <Form-item label="品牌描述" required>
+              <Input
+                :disabled="type == 'look'"
+                v-model.trim="formDatas.brandDesc"
+                placeholder="品牌描述"
+              />
+            </Form-item>
+            <Form-item label="授信额度" required>
+              <Input
+                :disabled="type == 'look'"
+                v-model.trim="formDatas.creditLine"
+                placeholder="授信额度"
+              />
+            </Form-item>
+            <Form-item label="联系人" required>
+              <Input
+                :disabled="type == 'look'"
+                v-model.trim="formDatas.userName"
+                placeholder="联系人"
+              />
+            </Form-item>
+            <Form-item label="账号" required>
+              <Input
+                :disabled="type == 'look'"
+                v-model.trim="formDatas.loginAccount"
+                placeholder="账号"
+              />
+            </Form-item>
+            <Form-item label="手机号" required>
+              <Input :disabled="type == 'look'" v-model.trim="formDatas.phone" placeholder="手机号"/>
+            </Form-item>
+            <Form-item v-if="type == 'add'" label="密码" required>
+              <Input
+                :disabled="type == 'look'"
+                type="password"
+                v-model.trim="formDatas.loginPwd"
+                placeholder="密码"
+              />
+            </Form-item>
+            <div class="upload-image-box">
+              <p>
+                <span style="color:red;">*</span>
+                <span>品牌图标</span>
+              </p>
+              <div class="upload-box">
+                <Upload
+                  action="https://hbrand.oss-cn-hangzhou.aliyuncs.com"
+                  :data="upData"
+                  :before-upload="beforeUpload"
+                  :on-success="UploadLogoUrl"
+                  :show-upload-list="false"
+                  :format="['jpg','jpeg','png']"
+                  :on-format-error="handleFormatError"
+                >
+                  <img :src="formDatas.logoUrl " alt v-if="formDatas.logoUrl ">
+                  <img src="../../assets/image/imgBg.png" alt v-else>
+                  <div class="zhezhao" @click.stop.prevent="zhezhaoClick" v-if="type == 'look'"></div>
+                </Upload>
+              </div>
+            </div>
+            <div class="modal-fotter" style="text-align:center;">
+              <!-- <Button @click="closeModal" type="default">取消</Button> -->
+              <Button v-if="type != 'add'" @click="closeModal" type="default">取消</Button>
+              <Button v-if="type == 'add'" @click="saveNewPresent" type="default">下一步，设置菜单</Button>
+              <Button v-else @click="saveNewPresent" type="default">确定</Button>
+            </div>
+          </Form>
+        </div>
+      </div>
+    </myModal>
+    <!-- 设置菜单 -->
+    <myModal class="myModal" @close="closeModal" width="800" :modal="myMenuisShow">
+      <div slot="main" class="modal-main">
+        <h3>菜单选择</h3>
+        <div class="modal-table">
+          <div class="selectBox">
+            <div class="left">
+              <Tree @on-check-change="checkChange" ref="fatherTree" :data="baseData" show-checkbox></Tree>
+            </div>
+            <div class="right">
+              <Tree :data="checkedData" ref="tree"></Tree>
+            </div>
+          </div>
+          <div class="modal-fotter" style="text-align:center;">
+            <Button @click="closeModal" type="default">取消</Button>
+            <Button v-if="type != 'look'" @click="saveMenu" type="default">保存</Button>
           </div>
         </div>
       </div>
-      <!-- 新建/修改品牌 -->
-      <myModal class="myModal"
-          @close="closeModal"
-          width="520"
-          :modal="myModalisShow">
-        <div slot="main" class="modal-main">
-          <h3>{{type == 'modify' ? '修改品牌信息' : type == 'look' ? '查看品牌' :'新建品牌'}}</h3>
-          <div class="modal-table">
-              <Form ref="form" :model="formDatas" :label-width="88">
-                  <Form-item label="品牌名称" required>
-                      <!-- <Select :disabled="type == 'look'" v-model="formDatas.brandId" placeholder="品牌名称">
-                        <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                      </Select> -->
-                      <Input :disabled="type == 'modify'" v-model.trim="formDatas.brandName" placeholder="品牌名称" />
-                  </Form-item>
-                  <Form-item label="品牌描述" required>
-                      <Input :disabled="type == 'look'" v-model.trim="formDatas.brandDesc" placeholder="品牌描述" />
-                  </Form-item>
-                  <Form-item label="授信额度" required>
-                      <Input :disabled="type == 'look'" v-model.trim="formDatas.creditLine" placeholder="授信额度" />
-                  </Form-item>
-                  <Form-item label="联系人" required>
-                      <Input :disabled="type == 'look'" v-model.trim="formDatas.userName" placeholder="联系人" />
-                  </Form-item>
-                  <Form-item label="账号" required>
-                      <Input :disabled="type == 'look'" v-model.trim="formDatas.loginAccount" placeholder="账号" />
-                  </Form-item>
-                  <Form-item label="手机号" required>
-                      <Input :disabled="type == 'look'" v-model.trim="formDatas.phone" placeholder="手机号" />
-                  </Form-item>
-                  <Form-item v-if="type == 'add'" label="密码" required>
-                      <Input :disabled="type == 'look'" type="password" v-model.trim="formDatas.loginPwd" placeholder="密码" />
-                  </Form-item>
-                  <div class="upload-image-box">
-                      <p>
-                          <span style="color:red;">*</span>
-                          <span> 品牌图标</span>
-                      </p>
-                      <div class="upload-box">
-                        <Upload action="https://hbrand.oss-cn-hangzhou.aliyuncs.com" 
-                            :data="upData" 
-                            :before-upload="beforeUpload" 
-                            :on-success="UploadLogoUrl" 
-                            :show-upload-list="false"
-                            :format="['jpg','jpeg','png']"
-                            :on-format-error="handleFormatError">
-                            <img :src="formDatas.logoUrl " alt="" v-if="formDatas.logoUrl ">
-                            <img src="../../assets/image/imgBg.png" alt="" v-else>
-                            <div class="zhezhao" @click.stop.prevent="zhezhaoClick" v-if="type == 'look'"></div>
-                        </Upload>
-                      </div>
-                  </div>
-                  <div class="modal-fotter" style="text-align:center;">
-                      <!-- <Button @click="closeModal" type="default">取消</Button> -->
-                      <Button v-if="type != 'add'" @click="closeModal" type="default">取消</Button>
-                      <Button v-if="type == 'add'" @click="saveNewPresent" type="default">下一步，设置菜单</Button>
-                      <Button v-else @click="saveNewPresent" type="default">确定</Button>
-                      
-                  </div>
-              </Form>
-          </div>
-        </div>
-      </myModal>
-      <!-- 设置菜单 -->
-      <myModal class="myModal"
-          @close="closeModal"
-          width="800"
-          :modal="myMenuisShow">
-        <div slot="main" class="modal-main">
-          <h3>菜单选择</h3>
-          <div class="modal-table">
-            <div class="selectBox">
-                <div class="left">
-                  <Tree @on-check-change='checkChange' ref="fatherTree"  :data="baseData" show-checkbox></Tree>
-                </div>
-                <div class="right">
-                  <Tree :data="checkedData" ref="tree"></Tree>
-                </div>
-            </div>
-            <div class="modal-fotter" style="text-align:center;">
-                <Button @click="closeModal" type="default">取消</Button>
-                <Button v-if="type != 'look'" @click="saveMenu" type="default">保存</Button>
-            </div>
-          </div>
-        </div>
-      </myModal>
+    </myModal>
   </div>
 </template>
 
 <script>
 import { queryDisPlayApplyAudit } from "@/api/activity-manage/display-apply-examine.js"; //api
-import dataRange from "../../components/data-rang.vue";
+import dataRange from "@/components/data-rang.vue";
 import md5 from "js-md5";
-import exportBtn from "../../components/Button/export-btn.vue";
-import addNewBtn from "../../components/Button/addNew-btn.vue";
-import myModal from "../../components/Modal/my-modal.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
+import addNewBtn from "@/components/Button/addNew-btn.vue";
+import myModal from "@/components/Modal/my-modal.vue";
 import hhTable from "@/components/table/table.vue";
 import upData from "@/assets/js/upload.js";
 import PROJECT_CONFIG from "@/util/config.js";
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,
-  EDFAULT_TOMORROW
+
 } from "@/util/index.js"; //搜索条件默认时间
 import {
-  typeQueryActivityVOByGroupId, //根据品牌ID获取活动包名
-  typeQueryActivityGroupVOByBrandId, //根据活动包名ID获取陈列活动列表
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
-import { displayApplyDetail } from "@/api/activity-manage/display-activity-manage.js"; //api
-import { getDisplayActivityListDoQuery } from "@/api/common.js";
 export default {
   name: "brand-manage-keepAlive",
   data() {
     return {
-      timeStr:"",
+      timeStr: "",
       checkedData: [],
       myModalisShow: false,
       brandId: "",
@@ -371,7 +389,7 @@ export default {
                       this.formDatas.logoUrl = params.row.logoUrl;
                       this.formDatas.loginAccount = params.row.loginAccount;
                       this.brandId = params.row.id;
-                      
+
                       this.addNewPresent();
                     }
                   }
@@ -452,13 +470,13 @@ export default {
       //   });
       // });
       datas.forEach(item => {
-        list.push({resourceId: item.id});
+        list.push({ resourceId: item.id });
         if (item.level == 2) {
           this.baseData.forEach(val => {
             if (val.children && val.children.length) {
               val.children.forEach(a => {
                 if (a.id == item.id) {
-                  list.push({resourceId: val.id});
+                  list.push({ resourceId: val.id });
                 }
               });
             }
@@ -471,8 +489,8 @@ export default {
                 if (a.children && a.children.length) {
                   a.children.forEach(b => {
                     if (b.id == item.id) {
-                      list.push({resourceId: val.id});
-                      list.push({resourceId: a.id});
+                      list.push({ resourceId: val.id });
+                      list.push({ resourceId: a.id });
                     }
                   });
                 }
@@ -481,7 +499,7 @@ export default {
           });
         }
       });
-      list = this.arrRemoval(list)
+      list = this.arrRemoval(list);
       var data = {};
       data["brandId"] = this.menuData.brandId;
       data["brandName"] = this.menuData.brandName;
@@ -525,23 +543,23 @@ export default {
         res => {
           let checkedArr = [];
           res.forEach(item => {
-            let level = null
-            if(item.resType == "template"){
-              level = 1
+            let level = null;
+            if (item.resType == "template") {
+              level = 1;
             }
-            if(item.resType == "menu"){
-              level = 2
+            if (item.resType == "menu") {
+              level = 2;
             }
-            if(item.resType == "page"){
-              level = 3
+            if (item.resType == "page") {
+              level = 3;
             }
             checkedArr.push({
-              children:[],
-              checked:true,
+              children: [],
+              checked: true,
               level,
-              title:item.resName,
-              id:item.id
-            })
+              title: item.resName,
+              id: item.id
+            });
             this.baseData.forEach((j, index) => {
               // if (item.resType == "template" && item.id == j.id) {
               //   this.$set(this.baseData[index], "checked", true);
@@ -572,21 +590,21 @@ export default {
           });
           // 过滤选中菜单显示
           // this.checkChange(checkedArr);
-          this.checkedData = implode(res,0,1)
+          this.checkedData = implode(res, 0, 1);
         }
       );
     },
     arrRemoval(arr) {
       let obj = {};
       let newArr = [];
-    
-      for(let i = 0,len = arr.length;i<len;i++){
-        if(!obj[arr[i].resourceId]){
-          obj[arr[i].resourceId] = 'a';
-          newArr.push(arr[i])
+
+      for (let i = 0, len = arr.length; i < len; i++) {
+        if (!obj[arr[i].resourceId]) {
+          obj[arr[i].resourceId] = "a";
+          newArr.push(arr[i]);
         }
       }
-      return newArr
+      return newArr;
     },
     checkChange(val) {
       let arr = []; //选中的
@@ -624,7 +642,7 @@ export default {
                         expand: true,
                         level: 2,
                         title: item.title,
-                        children:[]
+                        children: []
                       });
                     } else {
                       arr.push({
@@ -696,7 +714,7 @@ export default {
                         //arr不为空时
                         // debugger
                         let flag1 = null;
-                        
+
                         arr.forEach(a => {
                           if (a.title == val.title) {
                             flag1 = a;
@@ -706,41 +724,35 @@ export default {
                         if (flag1) {
                           let flag2 = null;
                           //有包含他的一级
-                          flag1.children.forEach( b => {
-                            if(b.title == j.title){
-                              flag2 = b
+                          flag1.children.forEach(b => {
+                            if (b.title == j.title) {
+                              flag2 = b;
                             }
-                          })
-                          if(flag2){
+                          });
+                          if (flag2) {
                             //有包含他的二级
-                            flag2.children.push(
-                              {
-                                title:item.title,
-                                children:[],
-                                level:3,
-                                expand:true
-                              }
-                            )
-                          }else{
+                            flag2.children.push({
+                              title: item.title,
+                              children: [],
+                              level: 3,
+                              expand: true
+                            });
+                          } else {
                             //没有包含她的二级
-                            flag1.children.push(
-                              {
-                                title:j.title,
-                                expand:true,
-                                level:2,
-                                children:[
-                                  {
-                                    title:item.title,
-                                    children:[],
-                                    level:3,
-                                    expand:true 
-                                  }
-                                ]
-                              }
-                            )
+                            flag1.children.push({
+                              title: j.title,
+                              expand: true,
+                              level: 2,
+                              children: [
+                                {
+                                  title: item.title,
+                                  children: [],
+                                  level: 3,
+                                  expand: true
+                                }
+                              ]
+                            });
                           }
-                            
-                            
                         } else {
                           //没有包含它的一级
                           arr.push({
@@ -892,12 +904,12 @@ export default {
       });
     },
     beforeUpload(res) {
-      this.timeStr = Date.now()
+      this.timeStr = Date.now();
       this.upData["key"] = "ecuda/image/" + this.timeStr + res.name;
     },
     UploadLogoUrl(response, file, fileList) {
       //陈列图片
-    
+
       this.formDatas.logoUrl =
         PROJECT_CONFIG.ossServer + "ecuda/image/" + this.timeStr + file.name;
       // console.log(this.formData.logoUrl);

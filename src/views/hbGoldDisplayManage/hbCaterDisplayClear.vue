@@ -85,85 +85,117 @@
 
 <template>
   <div id="Main">
-        <h2 class="Title">餐饮清算结果</h2>           
-        <div class="box">          
-            <Form ref="form" :model="formData" :label-width="80" :rules="rule">
-                <Row>
-                    <Col span='7'>
-                         <Form-item label="品牌名称" prop="brandId">
-                          <Select v-model="formData.brandId" placeholder="河北中粮可口可乐" disabled>
-                            <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                          </Select>
-                        </Form-item>
-                        
-                        <Form-item label="销售部">
-                          <Select v-model="formData.salesDept" clearable>
-                            <Option v-for="(item, key, index) in protocolSalesDept" :value="key" :key="index">{{ item }}</Option>
-                          </Select>
-                        </Form-item>
-                        
-                    </Col>
-                    <Col span='7' >  
-                        <Form-item label="活动包名:" prop="groupId">
-                          <Select v-model="formData.groupId" placeholder="请选择" disabled>
-                            <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                          </Select>
-                        </Form-item> 
-                        <Form-item label="大区">
-                          <Input v-model="formData.salesRegion"></Input>
-                        </Form-item>                      
-                    </Col>
-                    <Col span='7'>
-                        <Form-item label="陈列活动:" prop="activityId">                        
-                            <Date-picker style="width: 100%;" type="month" @on-change="changeDate" placeholder="选择日期" ></Date-picker>
-                        </Form-item>                          
-                        <Form-item label="营业部">
-                          <Input v-model="formData.busiDept"></Input>
-                        </Form-item>
-                    </Col>
-                    
-                    <Col span="2" offset="1">
-                        <div class="searchBox">
-                            <Button @click="submit('form')" class="btn-search  search_btn" type="primary">查询</Button>    
-                            <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
-                            <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button>                     
-                            </div>                                            
-                    </Col>
-                </Row>
-                <transition name="fade">
-                <Row v-if="showQuery">
-                    <Col span='7'>                                                  
-                        <Form-item label="客户编号:">
-                            <Input  v-model="formData.joinCode"></Input>                             
-                        </Form-item>                 
-                    </Col>
-                    <Col span='7'>                                                 
-                        <Form-item label="路线编号">
-                            <Input v-model="formData.salesRoute"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col span='7'>                                                 
-                        	<Form-item label="BAP渠道">                             
-                                <Select v-model="formData.bapChannel" clearable>
-                                    <Option v-for="(item, key, index) in protocolBapChannel" :value="key" :key="index">{{ item }}</Option>
-                                </Select>
-                            </Form-item>
-                    </Col>                                   
-                </Row>
-                </transition>
-            </Form>            
-      </div>
-      <div class="box" style="padding-bottom:20px">        
-        <div class='contentTop'> 
-            <Button class="btn-right" @click="exportExcel('form')"  type="primary" >导出</Button>     
-        </div>
-        <Table :columns="columns" :data="pageData" disabled-hover></Table>
-        <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+    <h2 class="Title">餐饮清算结果</h2>
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="80" :rules="rule">
+        <Row>
+          <Col span="7">
+            <Form-item label="品牌名称" prop="brandId">
+              <Select v-model="formData.brandId" placeholder="河北中粮可口可乐" disabled>
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+
+            <Form-item label="销售部">
+              <Select v-model="formData.salesDept" clearable>
+                <Option
+                  v-for="(item, key, index) in protocolSalesDept"
+                  :value="key"
+                  :key="index"
+                >{{ item }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="活动包名:" prop="groupId">
+              <Select v-model="formData.groupId" placeholder="请选择" disabled>
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in groupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="大区">
+              <Input v-model="formData.salesRegion"></Input>
+            </Form-item>
+          </Col>
+          <Col span="7">
+            <Form-item label="陈列活动:" prop="activityId">
+              <Date-picker
+                style="width: 100%;"
+                type="month"
+                @on-change="changeDate"
+                placeholder="选择日期"
+              ></Date-picker>
+            </Form-item>
+            <Form-item label="营业部">
+              <Input v-model="formData.busiDept"></Input>
+            </Form-item>
+          </Col>
+
+          <Col span="2" offset="1">
+            <div class="searchBox">
+              <Button @click="submit('form')" class="btn-search search_btn" type="primary">查询</Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-up"
+                v-if="showQuery"
+              ></Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-down"
+                v-else
+              ></Button>
             </div>
+          </Col>
+        </Row>
+        <transition name="fade">
+          <Row v-if="showQuery">
+            <Col span="7">
+              <Form-item label="客户编号:">
+                <Input v-model="formData.joinCode"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="路线编号">
+                <Input v-model="formData.salesRoute"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="BAP渠道">
+                <Select v-model="formData.bapChannel" clearable>
+                  <Option
+                    v-for="(item, key, index) in protocolBapChannel"
+                    :value="key"
+                    :key="index"
+                  >{{ item }}</Option>
+                </Select>
+              </Form-item>
+            </Col>
+          </Row>
+        </transition>
+      </Form>
+    </div>
+    <div class="box" style="padding-bottom:20px">
+      <div class="contentTop">
+        <Button class="btn-right" @click="exportExcel('form')" type="primary">导出</Button>
+      </div>
+      <Table :columns="columns" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -184,13 +216,9 @@ import {
 } from "@/util/ENUMS.js";
 
 import {
-  getDisplayActivityListDoQuery,
   queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
-  queryActivityVOByGroupId, //根据活动包名ID获取陈列活动列表
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-
-import { gdDisplayClear } from "@/api/activity-manage/display-activity-manage.js";
 
 import config from "@/util/config.js";
 
