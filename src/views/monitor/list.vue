@@ -131,7 +131,7 @@ tbody td {
 </template>
 
 <script>
-import area from "../../config/china_code_data.js";
+import area from "@/config/china_code_data.js";
 // import echarts from 'echarts';
 //
 import dataRange from "@/components/data-rang.vue";

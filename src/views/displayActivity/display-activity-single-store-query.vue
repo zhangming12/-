@@ -437,7 +437,7 @@
 </template>
 
 <script>
-import area from "../../config/china_code_data.js";
+import area from "@/config/china_code_data.js";
 
 import {
   dispalyExamineSuggesteStatus,

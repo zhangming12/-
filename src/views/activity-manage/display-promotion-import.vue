@@ -341,7 +341,7 @@
 </template>
 <script>
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
-import config from "../../util/config.js";
+import config from "@/util/config.js";
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";

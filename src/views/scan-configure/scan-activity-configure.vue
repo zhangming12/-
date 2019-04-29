@@ -17,7 +17,6 @@
     margin-left: 10px;
     overflow: hidden;
     background: #ffffff;
-    // padding-bottom: 60px;
     padding: 10px 10px;
     .title-box {
       display: flex;
@@ -80,7 +79,6 @@
       .tabs-main {
         width: 100%;
         margin-top: 10px;
-        // overflow: hidden;
         height: 140px;
         transition: all 0.3s;
 
@@ -136,7 +134,6 @@
         display: flex;
         position: relative;
         .zhezhao {
-          // background: red;
           cursor: not-allowed;
           width: 50px;
           height: 50px;

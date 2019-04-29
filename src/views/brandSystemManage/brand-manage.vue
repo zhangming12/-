@@ -275,7 +275,6 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
 import md5 from "js-md5";
 import exportBtn from "@/components/Button/export-btn.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
@@ -422,7 +421,7 @@ export default {
       menuData: {}
     };
   },
-  components: { dataRange, exportBtn, myModal, addNewBtn, hhTable },
+  components: { exportBtn, myModal, addNewBtn, hhTable },
   created() {
     this.init();
   },

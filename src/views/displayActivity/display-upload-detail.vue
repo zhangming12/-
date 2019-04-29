@@ -305,7 +305,7 @@
 </template>
 
 <script>
-import area from "../../config/china_code_data.js";
+import area from "@/config/china_code_data.js";
 import fieldNameDes from "@/components/field-name-description.vue";
 import {
   dispalyExamineSuggesteStatus

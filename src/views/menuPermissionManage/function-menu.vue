@@ -205,8 +205,8 @@
 </template>
 <script>
 import { doDelete } from "@/api/common.js";
-import config from "../../util/config.js";
-import PROJECT_CONFIG from "../../util/config.js";
+import config from "@/util/config.js";
+import PROJECT_CONFIG from "@/util/config.js";
 import upData from "../../assets/js/upload.js";
 export default {
   name: "function-menu-keepAlive",

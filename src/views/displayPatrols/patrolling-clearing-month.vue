@@ -198,7 +198,7 @@ import {
   queryActivityGroupVOByBrandId //根据品牌ID获取活动包名
 } from "@/api/common.js";
 import area from "@/config/areaCode.js";
-import config from "../../util/config.js";
+import config from "@/util/config.js";
 import {
   queryDisplayLiquidateRecord, //查询列表
   callLiquidateByActivityId, //清算费用

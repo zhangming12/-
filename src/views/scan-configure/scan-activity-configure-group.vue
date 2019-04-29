@@ -156,7 +156,6 @@
           </span>
 
           <addNewBtn class="btn-right ml20" @btnClick="addNewGroup"/>
-          <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
         </div>
         <Table :columns="columns1" :data="pageData" disabled-hover></Table>
       </div>
@@ -185,7 +184,6 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
@@ -408,7 +406,7 @@ export default {
       activityList: []
     };
   },
-  components: { dataRange, exportBtn, myModal, addNewBtn },
+  components: { exportBtn, myModal, addNewBtn },
   created() {
     this.Global.doPostNoLoading(
       "condition/queryBrands.json",

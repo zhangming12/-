@@ -30,24 +30,14 @@
                 <Form-item label="时间:" required>
                   <Row>
                     <Col span="11">
-                      <Form-item prop="queryStartTime">
-                        <data-range
-                          @dataChange="startTimeChange"
-                          hour="00:00"
-                          :time="formData.queryStartTime"
-                          start
-                        ></data-range>
+                      <Form-item>
+                        <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
                       </Form-item>
                     </Col>
                     <Col span="2" style="text-align: center;">至</Col>
                     <Col span="11">
-                      <Form-item prop="queryEndTime">
-                        <data-range
-                          hour="24:00"
-                          placeholder="结束时间"
-                          @dataChange="endTimeChange"
-                          :time="formData.queryEndTime"
-                        ></data-range>
+                      <Form-item>
+                        <data-range hour="24:00" placeholder="结束时间" v-model="formData.queryEndTime"></data-range>
                       </Form-item>
                     </Col>
                   </Row>
@@ -116,41 +106,22 @@
       <div class="contentTop">
         <Button @click="exportExcel" class="btn-right" icon="ios-download-outline" type="primary">导出</Button>
       </div>
-
       <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-      <!-- <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-            </div>
-      </div>-->
     </div>
   </div>
 </template>
 
 <script>
 import area from "@/config/china_code_data.js";
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 
-import {
-  EDFAULT_THREE_AGOTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { EDFAULT_THREE_AGOTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
   name: "activity-summary-stastics-keepAlive",
   data() {
-    const that = this;
     return {
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       formData: {
         queryStartTime: EDFAULT_THREE_AGOTIME,
         queryEndTime: EDFAULT_ENDTIME,
@@ -164,9 +135,6 @@ export default {
       rule: {
         queryStartTime: [{ validator: validateStart }],
         queryEndTime: [{ validator: validateEnd }]
-        // brandId: [{ required: true, message: "品牌不能为空" },{trigger:'blur'}],
-        // groupId: [{ required: true, message: "活动包不能为空" },{trigger:'blur'}],
-        // activityId: [{ required: true, message: "活动不能为空" },{trigger:'blur'}],
       },
       columns1: [],
       defaultList: [
@@ -182,11 +150,6 @@ export default {
           key: "userNum",
           align: "center"
         },
-        // {
-        //     title: '扫码量（汇总）',
-        //     key: 'userNum',
-        //     align: 'center'
-        // },
         {
           title: "参与量（汇总）",
           key: "sumWinNum",
@@ -206,8 +169,7 @@ export default {
   components: {
     dataRange
   },
-  created: function() {
-    var that = this;
+  created() {
     this.columns1 = this.columns1.concat(this.defaultList);
     this.Global.doPost(
       "condition/queryBrands.json",
@@ -224,7 +186,7 @@ export default {
       }
     );
   },
-  mounted: function() {},
+  mounted() {},
   methods: {
     getActivityList(value) {
       this.activityList = [];
@@ -258,29 +220,7 @@ export default {
         }
       );
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    submit: function(name) {
+    submit(name) {
       if (!this.formData.brandId) {
         this.$Message.error("请选择查询条件!!");
         return;
@@ -289,56 +229,26 @@ export default {
         this.$Message.error("请选择查询条件!!");
         return;
       }
-      // if (!this.formData.activityId) {
-      //   this.$Message.error("请选择查询条件!!");
-      //   return;
-      // }
       this.page = 1;
       this.init(this.page, 10);
-      // this.$refs[name].validate(valid => {
-      //   if (valid) {
-      //     this.page = 1;
-      //     this.init(this.page, 10);
-      //   } else {
-      //     this.$Message.error("请选择查询条件!!");
-      //   }
-      // });
     },
-    changePage: function(size) {
+    changePage(size) {
       this.init(size, 10);
     },
-    init: function(currentPage, pageSize) {
-      var that = this;
+    init(currentPage, pageSize) {
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       data["userType"] = "C";
       data["currentPage"] = currentPage;
       data["pageSize"] = pageSize;
-      console.log(data);
       this.Global.doPost("report/activityAggregateReport.json", data, res => {
-        // this.pageNum = res.items;
-        // this.page = res.page;
         this.columns1 = [];
         this.columns1 = this.columns1.concat(this.defaultList);
         if (res.datalist.length > 0) {
-          // var list = res.datalist[0].goodsMap;
           var list = res.datalist[0].gMap;
           for (var i in list) {
             var obj = {
@@ -349,44 +259,28 @@ export default {
             };
             obj["title"] = list[i];
             obj["key"] = i;
-            that.columns1.push(obj);
-            that.keyList.push(i);
+            this.columns1.push(obj);
+            this.keyList.push(i);
           }
         }
         for (var j = 0; j < res.datalist.length; j++) {
           // 为每个对象里面添加折扣的key值
-          for (var n = 0; n < that.keyList.length; n++) {
+          for (var n = 0; n < this.keyList.length; n++) {
             if (res.datalist[j].countWinMap) {
-              // res.datalist[j][that.keyList[n]] =
-              //   res.datalist[j].countWinMap[that.keyList[n]];
-              res.datalist[j][that.keyList[n]] =
-                res.datalist[j].cWinMap[that.keyList[n]];
+              res.datalist[j][this.keyList[n]] =
+                res.datalist[j].cWinMap[this.keyList[n]];
             }
           }
         }
-        that.pageData = res.datalist;
+        this.pageData = res.datalist;
       });
     },
-    exportExcel: function() {
-      var that = this;
+    exportExcel() {
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       data["userType"] = "C";
       var url = this.Global.getExportUrl(
@@ -395,16 +289,6 @@ export default {
       );
       window.open(url);
     }
-    // changeValue: function(value) {
-    //   var that = this;
-    //   this.activityList = [];
-    //   this.Global.getActivityList(value, function(res) {
-    //     that.activityList = res.datalist;
-    //     that.formData.activityId = res.datalist[0].id;
-    //   });
-    // }
   }
 };
 </script>
-
-

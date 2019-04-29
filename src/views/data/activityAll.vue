@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import area from "../../config/china_code_data.js";
+import area from "@/config/china_code_data.js";
 import dataRange from "@/components/data-rang.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import { validateStart, validateEnd } from "@/util/index.js";//验证规则

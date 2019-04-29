@@ -379,7 +379,7 @@
 </template>
 
 <script>
-import area from "../../config/china_code_data.js";
+import area from "@/config/china_code_data.js";
 
 import {
   dispalyExamineSuggesteStatus
@@ -394,7 +394,7 @@ import {
   EDFAULT_ENDTIME,
 
 } from "@/util/index.js"; //搜索条件默认时间
-import config from "../../util/config.js";
+import config from "@/util/config.js";
 import {
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";

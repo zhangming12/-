@@ -332,7 +332,7 @@
 
 <script>
 import { workerUpdateStatus } from "@/api/salesman-info/salesman-info";
-import config from "../../util/config.js";
+import config from "@/util/config.js";
 import hhTable from "@/components/table/table.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import importBtn from "@/components/Button/import-btn.vue";

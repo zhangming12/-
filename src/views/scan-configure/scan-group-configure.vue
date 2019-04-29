@@ -9,7 +9,6 @@
     margin-left: 10px;
     overflow: hidden;
     background: #ffffff;
-    // padding-bottom: 60px;
     padding: 10px 10px;
     .title-box {
       display: flex;
@@ -165,120 +164,185 @@
 </style>
 
 <template>
-  <div id="scan-Main" >
-      <!-- <h2 class="Title">活动包配置 </h2> -->
-      <div class="main-container">
-
-        <!-- 基础设置 -->
-          <div class="title-box">
-              <h3 class="title">基础设置</h3>
-              <!-- <saveBtn/> -->
-          </div>
-          
-          <div class="scan-box">
-              <Form ref="form1" :model="formData" :label-width="88" :rules="rule">
-                <Row>
-                    <Col span="6">
-                        <Form-item label="品牌名称:" required>
-                            <Select :disabled="type == 'look'" v-model="formData.brandId" placeholder="品牌名称*">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>
-                        
-                    </Col>
-                    <Col span="6">
-                        <Form-item label="活动包名:" required>
-                            <Input :disabled="type == 'look'" v-model="formData.groupName" placeholder="活动包名" />
-                        </Form-item>
-                        
-                    </Col>
-                    <Col span="6">
-                        <Form-item label="活动对象:" required>
-                            <Select :disabled="type == 'look'" v-model="formData.channel" placeholder="活动对象*">
-                                <Option value="B">B端</Option>
-                                <Option value="C">C端</Option>
-                            </Select> 
-                        </Form-item>
-                        
-                    </Col>
-                </Row>
-              </Form>
-          </div>
-
-          <!-- 限制设置 -->
-          <div class="title-box">
-              <h3 class="title">限制设置</h3>
-              <!-- <saveBtn/>/ -->
-          </div>
-          <div class="box">
-              <Form ref="form3" :model="formData" :label-width="110" :rules="rule">
-                <Row>
-                    <Col span="6">
-                        <Form-item label="日活动次数上限:" >
-                            <input :disabled="type == 'look'" type="number" placeholder="日活动次数上限" min="0" class="numberInput" v-model="formData.daily_limit_group">
-                        </Form-item>
-                        <Form-item label="月活动次数上限:" >
-                            <input :disabled="type == 'look'" type="number" placeholder="月活动次数上限" min="0" class="numberInput" v-model="formData.month_limit_group">
-                        </Form-item>
-                    </Col>
-                    <Col span="6">
-                        <Form-item label="日活动金额上限:" >
-                            <input :disabled="type == 'look'" type="number" placeholder="日活动金额上限" min="0" class="numberInput" v-model="formData.daily_amount_limit_group">
-                        </Form-item>
-                        <Form-item label="月活动金额上限:" >
-                            <input :disabled="type == 'look'" type="number" placeholder="月活动金额上限" min="0" class="numberInput" v-model="formData.month_amount_limit_group">
-                        </Form-item>
-                    </Col>
-                    <Col span="6">
-                        <Form-item label="周活动次数上限:" >
-                            <input :disabled="type == 'look'" type="number" placeholder="周活动次数上限" min="0" class="numberInput" v-model="formData.week_limit_group">
-                        </Form-item>
-                        <Form-item label="总活动次数上限:" >
-                            <input :disabled="type == 'look'" type="number" placeholder="总活动次数上限" min="0" class="numberInput" v-model="formData.user_limit_group">
-                        </Form-item>
-                    </Col>
-                    <Col span="6">
-                        <Form-item label="周活动金额上限:" >
-                            <input :disabled="type == 'look'" type="number" placeholder="周活动金额上限" min="0" class="numberInput" v-model="formData.week_amount_limit_group">
-                        </Form-item>
-                        <Form-item label="总活动金额上限:" >
-                            <input :disabled="type == 'look'" type="number" placeholder="总活动金额上限" min="0" class="numberInput" v-model="formData.user_amount_limit_group">
-                        </Form-item>
-                    </Col>
-                    <Col span="6">
-                        <Form-item label="地理位置扫码限制:" :label-width="126" required>
-                            <Select @on-change="conficChange" :disabled="type == 'look'" v-model="formData.confSpec" placeholder="地理位置扫码限制*">
-                                <Option value="kong">关闭</Option>
-                                <Option value="back">3个位置后回原位置扫码</Option>
-                                <Option value="lock">3个位置后锁定账号</Option>
-                            </Select> 
-                        </Form-item>
-                    </Col>
-                    <Col span="6">
-                        <Form-item label="限制距离(M):" :label-width="110" required>
-                            <input :disabled="type == 'look'" type="number" placeholder="限制距离" min="0" class="numberInput" v-model.number="formData.distance">
-                        </Form-item>
-                    </Col>
-                </Row>
-              </Form>
-          </div>
-
-          <!-- 底部按钮 -->
-          <footer>
-              <Button @click="backToLast" type="info">返回</Button>
-              <Button v-if="type != 'look'" @click="saveGroup" type="primary">保存</Button>
-          </footer>
-
-          <!-- 字段说明 -->
-          <fieldNameDes/>
+  <div id="scan-Main">
+    <!-- <h2 class="Title">活动包配置 </h2> -->
+    <div class="main-container">
+      <!-- 基础设置 -->
+      <div class="title-box">
+        <h3 class="title">基础设置</h3>
       </div>
-      
+
+      <div class="scan-box">
+        <Form ref="form1" :model="formData" :label-width="88" :rules="rule">
+          <Row>
+            <Col span="6">
+              <Form-item label="品牌名称:" required>
+                <Select :disabled="type == 'look'" v-model="formData.brandId" placeholder="品牌名称*">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="活动包名:" required>
+                <Input :disabled="type == 'look'" v-model="formData.groupName" placeholder="活动包名"/>
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="活动对象:" required>
+                <Select :disabled="type == 'look'" v-model="formData.channel" placeholder="活动对象*">
+                  <Option value="B">B端</Option>
+                  <Option value="C">C端</Option>
+                </Select>
+              </Form-item>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+
+      <!-- 限制设置 -->
+      <div class="title-box">
+        <h3 class="title">限制设置</h3>
+        <!-- <saveBtn/>/ -->
+      </div>
+      <div class="box">
+        <Form ref="form3" :model="formData" :label-width="110" :rules="rule">
+          <Row>
+            <Col span="6">
+              <Form-item label="日活动次数上限:">
+                <input
+                  :disabled="type == 'look'"
+                  type="number"
+                  placeholder="日活动次数上限"
+                  min="0"
+                  class="numberInput"
+                  v-model="formData.daily_limit_group"
+                >
+              </Form-item>
+              <Form-item label="月活动次数上限:">
+                <input
+                  :disabled="type == 'look'"
+                  type="number"
+                  placeholder="月活动次数上限"
+                  min="0"
+                  class="numberInput"
+                  v-model="formData.month_limit_group"
+                >
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="日活动金额上限:">
+                <input
+                  :disabled="type == 'look'"
+                  type="number"
+                  placeholder="日活动金额上限"
+                  min="0"
+                  class="numberInput"
+                  v-model="formData.daily_amount_limit_group"
+                >
+              </Form-item>
+              <Form-item label="月活动金额上限:">
+                <input
+                  :disabled="type == 'look'"
+                  type="number"
+                  placeholder="月活动金额上限"
+                  min="0"
+                  class="numberInput"
+                  v-model="formData.month_amount_limit_group"
+                >
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="周活动次数上限:">
+                <input
+                  :disabled="type == 'look'"
+                  type="number"
+                  placeholder="周活动次数上限"
+                  min="0"
+                  class="numberInput"
+                  v-model="formData.week_limit_group"
+                >
+              </Form-item>
+              <Form-item label="总活动次数上限:">
+                <input
+                  :disabled="type == 'look'"
+                  type="number"
+                  placeholder="总活动次数上限"
+                  min="0"
+                  class="numberInput"
+                  v-model="formData.user_limit_group"
+                >
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="周活动金额上限:">
+                <input
+                  :disabled="type == 'look'"
+                  type="number"
+                  placeholder="周活动金额上限"
+                  min="0"
+                  class="numberInput"
+                  v-model="formData.week_amount_limit_group"
+                >
+              </Form-item>
+              <Form-item label="总活动金额上限:">
+                <input
+                  :disabled="type == 'look'"
+                  type="number"
+                  placeholder="总活动金额上限"
+                  min="0"
+                  class="numberInput"
+                  v-model="formData.user_amount_limit_group"
+                >
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="地理位置扫码限制:" :label-width="126" required>
+                <Select
+                  @on-change="conficChange"
+                  :disabled="type == 'look'"
+                  v-model="formData.confSpec"
+                  placeholder="地理位置扫码限制*"
+                >
+                  <Option value="kong">关闭</Option>
+                  <Option value="back">3个位置后回原位置扫码</Option>
+                  <Option value="lock">3个位置后锁定账号</Option>
+                </Select>
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="限制距离(M):" :label-width="110" required>
+                <input
+                  :disabled="type == 'look'"
+                  type="number"
+                  placeholder="限制距离"
+                  min="0"
+                  class="numberInput"
+                  v-model.number="formData.distance"
+                >
+              </Form-item>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+
+      <!-- 底部按钮 -->
+      <footer>
+        <Button @click="backToLast" type="info">返回</Button>
+        <Button v-if="type != 'look'" @click="saveGroup" type="primary">保存</Button>
+      </footer>
+
+      <!-- 字段说明 -->
+      <fieldNameDes/>
+    </div>
   </div>
 </template>
 
 <script>
 import fieldNameDes from "@/components/field-name-description.vue";
-import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import detailBtn from "@/components/Button/detail-btn.vue";
 import saveBtn from "@/components/Button/save-btn.vue";
@@ -286,11 +350,7 @@ import myModal from "@/components/Modal/my-modal.vue";
 import upData from "@/assets/js/upload.js";
 import hhTable from "@/components/table/table.vue";
 import PROJECT_CONFIG from "@/util/config.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
   name: "scan-group-configure",
 
@@ -314,7 +374,6 @@ export default {
     };
   },
   components: {
-    dataRange,
     exportBtn,
     detailBtn,
     myModal,

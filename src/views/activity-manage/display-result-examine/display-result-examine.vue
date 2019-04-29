@@ -751,9 +751,9 @@ footer {
 </template>
 
 <script>
-import area from "../../../config/areaCode.js";
-import upData from "../../../assets/js/upload.js";
-import PROJECT_CONFIG from "../../../util/config.js";
+import area from "@/config/areaCode.js";
+import upData from "@/assets/js/upload.js";
+import PROJECT_CONFIG from "@/util/config.js";
 import imageLook from "@/components/imgLook/img-look.vue";
 import { displayFinalAudit } from "@/api/activity-manage/display-apply-examine.js";
 /**

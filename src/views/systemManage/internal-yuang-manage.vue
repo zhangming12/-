@@ -175,7 +175,7 @@ import {
 } from "@/util/index.js"; //搜索条件默认时间
 import area from "@/config/china_code_data.js";
 import QRCode from "qrcodejs2";
-import config from "../../util/config.js";
+import config from "@/util/config.js";
 export default {
   name:"internal-yuang-manage-keepAlive",
 

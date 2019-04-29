@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import config from "../../util/config.js";
+import config from "@/util/config.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
   name:"activity-keepAlive",

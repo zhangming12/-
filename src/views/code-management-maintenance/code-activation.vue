@@ -181,23 +181,17 @@
                   <Form-item label="时间:">
                     <Row>
                       <Col span="11">
-                        <Form-item prop="queryStartTime">
-                          <data-range
-                            @dataChange="startTimeChange"
-                            hour="00:00"
-                            :time="formData.queryStartTime"
-                            start
-                          ></data-range>
+                        <Form-item>
+                          <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
                         </Form-item>
                       </Col>
                       <Col span="2" style="text-align: center;">至</Col>
                       <Col span="11">
-                        <Form-item prop="queryEndTime">
+                        <Form-item>
                           <data-range
                             hour="24:00"
                             placeholder="结束时间"
-                            @dataChange="endTimeChange"
-                            :time="formData.queryEndTime"
+                            v-model="formData.queryEndTime"
                           ></data-range>
                         </Form-item>
                       </Col>
@@ -252,7 +246,6 @@
         <div class="contentTop">
           <exportBtn class="btn-right" @btnClick="exportExcel"/>
         </div>
-        <!-- <Table :columns="columns1" :data="pageData" disabled-hover></Table> -->
         <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
       </div>
       <div class="page-box">
@@ -266,13 +259,9 @@
 
 <script>
 import hhTable from "@/components/table/table.vue";
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
   name: "code-activation-keepAlive",
   data() {
@@ -280,14 +269,6 @@ export default {
       noneStatus: false,
       showQuery: false,
       newBuildModel: false,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       formItem: {
         brandId: ""
       },
@@ -465,14 +446,9 @@ export default {
       let startTime = "";
       let endTime = "";
       startTime = this.Global.createTime(this.formData.queryStartTime);
-      if (this.start.hour == "24:00") {
-        startTime = this.Global.setHoursData(this.start.time, this.start.hour);
-      }
 
       endTime = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        endTime = this.Global.setHoursData(this.end.time, this.end.hour);
-      }
+
       if (this.formData.time == "shengcheng") {
         data["queryStartTime"] = startTime;
         data["queryEndTime"] = endTime;
@@ -494,28 +470,6 @@ export default {
     sureCreate() {},
     cancel() {
       this.newBuildModel = false;
-    },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
     },
     changeValue(value) {
       this.groupList = [];
@@ -566,14 +520,7 @@ export default {
       let startTime = "";
       let endTime = "";
       startTime = this.Global.createTime(this.formData.queryStartTime);
-      if (this.start.hour == "24:00") {
-        startTime = this.Global.setHoursData(this.start.time, this.start.hour);
-      }
-
       endTime = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        endTime = this.Global.setHoursData(this.end.time, this.end.hour);
-      }
       if (this.formData.time == "shengcheng") {
         data["queryStartTime"] = startTime;
         data["queryEndTime"] = endTime;

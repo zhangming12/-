@@ -93,7 +93,7 @@
 
 <script>
 import upData from "../../assets/js/upload.js";
-import PROJECT_CONFIG from "../../util/config.js";
+import PROJECT_CONFIG from "@/util/config.js";
 export default {
   name:"rebate-setting-keepAlive",
 

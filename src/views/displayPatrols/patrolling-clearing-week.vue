@@ -230,7 +230,7 @@ import {
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import configs from "../../util/config.js";
+import configs from "@/util/config.js";
 
 
 import config from "@/util/config.js";

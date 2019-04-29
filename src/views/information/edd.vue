@@ -186,9 +186,9 @@
 <script>
 import dataRange from "@/components/data-rang.vue";
 
-import area from "../../config/china_code_data.js";
+import area from "@/config/china_code_data.js";
 import upData from "../../assets/js/upload.js";
-import PROJECT_CONFIG from "../../util/config.js";
+import PROJECT_CONFIG from "@/util/config.js";
 import base64 from "js-base64";
 import E from "wangeditor";
 import axios from "axios";

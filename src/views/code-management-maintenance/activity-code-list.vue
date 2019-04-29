@@ -290,7 +290,7 @@
 
 <script>
 import dataRange from "@/components/data-rang.vue";
-import DEV_CONFIG from "../../util/config.js";
+import DEV_CONFIG from "@/util/config.js";
 import {
   EDFAULT_STARTTIME,
   EDFAULT_ENDTIME,

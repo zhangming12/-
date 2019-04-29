@@ -138,24 +138,14 @@
                 <Form-item label="时间:" required>
                   <Row>
                     <Col span="11">
-                      <Form-item prop="queryStartTime">
-                        <data-range
-                          @dataChange="startTimeChange"
-                          hour="00:00"
-                          :time="formData.queryStartTime"
-                          start
-                        ></data-range>
+                      <Form-item>
+                        <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
                       </Form-item>
                     </Col>
                     <Col span="2" style="text-align: center;">至</Col>
                     <Col span="11">
-                      <Form-item prop="queryEndTime">
-                        <data-range
-                          hour="24:00"
-                          placeholder="结束时间"
-                          @dataChange="endTimeChange"
-                          :time="formData.queryEndTime"
-                        ></data-range>
+                      <Form-item>
+                        <data-range hour="24:00" placeholder="结束时间" v-model="formData.queryEndTime"></data-range>
                       </Form-item>
                     </Col>
                   </Row>
@@ -281,28 +271,15 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import area from "@/config/china_code_data.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
   name: "activity-ranking-list-keepAlive",
   data() {
-    const that = this;
     return {
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       areaData: area,
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
@@ -328,7 +305,7 @@ export default {
   components: {
     dataRange
   },
-  created: function() {
+  created() {
     this.Global.doPost(
       "condition/queryBrands.json",
       { date: 7, activityType: 1, scope: "a", channel: "C" },
@@ -377,7 +354,7 @@ export default {
         }
       );
     },
-    submit: function(name) {
+    submit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.init();
@@ -386,63 +363,25 @@ export default {
         }
       });
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    init: function() {
-      var that = this;
+    init() {
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
 
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       data["userType"] = "C";
-      console.log(data);
       this.Global.doPost(
         "report/winnerStatisticsShowReport.json",
         data,
-        function(res) {
-          that.provinceList = res.provList;
-          that.cityList = res.cityList;
-          that.areaList = res.areaList;
+        res => {
+          this.provinceList = res.provList;
+          this.cityList = res.cityList;
+          this.areaList = res.areaList;
         }
       );
     }
   }
 };
 </script>
-
-

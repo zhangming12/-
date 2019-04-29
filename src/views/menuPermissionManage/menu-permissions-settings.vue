@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import config from "../../util/config.js";
+import config from "@/util/config.js";
 export default {
   name: "menu-permissions-settings-keepAlive",
 

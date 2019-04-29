@@ -39,7 +39,7 @@
             <Form-item label="拍摄时间" required>
               <Row>
                 <Col span="11">
-                  <Form-item prop="queryStartTime">
+                  <Form-item>
                     <Date-picker
                       type="datetime"
                       placeholder="选择时间"
@@ -49,7 +49,7 @@
                 </Col>
                 <Col span="2" style="text-align: center">至</Col>
                 <Col span="11">
-                  <Form-item prop="queryEndTime">
+                  <Form-item>
                     <Date-picker type="datetime" placeholder="选择时间" v-model="formData.queryEndTime"></Date-picker>
                   </Form-item>
                 </Col>

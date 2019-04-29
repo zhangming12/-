@@ -167,23 +167,21 @@
                 <Form-item label="上传时间:" required>
                   <Row>
                     <Col span="11">
-                      <Form-item prop="queryStartTime">
+                      <Form-item>
                         <data-range
-                          @dataChange="startTimeChange"
                           hour="00:00"
-                          :time="formData.queryStartTime"
+                          v-model="formData.queryStartTime"
                           start
                         ></data-range>
                       </Form-item>
                     </Col>
                     <Col span="2" style="text-align: center;">至</Col>
                     <Col span="11">
-                      <Form-item prop="queryEndTime">
+                      <Form-item>
                         <data-range
                           hour="24:00"
                           placeholder="结束时间"
-                          @dataChange="endTimeChange"
-                          :time="formData.queryEndTime"
+                          v-model="formData.queryEndTime"
                         ></data-range>
                       </Form-item>
                     </Col>
@@ -414,7 +412,7 @@
 
 <script>
 import area from "@/config/china_code_data.js";
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import { validateStart, validateEnd } from "@/util/index.js";//验证规则
 
 import {
@@ -467,14 +465,6 @@ export default {
     const that = this;
     return {
       showQuery: false,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       groupList: [],
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
@@ -550,28 +540,6 @@ export default {
     }
   },
   methods: {
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     changeValue(value) {
       this.groupList = [];
       this.formData.groupId = "";
@@ -621,29 +589,12 @@ export default {
     },
     init(currentPage, pageSize) {
       var data = this.Global.JsonChange(this.formData);
-      // data["queryStartTime"] = this.Global.createTime(
-      //   this.formData.queryStartTime
-      // );
-      // data["queryEndTime"] = this.Global.formatEndTime(
-      //   this.formData.queryEndTime
-      // );
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
 
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
+      
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = currentPage;
       data["pageSize"] = pageSize;
@@ -783,17 +734,10 @@ export default {
             let timeStart = "";
             let timeEnd = "";
             timeStart = this.Global.createTime(this.formData.queryStartTime);
-            if (this.start.hour == "24:00") {
-              timeStart = this.Global.setHoursData(
-                this.start.time,
-                this.start.hour
-              );
-            }
+            
 
             timeEnd = this.Global.createTime(this.formData.queryEndTime);
-            if (this.end.hour == "24:00") {
-              timeEnd = this.Global.setHoursData(this.end.time, this.end.hour);
-            }
+           
             let params = {
               brandId: this.formData.brandId,
               groupId: this.formData.groupId,

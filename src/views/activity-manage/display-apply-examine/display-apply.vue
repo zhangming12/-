@@ -33,23 +33,13 @@
         <Form ref="form" :model="formData" :label-width="10" :rules="rule">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item prop="queryStartTime">
-                <data-range
-                  @dataChange="startTimeChange"
-                  hour="00:00"
-                  :time="formData.queryStartTime"
-                  start
-                ></data-range>
+              <Form-item>
+                <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="queryEndTime">
-                <data-range
-                  placeholder="结束时间"
-                  hour="24:00"
-                  @dataChange="endTimeChange"
-                  :time="formData.queryEndTime"
-                ></data-range>
+              <Form-item>
+                <data-range placeholder="结束时间" hour="24:00" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
@@ -169,7 +159,7 @@
 import area from "@/config/china_code_data.js";
 import { displayApplyStatus } from "@/util/ENUMS.js";
 import { queryDisPlayApplyAudit } from "@/api/activity-manage/display-apply-examine.js"; //api
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
@@ -194,14 +184,6 @@ export default {
       rule: {
         queryStartTime: [{ validator: validateStart }],
         queryEndTime: [{ validator: validateEnd }]
-      },
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
       },
       columns: [
         {
@@ -416,49 +398,13 @@ export default {
     changePage: function(size) {
       this.init(size, 10);
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     init(currentPage, pageSize) {
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
-      delete data["queryTime"];
       data["currentPage"] = currentPage;
       data["pageSize"] = pageSize;
       queryDisPlayApplyAudit(data).then(res => {
@@ -487,37 +433,16 @@ export default {
       });
     },
     formateTime(time) {
-      var date = new Date(time); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
-      var Y = date.getFullYear() + "-";
-      var M =
-        (date.getMonth() + 1 < 10
-          ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) + "-";
-      var D = date.getDate() + " ";
-      var h = date.getHours() + ":";
-      var m = date.getMinutes() + ":";
-      var s = date.getSeconds();
-      return Y + M + D + h + m + s;
+      return new Date(time).pattern("yyyy-MM-dd hh:mm:ss");
     },
     exportExcel() {
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
 
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
+
       this.Global.deleteEmptyProperty(data);
 
       var url = this.Global.getExportUrl(

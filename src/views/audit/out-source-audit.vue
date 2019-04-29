@@ -526,7 +526,6 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
@@ -535,7 +534,6 @@ import imageLook from "@/components/imgLook/img-look.vue";
 export default {
   name: "out-source-audit-keepAlive",
   components: {
-    dataRange,
     imageLook
   },
   data() {

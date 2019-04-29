@@ -205,7 +205,7 @@ let auditCountQualified = {
   "0": "不合格"
 };
 import area from "@/config/areaCode.js";
-import config from "../../util/config.js";
+import config from "@/util/config.js";
 import {
   queryDisplayLiquidateRecord, //查询列表
   callLiquidateByActivityId, //清算费用

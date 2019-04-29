@@ -425,10 +425,10 @@ footer {
 </template>
 
 <script>
-import area from "../../config/areaCode.js";
+import area from "@/config/areaCode.js";
 import { areaTreeInit } from "@/util/index.js";
-import upData from "../../assets/js/upload.js";
-import PROJECT_CONFIG from "../../util/config.js";
+import upData from "@/assets/js/upload.js";
+import PROJECT_CONFIG from "@/util/config.js";
 import { validateStart, validateEnd } from "@/util/index.js";//验证规则
 
 export default {

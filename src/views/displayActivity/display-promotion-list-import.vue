@@ -430,7 +430,7 @@ span.btn {
 </template>
 
 <script>
-import area from "../../config/china_code_data.js";
+import area from "@/config/china_code_data.js";
 
 import { dispalyExamineSuggesteStatus } from "@/util/ENUMS.js";
 import dataRange from "@/components/data-rang.vue";
@@ -439,7 +439,7 @@ import exportBtn from "@/components/Button/export-btn.vue";
 import detailBtn from "@/components/Button/detail-btn.vue";
 import delBtn from "@/components/Button/del-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
-import config from "../../util/config.js";
+import config from "@/util/config.js";
 import hhTable from "@/components/table/table.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import {
