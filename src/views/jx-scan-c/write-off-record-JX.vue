@@ -53,33 +53,6 @@
 .ivu-radio-wrapper {
   margin-right: 30px;
 }
-.searchBox {
-  overflow: hidden;
-  .search-left,
-  .search-right {
-    width: 48%;
-  }
-  .search-left {
-    button {
-      outline: none;
-      border: none;
-      width: 60px;
-      height: 30px;
-      line-height: 30px;
-      background: #ffffff;
-      margin-left: 8px;
-      cursor: pointer;
-      color: @primary-color;
-    }
-  }
-  .search-right {
-    width: 52%;
-    img {
-      cursor: pointer;
-      margin-left: 6px;
-    }
-  }
-}
 .myModal {
   position: absolute;
   width: 100%;
@@ -211,11 +184,7 @@ span.btn {
 
 <script>
 import dataRange from "@/components/data-rang.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 
 import importBtn from "@/components/Button/import-btn.vue";
 import exportBtn from "@/components/Button/export-btn.vue";

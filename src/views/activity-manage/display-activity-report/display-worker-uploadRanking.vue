@@ -99,12 +99,6 @@
       }
     }
   }
-  #scancode {
-    //background-image: url('../../../assets/image/week-worker-scancode.jpg');
-  }
-  #activityRate {
-    //background-image: url('../../../assets/image/week-worker-actrate.jpg');
-  }
 }
 
 .ivu-table-row {

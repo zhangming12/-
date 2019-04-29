@@ -63,58 +63,64 @@
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">新建角色</h2> -->
-        <div class="main-container">
-          <div class="box">
-            <Form :model="formData" :label-width="88" :rules="rules" >
-                <Row >
-                    <Col span='6'>
-                        <Form-item label='品牌名称' prop='brandId' required>
-                           <Select v-model="formData.brandId" placeholder="请选择" >
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>
-                        
-                    </Col>
-                    <Col span='6'>
-                        <Form-item label='角色名称' prop='roleName' required>
-                           <Input v-model.trim='formData.roleName' placeholder="请输入角色名称"></Input>
-                        </Form-item>
-                    </Col>
-                    <Col span='6'>
-                        <Form-item label='角色说明' prop='description'>
-                           <Input v-model.trim='formData.description' placeholder="请输入角色说明"></Input>
-                        </Form-item>
-                    </Col>
-                </Row>
-            </Form>           
-          </div>
-          <div class="box buttonBox">
-              <Form :label-width="88" ref="form" :rules="rules" >
-                  <Row >
-                      <Col span='24'>
-                          <h4>菜单选择:</h4>
-                          <div class="selectBox">
-                              <div class="left">
-                                <Tree @on-check-change='checkChange' ref="fatherTree" :data="baseData" show-checkbox></Tree>
-                              </div>
-                              <div class="right">
-                                <Tree :data="checkedData" ref="tree"></Tree>
-                              </div>
-                          </div>
-                      </Col>
-                  </Row>
-              </Form>    
-              <div class="btn">
-                  <Button @click="cancel" class="btnSearch" type="info">取消</Button>
-                  <Button @click="submit('form')" class="btnSearch" type="success">保存</Button>
-              </div>      
-          </div>
+  <div id="Main">
+    <!-- <h2 class="Title">新建角色</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form :model="formData" :label-width="88" :rules="rules">
+          <Row>
+            <Col span="6">
+              <Form-item label="品牌名称" prop="brandId" required>
+                <Select v-model="formData.brandId" placeholder="请选择">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="角色名称" prop="roleName" required>
+                <Input v-model.trim="formData.roleName" placeholder="请输入角色名称"></Input>
+              </Form-item>
+            </Col>
+            <Col span="6">
+              <Form-item label="角色说明" prop="description">
+                <Input v-model.trim="formData.description" placeholder="请输入角色说明"></Input>
+              </Form-item>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+      <div class="box buttonBox">
+        <Form :label-width="88" ref="form" :rules="rules">
+          <Row>
+            <Col span="24">
+              <h4>菜单选择:</h4>
+              <div class="selectBox">
+                <div class="left">
+                  <Tree
+                    @on-check-change="checkChange"
+                    ref="fatherTree"
+                    :data="baseData"
+                    show-checkbox
+                  ></Tree>
+                </div>
+                <div class="right">
+                  <Tree :data="checkedData" ref="tree"></Tree>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </Form>
+        <div class="btn">
+          <Button @click="cancel" class="btnSearch" type="info">取消</Button>
+          <Button @click="submit('form')" class="btnSearch" type="success">保存</Button>
         </div>
-        
-        
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -122,9 +128,7 @@ export default {
   name: "create-new-role",
   data() {
     return {
-      rules: {
-        // brandId: [{ required: true, message: "品牌不能为空", trigger: "blur" }]
-      },
+      rules: {},
       baseData: [],
       type: "", //类型 add 新建  modify 修改
       formData: {
@@ -415,43 +419,11 @@ export default {
       });
       this.checkedData = arr;
     },
-    // checkChange(val) {
-    //   const arr = []; //定义children为空的集合
-    //   const children = []; //定义children不为空的集合
-    //   const jh = []; //定义和children内容相同的集合
-    //   val.forEach((item, index) => {
-    //     if (item.children.length === 0) {
-    //       arr.push({
-    //         title: item.title,
-    //         index
-    //       });
-    //     }
-    //     if (item.children.length > 0) {
-    //       children.push(...item.children);
-    //     }
-    //   });
-    //   arr.forEach(item => {
-    //     children.forEach(j => {
-    //       if (item.title === j.title) {
-    //         jh.push(item);
-    //       }
-    //     });
-    //   });
-    //   jh.forEach(item => {
-    //     val.forEach((j, i) => {
-    //       if (item.title === j.title) {
-    //         val.splice(i, 1);
-    //       }
-    //     });
-    //   });
-    //   this.checkedData = JSON.parse(JSON.stringify(val));
-    // },
     cancel() {
       this.$router.back();
     },
     dataChange(val) {
       var treeData = this.$refs.tree.getCheckedNodes();
-      console.log(treeData);
     },
     createNewAccount() {
       this.type = "add";
@@ -477,8 +449,6 @@ export default {
       this.Global.deleteEmptyProperty(data);
       let datas = this.$refs["fatherTree"].getCheckedNodes();
       let idList = [];
-      // console.log(datas);
-      // return;
       datas.forEach(item => {
         idList.push(item.id);
         if (item.level == 2) {
@@ -510,9 +480,6 @@ export default {
         }
       });
       idList = this.arrRemoval(idList);
-
-      console.log(idList);
-      // return
       let api = "";
       if (this.$route.query.type === "edit") {
         api = "role/doUpdate.json";

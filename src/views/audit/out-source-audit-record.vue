@@ -42,32 +42,6 @@
 .ivu-radio-wrapper {
   margin-right: 30px;
 }
-.searchBox {
-  overflow: hidden;
-  .search-left,
-  .search-right {
-    width: 50%;
-  }
-  .search-left {
-    button {
-      outline: none;
-      border: none;
-      width: 60px;
-      height: 30px;
-      line-height: 30px;
-      background: #ffffff;
-      margin-left: 10px;
-      cursor: pointer;
-      color: @primary-color;
-    }
-  }
-  .search-right {
-    img {
-      cursor: pointer;
-      margin-left: 10px;
-    }
-  }
-}
 .myModal {
   position: absolute;
   width: 100%;
@@ -84,7 +58,6 @@
       font-size: 14px;
     }
     .modal-table {
-      //   max-height: 500px;
       overflow-y: auto;
       margin-top: 10px;
       h3 {
@@ -116,8 +89,6 @@
   margin-right: 10px;
   color: #333;
   cursor: pointer;
-  // text-overflow: ellipsis
-  // white-space: nowrap;
 }
 .demo {
   float: left;
@@ -157,59 +128,69 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">审核记录(单)</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" class="form" :model="formData" :label-width="10">
-              <div class="container">
-                    <div class="btn-left w18">
-                        <Form-item  prop="queryStartTime"   >
-                            <DatePicker type="daterange" v-model="formData.queryTime" split-panels placeholder="审核时间" style="display:block;"></DatePicker>
-                        </Form-item>
-                    </div>
-              </div>
-              <div class="btn-left w10">
-                <div class="searchBox">
-                    <div class="btn-right search-right" @click="submit('search')">
-                        <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                    </div>
-                </div>
-              </div>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left span">合格： <span class='numColor'>{{ isQualifiedCount }}</span></span>
-              <span class="btn-left span">不合格： <span class='numColor'>{{ isNotQualifiedCount }}</span></span>
-              <span class="btn-left span">判定中： <span class='numColor'>{{ isQualifiedIngCount }}</span></span>
+    <!-- <h2 class="Title">审核记录(单)</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" class="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item prop="queryStartTime">
+                <DatePicker
+                  type="daterange"
+                  v-model="formData.queryTime"
+                  split-panels
+                  placeholder="审核时间"
+                  style="display:block;"
+                ></DatePicker>
+              </Form-item>
             </div>
-            <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" ></hhTable>
-            
-        </div>
-        <div class="page-box">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-            </div>
-        </div>
-      </div>
-      
-      <!-- 导入导出历史 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="myModalisShow"
-            width=520>
-          <div slot="main" class="modal-main">
-            <!-- <h3>近一周导出历史</h3> -->
-            <div class="modal-table" style="margin-top:0;">
-              <h3>查看视频</h3>
-              <div class="videoBox">
-                  <video v-if="videoSrc" :src="videoSrc" controls></video>
-                  <p v-else> 暂无视频 </p>
+          </div>
+          <div class="btn-left w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('search')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
               </div>
             </div>
           </div>
-       </myModal>
+        </Form>
+      </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left span">
+            合格：
+            <span class="numColor">{{ isQualifiedCount }}</span>
+          </span>
+          <span class="btn-left span">
+            不合格：
+            <span class="numColor">{{ isNotQualifiedCount }}</span>
+          </span>
+          <span class="btn-left span">
+            判定中：
+            <span class="numColor">{{ isQualifiedIngCount }}</span>
+          </span>
+        </div>
+        <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
+    </div>
 
+    <!-- 导入导出历史 -->
+    <myModal class="myModal" @close="closeModal" :modal="myModalisShow" width="520">
+      <div slot="main" class="modal-main">
+        <!-- <h3>近一周导出历史</h3> -->
+        <div class="modal-table" style="margin-top:0;">
+          <h3>查看视频</h3>
+          <div class="videoBox">
+            <video v-if="videoSrc" :src="videoSrc" controls></video>
+            <p v-else>暂无视频</p>
+          </div>
+        </div>
+      </div>
+    </myModal>
   </div>
 </template>
 
@@ -217,11 +198,7 @@
 import refreshBtn from "@/components/Button/refresh-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import hhTable from "@/components/table/table.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
   name: "out-source-audit-record-keepAlive",
   data() {

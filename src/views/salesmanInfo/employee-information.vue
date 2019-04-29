@@ -133,8 +133,7 @@
 </template>
 
 <script>
-import { workerUpdateStatus } from "@/api/salesman-info/salesman-info";
-import config from "../../util/config.js";
+import config from "@/util/config.js";
 export default {
   name: "employee-information-keepAlive",
 

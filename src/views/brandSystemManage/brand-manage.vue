@@ -94,15 +94,11 @@
     }
     .modal-table {
       max-height: 500px;
-      // overflow-y: auto;
       margin-top: 10px;
       .modal-table-top {
         overflow: hidden;
         height: 30px;
         line-height: 30px;
-        // .numColor {
-        //   color: @primary-color;
-        // }
       }
     }
   }
@@ -121,7 +117,6 @@
   margin-left: 20px;
   position: relative;
   .zhezhao {
-    // background: red;
     cursor: not-allowed;
     width: 105px;
     height: 85px;
@@ -165,9 +160,7 @@
           </span>
 
           <addNewBtn class="btn-right ml20" @btnClick="showModal"/>
-          <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
         </div>
-        <!-- <Table :columns="columns1" :data="pageData" disabled-hover></Table> -->
         <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
       </div>
       <div class="page-box">
@@ -183,9 +176,6 @@
         <div class="modal-table">
           <Form ref="form" :model="formDatas" :label-width="88">
             <Form-item label="品牌名称" required>
-              <!-- <Select :disabled="type == 'look'" v-model="formDatas.brandId" placeholder="品牌名称">
-                        <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-              </Select>-->
               <Input
                 :disabled="type == 'modify'"
                 v-model.trim="formDatas.brandName"
@@ -253,7 +243,6 @@
               </div>
             </div>
             <div class="modal-fotter" style="text-align:center;">
-              <!-- <Button @click="closeModal" type="default">取消</Button> -->
               <Button v-if="type != 'add'" @click="closeModal" type="default">取消</Button>
               <Button v-if="type == 'add'" @click="saveNewPresent" type="default">下一步，设置菜单</Button>
               <Button v-else @click="saveNewPresent" type="default">确定</Button>
@@ -286,7 +275,6 @@
 </template>
 
 <script>
-import { queryDisPlayApplyAudit } from "@/api/activity-manage/display-apply-examine.js"; //api
 import dataRange from "@/components/data-rang.vue";
 import md5 from "js-md5";
 import exportBtn from "@/components/Button/export-btn.vue";
@@ -295,11 +283,7 @@ import myModal from "@/components/Modal/my-modal.vue";
 import hhTable from "@/components/table/table.vue";
 import upData from "@/assets/js/upload.js";
 import PROJECT_CONFIG from "@/util/config.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";

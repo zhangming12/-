@@ -143,27 +143,16 @@
         <Row>
           <Col span="12">
             <Form-item label="上传时间:" required prop="queryTime">
-              <!-- <DatePicker  v-model="formData.queryTime" placeholder="选择日期跟时间" type="datetimerange" style="width:100%"></DatePicker> -->
               <Row>
                 <Col span="11">
                   <Form-item prop="queryStartTime">
-                    <data-range
-                      @dataChange="startTimeChange"
-                      hour="00:00"
-                      :time="formData.queryStartTime"
-                      start
-                    ></data-range>
+                    <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
                   </Form-item>
                 </Col>
                 <Col span="2" style="text-align: center;">至</Col>
                 <Col span="11">
                   <Form-item prop="queryEndTime">
-                    <data-range
-                      placeholder="结束时间"
-                      hour="24:00"
-                      @dataChange="endTimeChange"
-                      :time="formData.queryEndTime"
-                    ></data-range>
+                    <data-range placeholder="结束时间" hour="24:00" v-model="formData.queryEndTime"></data-range>
                   </Form-item>
                 </Col>
               </Row>
@@ -289,7 +278,7 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
@@ -298,14 +287,6 @@ export default {
   name: "display-activity-ranking-keepAlive",
   data() {
     return {
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       groupList: [],
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
@@ -370,52 +351,17 @@ export default {
         }
       });
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     init() {
       var data = this.Global.JsonChange(this.formData);
 
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
 
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
+
       delete data.queryTime;
       this.Global.deleteEmptyProperty(data);
-      //data['brandId'] = 1;
-      //data['activityId'] = 12;
 
       displayRankingShow(data).then(res => {
         if (res.status == 1) {
@@ -445,24 +391,10 @@ export default {
     },
     displayRateExport() {
       var data = this.Global.JsonChange(this.formData);
-
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       delete data.queryTime;
       var url = this.Global.getExportUrl(
@@ -474,5 +406,3 @@ export default {
   }
 };
 </script>
-
-

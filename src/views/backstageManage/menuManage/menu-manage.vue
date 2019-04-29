@@ -81,90 +81,103 @@
 </style>
     
     <template>
-    <div id="Main">
-        <!-- <h2 class="Title">菜单管理</h2> -->
-        <div class="main-container">
-            <div class="box buttonBox">
-                <Form :label-width="88">
-                    <Row>
-                        <Col span='24'>
-                        <h4>菜单管理:</h4>
-                        <div class="selectBox">
-                            <div class="left">
-                                <Tree ref="tree" :data="treeData" :render="renderContent" @on-check-change="save"></Tree>
-                            </div>
-                        </div>
-                        </Col>
-                    </Row>
-                </Form>
-            </div>
-
-        </div>
-        <!-- 新建/修改一级菜单 -->
-        <Modal v-model="oneMenuShow">
-            <h3 slot="header" style="color:#f60;text-align:center">
-                {{menuData.type == 'add'?'新建一级菜单':'修改一级菜单'}}
-            </h3>
-            <Form :model="menuData" :label-width="88">
-                <Form-item label='菜单名称:' prop='resName' required>
-                    <Input v-model.trim="menuData.resName" placeholder="请输入菜单名称"></Input>
-                </Form-item>
-
-                <Form-item label='所属模块:' prop='menuName' required>
-                    <Select v-model="menuData.menuName" placeholder="模块名称" clearable>
-                        <Option :value="item.id" v-for="(item,index) in modularList" :key="index">{{ item.title }}</Option>
-                    </Select>
-                </Form-item>
-                <Form-item label='排序号:' prop='orderIndex' required>
-                    <Input v-model.trim="menuData.orderIndex" placeholder="请输入序号"></Input>
-                </Form-item>
-                <Form-item label='icon:' prop='resIcon' required>
-                    <Input v-model.trim="menuData.resIcon" placeholder="请输入ICON"></Input>
-                </Form-item>
-                <Form-item label='菜单说明:' prop='summary'>
-                    <Input v-model.trim="menuData.summary" placeholder="请输入功能说明"></Input>
-                </Form-item>
-            </Form>
-            <div slot="footer" style="text-align:center;">
-                <Button type="text" @click="cancel">取消</Button>
-                <Button type="text" @click="partitionSave">保存</Button>
-            </div>
-        </Modal>
-        <!-- 新建/修改二级菜单 -->
-        <Modal v-model="twoMenuShow">
-            <h3 slot="header" style="color:#f60;text-align:center">
-                {{menuData.type == 'add'?'新建二级菜单':'修改二级菜单'}}
-            </h3>
-            <Form :model="menuData" :label-width="100">
-                <Form-item label='菜单名称:' prop='resName' required>
-                    <Input v-model.trim="menuData.resName" placeholder="请输入菜单名称"></Input>
-                </Form-item>
-                <Form-item label='菜单URL:' prop='resPage' required>
-                    <Input v-model.trim="menuData.resPage" placeholder="请输入菜单URL"></Input>
-                </Form-item>
-                <Form-item label='所属模块:' prop='menuName' required @on-change="getOneLevelMenuList">
-                    <Select v-model="menuData.menuName" placeholder="模块名称" clearable>
-                        <Option :value="item.id" v-for="(item,index) in modularList" :key="index">{{ item.title }}</Option>
-                    </Select>
-                </Form-item>
-                <Form-item label='所属一级菜单:' prop='module' required>
-                    <Select v-model="menuData.module" placeholder="一级菜单" clearable>
-                        <Option :value="item.id" v-for="(item,index) in oneLevelMenuList" :key="index">{{ item.resName }}</Option>
-                    </Select>
-                </Form-item>
-                <Form-item label='排序号:' prop='orderIndex' required>
-                    <Input v-model.trim="menuData.orderIndex" placeholder="请输入序号"></Input>
-                </Form-item>
-                <Form-item label='菜单说明:' prop='summary'>
-                    <Input v-model.trim="menuData.summary" placeholder="请输入功能说明"></Input>
-                </Form-item>
-            </Form>
-            <div slot="footer" style="text-align:center;">
-                <Button type="text" @click="cancel">取消</Button>
-                <Button type="text" @click="twoLevelMenuSure">保存</Button>
-            </div>
-        </Modal>
+  <div id="Main">
+    <!-- <h2 class="Title">菜单管理</h2> -->
+    <div class="main-container">
+      <div class="box buttonBox">
+        <Form :label-width="88">
+          <Row>
+            <Col span="24">
+              <h4>菜单管理:</h4>
+              <div class="selectBox">
+                <div class="left">
+                  <Tree ref="tree" :data="treeData" :render="renderContent" @on-check-change="save"></Tree>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </Form>
+      </div>
     </div>
+    <!-- 新建/修改一级菜单 -->
+    <Modal v-model="oneMenuShow">
+      <h3
+        slot="header"
+        style="color:#f60;text-align:center"
+      >{{menuData.type == 'add'?'新建一级菜单':'修改一级菜单'}}</h3>
+      <Form :model="menuData" :label-width="88">
+        <Form-item label="菜单名称:" prop="resName" required>
+          <Input v-model.trim="menuData.resName" placeholder="请输入菜单名称"></Input>
+        </Form-item>
+
+        <Form-item label="所属模块:" prop="menuName" required>
+          <Select v-model="menuData.menuName" placeholder="模块名称" clearable>
+            <Option
+              :value="item.id"
+              v-for="(item,index) in modularList"
+              :key="index"
+            >{{ item.title }}</Option>
+          </Select>
+        </Form-item>
+        <Form-item label="排序号:" prop="orderIndex" required>
+          <Input v-model.trim="menuData.orderIndex" placeholder="请输入序号"></Input>
+        </Form-item>
+        <Form-item label="icon:" prop="resIcon" required>
+          <Input v-model.trim="menuData.resIcon" placeholder="请输入ICON"></Input>
+        </Form-item>
+        <Form-item label="菜单说明:" prop="summary">
+          <Input v-model.trim="menuData.summary" placeholder="请输入功能说明"></Input>
+        </Form-item>
+      </Form>
+      <div slot="footer" style="text-align:center;">
+        <Button type="text" @click="cancel">取消</Button>
+        <Button type="text" @click="partitionSave">保存</Button>
+      </div>
+    </Modal>
+    <!-- 新建/修改二级菜单 -->
+    <Modal v-model="twoMenuShow">
+      <h3
+        slot="header"
+        style="color:#f60;text-align:center"
+      >{{menuData.type == 'add'?'新建二级菜单':'修改二级菜单'}}</h3>
+      <Form :model="menuData" :label-width="100">
+        <Form-item label="菜单名称:" prop="resName" required>
+          <Input v-model.trim="menuData.resName" placeholder="请输入菜单名称"></Input>
+        </Form-item>
+        <Form-item label="菜单URL:" prop="resPage" required>
+          <Input v-model.trim="menuData.resPage" placeholder="请输入菜单URL"></Input>
+        </Form-item>
+        <Form-item label="所属模块:" prop="menuName" required @on-change="getOneLevelMenuList">
+          <Select v-model="menuData.menuName" placeholder="模块名称" clearable>
+            <Option
+              :value="item.id"
+              v-for="(item,index) in modularList"
+              :key="index"
+            >{{ item.title }}</Option>
+          </Select>
+        </Form-item>
+        <Form-item label="所属一级菜单:" prop="module" required>
+          <Select v-model="menuData.module" placeholder="一级菜单" clearable>
+            <Option
+              :value="item.id"
+              v-for="(item,index) in oneLevelMenuList"
+              :key="index"
+            >{{ item.resName }}</Option>
+          </Select>
+        </Form-item>
+        <Form-item label="排序号:" prop="orderIndex" required>
+          <Input v-model.trim="menuData.orderIndex" placeholder="请输入序号"></Input>
+        </Form-item>
+        <Form-item label="菜单说明:" prop="summary">
+          <Input v-model.trim="menuData.summary" placeholder="请输入功能说明"></Input>
+        </Form-item>
+      </Form>
+      <div slot="footer" style="text-align:center;">
+        <Button type="text" @click="cancel">取消</Button>
+        <Button type="text" @click="twoLevelMenuSure">保存</Button>
+      </div>
+    </Modal>
+  </div>
 </template>
     
 <script>
@@ -250,14 +263,14 @@ export default {
         this.treeData = [];
         let arr = implode(res, 0, 1);
         arr.forEach(item => {
-          if(item.resType == "template" && item.parentId == 0){
-            this.treeData.push(item)
+          if (item.resType == "template" && item.parentId == 0) {
+            this.treeData.push(item);
           }
-        })
+        });
         this.maxLevel = Math.max(...this.maxLevel);
       });
     },
-    
+
     renderContent(h, { root, node, data }) {
       return h(
         "span",
@@ -354,8 +367,8 @@ export default {
     getOneLevelMenuList(id) {
       this.oneLevelMenuList = [];
       this.menuData.module = "";
-      if(!id){
-        return 
+      if (!id) {
+        return;
       }
       this.Global.doPost("resource/queryMenuByTemplate.json", id, res => {
         this.oneLevelMenuList = res;
@@ -412,8 +425,8 @@ export default {
         if (data.level == 2) {
           setTimeout(() => {
             this.menuData.module = data.id;
-            this.$set(this.menuData,'module',data.id);
-          },0)
+            this.$set(this.menuData, "module", data.id);
+          }, 0);
         }
         this.twoMenuShow = true;
       }
@@ -444,14 +457,14 @@ export default {
       this.getModularList();
       this.menuData.menuName = parentId;
       this.getOneLevelMenuList(parentId);
-      
+
       if (data.level == 2) {
         // this.menuData.module = data.id;
         this.oneMenuShow = true;
       } else {
         setTimeout(() => {
           this.menuData.module = this.getBelonedOneMenu(data.id);
-        },0)
+        }, 0);
         this.twoMenuShow = true;
       }
 
@@ -535,7 +548,7 @@ export default {
         parmas["id"] = this.menuData.id;
       }
       this.Global.deleteEmptyProperty(parmas);
-      
+
       this.Global.doPost("resourceAuthority/addResource.json", parmas, res => {
         this.$Message.success(
           this.menuData.type == "edit" ? "修改成功" : "新建成功"

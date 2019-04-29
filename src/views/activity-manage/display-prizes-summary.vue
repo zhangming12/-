@@ -197,8 +197,6 @@
           <Col span="2" offset="1" style="margin-top:20px">
             <div class="searchBox">
               <Button @click="submit()" type="primary">查询</Button>
-              <!-- <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="chevron-up" v-if="showQuery"></Button>
-              <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="chevron-down" v-else></Button>-->
             </div>
           </Col>
         </Row>

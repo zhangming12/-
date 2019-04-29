@@ -47,27 +47,17 @@
           <Col span="21">
             <Row>
               <Col span="14">
-                <Form-item label="上传时间:" required prop="queryTime">
+                <Form-item label="上传时间:" required>
                   <Row>
                     <Col span="11">
-                      <Form-item prop="queryStartTime">
-                        <data-range
-                          @dataChange="startTimeChange"
-                          hour="00:00"
-                          :time="formData.queryStartTime"
-                          start
-                        ></data-range>
+                      <Form-item>
+                        <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
                       </Form-item>
                     </Col>
                     <Col span="2" style="text-align: center;">至</Col>
                     <Col span="11">
-                      <Form-item prop="queryEndTime">
-                        <data-range
-                          placeholder="结束时间"
-                          hour="24:00"
-                          @dataChange="endTimeChange"
-                          :time="formData.queryEndTime"
-                        ></data-range>
+                      <Form-item>
+                        <data-range placeholder="结束时间" hour="24:00" v-model="formData.queryEndTime"></data-range>
                       </Form-item>
                     </Col>
                   </Row>
@@ -138,7 +128,6 @@
                 v-else
               ></Button>
             </div>
-            <!-- <Button @click="submit('form')" class="btn-search" type="primary">查询</Button> -->
           </Col>
         </Row>
         <transition name="fade">
@@ -167,10 +156,9 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import { workerStoreDisplayStatistics } from "@/api/activity-manage/display-activity-manage.js";
-import { getActivityListDoQuery } from "@/api/common.js";
 import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
@@ -178,14 +166,6 @@ export default {
   data() {
     return {
       showQuery: false,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME,
@@ -193,15 +173,13 @@ export default {
         groupId: "",
         activityId: "",
         workerName: "",
-        workerPhone: "",
-        queryTime: [EDFAULT_STARTTIME, EDFAULT_ENDTIME]
+        workerPhone: ""
       },
       page: 1,
       pageNum: 0,
       rule: {
         queryStartTime: [{ validator: validateStart }],
-        queryEndTime: [{ validator: validateEnd }],
-        queryTime: [{ required: true, message: "选择日期跟时间" }]
+        queryEndTime: [{ validator: validateEnd }]
       },
 
       columns1: [
@@ -305,28 +283,6 @@ export default {
         }
       );
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     changePage: function(size) {
       this.init(size, 10);
     },
@@ -336,25 +292,13 @@ export default {
         return;
       }
       var data = this.Global.JsonChange(this.formData);
-      delete data["queryTime"];
 
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
 
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
+
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = currentPage;
       data["pageSize"] = pageSize;
@@ -373,21 +317,9 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
 
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
-      delete data["queryTime"];
+
       var url = this.Global.getExportUrl(
         "report/workerStoreDisplayStatisticsExport.json",
         data
@@ -415,5 +347,3 @@ export default {
   }
 };
 </script>
-
-

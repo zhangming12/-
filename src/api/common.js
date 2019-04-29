@@ -20,23 +20,6 @@ export function doQueryProvinceCityAll(level, id) {
         data
     })
 }
-/**
- * @desc 根据品牌ID获取活动列表
- * @param {String} 品牌ID 
- * @return {ArrayList} 活动列表
- */
-export function getActivityListDoQuery(id) {
-    let data = {
-        data: {
-            brandId: id
-        }
-    }
-    return fetch({
-        url: '/activity/queryActivityList.json',
-        method: 'post',
-        data
-    })
-}
 
 /**
  * @desc 根据品牌ID获取陈列活动列表

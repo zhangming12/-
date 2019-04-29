@@ -89,12 +89,16 @@
       }
     }
     .btn-box {
-      // text-align: right;
       margin-top: 10px;
       margin-right: 10px;
       overflow: hidden;
       .btn {
         margin-right: 10px;
+      }
+      .btn-span {
+        height: 32px;
+        display: flex;
+        align-items: center;
       }
     }
   }
@@ -185,14 +189,22 @@
         </div>
         <div class="btn-box">
           <Select
-            v-if="showReprieve"
-            style="width:100px;margin-top:5px;"
-            size="small"
             class="btn-left"
+            v-if="showReprieve"
+            style="width:100px;margin-top:5px;margin-right:10px;"
+            size="small"
           >
             <Option :value="0">其他</Option>
             <Option :value="1">暂缓</Option>
           </Select>
+          <span class="btn-span btn-left">
+            审核退回
+            <my-tooltip
+              :auditPolicy="itemData.auditPolicy"
+              :placement="position"
+              style="margin-left:5px;"
+            />
+          </span>
           <Button type="primary" class="btn btn-right" @click="save(itemData)">保存</Button>
           <Button
             class="btn btn-right"

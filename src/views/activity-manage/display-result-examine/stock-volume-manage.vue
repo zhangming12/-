@@ -76,7 +76,6 @@
   left: 50%;
   margin-left: -150px;
   margin-top: -250px;
-  // border: 1px solid black;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
   padding: 20px;
   background: #f5f7f9;

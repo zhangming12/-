@@ -7,9 +7,9 @@ import fetch from '@/util/fetch';
  * @return  
  * 
  */
-export function queryLoongStoreList(objList){
-    let data={
-        data:objList
+export function queryLoongStoreList(objList) {
+    let data = {
+        data: objList
     }
     return fetch({
         url: '/displayLoongLog/queryLoongStoreList.json',
@@ -23,9 +23,9 @@ export function queryLoongStoreList(objList){
  * @return  
  * 
  */
-export function brandStoreSignInfoImport(objList){
-    let data={
-        data:objList
+export function brandStoreSignInfoImport(objList) {
+    let data = {
+        data: objList
     }
     return fetch({
         url: '/brandStoreSign/brandStoreSignInfoImport.json',
@@ -39,9 +39,9 @@ export function brandStoreSignInfoImport(objList){
  * @return 
  * 
  */
-export function deleteLoongStoreInfo(objList){
-    let data={
-        data:objList
+export function deleteLoongStoreInfo(objList) {
+    let data = {
+        data: objList
     }
     return fetch({
         url: '/displayLoongLog/deleteLoongStoreInfo.json',
@@ -55,9 +55,9 @@ export function deleteLoongStoreInfo(objList){
  * @return  
  * 
  */
-export function queryLoongActivityList(objList){
-    let data={
-        data:objList
+export function queryLoongActivityList(objList) {
+    let data = {
+        data: objList
     }
     return fetch({
         url: '/displayLoongLog/queryLoongActivityList.json',
@@ -71,9 +71,9 @@ export function queryLoongActivityList(objList){
  * @return  
  * 
  */
-export function queryLoongActivityRisk(objList){
-    let data={
-        data:objList
+export function queryLoongActivityRisk(objList) {
+    let data = {
+        data: objList
     }
     return fetch({
         url: '/displayLoongLog/queryLoongActivityRisk.json',
@@ -88,28 +88,12 @@ export function queryLoongActivityRisk(objList){
  * @return  
  * 
  */
-export function getLoongActivityInfo(objList){
-    let data={
-        data:objList
+export function getLoongActivityInfo(objList) {
+    let data = {
+        data: objList
     }
     return fetch({
         url: '/displayLoongLog/getLoongActivityInfo.json',
-        method: 'post',
-        data
-    })
-}
-/**
- * @desc 地龙活动参与情况 店铺详情
- * @param 
- * @return  
- * 
- */
-export function queryLoongActivityMonitor(objList){
-    let data={
-        data:objList
-    }
-    return fetch({
-        url: '/displayLoongLog/queryLoongActivityMonitor.json',
         method: 'post',
         data
     })
@@ -121,9 +105,9 @@ export function queryLoongActivityMonitor(objList){
  * @return  
  * 
  */
-export function loongTrackStatisticsForWeek(objList){
-    let data={
-        data:objList
+export function loongTrackStatisticsForWeek(objList) {
+    let data = {
+        data: objList
     }
     return fetch({
         url: '/report/loongTrackStatisticsForWeek.json',
@@ -138,9 +122,9 @@ export function loongTrackStatisticsForWeek(objList){
  * @return  
  * 
  */
-export function loongTrackStatisticsDetail(objList){
-    let data={
-        data:objList
+export function loongTrackStatisticsDetail(objList) {
+    let data = {
+        data: objList
     }
     return fetch({
         url: '/report/loongTrackStatisticsDetail.json',

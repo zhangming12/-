@@ -37,22 +37,6 @@
   cursor: pointer;
   .TextOverflow();
 }
-.searchBox {
-  overflow: hidden;
-  .search_btn {
-    float: left;
-    width: 50px;
-    padding: 5px 14px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .search_icon {
-    float: left;
-    padding: 5px 10px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-}
 .uploadBox {
   overflow: hidden;
   .demo {

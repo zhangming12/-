@@ -298,9 +298,7 @@
         >全部确认</Button>
       </div>
       <div id="storeGoodsInfor" v-if="storeGoodsList && storeGoodsList.length">
-        <!-- <Row> -->
         <CheckboxGroup v-model="social">
-          <!-- <Col span="10"  offset="1" v-for="(item, index) in storeGoodsList" :key="index" style="margin-top:10px;height: 300px;"> -->
           <div class="storeGoods" v-for="(item, index) in storeGoodsList" :key="index">
             <div class="goodsOperator">
               <div class="operator-l">
@@ -335,15 +333,12 @@
                   <P>用户ID：{{item.storeId}}</P>
                   <P>客户编号：{{item.joinCode}}</P>
                   <P>门店名称：{{item.storeName}}</P>
-                  <!-- <P>门店地址：{{item.storeAddress}}</P> -->
                   <P>备注：{{item.memo}}</P>
                 </div>
               </div>
             </Card>
           </div>
-          <!-- </Col>  -->
         </CheckboxGroup>
-        <!-- </Row> -->
       </div>
       <div v-else style="text-align: center;">暂无数据</div>
       <div style="margin: 10px;overflow: hidden">

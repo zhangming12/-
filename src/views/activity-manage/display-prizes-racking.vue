@@ -177,9 +177,6 @@
             <Form-item label="线路编号:">
               <Input v-model.trim="formData.salesRoute" placeholder="请输入线路编号"></Input>
             </Form-item>
-            <!-- <Form-item label="经销商名称:" prop="supervisorId">
-            <Input v-model.trim="formData.supervisorId" placeholder="请输入经销商编号"></Input>
-            </Form-item>-->
           </Col>
           <Col span="2" offset="1" style="margin-top:20px">
             <div class="searchBox">

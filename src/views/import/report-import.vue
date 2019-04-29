@@ -218,8 +218,7 @@
 </template>
 
 <script>
-import { workerUpdateStatus } from "@/api/salesman-info/salesman-info";
-import config from "../../util/config.js";
+import config from "@/util/config.js";
 import dataRange from "@/components/data-rang.vue";
 
 import {

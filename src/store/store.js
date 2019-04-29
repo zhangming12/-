@@ -16,14 +16,8 @@ export default new vuex.Store({
         noticeMsg: 0 //通知消息数字
     },
     mutations: {
-        changeNoticeMsg(state, data) {
+        setNoticeMsg(state, data) {
             state.noticeMsg = data;
-        },
-        //获取noticeMsg
-        getNoticeMsg(state) {
-            Util.doPost('condition/queryBrands.json', {}, res => {
-                state.noticeMsg = 11;
-            })
         },
         default (state, data) {
             state.salaemanData = data;
@@ -49,6 +43,14 @@ export default new vuex.Store({
             state.status = !state.status;
         }
 
+    },
+    actions: {
+        //获取noticeMsg
+        getNoticeMsg(context) {
+            Util.doPost('condition/queryBrands.json', {}, res => {
+                context.commit('setNoticeMsg', 11);
+            })
+        },
     },
     plugins: [createPersistedState({
         storage: window.sessionStorage,

@@ -3,9 +3,6 @@
 
 .box {
   width: 100%;
-  // box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
-  // margin: 0 auto 15px;
-  // padding: 30px 20px 0;
   background: #fff;
 }
 
@@ -179,7 +176,6 @@
 
 <script>
 import { removeRoleResource, getRoleResource } from "@/api/common.js";
-import { workerUpdateStatus } from "@/api/salesman-info/salesman-info";
 export default {
   name: "brand-role-manage-keepAlive",
 

@@ -293,25 +293,18 @@
 <script>
 import area from "../../config/china_code_data.js";
 
-import {
-  dispalyExamineSuggesteStatus
-} from "@/util/ENUMS.js";
-import { queryDisPlayApplyAudit } from "@/api/activity-manage/display-apply-examine.js"; //api
+import { dispalyExamineSuggesteStatus } from "@/util/ENUMS.js";
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import hhTable from "@/components/table/table.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
   name: "display-application-audit-keepAlive",
@@ -754,30 +747,6 @@ export default {
           }
         }
       );
-      // queryDisPlayApplyAudit(data).then(res => {
-      //   if (res.status == 1) {
-      //     this.pageNum = res.data.items;
-      //     this.pageData = res.data.datalist;
-      //     this.page = res.data.page;
-      //     for (let i = 0; i < this.pageData.length; i++) {
-      //       var index = this.pageData[i]["displayApplyStatus"];
-      //       if (index == 0) {
-      //         this.pageData[i]["displayApplyStatus"] = "未审核";
-      //       } else if (index == 1) {
-      //         this.pageData[i]["displayApplyStatus"] = "通过";
-      //       } else if (index == 2) {
-      //         this.pageData[i]["displayApplyStatus"] = "未通过";
-      //       } else if (index == 3) {
-      //         this.pageData[i]["displayApplyStatus"] = "二次审核通过";
-      //       } else if (index == 4) {
-      //         this.pageData[i]["displayApplyStatus"] = "退回";
-      //       }
-      //       this.pageData[i]["displayApplyTime"] = this.formateTime(
-      //         this.pageData[i]["displayApplyTime"]
-      //       );
-      //     }
-      //   }
-      // });
     },
     exportExcel() {
       var data = this.Global.JsonChange(this.formData);

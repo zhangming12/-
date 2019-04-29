@@ -314,10 +314,10 @@ export default {
   },
   methods: {
     changeNotice() {
+      // this.$store.dispatch("getNoticeMsg");
       let num = this.$store.state.noticeMsg;
       num++;
-      // this.$store.commit('changeNoticeMsg',num)
-      this.$store.commit("getNoticeMsg");
+      this.$store.commit("setNoticeMsg", num);
     },
     //查询品牌
     queryBrand() {

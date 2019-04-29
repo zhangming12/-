@@ -141,8 +141,6 @@
   </div>
 </template>
 <script>
-import { getRoleResource } from "@/api/common.js";
-
 export default {
   name: "menu-settings",
 

@@ -36,7 +36,6 @@
   overflow: hidden;
   .title {
     display: inline-block;
-    float: left;
     height: 228px;
     line-height: 228px;
   }
@@ -137,122 +136,151 @@ footer {
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">预警详情</h2> -->
+  <div id="Main">
+    <!-- <h2 class="Title">预警详情</h2> -->
 
-        <div class="box">
-            <!-- 店铺信息 -->
-            <Form :model="formData" label-position="left" :label-width="80">
-            <div class="form-title">店铺信息</div>
-            <div id="shopInfor">
-                <div class='child'>                     
-                         <Row>
-                            <Col span="6">
-                                <FormItem label="客户编号：">
-                                    <span>{{formData.joinCode}}</span>
-                                </FormItem> 
-                                <FormItem label="手机号码：">
-                                    <span>{{formData.phone | phoneFormat}}</span>
-                                </FormItem> 
-                                <FormItem label="销售部：">
-                                    <span>{{formData.salesDept}}</span>
-                                </FormItem>                                                                                                                               
-                            </Col>
-                            <Col span="6"  >
-                                <FormItem label="店铺ID：">  
-                                    <span>{{formData.storeId}}</span>
-                                </FormItem>
-                                 <FormItem label="业代姓名：">
-                                    <span>{{formData.workerName}}</span>
-                                </FormItem>    
-                                <FormItem label="销售大区：">
-                                    <span>{{formData.salesRegion}}</span>
-                                </FormItem>                                                                                                                                                              
-                            </Col>
-                            <Col span="6">
-                                <FormItem label="店铺名称：">
-                                    <span>{{formData.storeName}}</span>
-                                </FormItem>
-                                <FormItem label="业代手机：">
-                                    <span>{{formData.workerPhone | phoneFormat}}</span>
-                                </FormItem>                                
-                                <FormItem label="营业部：">
-                                    <span>{{formData.busiDept}}</span>
-                                </FormItem>                                                                
-                            </Col>
-                            <Col span="6"  >
-                                <FormItem label="姓名：">  
-                                    <span>{{formData.name}}</span>
-                                </FormItem>
-                                <FormItem label="路线编号：">
-                                    <span>{{formData.salesRoute}}</span>
-                                </FormItem>                                                                                                
-                            </Col>  
-                            <Col span="24"  > 
-                                <FormItem label="地 址：">
-                                    <span>{{formData.address}}</span>
-                                </FormItem>                          
-                            </Col>  
-                            
-                        </Row>                    
+    <div class="box">
+      <!-- 店铺信息 -->
+      <Form :model="formData" label-position="left" :label-width="80">
+        <div class="form-title">店铺信息</div>
+        <div id="shopInfor">
+          <div class="child">
+            <Row>
+              <Col span="6">
+                <FormItem label="客户编号：">
+                  <span>{{formData.joinCode}}</span>
+                </FormItem>
+                <FormItem label="手机号码：">
+                  <span>{{formData.phone | phoneFormat}}</span>
+                </FormItem>
+                <FormItem label="销售部：">
+                  <span>{{formData.salesDept}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="店铺ID：">
+                  <span>{{formData.storeId}}</span>
+                </FormItem>
+                <FormItem label="业代姓名：">
+                  <span>{{formData.workerName}}</span>
+                </FormItem>
+                <FormItem label="销售大区：">
+                  <span>{{formData.salesRegion}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="店铺名称：">
+                  <span>{{formData.storeName}}</span>
+                </FormItem>
+                <FormItem label="业代手机：">
+                  <span>{{formData.workerPhone | phoneFormat}}</span>
+                </FormItem>
+                <FormItem label="营业部：">
+                  <span>{{formData.busiDept}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem label="姓名：">
+                  <span>{{formData.name}}</span>
+                </FormItem>
+                <FormItem label="路线编号：">
+                  <span>{{formData.salesRoute}}</span>
+                </FormItem>
+              </Col>
+              <Col span="24">
+                <FormItem label="地 址：">
+                  <span>{{formData.address}}</span>
+                </FormItem>
+              </Col>
+            </Row>
+          </div>
+        </div>
+      </Form>
+      <div class="form-title">地图预警</div>
+      <div id="container"></div>
+      <div class="videoInfor">
+        <div class="form-title videoTitle">视频信息</div>
+        <div class="videoRecord">
+          累计上传
+          <span class="color-orange">{{uploadCount}}</span>次,预警
+          <span class="color-orange">{{riskCount}}</span>次
+          <span class="color-orange" @click="handleLookMore">{{isShowMore?'收起列表':'查看更多'}}>></span>
+        </div>
+      </div>
+      <div>
+        <Row>
+          <Col
+            span="11"
+            offset="1"
+            v-for="(item, index) in storeGoodsList"
+            :key="index"
+            style="margin-top:10px;height: 220px;"
+          >
+            <div class="storeGoods">
+              <Card>
+                <div class="goodsDetail">
+                  <div class="showVideoPlay">
+                    <video :src="item.radioUrl" :ref=""playVideo" + index" controls></video>
+                    <img
+                      class="triangle"
+                      src="../../assets/image/triangle-first.jpg"
+                      v-if=" index == 0 "
+                    >
+                    <img
+                      class="triangle"
+                      src="../../assets/image/triangle-this.jpg"
+                      v-else-if=" index == 1 "
+                    >
+                  </div>
+                  <div class="goodsInfor">
+                    <P>拍摄时间：{{item.uploadTime | formatDate}}</P>
+                    <P>上传时间：{{item.startTime | formatYear }}至{{item.endTime | formatYear }}</P>
+                    <P>上传周数：第{{item.weeks}}周</P>
+                    <P>
+                      坐标预警：
+                      <span :class="{ 'colorError': item.locate == '异常'}">{{item.locate}}</span>
+                    </P>
+                  </div>
                 </div>
+              </Card>
             </div>
-            </Form>
-            <div class="form-title">地图预警</div>
-            <div id="container" ></div>
-            <div class="videoInfor">
-                <div class="form-title videoTitle">视频信息</div>
-                <div class="videoRecord">
-                    累计上传<span class="color-orange">{{uploadCount}}</span>次,预警<span class="color-orange">{{riskCount}}</span>次 <span class="color-orange" @click="handleLookMore">{{isShowMore?'收起列表':'查看更多'}}>></span>
+          </Col>
+        </Row>
+        <Row>
+          <Col
+            span="11"
+            offset="1"
+            v-for="(item, index) in otherStoreGoodsList"
+            :key="index"
+            v-show="isShowMore"
+            style="margin-top:10px;height: 220px;"
+          >
+            <div class="storeGoods">
+              <Card>
+                <div class="goodsDetail">
+                  <div class="showVideoPlay">
+                    <video :src="item.radioUrl" :ref=""playVideo" + index" controls></video>
+                  </div>
+                  <div class="goodsInfor">
+                    <P>拍摄时间：{{item.uploadTime | formatDate}}</P>
+                    <P>上传时间：{{item.startTime | formatYear }}至{{item.endTime | formatYear }}</P>
+                    <P>上传周数：第{{item.weeks}}周</P>
+                    <P>
+                      坐标预警：
+                      <span :class="{ 'colorError': item.locate == '异常'}">{{item.locate}}</span>
+                    </P>
+                  </div>
                 </div>
+              </Card>
             </div>
-            <div>
-                <Row>                   
-                    <Col span="11"  offset="1" v-for="(item, index) in storeGoodsList" :key="index"  style="margin-top:10px;height: 220px;">
-                        <div class="storeGoods">
-                            <Card >                            
-                                <div class="goodsDetail">
-                                    <div class="showVideoPlay">
-                                        <video   :src="item.radioUrl" :ref='"playVideo" + index' controls></video> 
-                                        <img class="triangle" src="../../assets/image/triangle-first.jpg" v-if=" index == 0 ">                                    
-                                        <img class="triangle" src="../../assets/image/triangle-this.jpg" v-else-if=" index == 1 ">                                                                        
-                                    </div>                                
-                                    <div class="goodsInfor">
-                                        <P>拍摄时间：{{item.uploadTime | formatDate}}</P>
-                                        <P>上传时间：{{item.startTime | formatYear }}至{{item.endTime | formatYear }}</P>                                    
-                                        <P>上传周数：第{{item.weeks}}周</P>
-                                        <P>坐标预警： <span  :class="{ 'colorError': item.locate == '异常'}">{{item.locate}}</span></P>                                                                    
-                                    </div>                                
-                                </div>                              
-                            </Card>
-                        </div>
-                    </Col>                              
-                </Row>
-                <Row>                   
-                    <Col span="11"  offset="1" v-for="(item, index) in otherStoreGoodsList" :key="index" v-show="isShowMore" style="margin-top:10px;height: 220px;">
-                        <div class="storeGoods">
-                            <Card >                            
-                                <div class="goodsDetail">
-                                    <div class="showVideoPlay">
-                                        <video   :src="item.radioUrl" :ref='"playVideo" + index' controls></video>                                                                                                                
-                                    </div>                                
-                                    <div class="goodsInfor">
-                                        <P>拍摄时间：{{item.uploadTime | formatDate}}</P>
-                                        <P>上传时间：{{item.startTime | formatYear }}至{{item.endTime | formatYear }}</P>                                    
-                                        <P>上传周数：第{{item.weeks}}周</P>
-                                        <P>坐标预警： <span  :class="{ 'colorError': item.locate == '异常'}">{{item.locate}}</span></P>                                                                    
-                                    </div>                                
-                                </div>                              
-                            </Card>
-                        </div>
-                    </Col>                              
-                </Row>
-            </div>           
-            <footer >
-              <Button type="success" class="btn-back" @click="handlePartakeBack">返回</Button>
-            </footer>
-        </div>    
+          </Col>
+        </Row>
+      </div>
+      <footer>
+        <Button type="success" class="btn-back" @click="handlePartakeBack">返回</Button>
+      </footer>
     </div>
+  </div>
 </template>
 
 <script>

@@ -152,9 +152,8 @@
                 <Col span="11">
                   <Form-item prop="queryStartTime">
                     <data-range
-                      @dataChange="startTimeChange"
                       hour="00:00"
-                      :time="formData.queryStartTime"
+                      v-model="formData.queryStartTime"
                       start
                     ></data-range>
                   </Form-item>
@@ -165,8 +164,7 @@
                     <data-range
                       placeholder="结束时间"
                       hour="24:00"
-                      @dataChange="endTimeChange"
-                      :time="formData.queryEndTime"
+                      v-model="formData.queryEndTime"
                     ></data-range>
                   </Form-item>
                 </Col>
@@ -203,7 +201,6 @@
             </Form-item>
           </Col>
           <Col span="2" offset="1" style="margin-top:20px">
-            <!-- <Button @click="submit('form')" class="btn-search" type="primary">查询</Button> -->
             <div class="searchBox">
               <Button @click="submit('form')" class="btn-search search_btn" type="primary">查询</Button>
               <Button
@@ -315,18 +312,8 @@
                 </div>
                 <div class="showVideo">
                   <video :src="item.radioUrl" :ref=""playVideo" + index" controls></video>
-                  <!-- <div class='mask' @click='video' @dblclick="dbVideo" :ref='"mask" + index' :data-id='index'>
-                                        <div class='maskTxt'>
-                                            <p>点击播放</p>
-                                            <p>双击放大</p>
-                                        </div>                                       
-                  </div>-->
+                  
                 </div>
-                <!-- <div class='superscript'
-                                     :class="[item.checkStatus == 2 ? 'notPass' : item.checkStatus == 0 || item.checkStatus == 1001 || item.checkStatus == 1002 || item.checkStatus == 1003 || item.checkStatus == 2001?'waiting':item.checkStatus == 1 || item.checkStatus == 4?'pass':'']"
-                                >                                    
-                                    <span>·····{{ item.checkStatus | displayCheck }}·····</span>
-                </div>-->
               </div>
             </Col>
           </Row>
@@ -338,8 +325,7 @@
 </template>
 
 <script>
-// import {EDFAULT_STARTTIME,EDFAULT_ENDTIME} from '@/util/index.js'; //搜索条件默认时间
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import { displayApplyStoreDetail } from "@/api/activity-manage/display-activity-manage.js"; //api
@@ -351,14 +337,6 @@ export default {
   data() {
     return {
       showQuery: false,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       formData: {
         storeId: "",
         checkStatus: "",
@@ -405,28 +383,6 @@ export default {
         }
       });
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     changePage: function(size) {
       this.init();
     },
@@ -435,20 +391,9 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
 
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
+      
       this.Global.deleteEmptyProperty(data);
       if (!this.formData.storeId && !this.formData.joinCode) {
         this.$Message.warning("请填写店铺ID或者客户编号");

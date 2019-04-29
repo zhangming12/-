@@ -55,23 +55,6 @@
     }
   }
 }
-.searchBox {
-  overflow: hidden;
-  .search_btn {
-    float: left;
-    width: 50px;
-    padding: 5px 14px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .search_icon {
-    float: left;
-    padding: 5px 10px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-}
-
 .area {
   border-radius: 4px;
   border: 1px solid #dddee1;
@@ -180,7 +163,6 @@
     <div class="box" style="padding-bottom:20px">
       <div class="contentTop">
         <Button class="btn-right" @click="exportExcel('form')" type="error">导出</Button>
-        <!-- <Button @click="allAwardStore('form')" class="btn-right"   type="primary">全部发放至商店</Button> -->
         <Button @click="batchAwardStore('form')" class="btn-right" type="primary">发放通知</Button>
         <Button @click="allWorker('form')" class="btn-right" type="success">发放折扣</Button>
         <Button @click="modifyDataMethod('form')" class="btn-right" type="primary">修改清算</Button>
@@ -229,15 +211,10 @@ import {
   distributionStatus //发放状态
 } from "@/util/ENUMS.js";
 
-
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import configs from "../../../util/config.js";
-
-
-import config from "@/util/config.js";
-
+import configs from "@/util/config.js";
 export default {
   name: "display-clear-list-keepAlive",
   data() {
@@ -268,7 +245,6 @@ export default {
       selectList: [],
       presentNameList: [],
       areaName: "请选择区域",
-      url: config.uploadWorkerExcel,
       page: 1,
       pageNum: 0,
       rule: {

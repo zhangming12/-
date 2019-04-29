@@ -263,22 +263,6 @@
   left: -300px;
 }
 
-.searchBox {
-  overflow: hidden;
-  .search_btn {
-    float: left;
-    width: 50px;
-    padding: 5px 14px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .search_icon {
-    float: left;
-    padding: 5px 10px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-}
 .warnColor {
   color: #ed3f14;
 }
@@ -371,9 +355,6 @@
         </Form>
       </div>
 
-      <div class="export" style="overflow:hidden;" v-if="storeGoodsList && storeGoodsList.length">
-        <!-- <span @click="handleBatchSure">批量确认</span> -->
-      </div>
       <div
         class="box clear container"
         style="width:100%;padding-top:30px;"
@@ -549,11 +530,7 @@ import dataRange from "@/components/data-rang.vue";
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import imageLook from "@/components/imgLook/img-look.vue";
 export default {
   name: "out-source-audit-keepAlive",
@@ -806,7 +783,6 @@ export default {
         "displayYxtg/displayVideoAuditByUpdatedVersion.json",
         params,
         res => {
-          // this.init();
           this.storeGoodsList.splice(index, 1);
           this.saveData = {};
           this.goodsStausShow = false;
@@ -915,6 +891,10 @@ export default {
         this.$Message.info("项目ID不能为空");
         return false;
       }
+      if (this.formData.activityId == 476 && !this.formData.presentId) {
+        this.$Message.info("分组ID不能为空");
+        return false;
+      }
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       data["pageSize"] = this.pageSize;
@@ -1007,57 +987,6 @@ export default {
     },
     handleIsPass(val) {
       this.activityIsPass = val == "2001" || val == "1001" ? false : true;
-    },
-    handleBatchSure() {
-      //批量确认
-      let social = [];
-      this.storeGoodsList.forEach(item => {
-        if (item.status) {
-          let index = item.status.split("-")[0];
-          social.push(index);
-        }
-      });
-      let len = social.length;
-      if (!len) {
-        this.$Message.info("请选择需要批量确认的视频");
-        return false;
-      }
-
-      let dataList = [];
-      for (let i = 0; i < len; i++) {
-        let arr = social[i];
-        let statusC = this.storeGoodsList[social[i]].status;
-        if (!statusC) {
-          this.$Message.error("请选择审核意见");
-          return false;
-        }
-        statusC = statusC.split("-")[1];
-        if (statusC == 2 || statusC == 3) {
-          if (!this.storeGoodsList[social[i]].checkMessage) {
-            this.$Message.error("请输入审核意见");
-            return false;
-          }
-        }
-        let obj = {
-          id: this.storeGoodsList[social[i]].id,
-          brandId: this.storeGoodsList[social[i]].brandId,
-          activityId: this.storeGoodsList[social[i]].activityId,
-          groupId: this.storeGoodsList[social[i]].groupId,
-          memo: this.storeGoodsList[social[i]].memo,
-          checkMessage: this.storeGoodsList[social[i]].checkMessage,
-          checkStatus: statusC
-        };
-        this.Global.deleteEmptyProperty(obj);
-        dataList.push(obj);
-      }
-      this.Global.doPost(
-        "displayYxtg/displayVideoBathAudit.json",
-        dataList,
-        res => {
-          this.$Message.success("批量审核成功");
-          this.init();
-        }
-      );
     }
   },
 

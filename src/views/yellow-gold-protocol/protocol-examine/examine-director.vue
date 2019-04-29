@@ -263,18 +263,12 @@ import {
   protocolIsSodaSales //汽水销售权
 } from "@/util/ENUMS.js";
 
-// import {
-//   EDFAULT_STARTTIME,
-//   EDFAULT_ENDTIME,
-//   EDFAULT_STARTSAMETIME
-// } from "@/util/index.js"; //搜索条件默认时间
 import dataRange from "@/components/data-rang.vue";
 
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import config from "@/util/config.js";
 
 import wpictureUpload from "@/components/word-picture-upload.vue";
-// import index from 'vue';
 
 export default {
   name: "examine-director-keepAlive",

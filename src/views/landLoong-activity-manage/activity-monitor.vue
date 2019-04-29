@@ -33,140 +33,162 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">活动监控</h2>            -->
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="80" :rules="rule">
-                <Row>
-                    <Col span="21">
-                        <Row>
-                            <Col span="13">
-                                <Form-item label="拍摄时间:" required>
-                                <Row>
-                                    <Col span="11">
-                                        <Form-item prop="queryStartTime">
-                                            <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                                        </Form-item>
-                                    </Col>
-                                    <Col span="2" style="text-align: center;">至</Col>
-                                    <Col span="11">
-                                        <Form-item prop="queryEndTime">
-                                            <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                                        </Form-item>
-                                    </Col>
-                                </Row>
-                                </Form-item>
-                            </Col>
-                            <Col span="11">
-                                <Form-item label="客户编号:">
-                                    <Input  v-model="formData.joinCode" placeholder="请输入客户编号"></Input>                              
-                                </Form-item>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col span="8">
-                                <Form-item label="店铺名称:">
-                                    <Input  v-model="formData.storeName" placeholder="请输入店铺名称"></Input>                             
-                                </Form-item>
-                            </Col>
-                            <Col span="8">
-                                <Form-item label="客户渠道:">
-                                    <Select v-model="formData.bapChannel" placeholder="请选择客户渠道" clearable>
-                                        <Option v-for="(item, key, index) in protocolBapChannel" :value="key" :key="index">{{ item }}</Option>
-                                    </Select>
-                                </Form-item> 
-                            </Col>
-                            <Col span="8">
-                                <Form-item label="业代姓名:">
-                                    <Input  v-model="formData.workerName" placeholder="请输入业代姓名"></Input>                             
-                                </Form-item>
-                            </Col>
-                        </Row>
-                    </Col>
-                    <Col span="2" offset="1">
-                            <div class="searchBox">
-                                <Button @click="submit('form')" class="btn-search  search_btn" type="primary">查询</Button>     
-                                <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
-                                <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button>                    
-                            </div>                                            
-                        </Col>
-                </Row>
-                <transition name="fade">
-                    <Row v-if="showQuery">
-                        <Col span='7'>
-                            <Form-item label="路线编号:">
-                                <Input  v-model="formData.salesRoute" placeholder="请输入路线编号"></Input>                                                         
-                                
-                            </Form-item> 
-                        </Col>
-                        <Col span='7'>
-                            <Form-item label="销售部:" >                                                        
-                                <Input  v-model="formData.salesDept" placeholder="请输入销售部"></Input>                             
-                            </Form-item> 
-                        </Col>
-                        <Col span='7'>
-                            <Form-item label="大区:">                         
-                                <Input  v-model="formData.salesRegion" placeholder="请输入大区"></Input>                             
-                            </Form-item>   
-                        </Col>
-                        <Col span='7'>
-                            <Form-item label="营业部:">
-                                <Input  v-model="formData.busiDept" placeholder="请输入营业部"></Input> 
-                            </Form-item> 
-                        </Col>
-                        <Col span='7'>
-                            <Form-item label="业代手机:">
-                                <Input  v-model="formData.workerPhone" placeholder="请输入业代手机"></Input>                             
-                            </Form-item>   
-                        </Col>
-                        <Col span='7'>
-                            <Form-item label="用户ID:">
-                                <Input  v-model="formData.storeId" placeholder="请输入用户ID"></Input>                             
-                            </Form-item> 
-                        </Col>
-                    </Row>
-                </transition>
-            </Form>           
-      </div>
-      <div class="box" style="padding-bottom:20px">        
-        <div id="storeGoodsInfor" v-if="storeGoodsList && storeGoodsList.length">
+    <!-- <h2 class="Title">活动监控</h2>            -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="80" :rules="rule">
+        <Row>
+          <Col span="21">
             <Row>
-            <Col span="11"  offset="1" v-for="(item, index) in storeGoodsList" :key="index" style="margin-top:10px;">
-                <storeInforCard :storeInforData="item" :loongBizType='type'></storeInforCard>
-            </Col> 
+              <Col span="13">
+                <Form-item label="拍摄时间:" required>
+                  <Row>
+                    <Col span="11">
+                      <Form-item prop="queryStartTime">
+                        <data-range
+                          @dataChange="startTimeChange"
+                          hour="00:00"
+                          :time="formData.queryStartTime"
+                          start
+                        ></data-range>
+                      </Form-item>
+                    </Col>
+                    <Col span="2" style="text-align: center;">至</Col>
+                    <Col span="11">
+                      <Form-item prop="queryEndTime">
+                        <data-range
+                          hour="24:00"
+                          placeholder="结束时间"
+                          @dataChange="endTimeChange"
+                          :time="formData.queryEndTime"
+                        ></data-range>
+                      </Form-item>
+                    </Col>
+                  </Row>
+                </Form-item>
+              </Col>
+              <Col span="11">
+                <Form-item label="客户编号:">
+                  <Input v-model="formData.joinCode" placeholder="请输入客户编号"></Input>
+                </Form-item>
+              </Col>
             </Row>
-        </div>
-        <div v-else style='text-align: center;'>
-            暂无数据  
-        </div>    
-        <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" :page-size="4" @on-change="changePage"></Page>
+            <Row>
+              <Col span="8">
+                <Form-item label="店铺名称:">
+                  <Input v-model="formData.storeName" placeholder="请输入店铺名称"></Input>
+                </Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="客户渠道:">
+                  <Select v-model="formData.bapChannel" placeholder="请选择客户渠道" clearable>
+                    <Option
+                      v-for="(item, key, index) in protocolBapChannel"
+                      :value="key"
+                      :key="index"
+                    >{{ item }}</Option>
+                  </Select>
+                </Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="业代姓名:">
+                  <Input v-model="formData.workerName" placeholder="请输入业代姓名"></Input>
+                </Form-item>
+              </Col>
+            </Row>
+          </Col>
+          <Col span="2" offset="1">
+            <div class="searchBox">
+              <Button @click="submit('form')" class="btn-search search_btn" type="primary">查询</Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-up"
+                v-if="showQuery"
+              ></Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-down"
+                v-else
+              ></Button>
             </div>
+          </Col>
+        </Row>
+        <transition name="fade">
+          <Row v-if="showQuery">
+            <Col span="7">
+              <Form-item label="路线编号:">
+                <Input v-model="formData.salesRoute" placeholder="请输入路线编号"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="销售部:">
+                <Input v-model="formData.salesDept" placeholder="请输入销售部"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="大区:">
+                <Input v-model="formData.salesRegion" placeholder="请输入大区"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="营业部:">
+                <Input v-model="formData.busiDept" placeholder="请输入营业部"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="业代手机:">
+                <Input v-model="formData.workerPhone" placeholder="请输入业代手机"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="用户ID:">
+                <Input v-model="formData.storeId" placeholder="请输入用户ID"></Input>
+              </Form-item>
+            </Col>
+          </Row>
+        </transition>
+      </Form>
+    </div>
+    <div class="box" style="padding-bottom:20px">
+      <div id="storeGoodsInfor" v-if="storeGoodsList && storeGoodsList.length">
+        <Row>
+          <Col
+            span="11"
+            offset="1"
+            v-for="(item, index) in storeGoodsList"
+            :key="index"
+            style="margin-top:10px;"
+          >
+            <storeInforCard :storeInforData="item" :loongBizType="type"></storeInforCard>
+          </Col>
+        </Row>
+      </div>
+      <div v-else style="text-align: center;">暂无数据</div>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" :page-size="4" @on-change="changePage"></Page>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { queryLoongActivityMonitor } from "@/api/landLoong-activity-manage/landLoong-activity-manage.js";
-
 import dataRange from "@/components/data-rang.vue";
-
 import {
   protocolBapChannel //BAP渠道
 } from "@/util/ENUMS.js";
 
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 
 import storeInforCard from "@/components/store-infor-card.vue";
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
-  name:"activity-monitor-keepAlive",
+  name: "activity-monitor-keepAlive",
 
   components: {
     storeInforCard,
@@ -175,7 +197,7 @@ export default {
   data() {
     const that = this;
     return {
-      type:"loong",
+      type: "loong",
       protocolBapChannel,
       start: {
         time: "",
@@ -233,7 +255,10 @@ export default {
       if (value.hour == "24:00") {
         return;
       }
-      this.formData.queryEndTime = this.Global.setHoursData(value.time, value.hour);
+      this.formData.queryEndTime = this.Global.setHoursData(
+        value.time,
+        value.hour
+      );
     },
     submit: function(name) {
       this.$refs[name].validate(valid => {
@@ -272,19 +297,15 @@ export default {
       data["pageSize"] = pageSize;
       data["loongBizType"] = "loong";
       delete data.queryTime;
-
-      // queryLoongActivityMonitor(data).then(res => {
-      //   if (res && res.status === 1) {
-      //     this.pageNum = res.data.items;
-      //     this.page = res.data.page;
-      //     this.storeGoodsList = res.data.datalist;
-      //   }
-      // });
-      this.Global.doPost("displayLoongLog/queryLoongActivityMonitor.json",data,res=>{
-        this.pageNum = res.items;
+      this.Global.doPost(
+        "displayLoongLog/queryLoongActivityMonitor.json",
+        data,
+        res => {
+          this.pageNum = res.items;
           this.page = res.page;
           this.storeGoodsList = res.datalist;
-      })
+        }
+      );
     }
   }
 };
