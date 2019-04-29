@@ -174,8 +174,6 @@ span.btn {
             此表共包含
             <span class="numColor">{{pageNum}}</span>条数据
           </span>
-
-          <!-- <exportBtn class="btn-right" @btnClick="exportExcel"/> -->
         </div>
         <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
       </div>
@@ -190,13 +188,8 @@ span.btn {
 </template>
 
 <script>
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 
-} from "@/util/index.js"; //搜索条件默认时间
-
-import exportBtn from "@/components/Button/export-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import hhTable from "@/components/table/table.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
@@ -314,7 +307,6 @@ export default {
     };
   },
   components: {
-    exportBtn,
     myModal,
     hhTable,
     fieldNameDes

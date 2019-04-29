@@ -117,7 +117,7 @@
     }
   }
 }
-.demo{
+.demo {
   color: @primary-color;
   margin-left: 20px;
   cursor: pointer;
@@ -125,117 +125,123 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">业务员关系管理</h2> -->
-        <div class="main-container">
-            <div class="box">
-                <Form ref="form" class="form" :model="formData" :label-width="10">
-                    <div class="container">
-                        <div class="btn-left w18">
-                            <Form-item prop="brandId" required>
-                                <Select v-model="formData.brandId" placeholder="品牌名称">
-                                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                                </Select>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item >
-                                <Input v-model.trim="formData.salesRoute" placeholder="销售路线"></Input>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item >
-                                <Input v-model.trim="formData.deptName" placeholder="所属工作流"></Input>
-                            </Form-item>
-                        </div>
-                        
-                    </div>
-                    <div class="btn-right w10">
-                            <div class="searchBox">
-                                <div class="btn-right search-right" @click="submit('form')">
-                                    <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                                </div>
-                            </div>
-                        </div>
-                </Form>
+  <div id="Main">
+    <!-- <h2 class="Title">业务员关系管理</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" class="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item prop="brandId" required>
+                <Select v-model="formData.brandId" placeholder="品牌名称">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
             </div>
-            <div class="box" style="padding:10px">
-                <div class="contentTop">
-                    <span class="btn-left">此表共包含<span class='numColor'>{{pageNum}}</span>条数据</span>
-                    
-                    <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
-                    <exportBtn  class="btn-right" @btnClick="exportExcel" />
-                    <importBtn  class="btn-right" @btnClick="exportExport = true" />
-                </div>
-                <hhTable :columns="columns" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
-                
+            <div class="btn-left w18">
+              <Form-item>
+                <Input v-model.trim="formData.salesRoute" placeholder="销售路线"></Input>
+              </Form-item>
             </div>
-            <div class="page-box">
-                <div>
-                    <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
-                </div>
+            <div class="btn-left w18">
+              <Form-item>
+                <Input v-model.trim="formData.deptName" placeholder="所属工作流"></Input>
+              </Form-item>
             </div>
-        </div>
-        <!-- 导入 -->
-      <myModal class="myModal"
-            @close="closeModal"
-            :modal="exportExport">
-            <div slot="main" class="modal-main">
-              <h3>导入</h3>
-              <div class="modal-table">
-                  <Form ref="form" :model="exportExportData" :label-width="88">
-                      <Form-item label="品牌名称" required>
-                        <Select v-model="exportExportData.brandId" placeholder="品牌名称">
-                            <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                        </Select>
-                      </Form-item>
-                      <Form-item label="上传文件" required>
-                        <div style="overflow:hidden;">
-                          <div class='upDate' style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;">
-                              <Upload :action="importUrl" 
-                              :show-upload-list=false
-                              :on-success='handleSuccess'
-                              :on-error='handleError'
-                              >
-                              <Icon type="ios-folder" size='14' color='#53a3f4'></Icon>
-                              <span>{{exportExportData.uploadText}}</span>
-                              </Upload>
-                          </div>
-                      </div>
-                      </Form-item>
-                      <!-- <div class='demo' @click='download'>
-                        <Icon type="ios-paper-outline" size='14' color='@primary-color'></Icon>
-                        <span>下载模版</span>
-                      </div> -->
-                      <div class="fotter" style="text-align:center;">
-                          <Button @click="closeModal" type="primary">取消</Button>
-                          <Button type="success" @click="uploadExcel">导入</Button>
-                      </div>
-                  </Form>
+          </div>
+          <div class="btn-right w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
               </div>
             </div>
-      </myModal>
-	</div>
+          </div>
+        </Form>
+      </div>
+      <div class="box" style="padding:10px">
+        <div class="contentTop">
+          <span class="btn-left">
+            此表共包含
+            <span class="numColor">{{pageNum}}</span>条数据
+          </span>
+
+          <exportBtn class="btn-right" @btnClick="exportExcel"/>
+          <importBtn class="btn-right" @btnClick="exportExport = true"/>
+        </div>
+        <hhTable :columns="columns" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
+      </div>
+      <div class="page-box">
+        <div>
+          <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
+        </div>
+      </div>
+    </div>
+    <!-- 导入 -->
+    <myModal class="myModal" @close="closeModal" :modal="exportExport">
+      <div slot="main" class="modal-main">
+        <h3>导入</h3>
+        <div class="modal-table">
+          <Form ref="form" :model="exportExportData" :label-width="88">
+            <Form-item label="品牌名称" required>
+              <Select v-model="exportExportData.brandId" placeholder="品牌名称">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="上传文件" required>
+              <div style="overflow:hidden;">
+                <div
+                  class="upDate"
+                  style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;"
+                >
+                  <Upload
+                    :action="importUrl"
+                    :show-upload-list="false"
+                    :on-success="handleSuccess"
+                    :on-error="handleError"
+                  >
+                    <Icon type="ios-folder" size="14" color="#53a3f4"></Icon>
+                    <span>{{exportExportData.uploadText}}</span>
+                  </Upload>
+                </div>
+              </div>
+            </Form-item>
+            <!-- <div class='demo' @click='download'>
+                        <Icon type="ios-paper-outline" size='14' color='@primary-color'></Icon>
+                        <span>下载模版</span>
+            </div>-->
+            <div class="fotter" style="text-align:center;">
+              <Button @click="closeModal" type="primary">取消</Button>
+              <Button type="success" @click="uploadExcel">导入</Button>
+            </div>
+          </Form>
+        </div>
+      </div>
+    </myModal>
+  </div>
 </template>
 
 <script>
 import config from "@/util/config.js";
 import myModal from "@/components/Modal/my-modal.vue";
-import wpictureUpload from "@/components/word-picture-upload.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import hhTable from "@/components/table/table.vue";
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import importBtn from "@/components/Button/import-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 export default {
   name: "worker-relationship-management-keepAlive",
 
   components: {
-    wpictureUpload,
     dataRange,
     exportBtn,
-    detailBtn,
     hhTable,
     importBtn,
     myModal,
@@ -245,8 +251,8 @@ export default {
     return {
       exportExportData: {
         uploadText: "选择上传文件",
-        brandId:"",
-        loadFilePath:""
+        brandId: "",
+        loadFilePath: ""
       },
       exportExport: false,
       noneStatus: false,
@@ -296,8 +302,7 @@ export default {
       }
     );
   },
-  watch: {
-  },
+  watch: {},
   methods: {
     handleError() {},
     handleSuccess(response, file, fileList) {
@@ -347,17 +352,21 @@ export default {
       }
       let params = {
         loadFilePath: this.exportExportData.loadFilePath,
-        brandId:this.exportExportData.brandId
+        brandId: this.exportExportData.brandId
       };
       this.isUpload = true;
       //导入
-      this.Global.doPost("position/positionSalesRouteImport.json", params, res => {
-        this.init();
-        this.$Message.success("上传成功");
-        this.wordUploadFlag = true;
-        this.isUpload = false;
-        this.exportExport = false;
-      });
+      this.Global.doPost(
+        "position/positionSalesRouteImport.json",
+        params,
+        res => {
+          this.init();
+          this.$Message.success("上传成功");
+          this.wordUploadFlag = true;
+          this.isUpload = false;
+          this.exportExport = false;
+        }
+      );
     },
     exportExcel() {
       var data = this.Global.JsonChange(this.formData);

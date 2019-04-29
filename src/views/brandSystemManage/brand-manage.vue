@@ -276,16 +276,12 @@
 
 <script>
 import md5 from "js-md5";
-import exportBtn from "@/components/Button/export-btn.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import hhTable from "@/components/table/table.vue";
 import upData from "@/assets/js/upload.js";
 import PROJECT_CONFIG from "@/util/config.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
-import {
-  queryOrganizationDictList //查询四级组织数据
-} from "@/api/common.js";
 export default {
   name: "brand-manage-keepAlive",
   data() {
@@ -421,7 +417,7 @@ export default {
       menuData: {}
     };
   },
-  components: { exportBtn, myModal, addNewBtn, hhTable },
+  components: { myModal, addNewBtn, hhTable },
   created() {
     this.init();
   },

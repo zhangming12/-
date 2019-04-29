@@ -159,9 +159,6 @@
             共查询到
             <span class="numColor">{{ pageNum }}</span> 条数据
           </span>
-          <!-- <span class="btn-right spanBtn" @click="goToAudit">去审核</span> -->
-          <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
-          <!-- <span class="btn-right spanBtn" @click="dowland" style="margin-right:10px;">活动规则设置</span> -->
         </div>
         <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
       </div>
@@ -177,9 +174,6 @@
 
 <script>
 import hhTable from "@/components/table/table.vue";
-import exportBtn from "@/components/Button/export-btn.vue";
-import importBtn from "@/components/Button/import-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import config from "@/util/config.js";
@@ -286,27 +280,12 @@ export default {
     };
   },
   components: {
-    exportBtn,
-    detailBtn,
-    importBtn,
     myModal,
     hhTable,
     fieldNameDes
   },
   methods: {
     submit(name) {
-      //   if (!this.formData.brandId) {
-      //     this.$Message.error("品牌不能为空");
-      //     return false;
-      //   }
-      //   if (!this.formData.groupId) {
-      //     this.$Message.error("活动包名不能为空");
-      //     return false;
-      //   }
-      // if (!this.formData.activityId) {
-      //   this.$Message.error("活动不能为空");
-      //   return false;
-      // }
       this.page = 1;
       this.init(this.page, 10);
     },

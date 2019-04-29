@@ -400,7 +400,6 @@ export default {
     exportExcel() {
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
-      console.log(data);
       var url = this.Global.getExportUrl(
         "displayYxtg/queryParticipateStatusExport.json",
         data
@@ -444,12 +443,10 @@ export default {
         }
       );
     },
-
     changePage(size) {
       this.page = size;
       this.init();
     }
-  },
-  filters: {}
+  }
 };
 </script>

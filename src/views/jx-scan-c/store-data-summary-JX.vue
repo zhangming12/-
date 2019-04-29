@@ -155,7 +155,6 @@ span.btn {
 </template>
 
 <script>
-import importBtn from "@/components/Button/import-btn.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import config from "@/util/config.js";
@@ -232,7 +231,6 @@ export default {
   components: {
     exportBtn,
     myModal,
-    importBtn,
     hhTable,
     fieldNameDes
   },

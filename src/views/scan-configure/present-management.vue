@@ -172,7 +172,6 @@
           </span>
 
           <addNewBtn class="btn-right ml20" @btnClick="showModal"/>
-          <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
         </div>
         <Table :columns="columns1" :data="pageData" disabled-hover></Table>
       </div>
@@ -242,15 +241,11 @@
 
 <script>
 import dataRange from "@/components/data-rang.vue";
-import exportBtn from "@/components/Button/export-btn.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import upData from "@/assets/js/upload.js";
 import PROJECT_CONFIG from "@/util/config.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
-import {
-  queryOrganizationDictList //查询四级组织数据
-} from "@/api/common.js";
 export default {
   name: "present-management",
   data() {
@@ -450,7 +445,7 @@ export default {
       logoUrl: ""
     };
   },
-  components: { dataRange, exportBtn, myModal, addNewBtn },
+  components: { dataRange, myModal, addNewBtn },
   created() {
     this.brandId = this.$route.query.brandId;
     this.Global.doPostNoLoading("condition/queryBrands.json", {}, res => {
@@ -458,9 +453,6 @@ export default {
       Object.entries(res).forEach(item => {
         this.brandList.push({ id: Number(item[0]), brandName: item[1] });
       });
-      // if (this.brandList && this.brandList.length) {
-      //   this.formData.brandId = this.brandList[0].id;
-      // }
     });
   },
   watch: {

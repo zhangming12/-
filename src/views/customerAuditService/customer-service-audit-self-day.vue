@@ -290,10 +290,8 @@
 
 <script>
 import config from "@/util/config.js";
-import wpictureUpload from "@/components/word-picture-upload.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import dataRange from "@/components/data-rang.vue";
-import exportBtn from "@/components/Button/export-btn.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
 import {
   thirtyAgoDate,
@@ -305,9 +303,7 @@ import echarts from "echarts";
 export default {
   name: "customer-service-audit-self-day",
   components: {
-    wpictureUpload,
     dataRange,
-    exportBtn,
     fieldNameDes
   },
   data() {

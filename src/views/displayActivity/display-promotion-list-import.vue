@@ -262,13 +262,10 @@ span.btn {
             <span class="numColor">{{pageNum}}</span>条数据
           </span>
 
-          <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
-
           <exportBtn class="btn-right" @btnClick="exportExcel"/>
           <delBtn class="btn-right" @btnClick="deleteShow = true"/>
           <importBtn class="btn-right" @btnClick="importShow = true"/>
         </div>
-        <!-- <Table :columns="columns1" :data="pageData" disabled-hover></Table> -->
         <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
       </div>
       <div class="page-box">
@@ -436,7 +433,6 @@ import { dispalyExamineSuggesteStatus } from "@/util/ENUMS.js";
 import dataRange from "@/components/data-rang.vue";
 import importBtn from "@/components/Button/import-btn.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import delBtn from "@/components/Button/del-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import config from "@/util/config.js";
@@ -688,7 +684,6 @@ export default {
   components: {
     dataRange,
     exportBtn,
-    detailBtn,
     myModal,
     delBtn,
     importBtn,

@@ -343,8 +343,6 @@
 
 <script>
 import fieldNameDes from "@/components/field-name-description.vue";
-import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import saveBtn from "@/components/Button/save-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import upData from "@/assets/js/upload.js";
@@ -374,8 +372,6 @@ export default {
     };
   },
   components: {
-    exportBtn,
-    detailBtn,
     myModal,
     hhTable,
     saveBtn,

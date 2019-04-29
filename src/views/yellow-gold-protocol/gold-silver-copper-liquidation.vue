@@ -546,7 +546,6 @@ export default {
       });
       //查周期
       this.Global.doPost("liquidate/getActGroupMonthDict.json", value, res => {
-        console.log(res);
         this.timeDataList = [];
         if (res) {
           let timeDataList = [];

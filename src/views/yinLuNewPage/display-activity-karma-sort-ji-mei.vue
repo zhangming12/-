@@ -158,23 +158,13 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="startTime">
-                <data-range
-                  @dataChange="startTimeChange"
-                  hour="00:00"
-                  :time="formData.startTime"
-                  start
-                ></data-range>
+              <Form-item>
+                <data-range hour="00:00" v-model="formData.startTime" start></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="endTime">
-                <data-range
-                  hour="24:00"
-                  placeholder="结束时间"
-                  @dataChange="endTimeChange"
-                  :time="formData.endTime"
-                ></data-range>
+              <Form-item>
+                <data-range hour="24:00" placeholder="结束时间" v-model="formData.endTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
@@ -300,9 +290,8 @@
 
 <script>
 import fieldNameDes from "@/components/field-name-description.vue";
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
@@ -314,19 +303,7 @@ export default {
   name: "display-activity-karma-sort-keepAlive",
   data() {
     return {
-      oneLeverList: [], //一级组织数据
-      twoLeverList: [], //二级组织数据
-      threeLeverList: [], //三级组织数据
-      fourLeverList: [], //四级组织数据
       showQuery: false,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       groupList: [],
       formData: {
         startTime: EDFAULT_STARTTIME,
@@ -340,10 +317,7 @@ export default {
         fourLevel: "",
         orderType: "upLoadVideo"
       },
-      rule: {
-        // startTime: [{ validator: validateStart }],
-        // endTime: [{ validator: validateEnd }]
-      },
+      rule: {},
       page: 1,
       pageNum: 0,
       brandList: [],
@@ -417,7 +391,7 @@ export default {
       rankList: []
     };
   },
-  components: { dataRange, exportBtn, detailBtn, fieldNameDes },
+  components: { dataRange, exportBtn, fieldNameDes },
   created() {
     this.getActivityList(84);
     this.threeLevelChange("17-01010100");
@@ -443,17 +417,6 @@ export default {
       this.page = size;
       this.init(size, 20);
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.startTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     getActivityList(value) {
       this.activityList = [];
       this.formData.activityId = "";
@@ -467,14 +430,6 @@ export default {
           });
         }
       );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.endTime = this.Global.setHoursData(value.time, value.hour);
     },
     submit(name) {
       if (!this.formData.startTime) {
@@ -493,20 +448,7 @@ export default {
       this.pageNum = 0;
       var data = this.Global.JsonChange(this.formData);
       data["startTime"] = this.Global.createTime(this.formData.startTime);
-      if (this.start.hour == "24:00") {
-        data["startTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["endTime"] = this.Global.createTime(this.formData.endTime);
-      if (this.end.hour == "24:00") {
-        data["endTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       data["currentPage"] = currentPage;
       data["pageSize"] = pageSize;
       data["brandId"] = 17;
@@ -529,20 +471,7 @@ export default {
     exportExcel() {
       var data = this.Global.JsonChange(this.formData);
       data["startTime"] = this.Global.createTime(this.formData.startTime);
-      if (this.start.hour == "24:00") {
-        data["startTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["endTime"] = this.Global.createTime(this.formData.endTime);
-      if (this.end.hour == "24:00") {
-        data["endTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       data["brandId"] = 17;
       data["groupId"] = 84;
@@ -579,7 +508,6 @@ export default {
 
       //查询一级组织数据
       queryOrganizationDictList({ brandId: value, parentId: 0 }).then(res => {
-        console.log(res.data);
         if (res && res.status == 1) {
           this.oneLeverList = res.data;
         }

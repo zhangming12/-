@@ -91,7 +91,6 @@
   left: 50%;
   margin-left: -150px;
   margin-top: -250px;
-  // border: 1px solid black;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
   padding: 20px;
   background: #f5f7f9;
@@ -121,24 +120,14 @@
                 <Form-item label="时间:">
                   <Row>
                     <Col span="11">
-                      <Form-item prop="queryStartTime">
-                        <data-range
-                          @dataChange="startTimeChange"
-                          hour="00:00"
-                          :time="formData.queryStartTime"
-                          start
-                        ></data-range>
+                      <Form-item>
+                        <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
                       </Form-item>
                     </Col>
                     <Col span="2" style="text-align: center;">至</Col>
                     <Col span="11">
-                      <Form-item prop="queryEndTime">
-                        <data-range
-                          hour="24:00"
-                          placeholder="结束时间"
-                          @dataChange="endTimeChange"
-                          :time="formData.queryEndTime"
-                        ></data-range>
+                      <Form-item>
+                        <data-range hour="24:00" placeholder="结束时间" v-model="formData.queryEndTime"></data-range>
                       </Form-item>
                     </Col>
                   </Row>
@@ -281,10 +270,6 @@
         <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
       </div>
     </div>
-    <!-- <Modal v-model="showVideoPlay" transfer class-name="vertical-center-modal" >
-			<video :src="radioUrl" controls></video>
-      <div slot="footer" style="display:none;"></div>
-    </Modal>-->
     <div v-if="showVideoPlay" class="showRadio">
       <span class="close" @click="close">X</span>
       <video :src="radioUrl" controls autoplay></video>
@@ -293,8 +278,7 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
-
+import dataRange from "@/components/data-range/data-range.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import { monitorRecord } from "@/util/ENUMS.js";
 import {
@@ -302,17 +286,8 @@ import {
 } from "@/api/common.js";
 export default {
   name: "monitor-recoad-keepAlive",
-
   data() {
     return {
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       screenWidth: document.body.clientWidth,
       showQuery: false,
       formData: {
@@ -508,36 +483,10 @@ export default {
       }
     );
   },
-  mounted() {},
   components: {
     dataRange
   },
   methods: {
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    dataChange(val) {
-      this.formData.queryEndTime = val.slice(0, 11) + "23:59:59";
-    },
     closeAlertBox(e) {
       if (e.target.className == "showRadio" || e.target.className == "close") {
         return false;
@@ -599,20 +548,7 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       var url = this.Global.getExportUrl(
         "displayYxtg/querySuperviseLogListExport.json",
@@ -631,22 +567,8 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
-
       this.Global.doPost(
         "displayYxtg/querySuperviseLogList.json",
         data,

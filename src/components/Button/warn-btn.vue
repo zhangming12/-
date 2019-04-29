@@ -29,7 +29,7 @@
 </template>
 <script>
 export default {
-  name: "exportBtn",
+  name: "warnBtn",
   data() {
     return {
     };

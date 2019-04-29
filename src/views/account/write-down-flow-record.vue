@@ -288,10 +288,6 @@ export default {
     dataRange
   },
   methods: {
-    dataChange(val) {
-      //将结束时间默认设置为当天的23:59:59
-      this.formData.queryEndTime = val.slice(0, 11) + "23:59:59";
-    },
     select(parent, children) {
       //时间选择
       if (this.defaultTime[parent].select == children) {

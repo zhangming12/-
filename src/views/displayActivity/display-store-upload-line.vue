@@ -224,8 +224,6 @@ import {
   dispalyExamineSuggesteStatus,
   displayParketCheckStatus
 } from "@/util/ENUMS.js";
-import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
@@ -269,7 +267,7 @@ export default {
       activityList: []
     };
   },
-  components: { exportBtn, detailBtn, myModal, fieldNameDes },
+  components: { myModal, fieldNameDes },
   mounted() {
     this.drawLine();
     window.addEventListener(

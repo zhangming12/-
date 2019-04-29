@@ -135,22 +135,12 @@
           <div class="container">
             <div class="btn-left w18">
               <Form-item required>
-                <data-range
-                  @dataChange="startTimeChange"
-                  hour="00:00"
-                  :time="formData.queryStartTime"
-                  start
-                ></data-range>
+                <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item required>
-                <data-range
-                  hour="24:00"
-                  placeholder="结束时间"
-                  @dataChange="endTimeChange"
-                  :time="formData.queryEndTime"
-                ></data-range>
+                <data-range hour="24:00" placeholder="结束时间" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
@@ -245,7 +235,6 @@
             <span class="numColor">{{scrapNum}}</span>
           </span>
 
-          <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
           <exportBtn class="btn-right" @btnClick="exportExcel"/>
           <importBtn class="btn-right" @btnClick="maintainImport" title="维护导入"/>
         </div>
@@ -256,7 +245,6 @@
           <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      <!-- <img src="../../assets/image/edit.png" alt=""> -->
     </div>
 
     <!-- 导入导出历史 -->
@@ -381,24 +369,14 @@
 <script>
 import area from "@/config/china_code_data.js";
 
-import {
-  dispalyExamineSuggesteStatus
-} from "@/util/ENUMS.js";
-import dataRange from "@/components/data-rang.vue";
+import { dispalyExamineSuggesteStatus } from "@/util/ENUMS.js";
+import dataRange from "@/components/data-range/data-range.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import importBtn from "@/components/Button/import-btn.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import config from "@/util/config.js";
-import {
-  queryOrganizationDictList //查询四级组织数据
-} from "@/api/common.js";
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 const image = require("../../assets/image/edit.png");
 export default {
@@ -480,14 +458,6 @@ export default {
       showQuery: false,
       groupName: "",
       activityName: "",
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       groupList: [],
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
@@ -840,7 +810,7 @@ export default {
       activityList: []
     };
   },
-  components: { dataRange, exportBtn, detailBtn, myModal, importBtn },
+  components: { dataRange, exportBtn, myModal, importBtn },
   created() {
     this.Global.doPostNoLoading(
       "condition/queryBrands.json",
@@ -949,17 +919,6 @@ export default {
     showDetail() {
       this.myModalisShow = true;
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     getActivityList(value) {
       this.groupList.forEach(item => {
         if (item.id == value) {
@@ -977,17 +936,6 @@ export default {
             this.activityList.push({ id: Number(item[0]), name: item[1] });
           });
         }
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
       );
     },
     formateTime(time) {
@@ -1033,20 +981,7 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       data["currentPage"] = currentPage;
       data["pageSize"] = pageSize;
       if (data["status"]) {
@@ -1064,7 +999,6 @@ export default {
           this.codeNum = this.pageData[0].codeNum;
           this.scrapNum = this.pageData[0].scrapNum;
         }
-        // this.pageData = res.datalist;
       });
     },
     exportExcel() {
@@ -1072,19 +1006,7 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       if (data["status"]) {
         data["status"] = 1;
       } else {
@@ -1118,15 +1040,7 @@ export default {
           }
         }
       );
-    },
-    handleEdit() {
-      this.$router.push({
-        path: "/displayReward-edit",
-        query: { type: "edit" }
-      });
     }
   }
 };
 </script>
-
-

@@ -231,7 +231,6 @@ export default {
     goodsUpload: function(response, file, fileList) {
       this.formData.goodsUrl =
         PROJECT_CONFIG.ossServer + "entity/image/" + this.timeStr2 + file.name;
-      console.log(this.formData.goodsUrl);
     },
     urlUpload: function(response, file, fileList) {
       this.formData.url =
@@ -251,9 +250,6 @@ export default {
           if (res.summary) {
             this.editor.txt.html(base64.Base64.decode(res.summary));
             this.$refs.text.innerHTML = base64.Base64.decode(res.summary);
-            // this.editor.txt.html(res.summary);
-            // this.$refs.text.innerHTML = res.summary;
-            // this.formData['summary'] = base64.Base64.decode(res.summary);
           }
           this.formData["goodsUrl"] = res.goodsUrl;
           this.formData["url"] = res.url;
@@ -297,5 +293,3 @@ export default {
   }
 };
 </script>
-
-

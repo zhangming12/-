@@ -137,128 +137,133 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">活动码包列表</h2> -->
-		<div class="box">
-			<Form :model="formData" :label-width="85">
-				<Row>
-					<Col span="21">
+  <div id="Main">
+    <!-- <h2 class="Title">活动码包列表</h2> -->
+    <div class="box">
+      <Form :model="formData" :label-width="85">
+        <Row>
+          <Col span="21">
             <Row>
-                <Col span="8">
-                    <Form-item label="品牌名称:" >
-                      {{formData.brandName}}
-                    </Form-item>
-                    <Form-item label="流水线:">
-                        {{formData.pipeLine}}
-                    </Form-item>
-                    
-                </Col>
-                <Col span="8">
-                    <Form-item label="活动包名:">
-                      {{formData.groupName}}
-                    </Form-item>
-                    <Form-item label="投放终端:">
-                        {{formItem.qrUseType | userFilter}}
-                    </Form-item>
-                    
-                </Col>
-                <Col span="8">
-                    <Form-item label="活动名称:">
-                        {{formData.activityName}}
-                    </Form-item>
-                    <Form-item label="识别明码:">
-                        {{ formItem.useMemoCode | codeFilter}}
-                    </Form-item>
-                </Col>
+              <Col span="8">
+                <Form-item label="品牌名称:">{{formData.brandName}}</Form-item>
+                <Form-item label="流水线:">{{formData.pipeLine}}</Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="活动包名:">{{formData.groupName}}</Form-item>
+                <Form-item label="投放终端:">{{formItem.qrUseType | userFilter}}</Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="活动名称:">{{formData.activityName}}</Form-item>
+                <Form-item label="识别明码:">{{ formItem.useMemoCode | codeFilter}}</Form-item>
+              </Col>
             </Row>
             <Row>
-                <Col span="6">
-                  <Form-item label="流水串号:">
-                        {{ formItem.flowingNum | codeFilter}}
-                    </Form-item>
-                </Col>
-                <Col span="13">
-                    <Form-item label="时间:">
-                        <Row>
-                            <Col span="11">
-                                <Form-item prop="queryStartTime">
-                                    <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                                </Form-item>
-                            </Col>
-                            <Col span="2" style="text-align: center;">至</Col>
-                            <Col span="11">
-                                <Form-item prop="queryEndTime">
-                                    <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                                </Form-item>
-                            </Col>
-                        </Row>
-                    </Form-item>
-                </Col>
-                
+              <Col span="6">
+                <Form-item label="流水串号:">{{ formItem.flowingNum | codeFilter}}</Form-item>
+              </Col>
+              <Col span="13">
+                <Form-item label="时间:">
+                  <Row>
+                    <Col span="11">
+                      <Form-item>
+                        <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
+                      </Form-item>
+                    </Col>
+                    <Col span="2" style="text-align: center;">至</Col>
+                    <Col span="11">
+                      <Form-item>
+                        <data-range hour="24:00" placeholder="结束时间" v-model="formData.queryEndTime"></data-range>
+                      </Form-item>
+                    </Col>
+                  </Row>
+                </Form-item>
+              </Col>
             </Row>
-
-					</Col>
-          <Col span='2' offset="1" style="margin-top:10px">
-              <Button @click="submit" class="btn-search  search_btn" type="primary">查询</Button>
-					</Col>
-				</Row>
-			</Form>
-		</div>
-		<div class="box tableBox">
-			<div class='contentTop'>
-				<Button class="btn-export" @click="newBuildModel=true" type="primary" style="width:120px;">生成码包</Button>
-			</div>
-			<Table :columns="columns1" :data="pageData" disabled-hover></Table>
+          </Col>
+          <Col span="2" offset="1" style="margin-top:10px">
+            <Button @click="submit" class="btn-search search_btn" type="primary">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="box tableBox">
+      <div class="contentTop">
+        <Button
+          class="btn-export"
+          @click="newBuildModel=true"
+          type="primary"
+          style="width:120px;"
+        >生成码包</Button>
+      </div>
+      <Table :columns="columns1" :data="pageData" disabled-hover></Table>
       <div class="pages">
         <div style="float: right;">
           <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-		</div>
-    <Modal
-      v-model="newBuildModel"
-      width='900'>
+    </div>
+    <Modal v-model="newBuildModel" width="900">
       <h2 style="text-align:center;margin-bottom:20px;">生成码包</h2>
-      <i-Form ref="form" :label-width='90' :model="formItem" :rules="rule">
-          <Row>
-              <Col span="8">
-                    <Form-item label="品牌名称:" required>
-                        <i-input readonly v-model="formData.brandName"></i-input>
-                    </Form-item>
-                    <Form-item label="投放终端:" required>
-                        {{formItem.qrUseType | userFilter}}
-                    </Form-item>
-                    <Form-item label="生成码量:" prop="totalCode" required>
-                        <input type="number" v-model="formItem.totalCode" min="1" max="20" class="numberInput" />
-                    </Form-item>
-                    <Form-item label="单码包冗余:">
-                        <input type="number" v-model="formItem.codePacketRedundancy" min="1" max="20" class="numberInput" />
-                    </Form-item>
-                </Col>
-                <Col span="8">
-                    <Form-item label="活动包名:" required>
-                        <i-input readonly v-model="formData.groupName"></i-input>
-                    </Form-item>
-                    <Form-item label="识别明码:" prop="useMemoCode" required>
-                        {{ formItem.useMemoCode | codeFilter}}
-                    </Form-item>
-                    <Form-item label="每码包码量:" prop="planQuantity" required>
-                        <!-- <Input-number :max="10" :min="1" :value="1"></Input-number> -->
-                        <input type="number" min="1" max="2000000" v-model="formItem.planQuantity" class="numberInput" />
-                    </Form-item>
-                </Col>
-                <Col span="8">
-                    <Form-item label="活动名称:" required>
-                        <i-input readonly v-model="formData.activityName"></i-input>
-                    </Form-item>
-                    <Form-item label="流水串号:" prop="flowingNum" required>
-                        {{ formItem.flowingNum | codeFilter}}
-                    </Form-item>
-                    <Form-item label="码包个数:" required>
-                        <i-input readonly v-model="packageNumber" placeholder="非填写,自动计算"></i-input>
-                    </Form-item>
-                </Col>
-          </Row>
+      <i-Form ref="form" :label-width="90" :model="formItem" :rules="rule">
+        <Row>
+          <Col span="8">
+            <Form-item label="品牌名称:" required>
+              <i-input readonly v-model="formData.brandName"></i-input>
+            </Form-item>
+            <Form-item label="投放终端:" required>{{formItem.qrUseType | userFilter}}</Form-item>
+            <Form-item label="生成码量:" prop="totalCode" required>
+              <input
+                type="number"
+                v-model="formItem.totalCode"
+                min="1"
+                max="20"
+                class="numberInput"
+              >
+            </Form-item>
+            <Form-item label="单码包冗余:">
+              <input
+                type="number"
+                v-model="formItem.codePacketRedundancy"
+                min="1"
+                max="20"
+                class="numberInput"
+              >
+            </Form-item>
+          </Col>
+          <Col span="8">
+            <Form-item label="活动包名:" required>
+              <i-input readonly v-model="formData.groupName"></i-input>
+            </Form-item>
+            <Form-item
+              label="识别明码:"
+              prop="useMemoCode"
+              required
+            >{{ formItem.useMemoCode | codeFilter}}</Form-item>
+            <Form-item label="每码包码量:" prop="planQuantity" required>
+              <!-- <Input-number :max="10" :min="1" :value="1"></Input-number> -->
+              <input
+                type="number"
+                min="1"
+                max="2000000"
+                v-model="formItem.planQuantity"
+                class="numberInput"
+              >
+            </Form-item>
+          </Col>
+          <Col span="8">
+            <Form-item label="活动名称:" required>
+              <i-input readonly v-model="formData.activityName"></i-input>
+            </Form-item>
+            <Form-item
+              label="流水串号:"
+              prop="flowingNum"
+              required
+            >{{ formItem.flowingNum | codeFilter}}</Form-item>
+            <Form-item label="码包个数:" required>
+              <i-input readonly v-model="packageNumber" placeholder="非填写,自动计算"></i-input>
+            </Form-item>
+          </Col>
+        </Row>
       </i-Form>
       <div slot="footer" style="text-align:center;">
         <i-button type="text" @click="cancel">取消</i-button>
@@ -266,36 +271,31 @@
       </div>
     </Modal>
     <Modal v-model="isShow" width="500">
-          <h3 style="text-align:center;" slot="header">下载码包</h3>
-          <Form :label-width="120">
-               
-                <Form-item label="验证码：">
-                    <Row>
-                        <Col span="16">
-                            <Input placeholder="请输入验证码" v-model.trim="editData.code"></Input>
-                        </Col>
-                        <Col span="6" offset="2">
-                            <Button @click="sendMsg()" :disabled="disabledStatus">{{codeMsg}}</Button>
-                        </Col>
-                    </Row>
-                </Form-item>                   
-          </Form>
-            <div slot='footer'>
-                <Button @click="downloadCode">下载码包</Button>
-                <Button @click="isShow = false">取消</Button>
-            </div>
-      </Modal>
-	</div>
+      <h3 style="text-align:center;" slot="header">下载码包</h3>
+      <Form :label-width="120">
+        <Form-item label="验证码：">
+          <Row>
+            <Col span="16">
+              <Input placeholder="请输入验证码" v-model.trim="editData.code"></Input>
+            </Col>
+            <Col span="6" offset="2">
+              <Button @click="sendMsg()" :disabled="disabledStatus">{{codeMsg}}</Button>
+            </Col>
+          </Row>
+        </Form-item>
+      </Form>
+      <div slot="footer">
+        <Button @click="downloadCode">下载码包</Button>
+        <Button @click="isShow = false">取消</Button>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import DEV_CONFIG from "@/util/config.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
   queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
   queryActivityVOByGroupId //根据活动包名ID获取陈列活动列表
@@ -339,14 +339,6 @@ export default {
       isShow: false,
       editData: {
         code: null
-      },
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
       },
       formItem: {
         brandId: "",
@@ -423,14 +415,6 @@ export default {
           key: "packageNum",
           align: "center"
         },
-        // {
-        //   title: "状态",
-        //   key: "status",
-        //   align: "center",
-        //   render:(h,params) => {
-
-        //   }
-        // },
         {
           title: "操作",
           key: "action",
@@ -627,28 +611,6 @@ export default {
         this.formItem.qrRuleId = res.qrRuleId;
       });
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     changeValue(value) {
       this.groupList = [];
       queryActivityGroupVOByBrandId(value).then(res => {
@@ -677,7 +639,6 @@ export default {
       this.init();
     },
     init() {
-      // var data = this.Global.JsonChange(this.formData);
       let data = {};
       if (this.formData.codeNum) {
         data["codeNum"] = this.formData.codeNum;
@@ -689,28 +650,13 @@ export default {
         this.formData.queryStartTime
       );
       data["activityId"] = this.formData.activityId;
-      console.log(data);
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       data["brandId"] = 1;
       delete data["brandName"];
       delete data["groupName"];
       delete data["activityName"];
 
       this.Global.deleteEmptyProperty(data);
-      console.log(data);
       this.Global.doPost(
         "codepackage/queryonecodepackageinfo.json",
         data,

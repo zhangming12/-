@@ -224,10 +224,7 @@
 
 <script>
 import dataRange from "@/components/data-range/data-range.vue";
-import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
-import importBtn from "@/components/Button/import-btn.vue";
 import { bankList } from "@/util/ENUMS.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {

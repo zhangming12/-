@@ -584,7 +584,6 @@ export default {
         this.cancel();
       });
     },
-    dataChange(val) {},
     createNewAccount() {},
     submit(name) {},
     userBind() {}

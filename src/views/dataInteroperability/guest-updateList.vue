@@ -64,57 +64,53 @@
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">客资更新列表</h2> -->
-        <div class="main-container">
-          <div class="box queryBox">
-              <div class="leftBox">
-                <span>更新时间:</span>
-                <span>{{updateTime}}</span>
-                <span @click="updataNow">立即更新</span>
-              </div>
-              <div class="rightBox">
-                  <Button type="primary" class="btn-search" @click="exportExcel">导出</Button>
-              </div>
-          </div>
-          <div class="box tableBox">
-              <!-- <Table :columns="columns1" :data="pageData" disabled-hover></Table> -->
-              <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable> 
-          </div>
-          <div class="page-box">
-              <div style="float: right;">
-                  <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-              </div>
-          </div>
+  <div id="Main">
+    <!-- <h2 class="Title">客资更新列表</h2> -->
+    <div class="main-container">
+      <div class="box queryBox">
+        <div class="leftBox">
+          <span>更新时间:</span>
+          <span>{{updateTime}}</span>
+          <span @click="updataNow">立即更新</span>
         </div>
-        <Modal
-            title="客资更新操作"
-            v-model="showUnlock"
-            class-name="vertical-center-modal">
-             <Form :model="formItem" :label-width="90" ref="form" :rules="rule">
-                 <FormItem label="操作内容:" prop="userName">
-                    <span>更新</span>
-                </FormItem>
-                <FormItem label="备注:" prop="memo">
-                    <Input v-model="formItem.memo" type="textarea" :rows="4" placeholder="请输入备注"></Input>
-                </FormItem>
-            </Form>
-            <div slot="footer">
-              <div style="text-align:center">
-                <i-button type="success" @click="cancel">取消</i-button>
-                <i-button type="primary" @click="userBind">确定</i-button>
-              </div>
-                
-            </div>
-        </Modal>
+        <div class="rightBox">
+          <Button type="primary" class="btn-search" @click="exportExcel">导出</Button>
+        </div>
+      </div>
+      <div class="box tableBox">
+        <!-- <Table :columns="columns1" :data="pageData" disabled-hover></Table> -->
+        <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
     </div>
+    <Modal title="客资更新操作" v-model="showUnlock" class-name="vertical-center-modal">
+      <Form :model="formItem" :label-width="90" ref="form" :rules="rule">
+        <FormItem label="操作内容:" prop="userName">
+          <span>更新</span>
+        </FormItem>
+        <FormItem label="备注:" prop="memo">
+          <Input v-model="formItem.memo" type="textarea" :rows="4" placeholder="请输入备注"></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <div style="text-align:center">
+          <i-button type="success" @click="cancel">取消</i-button>
+          <i-button type="primary" @click="userBind">确定</i-button>
+        </div>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
 import area from "@/config/areaCode.js";
 import hhTable from "@/components/table/table.vue";
 export default {
-  name:"guest-updateList-keepAlive",
+  name: "guest-updateList-keepAlive",
   components: {
     hhTable
   },
@@ -303,7 +299,6 @@ export default {
         onOk: () => {
           this.Global.doPost("hbBaseData/getDiffStore.json", "", res => {
             this.$Message.info("更新中，请稍后！");
-            console.log(res);
             this.init();
           });
         }
@@ -311,9 +306,6 @@ export default {
     },
     cancel() {
       this.showUnlock = false;
-    },
-    dataChange(val) {
-      var treeData = this.$refs.tree.getCheckedNodes();
     },
     createNewAccount() {
       this.type = "add";

@@ -254,10 +254,8 @@
 <script>
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import refreshBtn from "@/components/Button/refresh-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
-import importBtn from "@/components/Button/import-btn.vue";
 import hhTable from "@/components/table/table.vue";
 import area from "@/config/china_code_data.js";
 import config from "@/util/config.js";
@@ -479,9 +477,7 @@ export default {
   components: {
     dataRange,
     exportBtn,
-    detailBtn,
     myModal,
-    importBtn,
     hhTable,
     yearSelect,
     refreshBtn

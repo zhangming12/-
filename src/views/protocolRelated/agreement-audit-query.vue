@@ -269,7 +269,6 @@
       <div class="box" style="padding:10px">
         <div class="contentTop">
           <exportBtn class="btn-right" @btnClick="exportExcel"/>
-          <!-- <importBtn  class="btn-right" @btnClick="exportExport = true" /> -->
         </div>
         <Table :columns="columns" :data="pageData" disabled-hover></Table>
       </div>

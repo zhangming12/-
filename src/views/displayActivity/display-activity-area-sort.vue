@@ -396,7 +396,6 @@
       </div>
       <div class="table-box box" ref="tableBox">
         <div class="contentTop">
-          <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
           <exportBtn class="btn-right" @btnClick="exportExcel"/>
         </div>
         <!-- 排行榜 -->
@@ -597,23 +596,16 @@
 <script>
 import area from "@/config/china_code_data.js";
 
-import {
-  dispalyExamineSuggesteStatus
-} from "@/util/ENUMS.js";
+import { dispalyExamineSuggesteStatus } from "@/util/ENUMS.js";
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
   name: "display-activity-area-sort-keepAlive",
@@ -730,7 +722,7 @@ export default {
       activityList: []
     };
   },
-  components: { dataRange, exportBtn, detailBtn, myModal, fieldNameDes },
+  components: { dataRange, exportBtn, myModal, fieldNameDes },
   watch: {
     orderType(cval, oval) {
       if (cval == oval) {

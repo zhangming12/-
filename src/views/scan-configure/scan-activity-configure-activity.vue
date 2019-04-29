@@ -123,7 +123,6 @@
           </span>
 
           <addNewBtn class="btn-right ml20" @btnClick="addNewActivity"/>
-          <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
         </div>
         <Table :columns="columns1" :data="pageData" disabled-hover></Table>
       </div>
@@ -153,14 +152,10 @@
 
 <script>
 import dataRange from "@/components/data-rang.vue";
-import exportBtn from "@/components/Button/export-btn.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
-import {
-  queryOrganizationDictList //查询四级组织数据
-} from "@/api/common.js";
 export default {
   name: "scan-activity-configure-activity",
 
@@ -357,7 +352,7 @@ export default {
       activityList: []
     };
   },
-  components: { dataRange, exportBtn, myModal, addNewBtn },
+  components: { dataRange, myModal, addNewBtn },
   created() {
     this.groupId = this.$route.query.groupId;
     this.brandId = this.$route.query.brandId;
@@ -366,7 +361,6 @@ export default {
         "activityMaintain/getActivityList.json",
         { groupId: this.groupId },
         res => {
-          console.log(res);
           this.pageData = res.datalist;
           this.pageNum = res.items;
           this.page = res.page;

@@ -168,9 +168,6 @@
 
 <script>
 import hhTable from "@/components/table/table.vue";
-import exportBtn from "@/components/Button/export-btn.vue";
-import importBtn from "@/components/Button/import-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import area from "@/config/china_code_data.js";
@@ -205,12 +202,6 @@ export default {
                   margin: "0 auto",
                   cursor: "pointer"
                 }
-                // on: {
-                //   click: () => {
-                //     this.src = params.row.resIcon;
-                //     this.visible = true;
-                //   }
-                // }
               })
             ];
             return h("div", tag);
@@ -249,21 +240,12 @@ export default {
           align: "center",
           tooltip: true
         }
-        // {
-        //   title: "手机号",
-        //   key: "phone",
-        //   minWidth: 140,
-        //   align: "center"
-        // }
       ],
       pageData: [],
       pageSize: 10
     };
   },
   components: {
-    exportBtn,
-    detailBtn,
-    importBtn,
     myModal,
     hhTable,
     fieldNameDes

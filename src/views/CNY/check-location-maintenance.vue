@@ -235,7 +235,6 @@
 import hhTable from "@/components/table/table.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import importBtn from "@/components/Button/import-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import config from "@/util/config.js";
@@ -436,7 +435,6 @@ export default {
   },
   components: {
     exportBtn,
-    detailBtn,
     importBtn,
     myModal,
     hhTable,

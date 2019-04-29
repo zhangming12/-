@@ -72,107 +72,131 @@
 
 <template>
   <div id="Main">
-        <h2 class="Title">活动异常预警</h2>           
-      <div class="box">  
-            <Form ref="form" :model="formData" :label-width="80" :rules="rule">
-                <Row>
-                    <Col span="21">
-                        <Row>
-                            <Col span="13">
-                                <Form-item label="时间:">
-                                <Row>
-                                    <Col span="11">
-                                        <Form-item prop="queryStartTime">
-                                            <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                                        </Form-item>
-                                    </Col>
-                                    <Col span="2" style="text-align: center;">至</Col>
-                                    <Col span="11">
-                                        <Form-item prop="queryEndTime">
-                                            <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                                        </Form-item>
-                                    </Col>
-                                </Row>
-                                </Form-item>
-                            </Col>
-                            <Col span="11">
-                                <Form-item label="客户编号">
-                                    <Input  v-model="formData.joinCode"></Input>                              
-                                </Form-item>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col span="8">
-                                <Form-item label="店铺名称">
-                                    <Input  v-model="formData.storeName"></Input>                             
-                                </Form-item>
-                            </Col>
-                            <Col span="8">
-                                <Form-item label="客户渠道">
-                                    <Select v-model="formData.bapChannel" clearable>
-                                        <Option v-for="(item, key, index) in protocolBapChannel" :value="key" :key="index">{{ item }}</Option>
-                                    </Select>
-                                </Form-item> 
-                            </Col>
-                            <Col span="8">
-                                <Form-item label="业代姓名">
-                                    <Input  v-model="formData.workerName"></Input>                             
-                                </Form-item>
-                            </Col>
-                        </Row>
+    <h2 class="Title">活动异常预警</h2>
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="80" :rules="rule">
+        <Row>
+          <Col span="21">
+            <Row>
+              <Col span="13">
+                <Form-item label="时间:">
+                  <Row>
+                    <Col span="11">
+                      <Form-item prop="queryStartTime">
+                        <data-range
+                          @dataChange="startTimeChange"
+                          hour="00:00"
+                          :time="formData.queryStartTime"
+                          start
+                        ></data-range>
+                      </Form-item>
                     </Col>
-                    <Col span="2" offset="1">
-                            <div class="searchBox">
-                                <Button @click="submit('form')" class="btn-search  search_btn" type="primary">查询</Button> 
-                                <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-up" v-if="showQuery"></Button>
-                                <Button @click="showQuery=!showQuery" class="search_icon" type="primary" icon="ios-arrow-down" v-else></Button>                        
-                                
-                            </div>                                            
-                        </Col>
-                </Row>
-                <transition name="fade">
-                    <Row v-if="showQuery">
-                        <Col span='7'>
-                            <Form-item label="销售路线">
-                                <Input  v-model="formData.salesRoute"></Input>                                                         
-                                
-                            </Form-item> 
-                        </Col>
-                        <Col span='7'>
-                            <Form-item label="销售部" >                                                        
-                                <Input  v-model="formData.salesDept"></Input>                             
-                            </Form-item> 
-                        </Col>
-                        <Col span='7'>
-                            <Form-item label="大区">                         
-                                <Input  v-model="formData.salesRegion"></Input>                             
-                            </Form-item>   
-                        </Col>
-                        <Col span='7'>
-                        <Form-item label="营业部">
-                                <Input  v-model="formData.busiDept"></Input> 
-                            </Form-item> 
-                        </Col>
-                        <Col span='7'>
-                        <Form-item label="业代手机" >
-                            <Input  v-model="formData.workerPhone"></Input> 
-                        </Form-item> 
-                        </Col>
-                    </Row>
-                </transition>
-            </Form>          
-      </div>
-      <div class="box" style="padding-bottom:20px">        
-        <div class='contentTop'>  
-            <Button class="btn-right" @click="exportExcel"  type="primary" >导出</Button>
-        </div>
-        <Table :columns="columns" :data="pageData" disabled-hover></Table>
-        <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+                    <Col span="2" style="text-align: center;">至</Col>
+                    <Col span="11">
+                      <Form-item prop="queryEndTime">
+                        <data-range
+                          hour="24:00"
+                          placeholder="结束时间"
+                          @dataChange="endTimeChange"
+                          :time="formData.queryEndTime"
+                        ></data-range>
+                      </Form-item>
+                    </Col>
+                  </Row>
+                </Form-item>
+              </Col>
+              <Col span="11">
+                <Form-item label="客户编号">
+                  <Input v-model="formData.joinCode"></Input>
+                </Form-item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span="8">
+                <Form-item label="店铺名称">
+                  <Input v-model="formData.storeName"></Input>
+                </Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="客户渠道">
+                  <Select v-model="formData.bapChannel" clearable>
+                    <Option
+                      v-for="(item, key, index) in protocolBapChannel"
+                      :value="key"
+                      :key="index"
+                    >{{ item }}</Option>
+                  </Select>
+                </Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="业代姓名">
+                  <Input v-model="formData.workerName"></Input>
+                </Form-item>
+              </Col>
+            </Row>
+          </Col>
+          <Col span="2" offset="1">
+            <div class="searchBox">
+              <Button @click="submit('form')" class="btn-search search_btn" type="primary">查询</Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-up"
+                v-if="showQuery"
+              ></Button>
+              <Button
+                @click="showQuery=!showQuery"
+                class="search_icon"
+                type="primary"
+                icon="ios-arrow-down"
+                v-else
+              ></Button>
             </div>
+          </Col>
+        </Row>
+        <transition name="fade">
+          <Row v-if="showQuery">
+            <Col span="7">
+              <Form-item label="销售路线">
+                <Input v-model="formData.salesRoute"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="销售部">
+                <Input v-model="formData.salesDept"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="大区">
+                <Input v-model="formData.salesRegion"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="营业部">
+                <Input v-model="formData.busiDept"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="业代手机">
+                <Input v-model="formData.workerPhone"></Input>
+              </Form-item>
+            </Col>
+          </Row>
+        </transition>
+      </Form>
+    </div>
+    <div class="box" style="padding-bottom:20px">
+      <div class="contentTop">
+        <Button class="btn-right" @click="exportExcel" type="primary">导出</Button>
+      </div>
+      <Table :columns="columns" :data="pageData" disabled-hover></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -185,21 +209,15 @@ import {
 
 import dataRange from "@/components/data-rang.vue";
 
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import config from "@/util/config.js";
 
-import wpictureUpload from "@/components/word-picture-upload.vue";
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
-  name:"activity-abnormal-warn-two-keepAlive",
+  name: "activity-abnormal-warn-two-keepAlive",
 
   components: {
-    wpictureUpload,
     dataRange
   },
   data() {
@@ -367,7 +385,7 @@ export default {
                         joinCode: params.row.joinCode,
                         id: params.row.id,
                         // activityId:params.row.activityId,
-                        loongBizType:"two",
+                        loongBizType: "two",
                         storeId: params.row.storeId
                       };
                       this.$router.push({
@@ -459,7 +477,10 @@ export default {
       if (value.hour == "24:00") {
         return;
       }
-      this.formData.queryEndTime = this.Global.setHoursData(value.time, value.hour);
+      this.formData.queryEndTime = this.Global.setHoursData(
+        value.time,
+        value.hour
+      );
     },
 
     exportExcel: function() {

@@ -184,14 +184,10 @@
 </template>
 
 <script>
-import exportBtn from "@/components/Button/export-btn.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
-import {
-  queryOrganizationDictList //查询四级组织数据
-} from "@/api/common.js";
 export default {
   name: "scan-activity-configure-group-keepAlive",
 
@@ -406,7 +402,7 @@ export default {
       activityList: []
     };
   },
-  components: { exportBtn, myModal, addNewBtn },
+  components: {  myModal, addNewBtn },
   created() {
     this.Global.doPostNoLoading(
       "condition/queryBrands.json",
@@ -459,7 +455,6 @@ export default {
         "activityMaintain/doSearchActivityGroup.json",
         data,
         res => {
-          console.log(res);
           this.pageData = res.datalist;
           this.pageNum = res.items;
           this.page = res.page;
@@ -478,5 +473,3 @@ export default {
   }
 };
 </script>
-
-

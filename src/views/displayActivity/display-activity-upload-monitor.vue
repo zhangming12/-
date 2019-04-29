@@ -485,19 +485,13 @@
 <script>
 import { displayParketCheckStatus } from "@/util/ENUMS.js";
 import dataRange from "@/components/data-rang.vue";
-import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
   name: "display-activity-upload-monitor-keepAlive",
@@ -538,15 +532,12 @@ export default {
       },
       page: 1,
       pageNum: 0,
-      rule: {
-        // queryStartTime: [{ validator: validateStart }],
-        // queryEndTime: [{ validator: validateEnd }]
-      },
+      rule: {},
       brandList: [],
       activityList: []
     };
   },
-  components: { dataRange, exportBtn, detailBtn, myModal, fieldNameDes },
+  components: { dataRange, myModal, fieldNameDes },
   created() {
     this.Global.doPostNoLoading(
       "condition/queryBrands.json",

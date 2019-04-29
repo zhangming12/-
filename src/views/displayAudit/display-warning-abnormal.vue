@@ -78,108 +78,135 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title" v-if="displayExamineType == 'A'">陈列一级审核</h2> -->
-        <div class="main-container">
-            <div class="box">
-                <Form ref="form" :model="formData" :label-width="10">
-                    <div class="container">
-                        <div class="btn-left w18">
-                            <Form-item required prop="brandId">
-                                <Select v-model="formData.brandId" placeholder="品牌名称"  @on-change="changeValue">
-                                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                                </Select>
-                            </Form-item>
-                        </div>   
-                        <div class="btn-left w18">
-                            <Form-item  prop="queryStartTime" required>
-                                <data-range @dataChange="startTimeChange" placeholder="上传开始时间" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item  prop="queryEndTime" required>
-                                <data-range hour="24:00" placeholder="上传结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                            </Form-item>
-                        </div>
-                        
-                        <div class="btn-left w18">
-                            <Form-item prop="groupId" required>
-                                <Select v-model="formData.groupId" placeholder="活动名称" @on-change="getActivityList" clearable>
-                                    <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                                </Select>
-                            </Form-item> 
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item prop="activityId">
-                                <Select v-model="formData.activityId" placeholder="子活动名" clearable>
-                                    <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                                </Select>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w10">
-                            <div class="searchBox">
-                                <div class="btn-left search-left" @click="showQuery=!showQuery">
-                                <button type="button">
-                                    {{showQuery?'收起':'更多'}}
-                                    <Icon type="ios-arrow-down" size="14" style="margin-top:-2px;" v-if="!showQuery"/>
-                                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
-                                </button>
-                                </div>
-                                <div class="btn-right search-right" @click="submit('search')">
-                                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <transition name="fade">
-                        <div class="container" v-if="showQuery">
-                            <div class="btn-left w18">
-                                <Form-item>
-                                    <Input v-model.trim="formData.storeId" placeholder="门店ID"></Input>
-                                </Form-item>
-                            </div>
-                            <div class="btn-left w18">
-                                <Form-item>
-                                    <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
-                                </Form-item>
-                            </div>
-                            <div class="btn-left w18">
-                                <Form-item required>
-                                    <Input v-model.trim="formData.salesRoute" placeholder="销售路线"></Input>
-                                </Form-item>
-                            </div>
-                        </div>
-                    </transition>
-                </Form>
+  <div id="Main">
+    <!-- <h2 class="Title" v-if="displayExamineType == 'A'">陈列一级审核</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required prop="brandId">
+                <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
             </div>
-            <div class="table-box box">
-                <div class="contentTop">
-                <span class="btn-left">共查询到 <span class='numColor'>{{ pageNum }}</span> 条记录</span>
-                
-                <!-- <exportBtn  class="btn-right" @btnClick="submit('export')" title="导出"/> -->
-                <!-- <exportBtn  class="btn-right" @btnClick="myModalisShow = true" title="导出暂存"/> -->
-                <!-- <detailBtn  class="btn-right" @btnClick="historyShow = true" title="历史数据" /> -->
+            <div class="btn-left w18">
+              <Form-item prop="queryStartTime" required>
+                <data-range
+                  @dataChange="startTimeChange"
+                  placeholder="上传开始时间"
+                  hour="00:00"
+                  :time="formData.queryStartTime"
+                  start
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="queryEndTime" required>
+                <data-range
+                  hour="24:00"
+                  placeholder="上传结束时间"
+                  @dataChange="endTimeChange"
+                  :time="formData.queryEndTime"
+                ></data-range>
+              </Form-item>
+            </div>
+
+            <div class="btn-left w18">
+              <Form-item prop="groupId" required>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="活动名称"
+                  @on-change="getActivityList"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in groupList"
+                    :key="index"
+                  >{{ item.groupName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="activityId">
+                <Select v-model="formData.activityId" placeholder="子活动名" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in activityList"
+                    :key="index"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w10">
+              <div class="searchBox">
+                <div class="btn-left search-left" @click="showQuery=!showQuery">
+                  <button type="button">
+                    {{showQuery?'收起':'更多'}}
+                    <Icon
+                      type="ios-arrow-down"
+                      size="14"
+                      style="margin-top:-2px;"
+                      v-if="!showQuery"
+                    />
+                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
+                  </button>
                 </div>
-                <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" ></hhTable>
-                
-            </div>
-            <div class="page-box">
-                <div style="float: right;">
-                    <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+                <div class="btn-right search-right" @click="submit('search')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
                 </div>
+              </div>
             </div>
+          </div>
+          <transition name="fade">
+            <div class="container" v-if="showQuery">
+              <div class="btn-left w18">
+                <Form-item>
+                  <Input v-model.trim="formData.storeId" placeholder="门店ID"></Input>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item>
+                  <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input v-model.trim="formData.salesRoute" placeholder="销售路线"></Input>
+                </Form-item>
+              </div>
+            </div>
+          </transition>
+        </Form>
+      </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            共查询到
+            <span class="numColor">{{ pageNum }}</span> 条记录
+          </span>
         </div>
-	</div>
+        <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import dataRange from "@/components/data-rang.vue";
 import hhTable from "@/components/table/table.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
   name: "display-warning-abnormal-keepAlive",
   components: {
@@ -233,14 +260,14 @@ export default {
           key: "riskSource",
           align: "center",
           tooltip: true,
-          render: (h,params) => {
+          render: (h, params) => {
             let str = "";
             if (params.row.riskSource == "H") {
               str = "人工";
             } else if (params.row.riskSource == "M") {
               str = "自动";
             }
-            return h('div',str);
+            return h("div", str);
           }
         },
         {
@@ -249,12 +276,12 @@ export default {
 
           align: "center",
           tooltip: true,
-          render: (h,params) => {
+          render: (h, params) => {
             let str = "无";
             if (params.row.riskType == "V") {
               str = "视频异常";
             }
-            return h("div",str);
+            return h("div", str);
           }
         },
         {

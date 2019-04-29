@@ -220,14 +220,7 @@ import hhTable from "@/components/table/table.vue";
 export default {
   name: "giveout-prizes-clear-keepAlive",
   components: {
-    // dataRange,
-    // exportBtn,
-    // detailBtn,
-    // myModal,
-    // importBtn,
     hhTable
-    // yearSelect,
-    // refreshBtn
   },
   data() {
     return {

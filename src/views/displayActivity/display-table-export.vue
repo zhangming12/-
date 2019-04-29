@@ -163,7 +163,6 @@
 <script>
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import hhTable from "@/components/table/table.vue";
@@ -243,7 +242,7 @@ export default {
       step:20
     };
   },
-  components: { dataRange, exportBtn, detailBtn, myModal, hhTable,fieldNameDes },
+  components: { dataRange, exportBtn, myModal, hhTable,fieldNameDes },
   created() {
     this.columns1 = [].concat(this.defaultList);
     this.Global.doPostNoLoading(

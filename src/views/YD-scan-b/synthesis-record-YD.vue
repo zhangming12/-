@@ -210,7 +210,6 @@ const synthesisStatus = {
 import dataRange from "@/components/data-rang.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import area from "@/config/china_code_data.js";
-import importBtn from "@/components/Button/import-btn.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import config from "@/util/config.js";
@@ -311,7 +310,6 @@ export default {
   components: {
     exportBtn,
     myModal,
-    importBtn,
     hhTable,
     fieldNameDes,
     dataRange

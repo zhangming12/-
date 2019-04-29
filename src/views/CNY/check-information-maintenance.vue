@@ -114,195 +114,249 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">签到位置维护</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" :model="formData" :label-width="10">
-              <div class="container">
-                <div class="btn-left w18">
-                  <Form-item  required>
-                      <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
-                          <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                      </Select> 
-                  </Form-item>
+    <!-- <h2 class="Title">签到位置维护</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required>
+                <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <DatePicker
+                  type="daterange"
+                  v-model="formData.queryTime"
+                  split-panels
+                  placeholder="日期"
+                  style="display:block;"
+                ></DatePicker>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <!-- <DatePicker type="date" placeholder="签到时间" style="display:block;"></DatePicker> -->
+                <DatePicker
+                  type="daterange"
+                  v-model="formData.signTime"
+                  split-panels
+                  placeholder="签到时间"
+                  style="display:block;"
+                ></DatePicker>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <Input placeholder="签到点名称" v-model="formData.signName" clearable></Input>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <Select
+                  v-model="formData.signStatus"
+                  placeholder="签到状态"
+                  @on-change="oneLevelChange"
+                  clearable
+                >
+                  <Option value="0">待签到</Option>
+                  <Option value="1">正常签到</Option>
+                  <Option value="2">迟到签到</Option>
+                  <Option value="3">未签到</Option>
+                </Select>
+              </Form-item>
+            </div>
+
+            <div class="btn-left w10">
+              <div class="searchBox">
+                <div class="btn-left search-left" @click="showQuery=!showQuery">
+                  <button type="button">
+                    {{showQuery?'收起':'更多'}}
+                    <Icon
+                      type="ios-arrow-down"
+                      size="14"
+                      style="margin-top:-2px;"
+                      v-if="!showQuery"
+                    />
+                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
+                  </button>
                 </div>
-                <div class="btn-left w18">
-                  <Form-item  required>
-                    <DatePicker type="daterange" v-model="formData.queryTime" split-panels placeholder="日期" style="display:block;"></DatePicker>
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item  required>
-                    <!-- <DatePicker type="date" placeholder="签到时间" style="display:block;"></DatePicker> -->
-                    <DatePicker type="daterange" v-model="formData.signTime" split-panels placeholder="签到时间" style="display:block;"></DatePicker>
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                  <Form-item  required>
-                      <Input placeholder="签到点名称" v-model="formData.signName" clearable></Input>
-                  </Form-item>
-                </div>
-                <div class="btn-left w18">
-                    <Form-item required>
-                      <Select v-model="formData.signStatus" placeholder="签到状态" @on-change="oneLevelChange" clearable>
-                          <Option value="0" >待签到</Option>
-                          <Option value="1" >正常签到</Option>
-                          <Option value="2" >迟到签到</Option>
-                          <Option value="3" >未签到</Option>
-                      </Select> 
-                    </Form-item>
-                </div>
-                
-                <div class="btn-left w10">
-                  <div class="searchBox">
-                    <div class="btn-left search-left" @click="showQuery=!showQuery">
-                      <button type="button">
-                       {{showQuery?'收起':'更多'}} 
-                        <Icon type="ios-arrow-down" size="14" style="margin-top:-2px;" v-if="!showQuery"/>
-                        <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
-                      </button>
-                      
-                    </div>
-                    <div class="btn-right search-right" @click="submit('form')">
-                      <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                    </div>
-                  </div>
+                <div class="btn-right search-right" @click="submit('form')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
                 </div>
               </div>
-              <transition name="fade">
-                <div class="container" v-if="showQuery">
-                  <div class="btn-left w18">
-                    <Form-item required>
-                        <Input placeholder="业代姓名" v-model="formData.workerName" clearable></Input>
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item required>
-                        <Input placeholder="业代手机" v-model="formData.phone" clearable></Input>
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item required>
-                      <Select v-model="formData.oneLevel" placeholder="一级组织" @on-change="oneLevelChange" clearable>
-                          <Option :value="item.id" v-for="(item,index) in oneLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                      </Select> 
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item  required>
-                      <Select v-model="formData.twoLevel"  placeholder="二级组织" @on-change="twoLevelChange" clearable>
-                          <Option :value="item.id" v-for="(item,index) in twoLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                      </Select> 
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item  required>
-                      <Select v-model="formData.threeLevel"  placeholder="三级组织" @on-change="threeLevelChange" clearable>
-                          <Option :value="item.id" v-for="(item,index) in threeLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                      </Select> 
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item  required>
-                      <Select v-model="formData.fourLevel"  placeholder="四级组织" clearable>
-                          <Option :value="item.id" v-for="(item,index) in fourLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                      </Select> 
-                    </Form-item>
-                    
-                  </div>
-                </div>
-              </transition>
+            </div>
+          </div>
+          <transition name="fade">
+            <div class="container" v-if="showQuery">
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input placeholder="业代姓名" v-model="formData.workerName" clearable></Input>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input placeholder="业代手机" v-model="formData.phone" clearable></Input>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Select
+                    v-model="formData.oneLevel"
+                    placeholder="一级组织"
+                    @on-change="oneLevelChange"
+                    clearable
+                  >
+                    <Option :value="item.id" v-for="(item,index) in oneLeverList" :key="index">
+                      <span :title="item.areaName" class="text-overflow">{{item.areaName}}</span>
+                    </Option>
+                  </Select>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Select
+                    v-model="formData.twoLevel"
+                    placeholder="二级组织"
+                    @on-change="twoLevelChange"
+                    clearable
+                  >
+                    <Option :value="item.id" v-for="(item,index) in twoLeverList" :key="index">
+                      <span :title="item.areaName" class="text-overflow">{{item.areaName}}</span>
+                    </Option>
+                  </Select>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Select
+                    v-model="formData.threeLevel"
+                    placeholder="三级组织"
+                    @on-change="threeLevelChange"
+                    clearable
+                  >
+                    <Option :value="item.id" v-for="(item,index) in threeLeverList" :key="index">
+                      <span :title="item.areaName" class="text-overflow">{{item.areaName}}</span>
+                    </Option>
+                  </Select>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Select v-model="formData.fourLevel" placeholder="四级组织" clearable>
+                    <Option :value="item.id" v-for="(item,index) in fourLeverList" :key="index">
+                      <span :title="item.areaName" class="text-overflow">{{item.areaName}}</span>
+                    </Option>
+                  </Select>
+                </Form-item>
+              </div>
+            </div>
+          </transition>
+        </Form>
+      </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            共查询到
+            <span class="numColor">{{ pageNum }}</span> 条数据
+          </span>
+          <!-- <span class="btn-left spanBtn" @click="goToAudit">去审核</span> -->
+          <exportBtn class="btn-right" @btnClick="exportExcel"/>
+          <importBtn class="btn-right" @click.native="importExcelShow = true"/>
+          <span class="btn-right spanBtn" @click="dowland" style="margin-right:10px;">下载模板</span>
+        </div>
+        <hhTable
+          ref="table"
+          :columns="columns1"
+          :pageData="pageData"
+          :noneStatus="noneStatus"
+          disabled-hover
+        ></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
+      <fieldNameDes/>
+    </div>
+    <myModal class="myModal" @close="importExcelShow = false" :modal="importExcelShow">
+      <div slot="main" class="modal-main">
+        <h3>导入</h3>
+        <div class="modal-table">
+          <Form ref="form" :label-width="88">
+            <div style="overflow:hidden;">
+              <div class="upDate">
+                <Upload
+                  :action="importUrl"
+                  :show-upload-list="false"
+                  :on-success="handleSuccess"
+                  :on-error="handleError"
+                >
+                  <Icon type="ios-folder" size="14" color="#53a3f4"></Icon>
+                  <span>{{ importData.uploadText }}</span>
+                </Upload>
+              </div>
+            </div>
+            <div class="fotter" style="text-align:center;">
+              <Button @click="importExcelShow = false" type="primary">取消</Button>
+              <Button @click="exportMethod" type="success">导入</Button>
+            </div>
           </Form>
         </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">共查询到 <span class='numColor'>{{ pageNum }}</span> 条数据</span>
-              <!-- <span class="btn-left spanBtn" @click="goToAudit">去审核</span> -->
-              <exportBtn  class="btn-right" @btnClick="exportExcel" />
-              <importBtn  class="btn-right" @click.native="importExcelShow = true" />
-              <span class="btn-right spanBtn" @click="dowland" style="margin-right:10px;">下载模板</span>
-            </div>
-            <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus = "noneStatus" disabled-hover></hhTable>
-            
-        </div>
-        <div class="page-box">
-          <div style="float: right;">
-            <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-          </div>
-        </div>
-        <fieldNameDes/>
       </div>
-      <myModal class="myModal"
-            @close="importExcelShow = false"
-            :modal="importExcelShow">
-            <div slot="main" class="modal-main">
-              <h3>导入</h3>
-              <div class="modal-table">
-                  <Form ref="form" :label-width="88">
-                      <div style="overflow:hidden;">
-                          <div class='upDate'>
-                              <Upload :action="importUrl" 
-                                :show-upload-list=false
-                                :on-success='handleSuccess'
-                                :on-error='handleError'
-                                >
-                                <Icon type="ios-folder" size='14' color='#53a3f4'></Icon>
-                                <span>{{ importData.uploadText }}</span>
-                              </Upload>
-                          </div>
-                      </div>
-                      <div class="fotter" style="text-align:center;">
-                          <Button @click="importExcelShow = false" type="primary">取消</Button>
-                          <Button @click="exportMethod" type="success">导入</Button>
-                      </div>
-                  </Form>
-              </div>
-            </div>
-      </myModal>
+    </myModal>
 
-      <!-- 修改 -->
-      <myModal class="myModal"
-            @close="modifyShow = false"
-            :modal="modifyShow"
-            width="800">
-            <div slot="main" class="modal-main">
-              <h3>修改</h3>
-              <div class="modal-table">
-                  <Form ref="forms" :label-width="88">
-                    <Row>
-                      <Col span="8">
-                        <Form-item label="时间:">
-                          <DatePicker v-model="modifyData.signTime" type="datetime" placeholder="时间" style="display:block;"></DatePicker>
-                        </Form-item>
-                        <Form-item label="签到点ID:">
-                          <Input @on-blur="IDFilter" placeholder="签到点ID" v-model.trim="modifyData.signLocateId"></Input>
-                        </Form-item>
-                      </Col>
-                      <Col span="8">
-                        <Form-item label="业代手机:">
-                          <Input @on-blur="phoneFilter" placeholder="业代手机" v-model.trim="modifyData.phone"></Input>
-                        </Form-item>
-                        <Form-item label="签到点名称:">
-                          {{ modifyData.signName }}
-                        </Form-item>
-                      </Col>
-                      <Col span="8">
-                        <Form-item label="业代姓名:">
-                          {{ modifyData.workerName }}
-                        </Form-item>
-                        <Form-item label="签到点地址:">
-                          {{ modifyData.signAddress }}
-                        </Form-item>
-                      </Col>
-                    </Row>
-                      <div class="fotter" style="text-align:center;">
-                          <Button @click="modifyShow = false" type="primary">取消</Button>
-                          <Button @click="sureMethod" type="success">确定</Button>
-                      </div>
-                  </Form>
-              </div>
+    <!-- 修改 -->
+    <myModal class="myModal" @close="modifyShow = false" :modal="modifyShow" width="800">
+      <div slot="main" class="modal-main">
+        <h3>修改</h3>
+        <div class="modal-table">
+          <Form ref="forms" :label-width="88">
+            <Row>
+              <Col span="8">
+                <Form-item label="时间:">
+                  <DatePicker
+                    v-model="modifyData.signTime"
+                    type="datetime"
+                    placeholder="时间"
+                    style="display:block;"
+                  ></DatePicker>
+                </Form-item>
+                <Form-item label="签到点ID:">
+                  <Input
+                    @on-blur="IDFilter"
+                    placeholder="签到点ID"
+                    v-model.trim="modifyData.signLocateId"
+                  ></Input>
+                </Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="业代手机:">
+                  <Input @on-blur="phoneFilter" placeholder="业代手机" v-model.trim="modifyData.phone"></Input>
+                </Form-item>
+                <Form-item label="签到点名称:">{{ modifyData.signName }}</Form-item>
+              </Col>
+              <Col span="8">
+                <Form-item label="业代姓名:">{{ modifyData.workerName }}</Form-item>
+                <Form-item label="签到点地址:">{{ modifyData.signAddress }}</Form-item>
+              </Col>
+            </Row>
+            <div class="fotter" style="text-align:center;">
+              <Button @click="modifyShow = false" type="primary">取消</Button>
+              <Button @click="sureMethod" type="success">确定</Button>
             </div>
-      </myModal>
+          </Form>
+        </div>
+      </div>
+    </myModal>
   </div>
 </template>
 
@@ -310,15 +364,10 @@
 import hhTable from "@/components/table/table.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import importBtn from "@/components/Button/import-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import config from "@/util/config.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
@@ -564,7 +613,6 @@ export default {
   },
   components: {
     exportBtn,
-    detailBtn,
     importBtn,
     myModal,
     hhTable,

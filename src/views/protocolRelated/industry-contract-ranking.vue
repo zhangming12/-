@@ -328,7 +328,6 @@
             此表包含
             <span>{{pageNum}}</span> 条数据
           </div>
-          <!-- <detailBtn class="btn-right ml20" @btnClick="exportExcel" /> -->
           <exportBtn class="btn-right" @btnClick="exportExcel"/>
         </div>
 
@@ -336,7 +335,6 @@
 
         <div id="rank">
           <div id="rankTopImage">
-            <!-- <img src="../../assets/image/yedai10.png" alt=""> -->
             <span>业代签约排行榜</span>
           </div>
           <ul id="rankHeader">
@@ -385,7 +383,6 @@
 import fieldNameDes from "@/components/field-name-description.vue";
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
@@ -488,7 +485,7 @@ export default {
       rankList: []
     };
   },
-  components: { dataRange, exportBtn, detailBtn, fieldNameDes },
+  components: { dataRange, exportBtn, fieldNameDes },
   created() {
     this.Global.doPostNoLoading(
       "condition/queryBrands.json",

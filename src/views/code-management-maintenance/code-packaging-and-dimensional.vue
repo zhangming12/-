@@ -134,22 +134,12 @@
           <div class="container">
             <div class="btn-left w18">
               <Form-item required>
-                <data-range
-                  @dataChange="startTimeChange"
-                  hour="00:00"
-                  :time="formData.queryStartTime"
-                  start
-                ></data-range>
+                <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item required>
-                <data-range
-                  hour="24:00"
-                  placeholder="结束时间"
-                  @dataChange="endTimeChange"
-                  :time="formData.queryEndTime"
-                ></data-range>
+                <data-range hour="24:00" placeholder="结束时间" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
@@ -244,10 +234,8 @@
             <span class="numColor">{{scrapNum}}</span>
           </span>
 
-          <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
           <exportBtn class="btn-right" @btnClick="exportExcel"/>
           <importBtn class="btn-right" @btnClick="maintainImport" title="维护导入"/>
-          <!-- <Button type="text" class="btn-right" @click="maintainImport" style="margin-top:7px;">维护导入</Button> -->
         </div>
         <Table ref="table" :columns="columns1" :data="pageData" disabled-hover></Table>
       </div>
@@ -381,17 +369,13 @@
 import area from "@/config/china_code_data.js";
 const image = require("@/assets/image/edit.png");
 import { dispalyExamineSuggesteStatus } from "@/util/ENUMS.js";
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import importBtn from "@/components/Button/import-btn.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import config from "@/util/config.js";
-import {
-  queryOrganizationDictList //查询四级组织数据
-} from "@/api/common.js";
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
   name: "code-packaging-and-dimensional-keepAlive",
@@ -493,14 +477,6 @@ export default {
       threeLeverList: [], //三级组织数据
       fourLeverList: [], //四级组织数据
       showQuery: false,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       groupList: [],
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
@@ -556,37 +532,6 @@ export default {
           key: "lable",
           align: "center",
           tooltip: true
-          // render: (h, params) => {
-          //   return h("div", [
-          //     h(
-          //       "span",
-          //       {
-          //         style: {
-          //           // marginRight: "5px"
-          //         }
-          //       },
-          //       params.row.lable
-          //     ),
-          //     h("Button", {
-          //       props: {
-          //         type: "text",
-          //         size: "small",
-          //         fontSize: "20px",
-          //         icon: "ios-card-outline"
-          //       },
-          //       style: {
-          //         // marginRight: "5px"
-          //       },
-          //       on: {
-          //         click: () => {
-          //           this.labelNumberShow = true;
-          //           this.labelNumber = params.row.lable;
-          //           this.id = params.row.id;
-          //         }
-          //       }
-          //     })
-          //   ]);
-          // }
         },
         {
           title: "印刷正常数",
@@ -850,7 +795,7 @@ export default {
       activityList: []
     };
   },
-  components: { dataRange, exportBtn, detailBtn, myModal, importBtn },
+  components: { dataRange, exportBtn, myModal, importBtn },
   created() {
     this.Global.doPostNoLoading(
       "condition/queryBrands.json",
@@ -867,20 +812,6 @@ export default {
         }
       }
     );
-  },
-  watch: {
-    // labelNumberShow(val) {
-    //   if (!val) {
-    //     // this.id = "";
-    //     this.labelNumber = "";
-    //   }
-    // },
-    // modifyMemo(val) {
-    //   if (!val) {
-    //     // this.id = "";
-    //     this.memo = "";
-    //   }
-    // }
   },
   methods: {
     getActivityName(val) {
@@ -900,10 +831,6 @@ export default {
     // 修改标贴编号
     modifyLabel() {
       let data = {};
-      // if (!this.labelNumber) {
-      //   this.$Message.error("标贴编号不能为空");
-      //   return false;
-      // }
       data["lable"] = this.labelNumber;
       data["id"] = this.id;
       this.Global.doPostNoLoading("codepackage/updataLable.json", data, res => {
@@ -915,10 +842,6 @@ export default {
     // 修改备注
     modifyMemos() {
       let data = {};
-      // if (!this.memo) {
-      //   this.$Message.error("备注不能为空");
-      //   return false;
-      // }
       data["memo"] = this.memo;
       data["id"] = this.id;
       this.Global.doPostNoLoading("codepackage/updateMemo.json", data, res => {
@@ -973,17 +896,6 @@ export default {
     showDetail() {
       this.myModalisShow = true;
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     getActivityList(value) {
       this.groupList.forEach(item => {
         if (item.id == value) {
@@ -1001,17 +913,6 @@ export default {
             this.activityList.push({ id: Number(item[0]), name: item[1] });
           });
         }
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
       );
     },
     formateTime(time) {
@@ -1041,11 +942,6 @@ export default {
         this.$Message.error("活动包名不能为空");
         return false;
       }
-      // if (!this.formData.activityId) {
-      //   this.$Message.error("活动不能为空");
-      //   return false;
-      // }
-
       this.init(1, 10);
     },
     changePage(size) {
@@ -1057,20 +953,8 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
+
       data["currentPage"] = currentPage;
       data["pageSize"] = pageSize;
       if (data["status"]) {
@@ -1091,7 +975,6 @@ export default {
             this.codeNum = this.pageData[0].codeNum;
             this.scrapNum = this.pageData[0].scrapNum;
           }
-          // this.pageData = res.datalist;
         }
       );
     },
@@ -1100,12 +983,6 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
       if (data["status"]) {
         data["status"] = 1;
       } else {
@@ -1113,12 +990,7 @@ export default {
         delete data["status"];
       }
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
+
       this.Global.deleteEmptyProperty(data);
       var url = this.Global.getExportUrl(
         "codepackage/queryPackAndScrapInfoExport.json",
@@ -1156,5 +1028,3 @@ export default {
   }
 };
 </script>
-
-

@@ -386,8 +386,6 @@
 <script>
 import { displayParketCheckStatus } from "@/util/ENUMS.js";
 import dataRange from "@/components/data-range/data-range.vue";
-import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import {
@@ -431,14 +429,12 @@ export default {
       page: 1,
       pageNum: 0,
       rule: {
-        // queryStartTime: [{ validator: validateStart }],
-        // queryEndTime: [{ validator: validateEnd }]
       },
       brandList: [],
       activityList: []
     };
   },
-  components: { dataRange, exportBtn, detailBtn, myModal, fieldNameDes },
+  components: { dataRange, myModal, fieldNameDes },
   created() {
     this.getActivityList(79);
     this.threeLevelChange("17-01010200");

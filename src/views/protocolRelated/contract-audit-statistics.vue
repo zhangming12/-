@@ -133,7 +133,6 @@
             <div class="contentTop">
               <span class="btn-left">此表共包含<span class='numColor'>{{pageNum}}</span>条数据</span>
               
-              <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
               <exportBtn  class="btn-right" @btnClick="exportExcel" />
             </div>
             <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
@@ -154,7 +153,6 @@ import fieldNameDes from "@/components/field-name-description.vue";
 import hhTable from "@/components/table/table.vue";
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 
 import {
   EDFAULT_STARTTIME,
@@ -270,7 +268,6 @@ export default {
   components: {
     dataRange,
     exportBtn,
-    detailBtn,
     hhTable,
     fieldNameDes
   },

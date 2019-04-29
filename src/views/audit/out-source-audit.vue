@@ -37,7 +37,6 @@
     right: 10px;
   }
   .box {
-    // overflow: hidden;
     .card {
       border: 1px solid #e5e5e5;
       float: left;
@@ -46,7 +45,6 @@
       border-radius: 2px;
       margin-bottom: 10px;
       .card-top {
-        // height: 530px;
         box-sizing: border-box;
         padding: 10px 0;
         position: relative;
@@ -87,13 +85,9 @@
             .video {
               width: 100%;
               height: 213px;
-              //   display: flex;
-              //   justify-content: center;
-
               .video-main {
                 width: 250px;
                 position: relative;
-                // height: 213px;
                 video {
                   width: 250px;
                   height: 213px;
@@ -160,7 +154,6 @@
   #examine-right {
     margin: 0 auto 10px;
     padding: 14px;
-    // box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
     width: 500px;
     span {
       display: block;
@@ -439,7 +432,6 @@
                     <Col span="23">
                       <div class="item-box">
                         <span class="status">审核规则：</span>
-                        <!-- <div class="ruleBox">{{ item.auditPolicy }}</div> -->
                         <div class="ruleBox">
                           <div v-for="v in item.auditPolicy">{{ v }}</div>
                         </div>
@@ -472,11 +464,6 @@
         </div>
       </div>
       <div class="noData" v-else>暂无数据</div>
-      <!-- <div class="page-box">
-            <div style="float: right;">
-                <Page :total="pageNum" :page-size='pageSize' :current="page" @on-change="changePage"></Page>
-            </div>
-      </div>-->
     </div>
     <Modal
       v-model="goodsStausShow"

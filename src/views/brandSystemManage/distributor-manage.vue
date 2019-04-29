@@ -8,12 +8,6 @@
   min-height: 100%;
   background: #ffffff;
   padding-bottom: 60px;
-  .page-box {
-    overflow: hidden;
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-  }
 }
 .form {
   position: relative;
@@ -31,50 +25,11 @@
   line-height: 40px;
   margin-bottom: 0;
 }
-.ivu-table-row {
-  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1) !important;
-  transform: translateY(0px);
-}
 .table-box {
   padding: 0 10px;
   position: relative;
   .numColor {
     color: @primary-color;
-  }
-}
-
-//搜索条件 时间控件
-.ivu-date-picker {
-  display: block;
-}
-//搜索条件 radio按钮
-.ivu-radio-wrapper {
-  margin-right: 30px;
-}
-.searchBox {
-  overflow: hidden;
-  .search-left,
-  .search-right {
-    width: 50%;
-  }
-  .search-left {
-    button {
-      outline: none;
-      border: none;
-      width: 60px;
-      height: 30px;
-      line-height: 30px;
-      background: #ffffff;
-      margin-left: 8px;
-      cursor: pointer;
-      color: @primary-color;
-    }
-  }
-  .search-right {
-    img {
-      cursor: pointer;
-      margin-left: 10px;
-    }
   }
 }
 .myModal {
@@ -94,15 +49,11 @@
     }
     .modal-table {
       max-height: 500px;
-      // overflow-y: auto;
       margin-top: 10px;
       .modal-table-top {
         overflow: hidden;
         height: 30px;
         line-height: 30px;
-        // .numColor {
-        //   color: @primary-color;
-        // }
       }
     }
   }
@@ -121,7 +72,6 @@
   margin-left: 20px;
   position: relative;
   .zhezhao {
-    // background: red;
     cursor: not-allowed;
     width: 105px;
     height: 85px;
@@ -160,13 +110,6 @@
                 </Select>
               </Form-item>
             </div>
-            <!-- <div class="btn-left w18">
-                  <Form-item  required>
-                    <Select v-model="formData.brandId" placeholder="经销商名称" @on-change="queryDistributorList">
-                        <Option :value="item.id" v-for="(item,index) in distributorList" :key="index">{{ item.distributor }}</Option>
-                    </Select>
-                  </Form-item>
-            </div>-->
           </div>
           <div class="btn-left w10">
             <div class="searchBox">
@@ -185,9 +128,7 @@
           </span>
 
           <addNewBtn class="btn-right ml20" @btnClick="showModal"/>
-          <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" /> -->
         </div>
-        <!-- <Table :columns="columns1" :data="pageData" disabled-hover></Table> -->
         <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
       </div>
       <div class="page-box">
@@ -242,17 +183,12 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
-import exportBtn from "@/components/Button/export-btn.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import hhTable from "@/components/table/table.vue";
 import upData from "@/assets/js/upload.js";
 import PROJECT_CONFIG from "@/util/config.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
-import {
-  queryOrganizationDictList //查询四级组织数据
-} from "@/api/common.js";
 export default {
   name: "distributor-manage-keepAlive",
   data() {
@@ -356,7 +292,7 @@ export default {
       logoUrl: ""
     };
   },
-  components: { dataRange, exportBtn, myModal, addNewBtn, hhTable },
+  components: { myModal, addNewBtn, hhTable },
   created() {
     this.Global.doPostNoLoading("condition/queryAllBrands.json", "", res => {
       this.brandList = [];
@@ -364,7 +300,6 @@ export default {
         this.brandList.push({ id: Number(item[0]), brandName: item[1] });
       });
       if (this.brandList && this.brandList.length) {
-        // this.formData.brandId = this.brandList[0].id;
         this.init();
       }
     });
@@ -388,9 +323,6 @@ export default {
           this.formDatas.brandName = item.brandName;
         }
       });
-    },
-    zhezhaoClick() {
-      return false;
     },
     showModal() {
       this.addNewPresent();
@@ -462,7 +394,6 @@ export default {
       //陈列图片
       this.formDatas.goodsUrl =
         PROJECT_CONFIG.ossServer + "ecuda/image/" + file.name;
-      // console.log(this.formData.logoUrl);
     },
     closeModal() {
       this.myModalisShow = false;
@@ -474,10 +405,6 @@ export default {
       return new Date(Number(time)).pattern("yyyy-MM-dd-hh");
     },
     submit(name) {
-      // if (!this.formData.brandId) {
-      //   this.$Message.error("折扣名称不能为空");
-      //   return false;
-      // }
       this.page = 1;
       this.init();
     },
@@ -493,7 +420,6 @@ export default {
       this.Global.deleteEmptyProperty(data);
 
       this.Global.doPost("dealers/doQueryWithPage.json", data, res => {
-        //   console.log(res);
         this.pageData = res.datalist;
         this.noneStatus = true;
         this.pageNum = res.items;
@@ -519,5 +445,3 @@ export default {
   }
 };
 </script>
-
-

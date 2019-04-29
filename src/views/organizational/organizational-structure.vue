@@ -230,21 +230,17 @@
 <script>
 import config from "@/util/config.js";
 import myModal from "@/components/Modal/my-modal.vue";
-import wpictureUpload from "@/components/word-picture-upload.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import hhTable from "@/components/table/table.vue";
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import importBtn from "@/components/Button/import-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 export default {
   name: "organizational-structure-keepAlive",
 
   components: {
-    wpictureUpload,
     dataRange,
     exportBtn,
-    detailBtn,
     hhTable,
     importBtn,
     myModal,

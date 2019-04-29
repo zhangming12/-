@@ -269,7 +269,6 @@
 <script>
 import config from "@/util/config.js";
 import myModal from "@/components/Modal/my-modal.vue";
-import wpictureUpload from "@/components/word-picture-upload.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import hhTable from "@/components/table/table.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
@@ -278,7 +277,6 @@ export default {
   name: "personnel-organization-maintenance-keepAlive",
 
   components: {
-    wpictureUpload,
     exportBtn,
     hhTable,
     importBtn,

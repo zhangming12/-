@@ -192,14 +192,12 @@ import {
 } from "@/util/index.js"; //搜索条件默认时间
 import config from "@/util/config.js";
 
-import wpictureUpload from "@/components/word-picture-upload.vue";
 import { validateStart, validateEnd } from "@/util/index.js";//验证规则
 
 export default {
   name:"activity-abnormal-warn-four-keepAlive",
 
   components: {
-    wpictureUpload,
     dataRange
   },
   data() {

@@ -106,8 +106,6 @@
   margin-right: 10px;
   color: #333;
   cursor: pointer;
-  // text-overflow: ellipsis
-  // white-space: nowrap;
 }
 .demo {
   float: left;
@@ -128,159 +126,155 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">经销商员工管理</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" :model="formData" :label-width="10">
-              <div class="container">
-                    <div class="btn-left w18">
-                        <Form-item required prop="brandId">
-                            <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue" clearable>
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item prop="brandId" required>
-                            <Select v-model="formData.id" placeholder="经销商" clearable>
-                                <Option :value="item.id" v-for="(item,index) in distributorList" :key="index">{{ item.merchantName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item required>
-                            <Input v-model.trim="formData.userName" placeholder="员工姓名"></Input>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item required>
-                            <Input v-model.trim="formData.phone" placeholder="员工手机号"></Input>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item required>
-                            <Input v-model.trim="formData.userId" placeholder="客户ID"></Input>
-                        </Form-item>
-                    </div>
-                    
-                    <div class="btn-left w10">
-                        <div class="searchBox">
-                            <div class="btn-left search-left" @click="showQuery=!showQuery">
-                              <button type="button">
-                                  {{showQuery?'收起':'更多'}}
-                                  <Icon type="ios-arrow-down" size="14" style="margin-top:-2px;" v-if="!showQuery"/>
-                                  <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
-                              </button>
-                            </div>
-                            <div class="btn-right search-right" @click="submit('search')">
-                              <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                            </div>
-                        </div>
-                    </div>
-              </div>
-              <transition name="fade">
-                <div class="container" v-if="showQuery">
-                  <div class="btn-left w18">
-                    <!-- <Form-item  required>
-                      <Select v-model="formData.fourLevel"  placeholder="四级组织" clearable>
-                          <Option :value="item.id" v-for="(item,index) in fourLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                      </Select> 
-                    </Form-item> -->
-                    
-                    <Form-item required>
-                        <Select v-model="formData.status" placeholder="全部状态" clearable>
-                          <!-- <Option value="0" >待提取</Option>
-                          <Option value="1" >发放中</Option> -->
-                          <Option value="0" >拉黑</Option>
-                          <Option value="1" >正常</Option>
-                          <!-- <Option value="2" >已提取</Option>
-                          <Option value="3" >已退回</Option>
-                          <Option value="4" >已过期</Option> -->
-                      </Select> 
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                        <Form-item required>
-                            <Input v-model.trim="formData.salesRoute" placeholder="线路编号"></Input>
-                        </Form-item>
-                    </div>
-                  
-                  
+    <!-- <h2 class="Title">经销商员工管理</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required prop="brandId">
+                <Select
+                  v-model="formData.brandId"
+                  placeholder="品牌名称"
+                  @on-change="changeValue"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="brandId" required>
+                <Select v-model="formData.id" placeholder="经销商" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in distributorList"
+                    :key="index"
+                  >{{ item.merchantName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <Input v-model.trim="formData.userName" placeholder="员工姓名"></Input>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <Input v-model.trim="formData.phone" placeholder="员工手机号"></Input>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <Input v-model.trim="formData.userId" placeholder="客户ID"></Input>
+              </Form-item>
+            </div>
+
+            <div class="btn-left w10">
+              <div class="searchBox">
+                <div class="btn-left search-left" @click="showQuery=!showQuery">
+                  <button type="button">
+                    {{showQuery?'收起':'更多'}}
+                    <Icon
+                      type="ios-arrow-down"
+                      size="14"
+                      style="margin-top:-2px;"
+                      v-if="!showQuery"
+                    />
+                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
+                  </button>
                 </div>
-              </transition>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">共查询到 <span class='numColor'>{{pageNum}}</span> 条记录</span>
-              
-              <exportBtn  class="btn-right" @btnClick="submit('export')" title="导出"/>
-              <!-- <importBtn  class="btn-right" @btnClick="exportExport = true" /> -->
+                <div class="btn-right search-right" @click="submit('search')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+                </div>
+              </div>
             </div>
-            <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" ></hhTable>
-            
-        </div>
-        <div class="page-box">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+          </div>
+          <transition name="fade">
+            <div class="container" v-if="showQuery">
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Select v-model="formData.status" placeholder="全部状态" clearable>
+                    <Option value="0">拉黑</Option>
+                    <Option value="1">正常</Option>
+                  </Select>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input v-model.trim="formData.salesRoute" placeholder="线路编号"></Input>
+                </Form-item>
+              </div>
             </div>
+          </transition>
+        </Form>
+      </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            共查询到
+            <span class="numColor">{{pageNum}}</span> 条记录
+          </span>
+
+          <exportBtn class="btn-right" @btnClick="submit('export')" title="导出"/>
+        </div>
+        <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      
-      <!-- 导入导出历史 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="myModalisShow"
-            width=800>
-          <div slot="main" class="modal-main">
-            <!-- <h3>近一周导出历史</h3> -->
-            <div class="modal-table" style="margin-top:0;">
-              <div class="modal-table-top">
-                <span class="btn-left"><Icon type="md-alert" size="22" style="margin-right:5px;" />生成的数据报表可在【导出暂存】中保留7天,过期自动删除</span>
-                <refreshBtn @click.native="queryhistoryData" class="btn-right"/>
-              </div>
-              <!-- <hhTable :columns="columns" :pageData="historyData"  disabled-hover></hhTable> -->
-              <Table :columns="columns" :data="historyData"  disabled-hover></Table>
-            </div>
-          </div>
-       </myModal>
+    </div>
 
-       <!-- 时间溢出弹窗 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="timeModalShow">
-          <div slot="main" class="modal-main">
-            <h3>提示</h3>
-            <div class="modal-table">
-                <!-- <p style="text-align:center;">{{ str }}的范围超过31天，请缩小查询范围或者前往【历史数据】中下载历史数据</p> -->
-                <p style="text-align:center;">查询的范围超过31天，请缩小查询范围或者【导出】查看</p>
-            </div>
-            <div class="maintain-footer">
-                <Button @click="closeModal" type="text">知道了</Button>
-                <Button @click="goToHistory" style="color:#ff8a34;" type="text">导出</Button>
-            </div>
+    <!-- 导入导出历史 -->
+    <myModal class="myModal" @close="closeModal" :modal="myModalisShow" width="800">
+      <div slot="main" class="modal-main">
+        <!-- <h3>近一周导出历史</h3> -->
+        <div class="modal-table" style="margin-top:0;">
+          <div class="modal-table-top">
+            <span class="btn-left">
+              <Icon type="md-alert" size="22" style="margin-right:5px;"/>生成的数据报表可在【导出暂存】中保留7天,过期自动删除
+            </span>
+            <refreshBtn @click.native="queryhistoryData" class="btn-right"/>
           </div>
-       </myModal>
+          <Table :columns="columns" :data="historyData" disabled-hover></Table>
+        </div>
+      </div>
+    </myModal>
 
-       <!-- 历史数据 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="historyShow"
-            width=800>
-          <div slot="main" class="modal-main" style="padding:0;">
-            <yearSelect :yearDataList="yearMonthData" />
-          </div>
-       </myModal>
+    <!-- 时间溢出弹窗 -->
+    <myModal class="myModal" @close="closeModal" :modal="timeModalShow">
+      <div slot="main" class="modal-main">
+        <h3>提示</h3>
+        <div class="modal-table">
+          <p style="text-align:center;">查询的范围超过31天，请缩小查询范围或者【导出】查看</p>
+        </div>
+        <div class="maintain-footer">
+          <Button @click="closeModal" type="text">知道了</Button>
+          <Button @click="goToHistory" style="color:#ff8a34;" type="text">导出</Button>
+        </div>
+      </div>
+    </myModal>
+
+    <!-- 历史数据 -->
+    <myModal class="myModal" @close="closeModal" :modal="historyShow" width="800">
+      <div slot="main" class="modal-main" style="padding:0;">
+        <yearSelect :yearDataList="yearMonthData"/>
+      </div>
+    </myModal>
   </div>
 </template>
 
 <script>
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import refreshBtn from "@/components/Button/refresh-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
-import importBtn from "@/components/Button/import-btn.vue";
 import hhTable from "@/components/table/table.vue";
 import area from "@/config/china_code_data.js";
 import config from "@/util/config.js";
@@ -349,7 +343,7 @@ export default {
           width: 70,
           align: "center"
         },
-        
+
         {
           title: "员工姓名",
           key: "userName",
@@ -367,7 +361,6 @@ export default {
           key: "createTime",
           align: "center",
           tooltip: true,
-        //   width: 150,
           render: (h, params) => {
             return h("div", this.Global.createTime(params.row.createTime));
           }
@@ -375,7 +368,6 @@ export default {
 
         {
           title: "操作",
-        //   width: 100,
           align: "center",
           render: (h, params) => {
             return h(
@@ -392,29 +384,25 @@ export default {
                     style: {
                       padding: "3px 7px"
                     },
-                    // attrs: {
-                    //   id: "primary"
-                    // },
-                    
                     on: {
                       click: () => {
                         this.$Modal.confirm({
-                        title: "警告",
-                        content: `确定删除?`,
-                        onOk: () => {
-                          this.Global.doPost(
-                            "dealers/unlockMerchantDoll.json",
-                            {
-                              id: params.row.id,
-                              userId: params.row.userId
-                            },
-                            res => {
-                              this.$Message.success("成功");
-                              this.init();
-                            }
-                          );
-                        }
-                      });
+                          title: "警告",
+                          content: `确定删除?`,
+                          onOk: () => {
+                            this.Global.doPost(
+                              "dealers/unlockMerchantDoll.json",
+                              {
+                                id: params.row.id,
+                                userId: params.row.userId
+                              },
+                              res => {
+                                this.$Message.success("成功");
+                                this.init();
+                              }
+                            );
+                          }
+                        });
                       }
                     }
                   },
@@ -542,8 +530,6 @@ export default {
                         params.row.fileUrl
                       );
                       window.open(url);
-                      // let url = DEV_CONFIG.downloadServer + params.row.fileUrl;
-                      // window.open(url);
                     }
                   }
                 },
@@ -564,19 +550,16 @@ export default {
   components: {
     dataRange,
     exportBtn,
-    detailBtn,
     myModal,
-    importBtn,
     hhTable,
     yearSelect,
     refreshBtn
   },
   created() {
-    let userData = JSON.parse(sessionStorage.getItem('user')).brands;
-    let brandId = 
-    this.Global.doPostNoLoading(
+    let userData = JSON.parse(sessionStorage.getItem("user")).brands;
+    let brandId = this.Global.doPostNoLoading(
       "condition/queryBrands.json",
-      { date: 7,  scope: "a" },
+      { date: 7, scope: "a" },
       res => {
         this.brandList = [];
         Object.entries(res).forEach(item => {
@@ -638,7 +621,7 @@ export default {
       });
     },
     closeModal() {
-        this.exportExport = false;
+      this.exportExport = false;
       this.timeModalShow = false;
       this.historyShow = false;
       this.myModalisShow = false;
@@ -674,10 +657,6 @@ export default {
         this.$Message.error("品牌不能为空");
         return false;
       }
-      // if (!this.formData.groupId) {
-      //   this.$Message.error("活动包名不能为空");
-      //   return false;
-      // }
       if (type == "search") {
         this.page = 1;
         this.init();
@@ -693,26 +672,29 @@ export default {
       this.pageNum = 0;
       this.str = "查询";
       var data = this.Global.JsonChange(this.formData);
-      
 
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
       this.Global.deleteEmptyProperty(data);
-      this.Global.doPost("dealers/queryWithPageMerchantDoll.json", data, res => {
-        this.pageData = res.datalist;
-        this.pageNum = res.items;
-        this.page = res.page;
-        for (let i = 0, len = res.datalist.length; i < len; i++) {
-          res.datalist[i].createTime = this.Global.createTime(
-            res.datalist[i].createTime
-          );
-          res.datalist[i].recTime = this.Global.createTime(
-            res.datalist[i].recTime
-          );
-          res.datalist[i].flag = false;
+      this.Global.doPost(
+        "dealers/queryWithPageMerchantDoll.json",
+        data,
+        res => {
+          this.pageData = res.datalist;
+          this.pageNum = res.items;
+          this.page = res.page;
+          for (let i = 0, len = res.datalist.length; i < len; i++) {
+            res.datalist[i].createTime = this.Global.createTime(
+              res.datalist[i].createTime
+            );
+            res.datalist[i].recTime = this.Global.createTime(
+              res.datalist[i].recTime
+            );
+            res.datalist[i].flag = false;
+          }
+          this.noneStatus = true;
         }
-        this.noneStatus = true;
-      });
+      );
     },
     judgeTimeIsOver(startTime, endTime, days) {
       startTime = startTime.replace(/-/g, "/");
@@ -728,8 +710,8 @@ export default {
     exportExcel() {
       this.str = "导出";
       var data = this.Global.JsonChange(this.formData);
-      
-      this.Global.deleteEmptyProperty(data)
+
+      this.Global.deleteEmptyProperty(data);
       var url = this.Global.getExportUrl(
         "dealers/queryWithPageMerchantDollExport.json",
         data
@@ -746,7 +728,6 @@ export default {
       this.getDistributorList(value);
       //查询一级组织数据
       queryOrganizationDictList({ brandId: value, parentId: 0 }).then(res => {
-        console.log(res.data);
         if (res && res.status == 1) {
           this.oneLeverList = res.data;
         }

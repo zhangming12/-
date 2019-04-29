@@ -276,9 +276,6 @@ export default {
     });
   },
   methods: {
-    dataChange(val) {
-      this.formData.queryEndTime = val.slice(0, 11) + "23:59:59";
-    },
     select(parent, children) {
       //时间选择
       if (this.defaultTime[parent].select == children) {

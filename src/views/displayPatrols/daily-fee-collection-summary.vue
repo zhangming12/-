@@ -207,10 +207,6 @@
                         ，员工总领取折扣
                         <span class='numColor'>{{wReceiveWinAmount}}</span>
                     </span>
-                    
-                    <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
-                    <!-- <addNewBtn  class="btn-right" @btnClick="exportExcel" /> -->
-                    <!-- <exportBtn  class="btn-right" @btnClick="exportExport = true" /> -->
                 </div>
                 <hhTable ref="table" :columns="columns" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
             
@@ -227,7 +223,6 @@
 <script>
 import config from "@/util/config.js";
 import myModal from "@/components/Modal/my-modal.vue";
-import wpictureUpload from "@/components/word-picture-upload.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import hhTable from "@/components/table/table.vue";
 import dataRange from "@/components/data-rang.vue";
@@ -239,7 +234,6 @@ export default {
   name: "daily-fee-collection-summary-keepAlive",
 
   components: {
-    wpictureUpload,
     dataRange,
     exportBtn,
     hhTable,

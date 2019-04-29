@@ -135,7 +135,6 @@
 </template>
 
 <script>
-import exportBtn from "@/components/Button/export-btn.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import {
   EDFAULT_STARTTIME,
@@ -173,7 +172,7 @@ export default {
       }
     };
   },
-  components: { exportBtn, fieldNameDes },
+  components: { fieldNameDes },
   watch: {},
   created() {
     this.Global.doPostNoLoading(

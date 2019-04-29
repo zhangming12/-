@@ -266,7 +266,6 @@ span.btn {
 <script>
 import importBtn from "@/components/Button/import-btn.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
-import exportBtn from "@/components/Button/export-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import config from "@/util/config.js";
 import hhTable from "@/components/table/table.vue";
@@ -516,7 +515,6 @@ export default {
     };
   },
   components: {
-    exportBtn,
     myModal,
     importBtn,
     addNewBtn,

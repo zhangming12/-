@@ -117,24 +117,14 @@
             <Form-item label="时间:" required>
               <Row>
                 <Col span="11">
-                  <Form-item prop="queryStartTime">
-                    <data-range
-                      @dataChange="startTimeChange"
-                      hour="00:00"
-                      :time="formData.queryStartTime"
-                      start
-                    ></data-range>
+                  <Form-item>
+                    <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
                   </Form-item>
                 </Col>
                 <Col span="2" style="text-align: center;">至</Col>
                 <Col span="11">
-                  <Form-item prop="queryEndTime">
-                    <data-range
-                      hour="24:00"
-                      placeholder="结束时间"
-                      @dataChange="endTimeChange"
-                      :time="formData.queryEndTime"
-                    ></data-range>
+                  <Form-item>
+                    <data-range hour="24:00" placeholder="结束时间" v-model="formData.queryEndTime"></data-range>
                   </Form-item>
                 </Col>
               </Row>
@@ -241,17 +231,12 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import dataRange from "@/components/data-range/data-range.vue";
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
   name: "activityTop-keepAlive",
-
   data() {
     return {
       groupList: [],
@@ -267,14 +252,6 @@ export default {
         queryEndTime: [{ validator: validateEnd }],
         brandId: [{ required: true, message: "请选择品牌" }],
         groupId: [{ message: "请选择活动包名称", required: true }]
-      },
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
       },
       brandList: [],
       activityList: [],
@@ -335,50 +312,12 @@ export default {
         }
       );
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    dataChange(val) {
-      this.formData.queryEndTime = val.slice(0, 11) + "23:59:59";
-    },
     exportExcel() {
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       data["userType"] = "B";
       var url = this.Global.getExportUrl(
@@ -402,23 +341,9 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       data["userType"] = "B";
-      console.log(data);
       this.Global.doPost(
         "report/winnerStatisticsShowReport.json",
         data,
@@ -429,15 +354,6 @@ export default {
         }
       );
     }
-    // changeValue(value) {
-    //   this.activityList = [];
-    //   this.Global.getActivityList(value, res => {
-    //     this.activityList = res.datalist;
-    //     this.formData.activityId = res.datalist[0].id;
-    //   });
-    // }
   }
 };
 </script>
-
-

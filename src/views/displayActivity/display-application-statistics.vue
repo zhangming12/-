@@ -250,7 +250,6 @@
             <span class="numColor">{{pageNum}}</span>条数据
           </span>
 
-          <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
           <exportBtn class="btn-right" @btnClick="exportExcel"/>
         </div>
         <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
@@ -286,7 +285,6 @@ import hhTable from "@/components/table/table.vue";
 import { dispalyExamineSuggesteStatus } from "@/util/ENUMS.js";
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import {
@@ -450,7 +448,6 @@ export default {
   components: {
     dataRange,
     exportBtn,
-    detailBtn,
     myModal,
     hhTable,
     fieldNameDes

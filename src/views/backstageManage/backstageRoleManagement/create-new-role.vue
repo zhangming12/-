@@ -422,9 +422,6 @@ export default {
     cancel() {
       this.$router.back();
     },
-    dataChange(val) {
-      var treeData = this.$refs.tree.getCheckedNodes();
-    },
     createNewAccount() {
       this.type = "add";
       this.showUnlock = true;

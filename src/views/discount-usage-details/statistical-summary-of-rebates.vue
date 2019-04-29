@@ -191,9 +191,6 @@
         </Form>
       </div>
       <div class="box" style="margin-top: 15px;overflow: hidden;padding-bottom:20px;">
-        <!-- <div class='contentTop'>
-                    <Button class="btn-export" icon="ios-download-outline" @click="exportExcel" type="primary">导出</Button>
-        </div>-->
         <div class="contentTop">
           <span class="btn-left">
             此表共包含
@@ -201,8 +198,6 @@
           </span>
 
           <exportBtn class="btn-right" @btnClick="exportExcel" title="导出"/>
-          <!-- <exportBtn  class="btn-right" @btnClick="exportExcel" title="导出暂存"/> -->
-          <!-- <importBtn  class="btn-right" title="历史数据" /> -->
         </div>
         <hhTable :columns="columns" :pageData="pageData" disabled-hover></hhTable>
       </div>
@@ -222,9 +217,7 @@ import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
-import importBtn from "@/components/Button/import-btn.vue";
 import hhTable from "@/components/table/table.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
@@ -376,7 +369,7 @@ export default {
       presentNameList: [] //分组
     };
   },
-  components: { exportBtn, detailBtn, myModal, importBtn, hhTable },
+  components: { exportBtn, myModal, hhTable },
   created() {
     // cycleData周期
     let year = new Date().getFullYear();

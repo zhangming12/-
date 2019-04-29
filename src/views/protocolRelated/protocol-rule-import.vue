@@ -102,7 +102,7 @@
     }
   }
 }
-.demo{
+.demo {
   color: @primary-color;
   margin-top: 10px;
   margin-left: 10px;
@@ -111,11 +111,11 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">协议规则导入</h2> -->
-        <div class="main-container">
-            <div class="box">
-                <!-- <Form ref="form" class="form" :model="formData" :label-width="10">
+  <div id="Main">
+    <!-- <h2 class="Title">协议规则导入</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <!-- <Form ref="form" class="form" :model="formData" :label-width="10">
                     <div class="container">
                         <div class="btn-left w18">
                             <Form-item>                             
@@ -164,11 +164,11 @@
                         </div>
                     </div>
                     
-                </Form> -->
-                <Button style="margin-left:10px;" type="primary" @click="exportExport = true">协议规则导入</Button>
-                <Button style="margin-left:10px;" type="success" @click="importHeBeiShow = true">奖励规则导入</Button>
-            </div>
-            <!-- <div class="box" style="padding:10px">
+        </Form>-->
+        <Button style="margin-left:10px;" type="primary" @click="exportExport = true">协议规则导入</Button>
+        <Button style="margin-left:10px;" type="success" @click="importHeBeiShow = true">奖励规则导入</Button>
+      </div>
+      <!-- <div class="box" style="padding:10px">
                 <div class="contentTop">
                     <span class="btn-left">此表共包含<span class='numColor'>{{pageNum}}</span>条数据</span>
                     <exportBtn  class="btn-right" @btnClick="exportExcel" />
@@ -176,82 +176,86 @@
                 </div>
                 <Table :columns="columns" :data="pageData" disabled-hover></Table>
                 
-            </div> -->
-            <!-- <div class="page-box">
+      </div>-->
+      <!-- <div class="page-box">
                 <div>
                     <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
                 </div>
-            </div> -->
+      </div>-->
+    </div>
+    <!-- 协议规则导入 -->
+    <myModal class="myModal" @close="closeModal" :modal="exportExport">
+      <div slot="main" class="modal-main">
+        <h3>协议规则导入</h3>
+        <div class="modal-table">
+          <Form ref="form" :model="formData" :label-width="88">
+            <Form-item label="上传文件" required>
+              <div style="overflow:hidden;">
+                <div
+                  class="upDate"
+                  style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;"
+                >
+                  <Upload
+                    :action="importUrl"
+                    :show-upload-list="false"
+                    :on-success="handleSuccess"
+                    :on-error="handleError"
+                  >
+                    <Icon type="ios-folder" size="14" color="#53a3f4"></Icon>
+                    <span>{{exportExportData.uploadText}}</span>
+                  </Upload>
+                </div>
+              </div>
+            </Form-item>
+            <!-- <div class='demo' @click='download'>
+                        <Icon type="ios-paper-outline" size='14' color='@primary-color'></Icon>
+                        <span>下载模版</span>
+            </div>-->
+            <div class="fotter" style="text-align:center;">
+              <Button @click="closeModal" type="primary">取消</Button>
+              <Button type="success" @click="uploadExcel">导入</Button>
+            </div>
+          </Form>
         </div>
-        <!-- 协议规则导入 -->
-      <myModal class="myModal"
-            @close="closeModal"
-            :modal="exportExport">
-            <div slot="main" class="modal-main">
-              <h3>协议规则导入</h3>
-              <div class="modal-table">
-                  <Form ref="form" :model="formData" :label-width="88">
-                      <Form-item label="上传文件" required>
-                        <div style="overflow:hidden;">
-                          <div class='upDate' style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;">
-                              <Upload :action="importUrl" 
-                              :show-upload-list=false
-                              :on-success='handleSuccess'
-                              :on-error='handleError'
-                              >
-                              <Icon type="ios-folder" size='14' color='#53a3f4'></Icon>
-                              <span>{{exportExportData.uploadText}}</span>
-                              </Upload>
-                          </div>
-                      </div>
-                      </Form-item>
-                      <!-- <div class='demo' @click='download'>
+      </div>
+    </myModal>
+    <!-- 奖励规则导入 -->
+    <myModal class="myModal" @close="cancel" :modal="importHeBeiShow">
+      <div slot="main" class="modal-main">
+        <h3>奖励规则导入</h3>
+        <div class="modal-table">
+          <Form ref="form" :model="formData" :label-width="88">
+            <Form-item label="上传文件" required>
+              <div style="overflow:hidden;">
+                <div
+                  class="upDate"
+                  style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;"
+                >
+                  <Upload
+                    :action="importUrl"
+                    :show-upload-list="false"
+                    :on-success="hHandleSuccess"
+                    :on-error="handleError"
+                  >
+                    <Icon type="ios-folder" size="14" color="#53a3f4"></Icon>
+                    <span>{{uploadText}}</span>
+                  </Upload>
+                </div>
+              </div>
+            </Form-item>
+            <!-- <div class='demo' @click='download'>
                         <Icon type="ios-paper-outline" size='14' color='@primary-color'></Icon>
                         <span>下载模版</span>
-                      </div> -->
-                      <div class="fotter" style="text-align:center;">
-                          <Button @click="closeModal" type="primary">取消</Button>
-                          <Button type="success" @click="uploadExcel">导入</Button>
-                      </div>
-                  </Form>
-              </div>
+            </div>-->
+            <div class="fotter" style="text-align:center;">
+              <Button @click="cancel" type="primary">取消</Button>
+              <Button type="success" @click="UuploadExcel">导入</Button>
             </div>
-      </myModal>
-      <!-- 奖励规则导入 -->
-      <myModal class="myModal"
-            @close="cancel"
-            :modal="importHeBeiShow">
-            <div slot="main" class="modal-main">
-              <h3>奖励规则导入</h3>
-              <div class="modal-table">
-                  <Form ref="form" :model="formData" :label-width="88">
-                      <Form-item label="上传文件" required>
-                        <div style="overflow:hidden;">
-                          <div class='upDate' style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;">
-                              <Upload :action="importUrl" 
-                              :show-upload-list=false
-                              :on-success='hHandleSuccess'
-                              :on-error='handleError'
-                              >
-                              <Icon type="ios-folder" size='14' color='#53a3f4'></Icon>
-                              <span>{{uploadText}}</span>
-                              </Upload>
-                          </div>
-                      </div>
-                      </Form-item>
-                      <!-- <div class='demo' @click='download'>
-                        <Icon type="ios-paper-outline" size='14' color='@primary-color'></Icon>
-                        <span>下载模版</span>
-                      </div> -->
-                      <div class="fotter" style="text-align:center;">
-                          <Button @click="cancel" type="primary">取消</Button>
-                          <Button type="success" @click="UuploadExcel">导入</Button>
-                      </div>
-                  </Form>
-              </div>
-            </div>
-      </myModal>
-	</div>
+          </Form>
+        </div>
+      </div>
+    </myModal>
+  </div>
 </template>
 
 <script>
@@ -270,21 +274,17 @@ import {
 } from "@/util/ENUMS.js";
 import config from "@/util/config.js";
 import myModal from "@/components/Modal/my-modal.vue";
-import wpictureUpload from "@/components/word-picture-upload.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import hhTable from "@/components/table/table.vue";
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import importBtn from "@/components/Button/import-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 export default {
   name: "protocol-rule-import-keepAlive",
 
   components: {
-    wpictureUpload,
     dataRange,
     exportBtn,
-    detailBtn,
     hhTable,
     importBtn,
     myModal,
@@ -297,7 +297,7 @@ export default {
       },
       uploadText: "选择导入文件",
       hUploadUrl: "",
-      importHeBeiShow:false,
+      importHeBeiShow: false,
       exportExport: false,
       noneStatus: false,
       formData: {
@@ -535,7 +535,7 @@ export default {
     }
   },
   methods: {
-    cancel(){
+    cancel() {
       this.importHeBeiShow = false;
     },
     hHandleSuccess(response, file, fileList) {
@@ -552,7 +552,7 @@ export default {
       }
       let data = {
         loadFilePath: this.hUploadUrl,
-        brandId:8
+        brandId: 8
       };
       this.Global.doPost(
         "brandStoreSign/importSignPresentRule.json",

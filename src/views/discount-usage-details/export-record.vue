@@ -222,9 +222,7 @@
             共查询到
             <span class="numColor">{{pageNum}}</span> 条数据
           </span>
-          <!-- <Button type="text" class="btn-right ml20" @click="exportAllExcel">刷新</Button> -->
           <exportBtn class="btn-right" @click.native="exportExcel" title="刷新"/>
-          <!-- <exportBtn class="btn-right" @click.native="exportUserExcel" title="导出客户名单"/> -->
         </div>
         <hhTable :columns="columns1" :pageData="pageData" disabled-hover></hhTable>
       </div>
@@ -234,28 +232,6 @@
         </div>
       </div>
     </div>
-    <!-- 导入 -->
-    <!-- <myModal class="myModal"
-            height='220'
-            @close="closeModal"
-            :modal="maintainImportShow">
-          <div slot="main" class="modal-main">
-            <h3 style="margin-bottom:20px;">导入</h3>
-            <Form ref="form" :model="importData" :label-width="100" :rules="rule">
-              <div class="container">
-                <Form-item label="品牌名称：" required> 
-                </Form-item>
-                <div class='demo' @click='download'> 
-                    <Icon type="ios-paper-outline" size='14' color='#ff8a34'></Icon>
-                    <span>下载导入模版</span>
-                </div>
-              </div>
-            </Form>
-            <div class="maintain-footer">
-              <Button type="text" @click="closeModal">取消</Button>
-            </div>
-          </div>
-    </myModal>-->
   </div>
 </template>
 
@@ -268,14 +244,12 @@ import {
 import dataRange from "@/components/data-rang.vue";
 import hhTable from "@/components/table/table.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import importBtn from "@/components/Button/import-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 export default {
   name: "export-record-keepAlive",
 
   components: {
     exportBtn,
-    importBtn,
     myModal,
     hhTable,
     dataRange

@@ -30,7 +30,7 @@
 </template>
 <script>
 export default {
-  name: "exportBtn",
+  name: "refreshBtn",
   data() {
     return {
     };

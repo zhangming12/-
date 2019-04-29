@@ -18,14 +18,9 @@
     right: 10px;
   }
 }
-.ivu-table-row {
-  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1) !important;
-  transform: translateY(0px);
-}
 .table-box {
   overflow: hidden;
   padding: 0 10px;
-  // min-height: 500px;
   position: relative;
   .numColor {
     color: @primary-color;
@@ -61,7 +56,6 @@
   align-items: center;
   border-bottom: 1px solid #e5e5e5;
   li {
-    // width: calc(100% / 13);
     width: 8%;
     border-right: 1px solid #e5e5e5;
     color: #000;
@@ -97,7 +91,6 @@
   align-items: center;
   border-bottom: 1px solid #e5e5e5;
   li {
-    // width: calc(100% / 13);
     height: 40px;
     line-height: 40px;
     width: 8%;
@@ -150,38 +143,22 @@
           <div class="container">
             <div class="btn-left w18">
               <Form-item>
-                <!-- <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
-                          <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                </Select>-->
                 <Input value="银鹭" readonly></Input>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item prop="groupId">
-                <!-- <Select v-model="formData.groupId" placeholder="活动包名称*" @on-change="getActivityList" clearable>
-                          <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                </Select>-->
                 <Input value="同安陈列活动" readonly></Input>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="startTime">
-                <data-range
-                  @dataChange="startTimeChange"
-                  hour="00:00"
-                  :time="formData.startTime"
-                  start
-                ></data-range>
+              <Form-item>
+                <data-range hour="00:00" v-model="formData.startTime" start></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="endTime">
-                <data-range
-                  hour="24:00"
-                  placeholder="结束时间"
-                  @dataChange="endTimeChange"
-                  :time="formData.endTime"
-                ></data-range>
+              <Form-item>
+                <data-range hour="24:00" placeholder="结束时间" v-model="formData.endTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
@@ -219,25 +196,16 @@
             <div class="container" v-if="showQuery">
               <div class="btn-left w18">
                 <Form-item>
-                  <!-- <Select v-model="formData.oneLevel"  placeholder="一级组织" @on-change="oneLevelChange">
-                          <Option :value="item.id" v-for="(item,index) in oneLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                  </Select>-->
                   <Input value="销售中心" readonly></Input>
                 </Form-item>
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <!-- <Select v-model="formData.twoLevel" placeholder="二级组织" @on-change="twoLevelChange">
-                          <Option :value="item.id" v-for="(item,index) in twoLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                  </Select>-->
                   <Input value="闽南营业部" readonly></Input>
                 </Form-item>
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <!-- <Select v-model="formData.threeLevel" placeholder="三级组织" @on-change="threeLevelChange">
-                          <Option :value="item.id" v-for="(item,index) in threeLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                  </Select>-->
                   <Input value="同安处" readonly></Input>
                 </Form-item>
               </div>
@@ -260,7 +228,6 @@
             此表包含
             <span>{{pageNum}}</span> 条数据
           </div>
-          <!-- <detailBtn class="btn-right ml20" @btnClick="exportExcel" /> -->
           <exportBtn class="btn-right" @btnClick="exportExcel"/>
         </div>
 
@@ -314,9 +281,8 @@
 
 <script>
 import fieldNameDes from "@/components/field-name-description.vue";
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
@@ -328,19 +294,7 @@ export default {
   name: "display-activity-karma-sort-keepAlive",
   data() {
     return {
-      oneLeverList: [], //一级组织数据
-      twoLeverList: [], //二级组织数据
-      threeLeverList: [], //三级组织数据
-      fourLeverList: [], //四级组织数据
       showQuery: false,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       groupList: [],
       formData: {
         startTime: EDFAULT_STARTTIME,
@@ -354,10 +308,7 @@ export default {
         fourLevel: "",
         orderType: "upLoadVideo"
       },
-      rule: {
-        // startTime: [{ validator: validateStart }],
-        // endTime: [{ validator: validateEnd }]
-      },
+      rule: {},
       page: 1,
       pageNum: 0,
       brandList: [],
@@ -367,7 +318,6 @@ export default {
       threeLeverList: [], //三级组织数据
       fourLeverList: [], //四级组织数据
       rankHeaderList: [
-        // sort 为 true 时,表示为需要排序的字段
         {
           title: "排名",
           type: "index"
@@ -431,7 +381,7 @@ export default {
       rankList: []
     };
   },
-  components: { dataRange, exportBtn, detailBtn, fieldNameDes },
+  components: { dataRange, exportBtn, fieldNameDes },
   created() {
     this.getActivityList(85);
     this.threeLevelChange("17-01010300");
@@ -457,17 +407,6 @@ export default {
       this.page = size;
       this.init(size, 20);
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.startTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     getActivityList(value) {
       this.activityList = [];
       this.formData.activityId = "";
@@ -481,14 +420,6 @@ export default {
           });
         }
       );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.endTime = this.Global.setHoursData(value.time, value.hour);
     },
     submit(name) {
       if (!this.formData.startTime) {
@@ -507,20 +438,7 @@ export default {
       this.pageNum = 0;
       var data = this.Global.JsonChange(this.formData);
       data["startTime"] = this.Global.createTime(this.formData.startTime);
-      if (this.start.hour == "24:00") {
-        data["startTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["endTime"] = this.Global.createTime(this.formData.endTime);
-      if (this.end.hour == "24:00") {
-        data["endTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       data["currentPage"] = currentPage;
       data["pageSize"] = pageSize;
       data["brandId"] = 17;
@@ -533,7 +451,6 @@ export default {
         "uploadReport/salesDispalyActivityUploaddeDetail.json",
         data,
         res => {
-          console.log(res);
           this.rankList = res.datalist;
           this.page = res.page;
           this.pageNum = res.items;
@@ -543,20 +460,7 @@ export default {
     exportExcel() {
       var data = this.Global.JsonChange(this.formData);
       data["startTime"] = this.Global.createTime(this.formData.startTime);
-      if (this.start.hour == "24:00") {
-        data["startTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["endTime"] = this.Global.createTime(this.formData.endTime);
-      if (this.end.hour == "24:00") {
-        data["endTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       data["brandId"] = 17;
       data["groupId"] = 85;
@@ -593,7 +497,6 @@ export default {
 
       //查询一级组织数据
       queryOrganizationDictList({ brandId: value, parentId: 0 }).then(res => {
-        console.log(res.data);
         if (res && res.status == 1) {
           this.oneLeverList = res.data;
         }
@@ -641,5 +544,3 @@ export default {
   }
 };
 </script>
-
-

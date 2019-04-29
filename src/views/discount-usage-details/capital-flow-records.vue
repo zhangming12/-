@@ -259,8 +259,6 @@
 
           <exportBtn class="btn-right" @btnClick="submit('export')" title="导出"/>
           <exportBtn class="btn-right" @btnClick="myModalisShow = true" title="导出暂存"/>
-          <!-- <detailBtn  class="btn-right" @btnClick="showHistory" title="历史数据" /> -->
-          <!-- <detailBtn  class="btn-right" @btnClick="historyShow = true" title="历史数据" /> -->
         </div>
         <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
       </div>
@@ -315,10 +313,8 @@
 <script>
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import refreshBtn from "@/components/Button/refresh-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
-import importBtn from "@/components/Button/import-btn.vue";
 import hhTable from "@/components/table/table.vue";
 import area from "@/config/china_code_data.js";
 import yearSelect from "@/components/year-select.vue";
@@ -651,9 +647,7 @@ export default {
   components: {
     dataRange,
     exportBtn,
-    detailBtn,
     myModal,
-    importBtn,
     hhTable,
     yearSelect,
     refreshBtn

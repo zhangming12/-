@@ -28,7 +28,7 @@
 </template>
 <script>
 export default {
-  name: "exportBtn",
+  name: "importBtn",
   data() {
     return {
     };

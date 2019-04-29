@@ -348,9 +348,6 @@ export default {
         }
       );
     },
-    dataChange(val) {
-      this.formData.queryEndTime = val.slice(0, 11) + "23:59:59";
-    },
     submit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {

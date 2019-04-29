@@ -81,24 +81,14 @@
                 <Form-item label="时间:" required>
                   <Row>
                     <Col span="11">
-                      <Form-item prop="queryStartTime">
-                        <data-range
-                          @dataChange="startTimeChange"
-                          hour="00:00"
-                          :time="formData.queryStartTime"
-                          start
-                        ></data-range>
+                      <Form-item>
+                        <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
                       </Form-item>
                     </Col>
                     <Col span="2" style="text-align: center;">至</Col>
                     <Col span="11">
-                      <Form-item prop="queryEndTime">
-                        <data-range
-                          hour="24:00"
-                          placeholder="结束时间"
-                          @dataChange="endTimeChange"
-                          :time="formData.queryEndTime"
-                        ></data-range>
+                      <Form-item>
+                        <data-range hour="24:00" placeholder="结束时间" v-model="formData.queryEndTime"></data-range>
                       </Form-item>
                     </Col>
                   </Row>
@@ -140,12 +130,7 @@
               </Col>
               <Col span="8">
                 <Form-item label="活动名称:" prop="activityId">
-                  <Select
-                    v-model="formData.activityId"
-                    placeholder="请选择"
-                    @on-change="getpresentList"
-                    clearable
-                  >
+                  <Select v-model="formData.activityId" placeholder="请选择" clearable>
                     <Option
                       :value="item.id"
                       v-for="(item,index) in activityList"
@@ -179,27 +164,17 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
-
+import dataRange from "@/components/data-range/data-range.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
   queryActivityGroupVOByBrandId, //根据品牌ID获取活动包名
-  queryActivityVOByGroupId, //根据活动包名ID获取陈列活动列表
-  queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
+  queryActivityVOByGroupId //根据活动包名ID获取陈列活动列表
 } from "@/api/common.js";
 export default {
   name: "code-warning-keepAlive",
 
   data() {
     return {
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME,
@@ -273,36 +248,10 @@ export default {
       });
     });
   },
-  mounted() {},
   components: {
     dataRange
   },
   methods: {
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    dataChange(val) {
-      this.formData.queryEndTime = val.slice(0, 11) + "23:59:59";
-    },
     changeValue(value) {
       this.groupList = [];
       this.formData.groupId = "";
@@ -318,14 +267,6 @@ export default {
       queryActivityVOByGroupId(value).then(res => {
         if (res && res.status == 1) {
           this.activityList = res.data;
-        }
-      });
-    },
-    getpresentList(value) {
-      this.presentNameList = [];
-      queryActivityPresentVOByactivityId(value).then(res => {
-        if (res && res.status == 1) {
-          this.presentNameList = res.data;
         }
       });
     },
@@ -347,22 +288,8 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
-
       this.Global.doPost("codepackage/qrRisk.json", data, res => {
         this.pageNum = res.items;
         this.page = res.page;

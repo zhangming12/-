@@ -125,8 +125,6 @@
       </div>
       <div class="table-box box">
         <div class="contentTop">
-          <!-- <detailBtn class="btn-right ml20" @btnClick="showDetail" /> -->
-          <!-- <Button type="text" class="btn-right ml20" @click="refresh">刷新</Button> -->
           <refreshBtn class="btn-right" @click.native="refresh"/>
         </div>
         <Table ref="table" :columns="columns1" :data="pageData" disabled-hover></Table>
@@ -136,17 +134,13 @@
           <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      <!-- <img src="../../assets/image/edit.png" alt=""> -->
     </div>
   </div>
 </template>
 
 <script>
 import dataRange from "@/components/data-rang.vue";
-import exportBtn from "@/components/Button/export-btn.vue";
-import detailBtn from "@/components/Button/detail-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
-import importBtn from "@/components/Button/import-btn.vue";
 import refreshBtn from "@/components/Button/refresh-btn.vue";
 import DEV_CONFIG from "@/util/config.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
@@ -359,10 +353,7 @@ export default {
   },
   components: {
     dataRange,
-    exportBtn,
-    detailBtn,
     myModal,
-    importBtn,
     refreshBtn
   },
   created() {},
