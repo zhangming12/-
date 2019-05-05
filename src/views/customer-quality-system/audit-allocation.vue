@@ -12,14 +12,6 @@
   box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1) !important;
   transform: translateY(0px);
 }
-
-.time {
-  float: left;
-  padding: 0px 10px;
-  border: 1px solid @primary-color;
-  margin-right: 10px;
-  cursor: pointer;
-}
 .form {
   position: relative;
   display: flex;
@@ -139,24 +131,6 @@
   display: flex;
   justify-content: flex-start;
   flex-direction: row;
-}
-.switch {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  align-items: center;
-  .left,
-  .right {
-    //   border: 1px solid #e5e5e5;
-    width: 40%;
-    text-align: center;
-    cursor: pointer;
-    color: white;
-    background-color: #999;
-  }
-  .active {
-    background-color: @primary-color;
-  }
 }
 .table-box {
   .btns {
