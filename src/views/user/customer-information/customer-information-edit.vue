@@ -126,7 +126,6 @@ function filterArea(arrayList) {
 }
 import PROJECT_CONFIG from "@/util/config.js";
 import citySelect from "@/components/city-select-tree.vue";
-//import area from '@/config/china_code_data.js';
 import { doQueryProvinceCityAll } from "@/api/common.js";
 export default {
   name: "customer-information-edit-keepAlive",
@@ -169,7 +168,6 @@ export default {
       storeName: storeName,
       name: nickName,
       address: address,
-      // areaCode:areaCode,
       storeName: storeName
     };
 

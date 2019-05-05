@@ -134,7 +134,7 @@
         <Form ref="form" class="form" :model="formData" :label-width="10">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item prop="queryStartTime">
+              <Form-item  >
                 <DatePicker
                   type="daterange"
                   v-model="formData.queryTime"

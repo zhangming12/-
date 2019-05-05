@@ -627,7 +627,6 @@ export const routers = [{
                 name: 'GDStoreDistribute',
                 title: 'CNY点亮看板',
                 component: (resolve) => require(['../components/echarts/guangdong_store_distribute2.vue'], resolve)
-                    // component: _import('activity')
             },
             {
                 //全国门店数量分布
@@ -656,7 +655,6 @@ export const routers = [{
                 name: 'COFCOFromExport',
                 title: '中粮陈列日报导出',
                 component: (resolve) => require(['../components/report-form-export.vue'], resolve)
-                    // component: _import('activity')
             },
             {
                 //金银铜协议——主任协议查报(业务员上级)

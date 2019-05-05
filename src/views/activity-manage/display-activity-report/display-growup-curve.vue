@@ -97,7 +97,6 @@ export default {
       brandList: [],
       groupList: [],
       activityList: [],
-
       myChart: ""
     };
   },
@@ -237,10 +236,9 @@ export default {
 
       this.myChart.setOption(option);
     },
-    submit: function(name) {
+    submit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          //this.getTimeList();
           this.init();
         } else {
           this.$Message.error("请选择查询条件!!");
@@ -256,12 +254,10 @@ export default {
           let activityCountDate = []; //时间
           let activityScanCount = []; //当日上传门店数
           let activityStoreCount = []; //活跃门店数
-          // let uploadNumList = [];
           for (var key in datalist) {
             activityCountDate.push(datalist[key]["countDate"]);
             activityScanCount.push(datalist[key]["uploadCount"]);
             activityStoreCount.push(datalist[key]["storeCount"]);
-            // uploadNumList.push(datalist[key]["storeCount"])
           }
           //分别返回扫码量和门店数最大值
           let ScanMax = Math.max.apply(Math, activityScanCount);
@@ -309,7 +305,6 @@ export default {
             ]
           });
         }
-        //})
       });
     },
     getTimeList() {
@@ -341,5 +336,3 @@ export default {
   }
 };
 </script>
-
-

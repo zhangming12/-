@@ -146,62 +146,72 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">陈列业代上传排行榜</h2> -->
-      <div class="box">
-            <Form ref="form" :model="formData" :label-width="88" :rules="rule">
-                <Row>
-                    <Col span="10">
-                        
-                        <Form-item label="品牌名称:" prop="brandId" >
-                            <Select v-model="formData.brandId" placeholder="请选择" @on-change="brandChangeValue">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>                                                  
-                    </Col>
-                    <Col span="10" offset="1">                   
-                        <Form-item label="时间:"  prop="queryStartTime">
-                            <Select v-model="formData.queryStartTime"  placeholder="请选择" @on-change="timeDataChangeValue" >
-                                <Option :value="item.actStartTime" v-for="(item,index) in timeDataList" :key="index" >{{ item.actStartTime}} - {{ item.actEndTime}}</Option>
-                            </Select>
-                        </Form-item>
-                    </Col>
-                    <Col span="2" offset="1" >
-                        <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
-                    </Col>
-                </Row>
-            </Form>
-      </div>
-      <div class="areaBox">
-          
-          <div id="scancode" >
-              <div class="top">
-                    <div class="top-img">
-                        <img src="../../../assets/image/display-upload-achievements.jpg" class="top-img">
-                    </div>
-                    <div class="top-icon"  @click="uploadAchievementsExport" v-show="scancodeDatalist.length>0">
-                
-                        <img src="../../../assets/image/echart-down.jpg" >
-                    </div>
-              </div>
-              <ul>
-                  <li>
-                      <span>排名</span>
-                      <span>业代姓名</span>
-                      <span>手机号</span> 
-                      <span>门店数</span>
-                      
-                  </li>
-                  <li v-for="(item,index) in scancodeDatalist" :key="index" >
-                      <span>{{ index + 1}}</span>
-                      <span>{{ item.workerName }}</span>
-                      <span>{{ item.workerPhone }}</span>
-                      <span>{{ item.storeCount }}</span>
-                      
-                  </li>
-              </ul>
+    <!-- <h2 class="Title">陈列业代上传排行榜</h2> -->
+    <div class="box">
+      <Form ref="form" :model="formData" :label-width="88" :rules="rule">
+        <Row>
+          <Col span="10">
+            <Form-item label="品牌名称:" prop="brandId">
+              <Select v-model="formData.brandId" placeholder="请选择" @on-change="brandChangeValue">
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="10" offset="1">
+            <Form-item label="时间:">
+              <Select
+                v-model="formData.queryStartTime"
+                placeholder="请选择"
+                @on-change="timeDataChangeValue"
+              >
+                <Option
+                  :value="item.actStartTime"
+                  v-for="(item,index) in timeDataList"
+                  :key="index"
+                >{{ item.actStartTime}} - {{ item.actEndTime}}</Option>
+              </Select>
+            </Form-item>
+          </Col>
+          <Col span="2" offset="1">
+            <Button @click="submit('form')" type="primary" class="btn-search">查询</Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+    <div class="areaBox">
+      <div id="scancode">
+        <div class="top">
+          <div class="top-img">
+            <img src="../../../assets/image/display-upload-achievements.jpg" class="top-img">
           </div>
-        
+          <div
+            class="top-icon"
+            @click="uploadAchievementsExport"
+            v-show="scancodeDatalist.length>0"
+          >
+            <img src="../../../assets/image/echart-down.jpg">
+          </div>
+        </div>
+        <ul>
+          <li>
+            <span>排名</span>
+            <span>业代姓名</span>
+            <span>手机号</span>
+            <span>门店数</span>
+          </li>
+          <li v-for="(item,index) in scancodeDatalist" :key="index">
+            <span>{{ index + 1}}</span>
+            <span>{{ item.workerName }}</span>
+            <span>{{ item.workerPhone }}</span>
+            <span>{{ item.storeCount }}</span>
+          </li>
+        </ul>
       </div>
+    </div>
   </div>
 </template>
 
@@ -214,7 +224,7 @@ import {
 } from "@/api/activity-manage/display-activity-manage.js";
 
 export default {
-  name:"display-worker-uploadRanking-keepAlive",
+  name: "display-worker-uploadRanking-keepAlive",
   data() {
     const that = this;
     return {
@@ -339,7 +349,7 @@ export default {
     },
 
     timeDataChangeValue(value) {
-      console.log("ceshi")
+      console.log("ceshi");
       let timeDataList = this.timeDataList;
       if (value) {
         for (var i = 0; i < timeDataList.length; i++) {

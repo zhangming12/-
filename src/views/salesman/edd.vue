@@ -37,26 +37,6 @@
   padding-bottom: 15px;
   font-size: 16px;
 }
-
-.export {
-  height: 24px;
-  position: relative;
-  div {
-    background: @primary-color;
-    color: #fff;
-    padding: 3px 12px;
-    float: right;
-    border-bottom: 0;
-    position: absolute;
-    right: 1px;
-    bottom: 10px;
-    cursor: pointer;
-    i {
-      margin-right: 2px;
-    }
-  }
-}
-
 .area {
   border-radius: 4px;
   border: 1px solid #dddee1;
@@ -429,7 +409,7 @@ import area from "@/config/areaCode.js";
 import { areaTreeInit } from "@/util/index.js";
 import upData from "@/assets/js/upload.js";
 import PROJECT_CONFIG from "@/util/config.js";
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
   data() {

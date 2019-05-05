@@ -1,11 +1,6 @@
 <style lang="less" scoped>
-// @import '../../../config/index.less';
-
 .box {
-  // width: 100%;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
-  // margin: 0 auto;
-  //float: left;
   padding: 30px 20px;
   padding-bottom: 0;
   overflow: hidden;
@@ -29,7 +24,6 @@
 import echarts from "echarts";
 export default {
   name: "day-scancode-time-keepAlive",
-
   props: {
     dayScanCodeTimeDataList: Object
   },
@@ -427,5 +421,3 @@ export default {
   }
 };
 </script>
-
-

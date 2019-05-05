@@ -74,7 +74,7 @@
         <Form ref="form" :model="formData" :label-width="10">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item prop="queryStartTime">
+              <Form-item  >
                 <data-range
                   placeholder="上传开始时间"
                   hour="00:00"
@@ -84,7 +84,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="queryEndTime">
+              <Form-item  >
                 <data-range hour="24:00" placeholder="上传结束时间" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>

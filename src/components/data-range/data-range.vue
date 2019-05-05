@@ -1,6 +1,5 @@
 <style scoped lang="less">
-@import "../../config/index.less";
-.container {
+.zm-date-picker {
   display: flex;
   flex-direction: row;
   .timeBox {
@@ -20,7 +19,7 @@
 }
 </style>
 <template>
-  <div class="container">
+  <div class="zm-date-picker">
     <div class="timeBox">
       <Date-picker
         :placement="placement"
@@ -34,11 +33,7 @@
     </div>
     <div class="hourBox">
       <Select :disabled="dis" v-model="hourData" placeholder="请选择时间" @on-change="changeTypeValue">
-        <Option
-          :value="item.dataTime"
-          v-for="item in dataList"
-          :key="item.dataTime"
-        >{{item.dataTime}}</Option>
+        <Option :value="item" v-for="item in dataList" :key="item">{{item}}</Option>
       </Select>
     </div>
   </div>
@@ -48,7 +43,33 @@ export default {
   name: "dataRange",
   data() {
     return {
-      dataList: [],
+      dataList: [
+        "00:00",
+        "01:00",
+        "02:00",
+        "03:00",
+        "04:00",
+        "05:00",
+        "06:00",
+        "07:00",
+        "08:00",
+        "09:00",
+        "10:00",
+        "11:00",
+        "12:00",
+        "13:00",
+        "14:00",
+        "15:00",
+        "16:00",
+        "17:00",
+        "18:00",
+        "19:00",
+        "20:00",
+        "21:00",
+        "22:00",
+        "23:00",
+        "24:00"
+      ],
       yearData: this.value ? this.value.slice(0, 10) : "",
       hourData: this.hour
     };
@@ -81,14 +102,6 @@ export default {
       } else {
         this.yearData = "";
       }
-    }
-  },
-  created() {
-    let str = ":00";
-    for (let i = 0; i <= 24; i++) {
-      let time = i < 10 ? "0" + i : i;
-      time += str;
-      this.dataList.push({ dataTime: time });
     }
   },
   methods: {

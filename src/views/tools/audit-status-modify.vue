@@ -9,27 +9,6 @@
   position: relative;
   background: #ffffff;
   padding-bottom: 60px;
-  .export {
-    position: fixed;
-    z-index: 900;
-    top: 140px;
-    right: 40px;
-    span {
-      padding: 0 15px;
-      border-radius: 20px;
-      color: @primary-color;
-      border: 1px solid @primary-color;
-      display: inline-block;
-      height: 32px;
-      line-height: 32px;
-      transition: all 0.5s;
-      cursor: pointer;
-      &:hover {
-        color: white;
-        background-color: @primary-color;
-      }
-    }
-  }
   .box {
     .card {
       border-radius: 2px;
@@ -234,12 +213,12 @@
                 <div class="container">
                         
                     <div class="btn-left w18">
-                        <Form-item  prop="queryStartTime"    >
+                        <Form-item       >
                             <data-range @dataChange="startTimeChange" placeholder="申请开始时间" hour="00:00" :time="formData.queryStartTime" start></data-range>
                         </Form-item>
                     </div>
                     <div class="btn-left w18">
-                        <Form-item  prop="queryEndTime"    >
+                        <Form-item       >
                             <data-range hour="24:00" placeholder="申请结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
                         </Form-item>
                     </div>

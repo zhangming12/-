@@ -117,7 +117,7 @@
         <Form ref="form" :model="formData" :label-width="10">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item prop="queryStartTime" required>
+              <Form-item   required>
                 <data-range
                   placeholder="开始时间"
                   @dataChange="startTimeChange"
@@ -128,7 +128,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="queryEndTime" required>
+              <Form-item   required>
                 <data-range
                   placeholder="结束时间"
                   hour="24:00"
@@ -872,10 +872,6 @@ export default {
       this.init();
     },
     init() {
-      // if (!this.formData.checkStatus) {
-      //   this.$Message.error("请选择协议状态");
-      //   return false;
-      // }
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime

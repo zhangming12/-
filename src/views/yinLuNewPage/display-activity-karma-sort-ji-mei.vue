@@ -25,7 +25,6 @@
 .table-box {
   overflow: hidden;
   padding: 0 10px;
-  // min-height: 500px;
   position: relative;
   .numColor {
     color: @primary-color;
@@ -60,7 +59,6 @@
   align-items: center;
   border-bottom: 1px solid #e5e5e5;
   li {
-    // width: calc(100% / 13);
     width: 8%;
     border-right: 1px solid #e5e5e5;
     color: #000;
@@ -96,7 +94,6 @@
   align-items: center;
   border-bottom: 1px solid #e5e5e5;
   li {
-    // width: calc(100% / 13);
     height: 40px;
     line-height: 40px;
     width: 8%;

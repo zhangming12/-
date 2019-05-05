@@ -74,18 +74,6 @@ export default {
   name: "info-keepAlive",
 
   data() {
-    const validatePhone = (rule, value, callback) => {
-      // 验证手机号码
-      if (value == "") {
-        callback(new Error("请输入手机号码"));
-      } else {
-        if (!this.Global.checkPhone(value)) {
-          callback(new Error("请输入正确手机号码"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       formData: {
         brandId: "",
@@ -193,7 +181,7 @@ export default {
       brandList: []
     };
   },
-  created: function() {
+  created() {
     this.Global.doPostNoLoading("condition/queryBrands.json", {}, res => {
       this.brandList = [];
       Object.entries(res).forEach(item => {
@@ -246,5 +234,3 @@ export default {
   }
 };
 </script>
-
-

@@ -10,7 +10,6 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    
   }
 }
 .modal-main {
@@ -63,7 +62,8 @@
         <div class="title">选择SKU考核品类：</div>
         <div class="categoryBox itemBox">
           <div class="left">
-            <div class="tit">待选
+            <div class="tit">
+              待选
               <Checkbox
                 style="margin-left:20px;"
                 @on-change="selectAllMethod"
@@ -121,10 +121,7 @@ export default {
       cSkuNecessary: [...this.skuNecessary], //已选中
       showToolTip: false,
       showRight: true,
-      // categoryList: [],
-      // selectedCategoryList: [...this.sCategoryList],
-      // selectedCategoryList:JSON.parse(JSON.stringify(this.sCategoryList)),
-      selectedCategoryList:[],
+      selectedCategoryList: [],
       selectAll: false
     };
   },
@@ -170,8 +167,8 @@ export default {
         return [];
       }
     },
-    ind:{
-      type:[String,Number]
+    ind: {
+      type: [String, Number]
     }
   },
   destroyed() {},
@@ -190,7 +187,7 @@ export default {
       } else {
         this.cSkuNecessary = [];
         this.selectedCategoryList = [];
-        this.$emit("sCategoryListChange",this.ind)
+        this.$emit("sCategoryListChange", this.ind);
       }
     },
     cancel() {
@@ -224,10 +221,10 @@ export default {
         return false;
       }
       try {
-        JSON.parse(this.cSkuExpression)
+        JSON.parse(this.cSkuExpression);
       } catch (error) {
-        this.$Message.info("输入的品类规则不合法")
-        return
+        this.$Message.info("输入的品类规则不合法");
+        return;
       }
       this.$emit("getSKUInfomation", {
         skuNecessary: this.cSkuNecessary,

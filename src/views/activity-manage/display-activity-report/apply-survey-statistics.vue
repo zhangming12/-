@@ -30,16 +30,15 @@
         <Row>
           <Col span="12">
             <Form-item label="申请时间" required prop="queryTime">
-              <!-- <DatePicker  v-model="formData.queryTime" placeholder="选择日期跟时间" type="datetimerange" ></DatePicker> -->
               <Row>
                 <Col span="11">
-                  <Form-item prop="queryStartTime">
+                  <Form-item>
                     <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
                   </Form-item>
                 </Col>
                 <Col span="2" style="text-align: center;">至</Col>
                 <Col span="11">
-                  <Form-item prop="queryEndTime">
+                  <Form-item>
                     <data-range hour="24:00" v-model="formData.queryEndTime"></data-range>
                   </Form-item>
                 </Col>
@@ -177,7 +176,7 @@ export default {
     );
   },
   methods: {
-    submit: function(name) {
+    submit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.page = 1;
@@ -185,7 +184,7 @@ export default {
         }
       });
     },
-    changePage: function(size) {
+    changePage(size) {
       this.init(size, 10);
     },
     init(currentPage, pageSize) {
@@ -311,5 +310,3 @@ export default {
   }
 };
 </script>
-
-

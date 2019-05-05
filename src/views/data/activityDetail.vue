@@ -46,7 +46,7 @@
                 <Form-item label="参与时间:" required>
                   <Row>
                     <Col span="11">
-                      <Form-item prop="queryStartTime">
+                      <Form-item  >
                         <data-range
                           @dataChange="startTimeChange"
                           hour="00:00"
@@ -57,7 +57,7 @@
                     </Col>
                     <Col span="2" style="text-align: center;">至</Col>
                     <Col span="11">
-                      <Form-item prop="queryEndTime">
+                      <Form-item  >
                         <data-range
                           hour="24:00"
                           placeholder="结束时间"

@@ -127,7 +127,7 @@
                   </Form-item>
                 </div>
                 <div class="btn-left w18">
-                  <Form-item  prop="queryEndTime" required>
+                  <Form-item    required>
                       <Input placeholder="签到点名称" v-model="formData.signName" clearable></Input>
                   </Form-item>
                 </div>

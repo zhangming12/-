@@ -4,8 +4,6 @@
 .box {
   width: 100%;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
-  // margin: 0 auto;
-  //float: left;
   padding: 30px 20px;
   padding-bottom: 0;
   background: #fff;
@@ -36,8 +34,6 @@ export default {
       myChart: ""
     };
   },
-  components: {},
-  created: function() {},
   mounted() {
     this.drawLine();
   },
@@ -119,5 +115,3 @@ export default {
   }
 };
 </script>
-
-

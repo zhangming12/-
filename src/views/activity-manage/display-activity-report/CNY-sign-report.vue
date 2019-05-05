@@ -141,7 +141,7 @@ import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索�
 import config from "@/util/config.js";
 import { CNYSignStatus } from "@/util/ENUMS.js";
 import wpictureUpload from "@/components/word-picture-upload.vue";
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
   name: "CNY-sign-report-keepAlive",
@@ -266,14 +266,14 @@ export default {
       isUpload: false
     };
   },
-  created: function() {},
+  created() {},
   methods: {
     ceshiDownload() {
       this.Global.downloadFile("download.file", "", res => {
         console.log(res);
       });
     },
-    submit: function(name) {
+    submit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.page = 1;
@@ -283,7 +283,7 @@ export default {
         }
       });
     },
-    changePage: function(size) {
+    changePage(size) {
       this.init(size, 10);
     },
     init(currentPage, pageSize) {
@@ -305,7 +305,7 @@ export default {
       });
     },
 
-    uploadExcel: function() {
+    uploadExcel() {
       if (!this.uploadUrl) {
         this.$Message.error("请核实上传文件");
         return false;
@@ -345,7 +345,7 @@ export default {
       );
       window.open(url);
     },
-    exportTemplate: function() {
+    exportTemplate() {
       const url =
         "https://hbrand.oss-cn-hangzhou.aliyuncs.com/demo/CNYSignRecord.xlsx";
       window.open(url);

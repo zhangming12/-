@@ -33,13 +33,13 @@
             <Form-item label="时间:" required>
               <Row>
                 <Col span="11">
-                  <Form-item prop="queryStartTime">
+                  <Form-item>
                     <data-range hour="00:00" v-model="formData.queryStartTime" start/>
                   </Form-item>
                 </Col>
                 <Col span="2" style="text-align: center;">至</Col>
                 <Col span="11">
-                  <Form-item prop="queryEndTime">
+                  <Form-item>
                     <data-range hour="24:00" placeholder="结束时间" v-model="formData.queryEndTime"/>
                   </Form-item>
                 </Col>
@@ -92,12 +92,11 @@ import area from "@/config/china_code_data.js";
 import dataRange from "@/components/data-range/data-range.vue";
 
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
   name: "display-reward-keepAlive",
   data() {
-    const that = this;
     return {
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
@@ -108,6 +107,7 @@ export default {
       },
       page: 1,
       pageNum: 0,
+      pageSize: 10,
       rule: {
         queryStartTime: [{ validator: validateStart }],
         queryEndTime: [{ validator: validateEnd }]
@@ -303,18 +303,14 @@ export default {
   },
   methods: {
     submit(name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          this.page = 1;
-          this.init(this.page, 10);
-        }
-      });
+      this.page = 1;
+      this.init(this.page, 10);
     },
     changePage(size) {
+      this.page = size;
       this.init(size, 10);
     },
     init(currentPage, pageSize) {
-      var that = this;
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
@@ -326,8 +322,8 @@ export default {
           this.formData.areaCode.length - 1
         ].toString();
       }
-      data["currentPage"] = currentPage;
-      data["pageSize"] = pageSize;
+      data["currentPage"] = this.page;
+      data["pageSize"] = this.pageSize;
       data["groupType"] = 3;
       this.Global.doPost(
         "displayYxtg/queryDisplayYxtgActivityGroupList.json",

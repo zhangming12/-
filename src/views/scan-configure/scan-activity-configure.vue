@@ -36,7 +36,6 @@
       margin: 10px 0 25px;
       padding-top: 10px;
       .tabs-head {
-        // overflow-x: auto;
         padding-right: 30px;
         padding-left: 5px;
         height: 32px;
@@ -229,12 +228,7 @@
               <Form-item label="活动时间:" required>
                 <Row>
                   <Col span="11">
-                    <data-range
-                      :dis="type == 'look'"
-                      hour="00:00"
-                      v-model="formData1.startTime"
-                      start
-                    ></data-range>
+                    <data-range :dis="type == 'look'" hour="00:00" v-model="formData1.startTime"></data-range>
                   </Col>
                   <Col span="11" offset="1">
                     <data-range

@@ -104,7 +104,6 @@ export default {
       rule: {
         brandId: [{ required: true, message: "请选择品牌名称" }],
         groupId: [{ required: true, message: "请选择活动包名" }]
-        // activityId: [{ required: true, message: "请选择活动名称" }]
       },
       brandList: [],
       groupList: [],
@@ -266,5 +265,3 @@ export default {
   }
 };
 </script>
-
-

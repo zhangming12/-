@@ -3,33 +3,14 @@
 
 .box {
   width: 100%;
-  // box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
-  // margin: 0 auto 15px;
-  // padding: 30px 20px 0;
   background: #fff;
 }
-
 .ivu-radio-wrapper {
   margin-right: 30px;
 }
 .contentTop {
   overflow: hidden;
   margin-bottom: 10px;
-  .export {
-    height: 24px;
-    float: right;
-    div {
-      background: @primary-color;
-      color: #fff;
-      padding: 3px 12px;
-
-      border-bottom: 0;
-      cursor: pointer;
-      i {
-        margin-right: 2px;
-      }
-    }
-  }
   .upDate {
     float: right;
     border: 1px solid #aeaeae;
@@ -52,104 +33,102 @@
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">员工信息</h2> -->
-        <div class="main-container">
-          <div class="box">
-              <Form ref="form" :model="formData" :label-width="88">
-                  <Row >
-                      <Col span='7'>
-                          <Form-item label='品牌名称:' required prop='brandId'>
-                            <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
-                                  <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                              </Select>
-                          </Form-item>
-                          <Form-item label='手机号码:' prop='phone'>
-                              <Input v-model='formData.phone' placeholder="请输入手机号码"></Input>
-                          </Form-item>
-                      </Col>
-                      <Col span='7'> 
-                          <Form-item label='员工角色:' prop='roleId'>
-                            <Select v-model="formData.roleId" placeholder="请选择" clearable>
-                              <Option :value="item.id" v-for="(item,index) in roleDataList" :key="index">{{ item.roleName }}</Option>
-                            </Select>
-                          </Form-item>
-                          
-                      </Col>
-                      <Col span='7'> 
-                          <Form-item label='员工姓名:' prop='workerName'>
-                              <Input v-model='formData.workerName' placeholder="请输入业代姓名"></Input>
-                          </Form-item>
-                      </Col>
-                      <Col span='2' offset='1' style="margin-top:28px;"> 
-                          <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
-                      </Col>
-                  </Row>
-              </Form>           
+  <div id="Main">
+    <!-- <h2 class="Title">员工信息</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="88">
+          <Row>
+            <Col span="7">
+              <Form-item label="品牌名称:" required prop="brandId">
+                <Select v-model="formData.brandId" placeholder="请选择" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+              <Form-item label="手机号码:" prop="phone">
+                <Input v-model="formData.phone" placeholder="请输入手机号码"></Input>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="员工角色:" prop="roleId">
+                <Select v-model="formData.roleId" placeholder="请选择" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in roleDataList"
+                    :key="index"
+                  >{{ item.roleName }}</Option>
+                </Select>
+              </Form-item>
+            </Col>
+            <Col span="7">
+              <Form-item label="员工姓名:" prop="workerName">
+                <Input v-model="formData.workerName" placeholder="请输入业代姓名"></Input>
+              </Form-item>
+            </Col>
+            <Col span="2" offset="1" style="margin-top:28px;">
+              <Button @click="submit('form')" class="btn-search" type="primary">查询</Button>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+      <div class="box" style="overflow: hidden;padding:10px;">
+        <div class="contentTop">
+          <i-button
+            class="btn-export"
+            icon="ios-download-outline"
+            @click="exportExcel"
+            type="primary"
+          >导出</i-button>
+          <i-button @click="uploadExcel" class="btn-export" icon="android-add" type="success">导入</i-button>
+          <div class="upDate">
+            <Upload
+              :action="url"
+              :show-upload-list="false"
+              :on-success="handleSuccess"
+              :on-error="handleError"
+            >
+              <Icon type="ios-folder" size="14" color="#53a3f4"></Icon>
+              {{ uploadText }}
+            </Upload>
           </div>
-          <div class="box" style='overflow: hidden;padding:10px;'>
-              <div class='contentTop'>
-                  <i-button class="btn-export" icon="ios-download-outline" @click="exportExcel" type="primary">导出</i-button>
-                  <i-button @click="uploadExcel" class="btn-export" icon="android-add" type="success">导入</i-button>
-                  <div class='upDate'>
-                    <Upload :action="url" 
-                      :show-upload-list=false
-                      :on-success='handleSuccess'
-                      :on-error='handleError'
-                      >
-                      <Icon type="ios-folder" size='14' color='#53a3f4'></Icon>
-                      {{ uploadText }}
-                    </Upload>
-                  </div>
-                  <div class='demo' @click='dowland'> 
-                    <Icon type="ios-paper-outline" size='14' color='#ff8a34'></Icon>
-                    <span>下载模版</span>
-                  </div>
-              </div>
-              <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-              
-          </div>
-          <div class="page-box">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-            </div>
+          <div class="demo" @click="dowland">
+            <Icon type="ios-paper-outline" size="14" color="#ff8a34"></Icon>
+            <span>下载模版</span>
           </div>
         </div>
-        <!-- 角色调整 -->
-        <Modal
-            v-model="roleChangeIsShow">
-            <h2 style="text-align:center;">角色调整</h2>
-            <i-Form>
-              <CheckboxGroup v-model="roleList">
-                <Checkbox :label="item.id" v-for="item in roleListData" :key="item.id" >{{ item.roleName }}</Checkbox>
-              </CheckboxGroup>
-            </i-Form>
-            <div slot="footer">
-              <i-button type="text" @click="cancel">取消</i-button>
-              <i-button type="success" @click="roleChangeMethod">确定</i-button>
-            </div>
-        </Modal>
+        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
     </div>
+    <!-- 角色调整 -->
+    <Modal v-model="roleChangeIsShow">
+      <h2 style="text-align:center;">角色调整</h2>
+      <i-Form>
+        <CheckboxGroup v-model="roleList">
+          <Checkbox :label="item.id" v-for="item in roleListData" :key="item.id">{{ item.roleName }}</Checkbox>
+        </CheckboxGroup>
+      </i-Form>
+      <div slot="footer">
+        <i-button type="text" @click="cancel">取消</i-button>
+        <i-button type="success" @click="roleChangeMethod">确定</i-button>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
 import config from "@/util/config.js";
 export default {
   name: "employee-information-keepAlive",
-
   data() {
-    const validatePhone = (rule, value, callback) => {
-      // 验证手机号码
-      if (value == "") {
-        callback(new Error("请输入手机号码"));
-      } else {
-        if (!this.Global.checkPhone(value)) {
-          callback(new Error("请输入正确手机号码"));
-        } else {
-          callback();
-        }
-      }
-    };
     return {
       changeSaleRouteIsShow: false, //更改销售路线模态框
       saleRouteData: {
@@ -201,25 +180,16 @@ export default {
           title: "员工角色",
           key: "roleName",
           align: "center"
-          // render: (h, params) => {
-          //   return h("div", this.roleNameMethod(params.row.roleVOs));
-          // }
         },
         {
           title: "手机号码",
           key: "phone",
           align: "center"
         },
-        // {
-        //   title: "销售路线",
-        //   key: "salesRoute",
-        //   align: "center"
-        // },
         {
           title: "操作",
           key: "action",
           align: "center",
-          // width: "400",
           render: (h, params) => {
             var tag = [];
             var str = "";
@@ -283,21 +253,17 @@ export default {
   },
   methods: {
     changeValue(val) {
-      // let data = { brandId: val };
       this.Global.doPost(
         "resource/queryRoleList.json",
         { brandId: val },
         res => {
           this.roleDataList = res;
-          console.log(res);
         }
       );
     },
     //角色调整
     roleChangeMethod() {
       let data = {};
-      // data["userId"] = this.userId;
-
       data["roleIds"] = this.roleList.join(",");
       data["phone"] = this.phone;
       data["workerId"] = this.workerId;
@@ -351,11 +317,9 @@ export default {
     },
     //更改销售路线
     sureChangeSaleRoute(e) {
-      //更改销售路线
       if (!this.saleRouteData.newSaleRoute) {
         this.$Message.error("请输入新的销售路线");
         this.changeSaleRouteIsShow = true;
-        // e.stopPropagation();
         return false;
       }
       let data = {
@@ -384,7 +348,6 @@ export default {
       this.saleRouteData.workerId = val.row.userId;
       this.saleRouteData.brandId = val.row.brandId;
     },
-    // brandWorkerImport.json   导入的
     uploadExcel() {
       if (!this.uploadUrl) {
         this.$Message.error("请核实上传文件");
@@ -419,7 +382,6 @@ export default {
       var url = response.data;
       if (url) {
         this.uploadUrl = url;
-        // this.uploadExcel()
       }
     },
     submit(name) {
@@ -473,7 +435,6 @@ export default {
         this.pageData = res.datalist;
       });
     },
-    // queryBrandRoleInfoExport.json   导出的
     exportExcel() {
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);

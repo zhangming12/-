@@ -3,9 +3,7 @@
 
 .box {
   width: 100%;
-  // box-shadow: 0 0 10px 2px rgba(0,0,0,.1);
   margin: 0 auto;
-  // padding: 30px 20px;
   padding-bottom: 0;
   background: #fff;
   position: relative;
@@ -55,9 +53,6 @@
     color: #34a323;
     display: inline-block;
   }
-  // span{
-  //     display: inline-block;
-  // }
   .orange {
     color: #d90000;
     display: inline-block;
@@ -66,32 +61,33 @@
 </style>
 
 <template>
-  <div >
+  <div>
     <div class="box">
-        <div class="iconBox">
-            <router-link to='/bigGDStoreDistribute' v-if="bigStatus">
-                <Icon type="ios-expand" size="22" color="red" class='small '></Icon>
-            </router-link>
-            <router-link to='/GDStoreDistribute' v-else>
-                <Icon type="ios-contract" size="22" color="red" class='big '></Icon>
-            </router-link>
-        </div>
-        <div style="overflow: hidden;">
+      <div class="iconBox">
+        <router-link to="/bigGDStoreDistribute" v-if="bigStatus">
+          <Icon type="ios-expand" size="22" color="red" class="small"></Icon>
+        </router-link>
+        <router-link to="/GDStoreDistribute" v-else>
+          <Icon type="ios-contract" size="22" color="red" class="big"></Icon>
+        </router-link>
+      </div>
+      <div style="overflow: hidden;">
         <div id="scancodeActivity" class="echartBox"></div>
         <div class="signInfor">
-            <div class="title">今日签到人数（人）</div>    
-            <div class="subTitle">
-                应到：<span class="green padding10px">{{planCount}}</span>实到：<span class="orange ">{{actuallyCount}}</span> 
-            </div>
-            <div class="subDesc" v-for="value in todaySignCount">
-                <span class="padding10px">{{value.areaName}}</span>应到：<span class="green padding10px">{{value.planCount}}</span>实到：<span class="orange ">{{value.actuallyCount}}</span> 
-            </div>
-            
-
-        </div> 
+          <div class="title">今日签到人数（人）</div>
+          <div class="subTitle">
+            应到：
+            <span class="green padding10px">{{planCount}}</span>实到：
+            <span class="orange">{{actuallyCount}}</span>
+          </div>
+          <div class="subDesc" v-for="value in todaySignCount">
+            <span class="padding10px">{{value.areaName}}</span>应到：
+            <span class="green padding10px">{{value.planCount}}</span>实到：
+            <span class="orange">{{value.actuallyCount}}</span>
+          </div>
         </div>
-               
-    </div>  
+      </div>
+    </div>
   </div>
 </template>
 
@@ -549,43 +545,41 @@ export default {
         }
         this.drawLine(geoCoordMap, arrList);
       });
-    //   signLightMap1(dataList).then(res => {
-    //     if (res.data && res.status === 1) {
-    //       let dataList = res.data;
-    //       let geoCoordMap = {};
-    //       let arrList = [];
-    //       for (var x of dataList) {
-    //         let signLocate = x.signLocate.split(",").reverse();
-    //         signLocate[0] = Number(signLocate[0]);
-    //         signLocate[1] = Number(signLocate[1]);
-    //         geoCoordMap[x.signName] = signLocate;
-    //         let obj = {};
-    //         let signName = x.signName;
-    //         obj["name"] = x.signName;
-    //         obj["value1"] = x.signStatus; //计划签到   1已签到 0未签到
-    //         obj["value2"] = x.actuallyCount; //实际签到
-    //         arrList.push(obj);
-    //       }
-    //       this.drawLine(geoCoordMap, arrList);
-    //     }
-    //   });
-    //   cnySignCount(dataList).then(res => {
-    //     if (res.data && res.status === 1) {
-    //       this.todaySignCount = res.data;
-    //       let planCount = 0;
-    //       let actuallyCount = 0;
+      //   signLightMap1(dataList).then(res => {
+      //     if (res.data && res.status === 1) {
+      //       let dataList = res.data;
+      //       let geoCoordMap = {};
+      //       let arrList = [];
+      //       for (var x of dataList) {
+      //         let signLocate = x.signLocate.split(",").reverse();
+      //         signLocate[0] = Number(signLocate[0]);
+      //         signLocate[1] = Number(signLocate[1]);
+      //         geoCoordMap[x.signName] = signLocate;
+      //         let obj = {};
+      //         let signName = x.signName;
+      //         obj["name"] = x.signName;
+      //         obj["value1"] = x.signStatus; //计划签到   1已签到 0未签到
+      //         obj["value2"] = x.actuallyCount; //实际签到
+      //         arrList.push(obj);
+      //       }
+      //       this.drawLine(geoCoordMap, arrList);
+      //     }
+      //   });
+      //   cnySignCount(dataList).then(res => {
+      //     if (res.data && res.status === 1) {
+      //       this.todaySignCount = res.data;
+      //       let planCount = 0;
+      //       let actuallyCount = 0;
 
-    //       for (const key of res.data) {
-    //         planCount += key.planCount;
-    //         actuallyCount += key.actuallyCount;
-    //       }
-    //       this.planCount = planCount;
-    //       this.actuallyCount = actuallyCount;
-    //     }
-    //   });
+      //       for (const key of res.data) {
+      //         planCount += key.planCount;
+      //         actuallyCount += key.actuallyCount;
+      //       }
+      //       this.planCount = planCount;
+      //       this.actuallyCount = actuallyCount;
+      //     }
+      //   });
     }
   }
 };
 </script>
-
-

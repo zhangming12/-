@@ -150,7 +150,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="queryStartTime" required>
+              <Form-item   required>
                 <data-range
                   placeholder="上传时间查询范围"
                   @dataChange="startTimeChange"
@@ -161,7 +161,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="queryEndTime" required>
+              <Form-item   required>
                 <data-range
                   hour="24:00"
                   placeholder="上传时间查询范围"

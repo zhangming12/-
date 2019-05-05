@@ -548,7 +548,6 @@ export default {
     this.hand = setInterval(() => {
       this.trueTime();
     }, 10000);
-    // this.cityData = this.areaData[0].children;
   },
   beforeDestroy() {
     this.activityList = [];
@@ -579,8 +578,6 @@ export default {
     changeGroup(e) {
       this.formData.groupId = e.target.id;
       this.formData.brandId = this.findBrandId(e.target.id);
-      console.log(e.target.brandId);
-      // console.log(this.formData)
       this.groupName = e.target.title;
       this.showGroup = false;
       this.activityName = "请选择活动";
@@ -825,8 +822,6 @@ export default {
             type: "category",
             boundaryGap: false,
             data: []
-
-            // data : ['9点前','10点','11点','12点','13点','14点','15点','16点','17点','18点','19点','20点后']
           }
         ],
         yAxis: [

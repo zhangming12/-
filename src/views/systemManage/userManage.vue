@@ -32,24 +32,6 @@
   padding-bottom: 15px;
   font-size: 16px;
 }
-.export {
-  height: 24px;
-  position: relative;
-  div {
-    border: 1px solid @primary-color;
-    padding: 3px 12px;
-    float: right;
-    border-bottom: 0;
-    position: absolute;
-    right: 1px;
-    bottom: -1px;
-    color: @primary-color;
-    cursor: pointer;
-    i {
-      margin-right: 2px;
-    }
-  }
-}
 </style>
 
 <template>

@@ -152,12 +152,12 @@
                 </div>
                 
                 <div class="btn-left w18">
-                  <Form-item  prop="queryStartTime" required>
+                  <Form-item    required>
                       <data-range placeholder="签约时间查询范围" @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
                   </Form-item>
                 </div>
                 <div class="btn-left w18">
-                  <Form-item  prop="queryEndTime" required>
+                  <Form-item    required>
                       <data-range placeholder="签约时间查询范围" hour="24:00" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
                   </Form-item>
                 </div>

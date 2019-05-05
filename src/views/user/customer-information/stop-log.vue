@@ -156,7 +156,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="queryStartTime">
+              <Form-item  >
                 <DatePicker
                   v-model="formData.queryTime"
                   type="daterange"

@@ -23,66 +23,83 @@
 
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">经销商陈列活动管理</h2> -->
-      <div class="main-container">
-        <div class="box">
-              <Form ref="form" :model="formData" :label-width="10">
-                    <div class="container">
-                        <div class="btn-left w18">
-                            <Form-item prop="queryStartTime">
-                              <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item prop="queryEndTime">
-                                <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item>
-                              <Select v-model="formData.brandId" placeholder="请选择品牌">
-                                  <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                              </Select> 
-                          </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item>                            
-                              <Select placeholder="请选择状态" v-model="formData.activityStatus" clearable>
-                                  <Option value="1">未开始</Option>
-                                  <Option value="0">进行中</Option>
-                                  <Option value="2">已结束</Option>
-                              </Select>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                          <Form-item>
-                            <Cascader placeholder="请选择区域" :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
-                          </Form-item>
-                        </div>
-                        <div class="btn-right w10">
-                            <div class="searchBox">
-                                
-                                <div class="btn-right search-right" @click="submit('form')">
-                                    <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </Form>
-        </div>
-        <div class="box" style="margin-top: 15px;padding:10px">
-          <div class="contentTop">
-               <addNewBtn class="btn-right" title="新建" @btnClick="handleAdd" />
-          </div>
-          <Table :columns="columns" :data="pageData" disabled-hover></Table>
-          
-        </div>
-        <div class="page-box">
-              <div style="float: right;">
-                  <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+    <!-- <h2 class="Title">经销商陈列活动管理</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item>
+                <data-range
+                  @dataChange="startTimeChange"
+                  hour="00:00"
+                  :time="formData.queryStartTime"
+                  start
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item>
+                <data-range
+                  hour="24:00"
+                  placeholder="结束时间"
+                  @dataChange="endTimeChange"
+                  :time="formData.queryEndTime"
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item>
+                <Select v-model="formData.brandId" placeholder="请选择品牌">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item>
+                <Select placeholder="请选择状态" v-model="formData.activityStatus" clearable>
+                  <Option value="1">未开始</Option>
+                  <Option value="0">进行中</Option>
+                  <Option value="2">已结束</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item>
+                <Cascader
+                  placeholder="请选择区域"
+                  :data="areaData"
+                  v-model="formData.areaCode"
+                  change-on-select
+                ></Cascader>
+              </Form-item>
+            </div>
+            <div class="btn-right w10">
+              <div class="searchBox">
+                <div class="btn-right search-right" @click="submit('form')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+                </div>
               </div>
+            </div>
           </div>
+        </Form>
       </div>
+      <div class="box" style="margin-top: 15px;padding:10px">
+        <div class="contentTop">
+          <addNewBtn class="btn-right" title="新建" @btnClick="handleAdd"/>
+        </div>
+        <Table :columns="columns" :data="pageData" disabled-hover></Table>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -90,12 +107,8 @@
 import area from "@/config/china_code_data.js";
 import dataRange from "@/components/data-rang.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
   name: "dealer-dispay-manage-patrols-keepAlive",
@@ -136,7 +149,7 @@ export default {
           title: "创建时间",
           key: "createTime",
           align: "center",
-          width:150,
+          width: 150,
           render: (h, params) => {
             return this.Global.createTime(params.row.createTime);
           }
@@ -154,7 +167,7 @@ export default {
         {
           title: "活动开始时间",
           key: "startTime",
-          width:150,
+          width: 150,
           align: "center",
           render: (h, params) => {
             return params.row.startTime
@@ -165,7 +178,7 @@ export default {
         {
           title: "活动结束时间",
           key: "endTime",
-          width:150,
+          width: 150,
           align: "center",
           render: (h, params) => {
             return params.row.endTime
@@ -300,7 +313,8 @@ export default {
     };
   },
   components: {
-    dataRange,addNewBtn
+    dataRange,
+    addNewBtn
   },
   created() {
     this.Global.doPostNoLoading(
@@ -371,8 +385,6 @@ export default {
         );
       }
       this.Global.deleteEmptyProperty(data);
-      // return;
-
       if (this.formData.areaCode.length) {
         data["areaCode"] = this.formData.areaCode[
           this.formData.areaCode.length - 1

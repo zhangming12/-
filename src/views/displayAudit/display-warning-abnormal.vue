@@ -9,33 +9,6 @@
   position: relative;
   background: #ffffff;
   padding-bottom: 60px;
-  .export {
-    position: fixed;
-    z-index: 900;
-    top: 140px;
-    right: 40px;
-    span {
-      padding: 0 15px;
-      border-radius: 20px;
-      color: @primary-color;
-      border: 1px solid @primary-color;
-      display: inline-block;
-      height: 32px;
-      line-height: 32px;
-      transition: all 0.5s;
-      cursor: pointer;
-      &:hover {
-        color: white;
-        background-color: @primary-color;
-      }
-    }
-  }
-  .page-box {
-    overflow: hidden;
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-  }
 }
 .table-box {
   padding: 0 10px;
@@ -44,36 +17,6 @@
   .numColor {
     color: @primary-color;
   }
-}
-
-.searchBox {
-  overflow: hidden;
-  .search_btn {
-    float: left;
-    width: 50px;
-    padding: 5px 14px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .search_icon {
-    float: left;
-    padding: 5px 10px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-}
-.warnColor {
-  color: #ed3f14;
-}
-.primaryColor {
-  color: @primary-color;
-}
-.successColor {
-  color: #19be6b;
-}
-.noData {
-  text-align: center;
-  line-height: 100px;
 }
 </style>
 
@@ -96,24 +39,18 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="queryStartTime" required>
+              <Form-item required>
                 <data-range
-                  @dataChange="startTimeChange"
                   placeholder="上传开始时间"
                   hour="00:00"
-                  :time="formData.queryStartTime"
+                  v-model="formData.queryStartTime"
                   start
                 ></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="queryEndTime" required>
-                <data-range
-                  hour="24:00"
-                  placeholder="上传结束时间"
-                  @dataChange="endTimeChange"
-                  :time="formData.queryEndTime"
-                ></data-range>
+              <Form-item required>
+                <data-range hour="24:00" placeholder="上传结束时间" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>
 
@@ -204,7 +141,7 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import hhTable from "@/components/table/table.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
@@ -329,20 +266,8 @@ export default {
           }
         }
       ],
-      startTime: EDFAULT_STARTTIME,
-      endTime: EDFAULT_ENDTIME,
-      startHour: "00:00",
-      endHour: "24:00",
       showQuery: false,
       groupList: [], //活动包名
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME,
@@ -439,32 +364,6 @@ export default {
       this.page = size;
       this.init();
     },
-    createTime(val) {
-      var time = this.Global.createTime(val);
-      return time;
-    },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     init() {
       if (!this.formData.groupId) {
         this.$Message.error("活动包不能为空");
@@ -475,14 +374,7 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      data["queryEndTime"] = this.Global.setHoursData(
-        this.endTime,
-        this.endHour
-      );
-      data["queryStartTime"] = this.Global.setHoursData(
-        this.startTime,
-        this.startHour
-      );
+      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
@@ -494,8 +386,6 @@ export default {
         this.currentPage = res.page;
       });
     }
-  },
-
-  filters: {}
+  }
 };
 </script>

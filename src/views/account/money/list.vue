@@ -45,13 +45,13 @@
             <Form-item label="时间:" required :label-width="80">
               <Row>
                 <Col span="11">
-                  <Form-item prop="queryStartTime">
+                  <Form-item>
                     <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
                   </Form-item>
                 </Col>
                 <Col span="2" style="text-align: center;">至</Col>
                 <Col span="11">
-                  <Form-item prop="queryEndTime">
+                  <Form-item>
                     <data-range hour="24:00" v-model="formData.queryEndTime"></data-range>
                   </Form-item>
                 </Col>

@@ -330,7 +330,7 @@ export default {
           }
         }
       ],
-      pageData: [{}],
+      pageData: [],
       brandList: [],
       showImage: false
     };
@@ -341,7 +341,6 @@ export default {
     hhTable,
     fieldNameDes
   },
-  created() {},
   watch: {
     importExcelShow(val) {
       if (!val) {
@@ -395,18 +394,6 @@ export default {
       this.myModalisShow = true;
     },
     submit(name) {
-      //   if (!this.formData.brandId) {
-      //     this.$Message.error("品牌不能为空");
-      //     return false;
-      //   }
-      //   if (!this.formData.groupId) {
-      //     this.$Message.error("活动包名不能为空");
-      //     return false;
-      //   }
-      // if (!this.formData.activityId) {
-      //   this.$Message.error("活动不能为空");
-      //   return false;
-      // }
       this.page = 1;
       this.init(this.page, 10);
     },
@@ -443,5 +430,3 @@ export default {
   }
 };
 </script>
-
-

@@ -631,7 +631,7 @@ export default {
       );
     },
     formateTime(time) {
-      return new Date(Number(time)).pattern("yyyy-MM-dd hh:mm:ss");
+      return new Date(time).pattern("yyyy-MM-dd hh:mm:ss");
     },
     submit(name) {
       if (!this.formData.brandId) {
@@ -725,12 +725,12 @@ export default {
       }
       let data = this.Global.JsonChange(this.formData);
       if (this.formData.queryTime[0]) {
-        data["startTime"] = this.formateTime(
-          new Date(this.formData.queryTime[0])
-        );
-        data["endTime"] = this.formateTime(
-          new Date(this.formData.queryTime[1])
-        );
+        data["startTime"] =
+          this.formateTime(this.formData.queryTime[0]).substr(0, 11) +
+          "00:00:00";
+        data["endTime"] =
+          this.formateTime(this.formData.queryTime[1]).substr(0, 11) +
+          "23:59:59";
       }
       delete data["queryTime"];
       this.Global.deleteEmptyProperty(data);

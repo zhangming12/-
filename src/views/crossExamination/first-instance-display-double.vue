@@ -312,7 +312,7 @@
         <Form ref="form" :model="formData" :label-width="10">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item prop="queryStartTime" required>
+              <Form-item required>
                 <data-range
                   @dataChange="startTimeChange"
                   placeholder="申请开始时间"
@@ -323,7 +323,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="queryEndTime" required>
+              <Form-item   required>
                 <data-range
                   hour="24:00"
                   placeholder="申请结束时间"
@@ -900,11 +900,7 @@ import dataRange from "@/components/data-rang.vue";
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import qs from "qs";
 import imageLook from "@/components/imgLook/img-look.vue";
 import myTooltip from "@/components/tooltip/tooltip.vue";

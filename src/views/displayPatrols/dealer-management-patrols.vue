@@ -131,141 +131,186 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">经销商管理</h2> -->
-        <div class="main-container">
-            <div class="box">
-                <Form ref="form" class="form" :model="formData" :label-width="10">
-                    <div class="container">
-                        <div class="btn-left w18">
-                            <Form-item prop="brandId" required>
-                                <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue">
-                                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                                </Select>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item prop="id">
-                               <Select v-model="formData.id" placeholder="经销商" clearable>
-                                    <Option :value="item.id" v-for="(item,index) in distributorList" :key="index">{{ item.merchantName }}</Option>
-                                </Select>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item >
-                                <Input v-model.trim="formData.phone" placeholder="登录账号"></Input>
-                            </Form-item>
-                        </div>
-                        
-                    </div>
-                    <div class="btn-right w10">
-                            <div class="searchBox">
-                                <div class="btn-right search-right" @click="submit('form')">
-                                    <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                                </div>
-                            </div>
-                        </div>
-                </Form>
+  <div id="Main">
+    <!-- <h2 class="Title">经销商管理</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" class="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item prop="brandId" required>
+                <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
             </div>
-            <div class="box" style="padding:10px">
-                <div class="contentTop">
-                    <span class="btn-left">此表共包含<span class='numColor'>{{pageNum}}</span>条数据</span>
-                    
-                    <addNewBtn  class="btn-right" @btnClick="addNewMerchant" />
-                </div>
-                <hhTable :columns="columns" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
-                
+            <div class="btn-left w18">
+              <Form-item prop="id">
+                <Select v-model="formData.id" placeholder="经销商" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in distributorList"
+                    :key="index"
+                  >{{ item.merchantName }}</Option>
+                </Select>
+              </Form-item>
             </div>
-            <div class="page-box">
-                <div>
-                    <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
-                </div>
+            <div class="btn-left w18">
+              <Form-item>
+                <Input v-model.trim="formData.phone" placeholder="登录账号"></Input>
+              </Form-item>
             </div>
+          </div>
+          <div class="btn-right w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+              </div>
+            </div>
+          </div>
+        </Form>
+      </div>
+      <div class="box" style="padding:10px">
+        <div class="contentTop">
+          <span class="btn-left">
+            此表共包含
+            <span class="numColor">{{pageNum}}</span>条数据
+          </span>
+          <addNewBtn class="btn-right" @btnClick="addNewMerchant"/>
         </div>
-        <!-- 新建/修改经销商第一步 -->
-
-      <myModal class="myModal"
-            @close="closeModal"
-            :modal="oneStepShow">
-            <div slot="main" class="modal-main">
-              <h3>{{ type == 'add' ? '新建经销商' : "修改经销商"}}</h3>
-              <div class="modal-table">
-                  <Form ref="form" :model="oneStepData" :label-width="88">
-                      <Form-item label="关联品牌:" required>
-                        <Select v-model="oneStepData.brandIds" placeholder="品牌名称" multiple :disabled="type == 'modify'">
-                            <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                        </Select>
-                      </Form-item>
-                      <Form-item label="经销商名称:" required>
-                        <Input v-model.trim="oneStepData.merchantName" placeholder="请输入经销商名称"></Input>
-                      </Form-item>
-                      <Form-item label="启用经销商巡拍功能:" :label-width="140" required>
-                         <Switch v-model="oneStepData.patrolling" size="large">
-                            <span slot="open">开启</span>
-                            <span slot="close">关闭</span>
-                        </Switch>
-                      </Form-item>
-                      <Form-item label="备注信息:" :label-width="80">
-                        <Input type="textarea" :rows="4" v-model.trim="oneStepData.summary" placeholder="请输入备注信息"></Input>
-                      </Form-item>
-                      <div class="fotter" style="text-align:center;">
-                          <Button @click="closeModal" type="text">取消</Button>
-                          <!-- <Button v-if="oneStepData.patrolling" type="text" @click="uploadExcel">下一步</Button> -->
-                          <Button type="text" @click="saveOneStep">{{ oneStepData.patrolling && !oneStepData.phone ? '下一步' : '保存'}}</Button>
-                      </div>
-                  </Form>
-              </div>
+        <hhTable :columns="columns" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
+      </div>
+      <div class="page-box">
+        <div>
+          <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
+        </div>
+      </div>
+    </div>
+    <!-- 新建/修改经销商第一步 -->
+    <myModal class="myModal" @close="closeModal" :modal="oneStepShow">
+      <div slot="main" class="modal-main">
+        <h3>{{ type == 'add' ? '新建经销商' : "修改经销商"}}</h3>
+        <div class="modal-table">
+          <Form ref="form" :model="oneStepData" :label-width="88">
+            <Form-item label="关联品牌:" required>
+              <Select
+                v-model="oneStepData.brandIds"
+                placeholder="品牌名称"
+                multiple
+                :disabled="type == 'modify'"
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="经销商名称:" required>
+              <Input v-model.trim="oneStepData.merchantName" placeholder="请输入经销商名称"></Input>
+            </Form-item>
+            <Form-item label="启用经销商巡拍功能:" :label-width="140" required>
+              <Switch v-model="oneStepData.patrolling" size="large">
+                <span slot="open">开启</span>
+                <span slot="close">关闭</span>
+              </Switch>
+            </Form-item>
+            <Form-item label="备注信息:" :label-width="80">
+              <Input
+                type="textarea"
+                :rows="4"
+                v-model.trim="oneStepData.summary"
+                placeholder="请输入备注信息"
+              ></Input>
+            </Form-item>
+            <div class="fotter" style="text-align:center;">
+              <Button @click="closeModal" type="text">取消</Button>
+              <Button
+                type="text"
+                @click="saveOneStep"
+              >{{ oneStepData.patrolling && !oneStepData.phone ? '下一步' : '保存'}}</Button>
             </div>
-      </myModal>
-        <!-- 新建/修改经销商第二步 -->
-      <myModal class="myModal"
-            @close="twoStepShow = false"
-            :modal="twoStepShow">
-            <div slot="main" class="modal-main">
-              <h3>{{ type == 'add' ? '新建经销商' : "修改经销商"}}</h3>
-              <div class="modal-table">
-                  <Form ref="form" style="padding-left:10px;" label-position="left" :model="twoStepData" :label-width="140">
-                      
-                      <Form-item label="关联品牌:" v-if="type == 'add'" required>
-                        <!-- <Input v-model.trim="twoStepData.brandNames" readonly></Input> -->
-                        {{ getBrandNames(twoStepData.brandList) }}
-                      </Form-item>
-                      <Form-item label="登录账号手机号:" required>
-                        <Input v-model.trim="twoStepData.phone" placeholder="请输入登陆账户/手机号"></Input>
-                      </Form-item>
-                      <Form-item label="账号状态:" required>
-                        {{type == 'add' ? '正常' : twoStepData.patrolling == 1 ? '正常' : "解除关系"}}
-                      </Form-item>
-                      <Form-item v-if="type == 'add'  || twoStepData.type == 'add'" :label="item.brandName + '-陈列分润比例:'" :label-width="200" required v-for="(item ,index) in twoStepData.brandList" :key="index">
-                        <div class="sitem" style="display:flex;" >
-                          <InputNumber :min="0" placeholder="经销商占比" v-model.trim="item.merchantProportion"></InputNumber>
-                          <span style="margin:0 8px;">:</span>
-                          <InputNumber :min="0" placeholder="配送公仔占比" v-model.trim="item.workerProportion"></InputNumber>
-                        </div>
-                      </Form-item>
-                      <Form-item v-if="type == 'modify' && twoStepData.type != 'add'" label="陈列分润比例:" :label-width="100" required>
-                        <div class="sitem" style="display:flex;" >
-                          <InputNumber :min="0" placeholder="经销商占比" v-model.trim="twoStepData.merchantProportion"></InputNumber>
-                          <span style="margin:0 8px;">:</span>
-                          <InputNumber :min="0" placeholder="配送公仔占比" v-model.trim="twoStepData.workerProportion"></InputNumber>
-                        </div>
-                      </Form-item>
-                      <Form-item :label-width="20">
-                        <div>
-                          若经销商或批发商老板与配送员的分成比例是6:4则填写6:4;若经销商或批发商均无奖励则
-                        填写0:0,不填写数值默认是0:0
-                        </div>
-                        
-                      </Form-item>
-                      <div class="fotter" style="text-align:center;">
-                          <Button @click="twoStepShow = false" type="text">取消</Button>
-                          <Button type="text" @click="twoStepSave">保存</Button>
-                      </div>
-                  </Form>
+          </Form>
+        </div>
+      </div>
+    </myModal>
+    <!-- 新建/修改经销商第二步 -->
+    <myModal class="myModal" @close="twoStepShow = false" :modal="twoStepShow">
+      <div slot="main" class="modal-main">
+        <h3>{{ type == 'add' ? '新建经销商' : "修改经销商"}}</h3>
+        <div class="modal-table">
+          <Form
+            ref="form"
+            style="padding-left:10px;"
+            label-position="left"
+            :model="twoStepData"
+            :label-width="140"
+          >
+            <Form-item
+              label="关联品牌:"
+              v-if="type == 'add'"
+              required
+            >{{ getBrandNames(twoStepData.brandList) }}</Form-item>
+            <Form-item label="登录账号手机号:" required>
+              <Input v-model.trim="twoStepData.phone" placeholder="请输入登陆账户/手机号"></Input>
+            </Form-item>
+            <Form-item
+              label="账号状态:"
+              required
+            >{{type == 'add' ? '正常' : twoStepData.patrolling == 1 ? '正常' : "解除关系"}}</Form-item>
+            <Form-item
+              v-if="type == 'add'  || twoStepData.type == 'add'"
+              :label="item.brandName + '-陈列分润比例:'"
+              :label-width="200"
+              required
+              v-for="(item ,index) in twoStepData.brandList"
+              :key="index"
+            >
+              <div class="sitem" style="display:flex;">
+                <InputNumber :min="0" placeholder="经销商占比" v-model.trim="item.merchantProportion"></InputNumber>
+                <span style="margin:0 8px;">:</span>
+                <InputNumber :min="0" placeholder="配送公仔占比" v-model.trim="item.workerProportion"></InputNumber>
               </div>
+            </Form-item>
+            <Form-item
+              v-if="type == 'modify' && twoStepData.type != 'add'"
+              label="陈列分润比例:"
+              :label-width="100"
+              required
+            >
+              <div class="sitem" style="display:flex;">
+                <InputNumber
+                  :min="0"
+                  placeholder="经销商占比"
+                  v-model.trim="twoStepData.merchantProportion"
+                ></InputNumber>
+                <span style="margin:0 8px;">:</span>
+                <InputNumber
+                  :min="0"
+                  placeholder="配送公仔占比"
+                  v-model.trim="twoStepData.workerProportion"
+                ></InputNumber>
+              </div>
+            </Form-item>
+            <Form-item :label-width="20">
+              <div>
+                若经销商或批发商老板与配送员的分成比例是6:4则填写6:4;若经销商或批发商均无奖励则
+                填写0:0,不填写数值默认是0:0
+              </div>
+            </Form-item>
+            <div class="fotter" style="text-align:center;">
+              <Button @click="twoStepShow = false" type="text">取消</Button>
+              <Button type="text" @click="twoStepSave">保存</Button>
             </div>
-      </myModal>
-	</div>
+          </Form>
+        </div>
+      </div>
+    </myModal>
+  </div>
 </template>
 
 <script>
@@ -273,13 +318,11 @@ import config from "@/util/config.js";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import hhTable from "@/components/table/table.vue";
-import dataRange from "@/components/data-rang.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
 export default {
   name: "dealer-management-patrols-keepAlive",
 
   components: {
-    dataRange,
     hhTable,
     myModal,
     fieldNameDes,

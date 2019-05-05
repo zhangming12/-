@@ -240,7 +240,6 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import upData from "@/assets/js/upload.js";
@@ -445,7 +444,7 @@ export default {
       logoUrl: ""
     };
   },
-  components: { dataRange, myModal, addNewBtn },
+  components: { myModal, addNewBtn },
   created() {
     this.brandId = this.$route.query.brandId;
     this.Global.doPostNoLoading("condition/queryBrands.json", {}, res => {

@@ -42,62 +42,6 @@
 .ivu-radio-wrapper {
   margin-right: 30px;
 }
-.searchBox {
-  overflow: hidden;
-  .search-left,
-  .search-right {
-    width: 50%;
-  }
-  .search-left {
-    button {
-      outline: none;
-      border: none;
-      width: 60px;
-      height: 30px;
-      line-height: 30px;
-      background: #ffffff;
-      margin-left: 10px;
-      cursor: pointer;
-      color: @primary-color;
-    }
-  }
-  .search-right {
-    img {
-      cursor: pointer;
-      margin-left: 10px;
-    }
-  }
-}
-.myModal {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  .modal-main {
-    box-sizing: border-box;
-    padding: 10px;
-    width: 100%;
-    height: 100%;
-    h3 {
-      text-align: center;
-      font-size: 14px;
-    }
-    .modal-table {
-      max-height: 500px;
-      overflow-y: auto;
-      margin-top: 10px;
-      .modal-table-top {
-        overflow: hidden;
-        height: 30px;
-        line-height: 30px;
-        .numColor {
-          color: @primary-color;
-        }
-      }
-    }
-  }
-}
 .upDate {
   float: left;
   border: 1px solid #aeaeae;
@@ -132,24 +76,18 @@
         <Form ref="form" :model="formData" :label-width="10">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item prop="queryStartTime" required>
+              <Form-item required>
                 <data-range
                   placeholder="查询开始时间"
-                  @dataChange="startTimeChange"
                   hour="00:00"
-                  :time="formData.queryStartTime"
+                  v-model="formData.queryStartTime"
                   start
                 ></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="queryEndTime" required>
-                <data-range
-                  hour="24:00"
-                  placeholder="查询结束时间"
-                  @dataChange="endTimeChange"
-                  :time="formData.queryEndTime"
-                ></data-range>
+              <Form-item required>
+                <data-range hour="24:00" placeholder="查询结束时间" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
@@ -254,9 +192,8 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
-import myModal from "@/components/Modal/my-modal.vue";
 import hhTable from "@/components/table/table.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
@@ -332,12 +269,6 @@ export default {
           align: "center",
           tooltip: true
         },
-        // {
-        //   title: "预计最高折扣",
-        //   key: "expectAmount",
-        //   align: "center",
-        //   tooltip: true
-        // },
         {
           title: "实际发放折扣",
           key: "actualAmount",
@@ -346,14 +277,6 @@ export default {
         }
       ],
       showQuery: false,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       page: 1,
       pageSize: 10,
       groupList: [],
@@ -374,7 +297,6 @@ export default {
   components: {
     dataRange,
     exportBtn,
-    myModal,
     hhTable
   },
   created() {
@@ -394,17 +316,6 @@ export default {
     );
   },
   methods: {
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     getActivityList(value) {
       this.groupList.forEach(item => {
         if (item.id == value) {
@@ -422,17 +333,6 @@ export default {
             this.activityList.push({ id: Number(item[0]), name: item[1] });
           });
         }
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
       );
     },
     submit(type) {
@@ -470,20 +370,7 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
       this.Global.deleteEmptyProperty(data);
@@ -514,20 +401,7 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       var url = this.Global.getExportUrl(
         "displayYxtg/queryDisplayDetailInfoExport.json",
@@ -535,12 +409,9 @@ export default {
       );
       window.open(url);
     },
-
     changeValue(value) {
-      this.oneLeverList = [];
       this.groupList = [];
       this.formData.groupId = "";
-      this.formData.oneLevel = "";
       if (!value) return;
       //查询活动包
       this.Global.doPostNoLoading(

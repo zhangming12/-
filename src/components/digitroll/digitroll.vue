@@ -1,9 +1,3 @@
-/* 数字滚动组件
-    params:
-        num:String,Number,显示的数字 required
-
-**/
-
 <style lang="less" scoped>
 .my-skin {
   display: inline-block;
@@ -11,14 +5,19 @@
 </style>
 
 <template>
-    <div>
-        <div class="my-skin" >
-            <div :style="numStyle" :id="id" class="myroll"></div>
-        </div>
+  <div>
+    <div class="my-skin">
+      <div :style="numStyle" :id="id" class="myroll"></div>
     </div>
+  </div>
 </template>
 
 <script>
+/**
+ * 数字滚动组件
+ * params num {String | Number} required 显示的数字
+ *
+ */
 import DigitRoll from "@/util/digitroll.js";
 export default {
   props: {

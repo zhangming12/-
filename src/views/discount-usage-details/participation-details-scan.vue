@@ -155,12 +155,12 @@
                         </Form-item>
                     </div>
                     <div class="btn-left w18">
-                        <Form-item  prop="queryStartTime" required>
+                        <Form-item    required>
                             <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
                         </Form-item>
                     </div>
                     <div class="btn-left w18">
-                        <Form-item  prop="queryEndTime" required>
+                        <Form-item    required>
                             <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
                         </Form-item>
                     </div>

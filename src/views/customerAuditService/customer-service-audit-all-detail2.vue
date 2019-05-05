@@ -261,7 +261,7 @@
                 </Form-item>
               </div>
               <div class="btn-left w18">
-                <Form-item prop="queryStartTime" required>
+                <Form-item   required>
                   <DatePicker
                     style="display:block;"
                     v-model="formData.queryStartTime"
@@ -271,7 +271,7 @@
                 </Form-item>
               </div>
               <div class="btn-left w18">
-                <Form-item prop="queryEndTime" required>
+                <Form-item   required>
                   <DatePicker
                     style="display:block;"
                     v-model="formData.queryEndTime"

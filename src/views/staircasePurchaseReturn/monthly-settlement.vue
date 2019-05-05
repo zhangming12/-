@@ -15,20 +15,6 @@
 .contentTop {
   overflow: hidden;
   margin-bottom: 10px;
-  .export {
-    height: 24px;
-    float: right;
-    div {
-      background: @primary-color;
-      color: #fff;
-      padding: 3px 12px;
-      border-bottom: 0;
-      cursor: pointer;
-      i {
-        margin-right: 2px;
-      }
-    }
-  }
 }
 
 .vertical-center-modal {

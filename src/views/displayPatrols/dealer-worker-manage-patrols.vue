@@ -271,7 +271,6 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import refreshBtn from "@/components/Button/refresh-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
@@ -414,14 +413,6 @@ export default {
         }
       ],
       showQuery: false,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: "",
-        hour: "24:00"
-      },
       page: 1,
       pageSize: 10,
       groupList: [],
@@ -548,7 +539,6 @@ export default {
     };
   },
   components: {
-    dataRange,
     exportBtn,
     myModal,
     hhTable,
@@ -625,29 +615,6 @@ export default {
       this.timeModalShow = false;
       this.historyShow = false;
       this.myModalisShow = false;
-    },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        this.formData.queryEndTime = value.time;
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
     },
     formateTime(time) {
       return new Date(Number(time)).pattern("yyyy-MM-dd-hh");
@@ -748,5 +715,3 @@ export default {
   }
 };
 </script>
-
-

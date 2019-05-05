@@ -127,83 +127,104 @@ html {
 </style>
 
 <template>
-    <div id="Main">
-        <div class="mainTop">
-          <div class="logo" >
-              <img class="hzHuihe" src="../../assets/image/eDianJia.png" alt="">
-          </div>
+  <div id="Main">
+    <div class="mainTop">
+      <div class="logo">
+        <img class="hzHuihe" src="../../assets/image/eDianJia.png" alt>
+      </div>
 
-          <div class="top-middle-box">
-              <div style="float:left;">
-                <select-box @selectChange="brandClick" v-model="formData.groupId" :check="true" :width="160" :selectLict="brandList" placeholder="选择活动包名"></select-box>
-              </div>
-              <div style="float:left;">
-                <select-box @selectChange="activityClick" v-model="formData.activityId" total :width="160" :selectLict="activityList" placeholder="选择活动"></select-box>
-              </div>
-              <div style="float:left;">
-                <select-box @selectChange="provinceClick" v-model="formData.provinceId" :width="120" province :selectLict="provinceList" placeholder="选择省"></select-box>
-              </div>
-              <div style="float:left;">
-                <select-box @selectChange="cityClick" v-model="formData.cityId" total :width="120" :selectLict="cityList" placeholder="选择市"></select-box>
-              </div>
-              
-          </div>
-
-          <div class="bigOrSmall">
-              <router-link to='/displayKanBan1' v-if="bigStatus">
-                <!-- <Icon type="arrow-expand" size="22" color="#fff" class='small'></Icon> -->
-                <Icon type="ios-expand" size="22" color="#fff" class='small'/>
-              </router-link>
-              <router-link to='/displayKanBan' v-else>
-                  <!-- <Icon type="arrow-shrink" size="22" color="#fff" class='big'></Icon> -->
-                  <Icon type="ios-contract" size="22" color="#fff" class='big'/>
-              </router-link>
-          </div>
-          
+      <div class="top-middle-box">
+        <div style="float:left;">
+          <select-box
+            @selectChange="brandClick"
+            v-model="formData.groupId"
+            :check="true"
+            :width="160"
+            :selectLict="brandList"
+            placeholder="选择活动包名"
+          ></select-box>
         </div>
-        
-
-        <div class="main-box">
-          <div class="main-top-box main">
-              
-              <div class="left">
-                  <div id="todayArea" ref="todayArea"></div>
-                  <div class="title">今日区域占比</div>
-              </div>
-              <div class="middle">
-                  
-                  <div class="todayTitle title">今日上传数</div>
-                  <div class="numScreen">
-                    <ul>
-                        <li v-for="(item,index) in numberList " :key="index">{{ item }}</li>
-                    </ul>
-                  </div>
-                  <div class="time">{{nowTime}}</div>
-                  <div id="todayUpload" ref="todayUpload"> </div>
-              </div>
-              <div class="right">
-                  <div class="title">累计清算情况</div>
-                  <div id="qingsuanpicture" ref="qingsuanpicture"></div>
-              </div>
-          </div>
-          <div class="main-top-box main">
-              
-              <div class="left">
-                  <div id="totalPicture" ref="totalPicture"></div>
-                  <div class="title">累计合格率</div>
-              </div>
-              <div class="middle">
-                  <div id="weekUpload" ref="weekUpload"></div>
-                  <div class="title">周上传情况</div>
-              </div>
-              <div class="right">
-                  <div class="title">新老用户成长曲线</div>
-                  <div id="userGroup" ref="userGroup"></div>
-              </div>
-          </div>
+        <div style="float:left;">
+          <select-box
+            @selectChange="activityClick"
+            v-model="formData.activityId"
+            total
+            :width="160"
+            :selectLict="activityList"
+            placeholder="选择活动"
+          ></select-box>
         </div>
+        <div style="float:left;">
+          <select-box
+            @selectChange="provinceClick"
+            v-model="formData.provinceId"
+            :width="120"
+            province
+            :selectLict="provinceList"
+            placeholder="选择省"
+          ></select-box>
+        </div>
+        <div style="float:left;">
+          <select-box
+            @selectChange="cityClick"
+            v-model="formData.cityId"
+            total
+            :width="120"
+            :selectLict="cityList"
+            placeholder="选择市"
+          ></select-box>
+        </div>
+      </div>
+
+      <div class="bigOrSmall">
+        <router-link to="/displayKanBan1" v-if="bigStatus">
+          <!-- <Icon type="arrow-expand" size="22" color="#fff" class='small'></Icon> -->
+          <Icon type="ios-expand" size="22" color="#fff" class="small"/>
+        </router-link>
+        <router-link to="/displayKanBan" v-else>
+          <!-- <Icon type="arrow-shrink" size="22" color="#fff" class='big'></Icon> -->
+          <Icon type="ios-contract" size="22" color="#fff" class="big"/>
+        </router-link>
+      </div>
     </div>
-    
+
+    <div class="main-box">
+      <div class="main-top-box main">
+        <div class="left">
+          <div id="todayArea" ref="todayArea"></div>
+          <div class="title">今日区域占比</div>
+        </div>
+        <div class="middle">
+          <div class="todayTitle title">今日上传数</div>
+          <div class="numScreen">
+            <ul>
+              <li v-for="(item,index) in numberList " :key="index">{{ item }}</li>
+            </ul>
+          </div>
+          <div class="time">{{nowTime}}</div>
+          <div id="todayUpload" ref="todayUpload"></div>
+        </div>
+        <div class="right">
+          <div class="title">累计清算情况</div>
+          <div id="qingsuanpicture" ref="qingsuanpicture"></div>
+        </div>
+      </div>
+      <div class="main-top-box main">
+        <div class="left">
+          <div id="totalPicture" ref="totalPicture"></div>
+          <div class="title">累计合格率</div>
+        </div>
+        <div class="middle">
+          <div id="weekUpload" ref="weekUpload"></div>
+          <div class="title">周上传情况</div>
+        </div>
+        <div class="right">
+          <div class="title">新老用户成长曲线</div>
+          <div id="userGroup" ref="userGroup"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -288,42 +309,40 @@ export default {
       this.nowTime = this.initializationTime();
     }, 1000);
     this.Global.doPostNoLoading(
-      "displayYxtg/queryDisplayYxtgActivityGroupList.json",
-      {
-        brandList: brandIdList,
-        groupType: 3
-      },
+      "condition/queryGroup.json",
+      { date: 7, activityType: 3, scope: "d", brandIds: brandIdList },
+
       res => {
         this.brandList = [];
         if (res) {
-          if (res.datalist && res.datalist.length) {
-            for (let i = 0; i < res.datalist.length; i++) {
-              this.brandList.push({
-                label: res.datalist[i].groupName,
-                value: res.datalist[i].id
-              });
-            }
-            this.formData.groupId = this.brandList[0].value;
-            this.init();
-            this.Global.doPostNoLoading(
-              "queryGroupArea.json",
-              {
-                groupId: this.formData.groupId,
-                areaCode: ""
-              },
-              res => {
-                this.provinceList = [];
-                if (res && res.length) {
-                  for (let i = 0; i < res.length; i++) {
-                    this.provinceList.push({
-                      label: res[i].areaName,
-                      value: res[i].id
-                    });
-                  }
+          let keys = Object.keys(res);
+          keys.forEach(item => {
+            this.brandList.push({
+              label: res[item],
+              value: item
+            });
+          });
+          this.formData.groupId = this.brandList[0].value;
+          this.init();
+          this.Global.doPostNoLoading(
+            "queryGroupArea.json",
+            {
+              groupId: this.formData.groupId,
+              areaCode: ""
+            },
+            res => {
+              this.provinceList = [];
+              if (res && res.length) {
+                for (let i = 0; i < res.length; i++) {
+                  this.provinceList.push({
+                    label: res[i].areaName,
+                    value: res[i].id
+                  });
                 }
               }
-            );
-          }
+            }
+          );
+          // }
           this.activityList = [];
           queryActivityVOByGroupId(this.formData.groupId).then(res => {
             if (res && res.status == 1) {
@@ -343,6 +362,62 @@ export default {
         }
       }
     );
+    // this.Global.doPostNoLoading(
+    //   "displayYxtg/queryDisplayYxtgActivityGroupList.json",
+    //   {
+    //     brandList: brandIdList,
+    //     groupType: 3
+    //   },
+    //   res => {
+    //     this.brandList = [];
+    //     if (res) {
+    //       if (res.datalist && res.datalist.length) {
+    //         for (let i = 0; i < res.datalist.length; i++) {
+    //           this.brandList.push({
+    //             label: res.datalist[i].groupName,
+    //             value: res.datalist[i].id
+    //           });
+    //         }
+    //         this.formData.groupId = this.brandList[0].value;
+    //         this.init();
+    //         this.Global.doPostNoLoading(
+    //           "queryGroupArea.json",
+    //           {
+    //             groupId: this.formData.groupId,
+    //             areaCode: ""
+    //           },
+    //           res => {
+    //             this.provinceList = [];
+    //             if (res && res.length) {
+    //               for (let i = 0; i < res.length; i++) {
+    //                 this.provinceList.push({
+    //                   label: res[i].areaName,
+    //                   value: res[i].id
+    //                 });
+    //               }
+    //             }
+    //           }
+    //         );
+    //       }
+    //       this.activityList = [];
+    //       queryActivityVOByGroupId(this.formData.groupId).then(res => {
+    //         if (res && res.status == 1) {
+    //           if (res.data && res.data.length) {
+    //             for (let i = 0; i < res.data.length; i++) {
+    //               this.activityList.push({
+    //                 label: res.data[i].name,
+    //                 value: res.data[i].id
+    //               });
+    //             }
+    //           } else {
+    //             this.activityList = [];
+    //             // this.$Message.error("该活动包名下暂无活动");
+    //           }
+    //         }
+    //       });
+    //     }
+    //   }
+    // );
   },
 
   mounted() {

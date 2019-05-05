@@ -51,32 +51,6 @@
 .ivu-radio-wrapper {
   margin-right: 30px;
 }
-.searchBox {
-  overflow: hidden;
-  .search-left,
-  .search-right {
-    width: 50%;
-  }
-  .search-left {
-    button {
-      outline: none;
-      border: none;
-      width: 60px;
-      height: 30px;
-      line-height: 30px;
-      background: #ffffff;
-      margin-left: 8px;
-      cursor: pointer;
-      color: @primary-color;
-    }
-  }
-  .search-right {
-    img {
-      cursor: pointer;
-      margin-left: 10px;
-    }
-  }
-}
 .myModal {
   position: absolute;
   width: 100%;
@@ -383,20 +357,6 @@ export default {
         }
       });
     },
-    showDetail() {
-      this.myModalisShow = true;
-    },
-    formateTime(time) {
-      return new Date(Number(time)).pattern("yyyy-MM-dd-hh");
-    },
-    submit(name) {
-      if (!this.formData.brandId) {
-        this.$Message.error("品牌不能为空");
-        return false;
-      }
-      this.page = 1;
-      this.init(this.page, 10);
-    },
     changePage(size) {
       this.init(size, 10);
     },
@@ -422,5 +382,3 @@ export default {
   }
 };
 </script>
-
-

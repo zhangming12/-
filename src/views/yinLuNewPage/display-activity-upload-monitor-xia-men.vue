@@ -224,7 +224,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="queryStartTime">
+              <Form-item>
                 <data-range
                   hour="00:00"
                   v-model="formData.queryStartTime"
@@ -233,7 +233,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="queryEndTime">
+              <Form-item>
                 <data-range
                   hour="24:00"
                   placeholder="结束时间"

@@ -161,7 +161,7 @@
               </Select>
             </Form-item>
 
-            <Form-item label="时间" prop="queryStartTime">
+            <Form-item label="时间"  >
               <Select
                 v-model="formData.queryStartTime"
                 placeholder="请选择"

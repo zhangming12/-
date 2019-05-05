@@ -110,12 +110,12 @@ span.btn {
         <Form ref="form" class="form" :model="formData" :label-width="10" :rules="rule">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item prop="queryStartTime" required>
+              <Form-item   required>
                 <DatePicker type="date" v-model="formData.queryStartTime" placeholder="开始时间"></DatePicker>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="queryEndTime" required>
+              <Form-item   required>
                 <DatePicker type="date" v-model="formData.queryEndTime" placeholder="结束时间"></DatePicker>
               </Form-item>
             </div>
