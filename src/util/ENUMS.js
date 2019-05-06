@@ -43,14 +43,6 @@ export let dispalyShowStatus = {
         '3': '未开始',
         '4': '已结束'
     }
-    //陈列活动参与明细 —— 审核意见
-export let dispalyExamineSuggesteStatus = {
-        '0': '未审核',
-        '1': '通过',
-        '2': '不通过',
-        '3': '二次审核通过',
-        '4': '退回',
-    }
     //陈列活动 陈列申请状态 
 export let displayApplyStatus = {
     '0': '未审核',

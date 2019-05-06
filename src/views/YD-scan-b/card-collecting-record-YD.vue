@@ -121,24 +121,13 @@ span.btn {
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
-                <data-range
-                  @dataChange="startTimeChange"
-                  placeholder="筛选开始时间"
-                  hour="00:00"
-                  :time="formData.queryStartTime"
-                  start
-                ></data-range>
+              <Form-item required>
+                <data-range placeholder="筛选开始时间" hour="00:00" v-model="formData.queryStartTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
-                <data-range
-                  hour="24:00"
-                  placeholder="筛选结束时间"
-                  @dataChange="endTimeChange"
-                  :time="formData.queryEndTime"
-                ></data-range>
+              <Form-item required>
+                <data-range hour="24:00" placeholder="筛选结束时间" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
@@ -200,7 +189,7 @@ span.btn {
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import area from "@/config/china_code_data.js";
 import exportBtn from "@/components/Button/export-btn.vue";
@@ -214,14 +203,6 @@ export default {
     return {
       showQuery: false,
       noneStatus: false,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME
@@ -328,29 +309,6 @@ export default {
     );
   },
   methods: {
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        this.formData.queryEndTime = value.time;
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     //根据品牌查询活动包
     changeValue(value) {
       this.groupList = [];
@@ -380,32 +338,7 @@ export default {
     exportExcel() {
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
-      if (this.formData.queryStartTime) {
-        data["queryStartTime"] = this.Global.createTime(
-          this.formData.queryStartTime
-        );
-        if (this.start.hour == "24:00") {
-          data["queryStartTime"] = this.Global.setHoursData(
-            this.start.time,
-            this.start.hour
-          );
-        }
-      } else {
-        delete data["queryStartTime"];
-      }
-      if (this.formData.queryEndTime) {
-        data["queryEndTime"] = this.Global.createTime(
-          this.formData.queryEndTime
-        );
-        if (this.end.hour == "24:00") {
-          data["queryEndTime"] = this.Global.setHoursData(
-            this.end.time,
-            this.end.hour
-          );
-        }
-      } else {
-        delete data["queryEndTime"];
-      }
+
       var url = this.Global.getExportUrl(
         "collect/collectCardsExport.json",
         data
@@ -417,44 +350,13 @@ export default {
       var data = this.Global.JsonChange(this.formData);
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
-      if (this.formData.queryStartTime) {
-        data["queryStartTime"] = this.Global.createTime(
-          this.formData.queryStartTime
-        );
-        if (this.start.hour == "24:00") {
-          data["queryStartTime"] = this.Global.setHoursData(
-            this.start.time,
-            this.start.hour
-          );
-        }
-      } else {
-        delete data["queryStartTime"];
-      }
-      if (this.formData.queryEndTime) {
-        data["queryEndTime"] = this.Global.createTime(
-          this.formData.queryEndTime
-        );
-        if (this.end.hour == "24:00") {
-          data["queryEndTime"] = this.Global.setHoursData(
-            this.end.time,
-            this.end.hour
-          );
-        }
-      } else {
-        delete data["queryEndTime"];
-      }
+
       this.Global.deleteEmptyProperty(data);
       this.Global.doPost("collect/collectCardsByStore.json", data, res => {
         this.noneStatus = true;
         this.pageNum = res.items;
         this.page = res.page;
         this.pageData = res.datalist;
-        for (let i = 0, len = res.datalist.length; i < len; i++) {
-          res.datalist[i].time =
-            this.Global.createTime(res.datalist[i].showStartTime) +
-            "至" +
-            this.Global.createTime(res.datalist[i].showEndTime);
-        }
       });
     }
   }

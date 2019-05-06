@@ -75,24 +75,14 @@
             <Form-item label="提交时间">
               <Row>
                 <Col span="11">
-                  <Form-item  >
-                    <data-range
-                      @dataChange="startTimeChange"
-                      hour="00:00"
-                      :time="formData.queryStartTime"
-                      start
-                    ></data-range>
+                  <Form-item>
+                    <data-range hour="00:00" v-model="formData.queryStartTime"></data-range>
                   </Form-item>
                 </Col>
                 <Col span="2" style="text-align: center;">至</Col>
                 <Col span="11">
-                  <Form-item  >
-                    <data-range
-                      hour="24:00"
-                      placeholder="结束时间"
-                      @dataChange="endTimeChange"
-                      :time="formData.queryEndTime"
-                    ></data-range>
+                  <Form-item>
+                    <data-range hour="24:00" placeholder="结束时间" v-model="formData.queryEndTime"></data-range>
                   </Form-item>
                 </Col>
               </Row>
@@ -249,7 +239,7 @@ import {
   protocolIsSodaSales //汽水销售权
 } from "@/util/ENUMS.js";
 
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import config from "@/util/config.js";
@@ -265,14 +255,6 @@ export default {
   },
   data() {
     return {
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME,
@@ -285,7 +267,6 @@ export default {
         busiDept: "",
         signAttr: "",
         checkStatus: "0"
-        // queryTime: [ EDFAULT_STARTTIME , EDFAULT_ENDTIME ]
       },
       protocolStatus,
       protocolBapChannel,
@@ -747,28 +728,6 @@ export default {
     }
   },
   methods: {
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     formDataInit() {
       this.formData.queryStartTime = EDFAULT_STARTTIME;
       this.formData.queryEndTime = EDFAULT_ENDTIME;
@@ -781,9 +740,8 @@ export default {
       this.formData.salesRoute = "";
       this.formData.busiDept = "";
       this.formData.signAttr = "";
-      // this.formData.checkStatus = '';
     },
-    submit: function(name) {
+    submit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.page = 1;
@@ -793,36 +751,16 @@ export default {
         }
       });
     },
-    changePage: function(size) {
+    changePage(size) {
       this.init(size, 10);
     },
-    init: function(currentPage, pageSize) {
+    init(currentPage, pageSize) {
       var data = this.Global.JsonChange(this.formData);
-      data["queryStartTime"] = this.Global.createTime(
-        this.formData.queryStartTime
-      );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
-      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = currentPage;
       data["pageSize"] = pageSize;
-      delete data.queryTime;
-      console.log(data);
       if (this.examineType == "director") {
         queryBrandStoreSignProtFirstList(data).then(res => {
-          console.log(res);
           if (res && res.status === 1) {
             this.pageNum = res.data.items;
             this.page = res.data.page;
@@ -839,13 +777,13 @@ export default {
         });
       }
     },
-    exportExcel: function() {
+    exportExcel() {
       const url =
         "https://hbrand.oss-cn-hangzhou.aliyuncs.com/demo/displayRetailPurchases.xlsx";
       window.open(url);
     },
 
-    uploadExcel: function() {
+    uploadExcel() {
       if (!this.uploadUrl) {
         this.$Message.error("请核实上传文件");
         return false;
@@ -883,28 +821,9 @@ export default {
       this.uploadUrl = val;
       this.wordUploadFlag = val1;
     },
-    exportExcel: function() {
+    exportExcel() {
       var data = this.Global.JsonChange(this.formData);
-      data["queryStartTime"] = this.Global.createTime(
-        this.formData.queryStartTime
-      );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
-      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
-      delete data.queryTime;
-      console.log(data);
       var url = this.Global.getExportUrl(
         "brandStoreSign/brandStoreSignProtExport.json",
         data

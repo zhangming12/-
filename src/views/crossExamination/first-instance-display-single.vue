@@ -37,7 +37,6 @@
     right: 10px;
   }
   .box {
-    // overflow: hidden;
     .card {
       border: 1px solid #e5e5e5;
       float: left;
@@ -47,7 +46,6 @@
       border-radius: 2px;
       margin-bottom: 10px;
       .card-top {
-        // height: 530px;
         box-sizing: border-box;
         padding: 10px 0;
         position: relative;
@@ -88,13 +86,9 @@
             .video {
               width: 100%;
               height: 213px;
-              //   display: flex;
-              //   justify-content: center;
-
               .video-main {
                 width: 250px;
                 position: relative;
-                // height: 213px;
                 video {
                   width: 250px;
                   height: 213px;
@@ -114,11 +108,6 @@
             .item-box {
               line-height: 36px;
               font-size: 12px;
-              // p {
-              // overflow: hidden;
-              // text-overflow: ellipsis;
-              // white-space: nowrap;
-              // }
               & > p {
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -143,7 +132,6 @@
     }
   }
 }
-
 #goodsStausShow {
   .ivu-form-item {
     margin-bottom: 12px;
@@ -151,7 +139,6 @@
   #examine-right {
     margin: 0 auto 10px;
     padding: 14px;
-    // box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
     width: 500px;
     span {
       display: block;
@@ -204,7 +191,6 @@
 }
 .container-status {
   overflow: hidden;
-  // float: left;
   margin-top: 3px;
   line-height: 28px;
   margin-bottom: 10px;
@@ -296,24 +282,13 @@
         <Form ref="form" :model="formData" :label-width="10">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item  >
-                <data-range
-                  @dataChange="startTimeChange"
-                  placeholder="申请开始时间"
-                  hour="00:00"
-                  :time="formData.queryStartTime"
-                  start
-                ></data-range>
+              <Form-item>
+                <data-range placeholder="申请开始时间" hour="00:00" v-model="formData.queryStartTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item  >
-                <data-range
-                  hour="24:00"
-                  placeholder="申请结束时间"
-                  @dataChange="endTimeChange"
-                  :time="formData.queryEndTime"
-                ></data-range>
+              <Form-item>
+                <data-range hour="24:00" placeholder="申请结束时间" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
@@ -563,14 +538,6 @@
                         </div>
                       </Col>
                       <Col span="23">
-                        <!-- <div class="item-box">
-                                        <span class="status">合格分项:</span>
-                                        <RadioGroup  v-model="item.status" @on-change="radioChange"> 
-                                            <Radio :label="index + '-1'">必备包装合格</Radio>
-                                            <Radio :label="index + '-2'">全部SKU数合格</Radio>
-                                            <Radio :label="index + '-3'">货架牌面数合格</Radio>
-                                        </RadioGroup>
-                        </div>-->
                         <div class="item-box" v-if="item.isOpenCheck == 1">
                           <check-look
                             :position="getPosition(index)"
@@ -626,11 +593,6 @@
         </CheckboxGroup>
       </div>
       <div class="noData" v-else>暂无数据</div>
-      <!-- <div class="page-box">
-            <div style="float: right;">
-                <Page :total="pageNum" :page-size='pageSize' :current="page" @on-change="changePage"></Page>
-            </div>
-      </div>-->
     </div>
     <Modal
       v-model="goodsStausShow"
@@ -660,7 +622,7 @@
             <FormItem label="审核意见:" :label-width="70">
               <Input @on-change="wordFilter" v-model="checkMessage"></Input>
             </FormItem>
-            <RadioGroup v-model="checkMessage" vertical class="radio" @on-change="wordChange">
+            <RadioGroup v-model="checkMessage" vertical class="radio">
               <Radio
                 v-if="i < 10"
                 v-for="(val,i) in displayExamineWordList"
@@ -710,17 +672,13 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import checkLook from "@/components/checkLook/check-look.vue";
 import myTooltip from "@/components/tooltip/tooltip.vue";
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import imageLook from "@/components/imgLook/img-look.vue";
 export default {
   name: "first-instance-display-single-keepAlive",
@@ -751,14 +709,6 @@ export default {
       ruleBoxData: [], //规则框数据
       ruleBox: [], //规则框是否显示
       saveData: {},
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME,
@@ -898,7 +848,6 @@ export default {
       );
     }
   },
-  mounted() {},
   watch: {
     "formItem.checkStatus"(val) {
       if (val == 2001 || val == 1001) {
@@ -946,23 +895,6 @@ export default {
         return;
       }
       var data = this.Global.JsonChange(this.formData);
-      data["queryStartTime"] = this.Global.createTime(
-        this.formData.queryStartTime
-      );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
-      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = 1;
       data["pageSize"] = this.pageSize;
@@ -1009,10 +941,6 @@ export default {
     },
     riskShow() {
       this.riskIsShow = true;
-    },
-    wordChange(val) {
-      if (val) {
-      }
     },
     getWeek(start, end) {
       return `${this.formatTime(start)}至${this.formatTime(end)}`;
@@ -1083,12 +1011,6 @@ export default {
         return item.content.indexOf(val) != -1;
       });
     },
-    aiStatusChange(val) {
-      if (val == 1002 || val == 1003 || val == 2 || val == 3) {
-        this.goodsStausShow = true;
-      }
-    },
-
     changeValue(value) {
       this.groupList = [];
       this.formData.groupId = "";
@@ -1124,65 +1046,17 @@ export default {
       this.page = 1;
       this.init();
     },
-    // changePage(size) {
-    //   this.page = size;
-    //   this.init();
-    // },
-    createTime(val) {
-      var time = this.Global.createTime(val);
-      return time;
-    },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     init() {
       if (!this.formData.groupId) {
         this.$Message.error("活动包不能为空");
         return;
       }
       var data = this.Global.JsonChange(this.formData);
-      data["queryStartTime"] = this.Global.createTime(
-        this.formData.queryStartTime
-      );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
-      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = 1;
       data["pageSize"] = this.pageSize;
       data["brandId"] = this.formData.brandId;
       data["level"] = 1;
-      // queryAcrossAudit.json
       this.Global.doPost(
         "displayYxtg/queryAcrossAuditByUpdatedVersion.json",
         data,
@@ -1208,30 +1082,13 @@ export default {
             });
           }
           this.pageNum = res.items;
-          // this.page = res.page;
         }
       );
-      // this.queryAuditNum();
     },
     getPosition(index) {
       if (!index) return "right";
       if (index % 2 == 0) return "right";
       else return "left";
-    },
-    setStatus(val, flag, index) {
-      if (val == 0) {
-        return;
-      }
-      if (val == 1001 || val == 2001 || val == 1) {
-        val = 1001;
-      }
-      if (val == 1002 || val == 2) {
-        val = 1002;
-      }
-      if (val == 1003 || val == 3) {
-        val = 1003;
-      }
-      return `${index}-${flag}-${val}`;
     },
     handleLookDetail(val, flag) {
       let { id, activityId, storeId } = val;
@@ -1381,11 +1238,6 @@ export default {
             this.storeGoodsList[social[i]].checkProject
           );
           let len = 0;
-          // let arrr = entries.forEach(item => {
-          //   if(item){
-          //     len ++
-          //   }
-          // })
           for (let i = 0; i < entries.length; i++) {
             len += entries[i];
           }
@@ -1444,7 +1296,6 @@ export default {
           if (this.storeGoodsList.length == 0) {
             this.init();
           } else {
-            // this.queryAuditNum();
           }
           window.scrollTo(0, 0);
         }
@@ -1459,15 +1310,6 @@ export default {
         str = "门店";
       } else if (val == "worker") {
         str = "业务员";
-      }
-      return str;
-    },
-    skufilter(val) {
-      let str = "";
-      if (val == 1) {
-        str = "/合格";
-      } else if (val == 2) {
-        str = "/不合格";
       }
       return str;
     },

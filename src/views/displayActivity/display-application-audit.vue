@@ -293,7 +293,6 @@
 <script>
 import area from "@/config/china_code_data.js";
 
-import { dispalyExamineSuggesteStatus } from "@/util/ENUMS.js";
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import detailBtn from "@/components/Button/detail-btn.vue";

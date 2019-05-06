@@ -529,7 +529,7 @@ export default {
       var phone = PHONE;
       this.disabledStatus = true;
       var time = 60;
-      this.Global.doPost("liquidate/getTokenAndAuthCode.json", {}, res => {
+      this.Global.doPost("liquidate/getTokenAndAuthCode.json", "", res => {
         this.Global.TimeDown(
           time,
           t => {
@@ -711,10 +711,6 @@ export default {
           Object.entries(res).forEach(item => {
             this.groupList.push({ id: Number(item[0]), groupName: item[1] });
           });
-          // if (this.groupList && this.groupList.length) {
-          //   this.formData.groupId = this.groupList[0].id;
-          //   this.getActivityList(this.formData.groupId);
-          // }
         }
       );
     },

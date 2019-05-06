@@ -97,12 +97,6 @@ import "echarts/map/js/china.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 
 import guangdong from "@/assets/4401001.json";
-
-import {
-  signLightMap,
-  signLightMap1,
-  cnySignCount
-} from "@/api/activity-manage/display-activity-manage.js";
 export default {
   data() {
     return {
@@ -545,40 +539,6 @@ export default {
         }
         this.drawLine(geoCoordMap, arrList);
       });
-      //   signLightMap1(dataList).then(res => {
-      //     if (res.data && res.status === 1) {
-      //       let dataList = res.data;
-      //       let geoCoordMap = {};
-      //       let arrList = [];
-      //       for (var x of dataList) {
-      //         let signLocate = x.signLocate.split(",").reverse();
-      //         signLocate[0] = Number(signLocate[0]);
-      //         signLocate[1] = Number(signLocate[1]);
-      //         geoCoordMap[x.signName] = signLocate;
-      //         let obj = {};
-      //         let signName = x.signName;
-      //         obj["name"] = x.signName;
-      //         obj["value1"] = x.signStatus; //计划签到   1已签到 0未签到
-      //         obj["value2"] = x.actuallyCount; //实际签到
-      //         arrList.push(obj);
-      //       }
-      //       this.drawLine(geoCoordMap, arrList);
-      //     }
-      //   });
-      //   cnySignCount(dataList).then(res => {
-      //     if (res.data && res.status === 1) {
-      //       this.todaySignCount = res.data;
-      //       let planCount = 0;
-      //       let actuallyCount = 0;
-
-      //       for (const key of res.data) {
-      //         planCount += key.planCount;
-      //         actuallyCount += key.actuallyCount;
-      //       }
-      //       this.planCount = planCount;
-      //       this.actuallyCount = actuallyCount;
-      //     }
-      //   });
     }
   }
 };

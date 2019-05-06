@@ -27,7 +27,6 @@
 .table-box {
   padding: 0 10px;
   min-height: 500px;
-  // padding-bottom: 60px;
   position: relative;
   .numColor {
     color: @primary-color;
@@ -150,24 +149,13 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
-                <data-range
-                  placeholder="领取/记账开始时间"
-                  @dataChange="startTimeChange"
-                  hour="00:00"
-                  :time="formData.queryStartTime"
-                  start
-                ></data-range>
+              <Form-item required>
+                <data-range placeholder="领取/记账开始时间" hour="00:00" v-model="formData.queryStartTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
-                <data-range
-                  hour="24:00"
-                  placeholder="领取/记账结束时间"
-                  @dataChange="endTimeChange"
-                  :time="formData.queryEndTime"
-                ></data-range>
+              <Form-item required>
+                <data-range hour="24:00" placeholder="领取/记账结束时间" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
@@ -291,7 +279,6 @@
       <div slot="main" class="modal-main">
         <h3>提示</h3>
         <div class="modal-table">
-          <!-- <p style="text-align:center;">{{ str }}的范围超过31天，请缩小查询范围或者前往【历史数据】中下载历史数据</p> -->
           <p style="text-align:center;">查询的范围超过31天，请缩小查询范围或者【导出】查看</p>
         </div>
         <div class="maintain-footer">
@@ -311,14 +298,13 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import refreshBtn from "@/components/Button/refresh-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import hhTable from "@/components/table/table.vue";
 import area from "@/config/china_code_data.js";
 import yearSelect from "@/components/year-select.vue";
-import DEV_CONFIG from "@/util/config.js";
 export default {
   name: "gdkl-capital-flow-records-keepAlive",
   data() {
@@ -516,14 +502,6 @@ export default {
         }
       ],
       showQuery: false,
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: "",
-        hour: "24:00"
-      },
       page: 1,
       pageSize: 10,
       groupList: [],
@@ -616,7 +594,6 @@ export default {
                   props: {
                     type: "text",
                     size: "small",
-                    // disabled: params.row.result == "NotDown"
                     disabled: params.row.result != "Down"
                   },
                   style: {
@@ -630,8 +607,6 @@ export default {
                         params.row.fileUrl
                       );
                       window.open(url);
-                      // let url = DEV_CONFIG.downloadServer + params.row.fileUrl;
-                      // window.open(url);
                     }
                   }
                 },
@@ -741,7 +716,6 @@ export default {
     },
     goToHistory() {
       this.closeModal();
-      // this.timeModalShow = false;
       this.submit("export");
       this.$nextTick(() => {
         this.myModalisShow = true;
@@ -751,17 +725,6 @@ export default {
       this.timeModalShow = false;
       this.historyShow = false;
       this.myModalisShow = false;
-    },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
     },
     getActivityList(value) {
       this.groupList.forEach(item => {
@@ -781,21 +744,6 @@ export default {
           });
         }
       );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        this.formData.queryEndTime = value.time;
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    formateTime(time) {
-      return new Date(Number(time)).pattern("yyyy-MM-dd-hh");
     },
     submit(type) {
       if (!this.formData.queryStartTime) {
@@ -840,23 +788,6 @@ export default {
       }
       data["queryType"] = queryType;
       delete data["brandId"];
-      data["queryStartTime"] = this.Global.createTime(
-        this.formData.queryStartTime
-      );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
-      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
 
       if (
         !this.formData.userId &&
@@ -926,23 +857,6 @@ export default {
     exportExcel() {
       this.str = "导出";
       var data = this.Global.JsonChange(this.formData);
-      data["queryStartTime"] = this.Global.createTime(
-        this.formData.queryStartTime
-      );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
-      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       let arr = this.formData.brandId.split(",");
       let brandIds = arr.map(item => parseInt(item, 10));
       let queryType = 2;

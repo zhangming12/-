@@ -7,11 +7,6 @@
   padding-bottom: 0;
   background: #fff;
 }
-
-.ivu-table-row {
-  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1) !important;
-  transform: translateY(0px);
-}
 .form {
   position: relative;
   display: flex;
@@ -44,42 +39,6 @@
         margin-right: 2px;
       }
     }
-  }
-  .upDate {
-    float: right;
-    border: 1px solid #aeaeae;
-    padding: 2px 12px;
-    margin-right: 10px;
-    margin-top: 4px;
-    color: #333;
-  }
-  .demo {
-    float: right;
-    color: @primary-color;
-    height: 30px;
-    line-height: 30px;
-    cursor: pointer;
-    margin-right: 20px;
-    span {
-      text-decoration: underline;
-    }
-  }
-}
-
-.searchBox {
-  overflow: hidden;
-  .search_btn {
-    float: left;
-    width: 50px;
-    padding: 5px 14px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .search_icon {
-    float: left;
-    padding: 5px 10px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
   }
 }
 .myModal {
@@ -120,22 +79,6 @@
         text-align: center;
       }
     }
-  }
-}
-.demo {
-  color: @primary-color;
-  margin-left: 20px;
-  cursor: pointer;
-}
-.sitem {
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: row;
-}
-.table-box {
-  .btns {
-    text-align: right;
-    margin: 10px;
   }
 }
 .moreBox {
@@ -286,7 +229,13 @@
       <div slot="main" class="modal-main">
         <h3>抽检率</h3>
         <div class="rate-box">
-          <InputNumber :max="100" :min="1" placeholder="抽检率" style="display:block;width:100%;"></InputNumber>
+          <InputNumber
+            v-model.trim.number="samplingRate"
+            :max="100"
+            :min="0"
+            placeholder="抽检率"
+            style="display:block;width:100%;"
+          ></InputNumber>
           <span>%</span>
         </div>
         <div class="team-footer">
@@ -312,6 +261,7 @@ export default {
     return {
       showRate: false,
       noneStatus: false,
+      samplingRate: null, //抽检率
       formData: {
         brandId: "",
         groupId: ""

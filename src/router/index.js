@@ -182,16 +182,12 @@ export const routers = [{
                 component: _import('salesman/list')
             },
             {
-                // ——————————————————————————————————————————
-                // //////////////////////
                 path: '/salesmanEdd',
                 name: 'salesmanEdd',
                 title: '业代推广活动新建',
                 component: _import('salesman/edd')
             },
             {
-                // ——————————————————————————————————————————
-                // //////////////////////
                 path: '/salesmanNext',
                 name: 'salesmanNext',
                 title: '关联业代',

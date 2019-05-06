@@ -150,7 +150,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
+              <Form-item required>
                 <data-range
                   placeholder="上传时间查询范围"
                   @dataChange="startTimeChange"
@@ -161,7 +161,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
+              <Form-item required>
                 <data-range
                   hour="24:00"
                   placeholder="上传时间查询范围"
@@ -253,7 +253,6 @@
             共查询到
             <span class="numColor">{{pageNum}}</span> 条记录
           </span>
-
         </div>
         <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
       </div>
@@ -328,7 +327,6 @@ import refreshBtn from "@/components/Button/refresh-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import hhTable from "@/components/table/table.vue";
 import area from "@/config/china_code_data.js";
-import yearSelect from "@/components/year-select.vue";
 import DEV_CONFIG from "@/util/config.js";
 export default {
   name: "display-risk-record-keepAlive",
@@ -415,28 +413,12 @@ export default {
           key: "riskSource",
           align: "center",
           tooltip: true
-          // render: (h, params) => {
-          //   let str = "";
-          //   if (params.row.riskSource == "M") {
-          //     str = "自动";
-          //   } else if (params.row.riskSource == "H") {
-          //     str = "人工";
-          //   }
-          //   return h("div", str);
-          // }
         },
         {
           title: "风险类型",
           key: "riskType",
           align: "center",
           tooltip: true
-          // render: (h, params) => {
-          //   let str = "";
-          //   if (params.row.riskType == "V") {
-          //     str = "视频异常";
-          //   }
-          //   return h("div", str);
-          // }
         },
         {
           title: "风险描述",
@@ -664,7 +646,6 @@ export default {
     dataRange,
     myModal,
     hhTable,
-    yearSelect,
     refreshBtn
   },
   created() {

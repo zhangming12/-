@@ -142,7 +142,7 @@
       <Form ref="form" :model="formData" :label-width="80" :rules="rule">
         <Row>
           <Col span="12">
-            <Form-item label="上传时间:" required prop="queryTime">
+            <Form-item label="上传时间:" required>
               <Row>
                 <Col span="11">
                   <Form-item>
@@ -293,8 +293,7 @@ export default {
         queryEndTime: EDFAULT_ENDTIME,
         brandId: "",
         groupId: "",
-        activityId: "",
-        queryTime: [EDFAULT_STARTTIME, EDFAULT_ENDTIME]
+        activityId: ""
       },
       rule: {
         queryStartTime: [{ validator: validateStart }],
@@ -353,14 +352,6 @@ export default {
     },
     init() {
       var data = this.Global.JsonChange(this.formData);
-
-      data["queryStartTime"] = this.Global.createTime(
-        this.formData.queryStartTime
-      );
-
-      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-
-      delete data.queryTime;
       this.Global.deleteEmptyProperty(data);
 
       displayRankingShow(data).then(res => {
@@ -391,12 +382,7 @@ export default {
     },
     displayRateExport() {
       var data = this.Global.JsonChange(this.formData);
-      data["queryStartTime"] = this.Global.createTime(
-        this.formData.queryStartTime
-      );
-      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
       this.Global.deleteEmptyProperty(data);
-      delete data.queryTime;
       var url = this.Global.getExportUrl(
         "report/displayRankingShowExport.json",
         data

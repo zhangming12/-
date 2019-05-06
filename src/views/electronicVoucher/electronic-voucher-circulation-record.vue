@@ -128,127 +128,146 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">电子劵流通记录</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" :model="formData" :label-width="10">
-              <div class="container">
-                    <div class="btn-left w18">
-                        <Form-item required prop="brandId">
-                            <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue">
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item    required>
-                            <data-range @dataChange="startTimeChange" placeholder="交易时间查询范围" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item    required>
-                            <data-range hour="24:00" placeholder="交易时间查询范围" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item required prop="merchantId">
-                            <Select v-model="formData.merchantId" placeholder="请选择经销商" clearable>
-                                <Option :value="item.id" v-for="(item,index) in distributorList" :key="index">{{ item.merchantName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                      <Form-item required>
-                        <Input v-model.trim="formData.storeId" placeholder="用户归属"></Input>
-                      </Form-item>
-                    </div>
-                    <div class="btn-left w10">
-                      <div class="searchBox">
-                        <div class="btn-left search-left" @click="showQuery=!showQuery">
-                          <button type="button">
-                              {{showQuery?'收起':'更多'}}
-                              <Icon type="ios-arrow-down" size="14" style="margin-top:-2px;" v-if="!showQuery"/>
-                              <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
-                          </button>
-                        </div>
-                        <div class="btn-right search-right" @click="submit('search')">
-                          <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                        </div>
-                      </div>
-                    </div>
-              </div>
-              <transition name="fade">
-                <div class="container" v-if="showQuery">
-                  <div class="btn-left w18">
-                    <Form-item required>
-                        <Input v-model.trim="formData.voucherNo" placeholder="电子劵号"></Input>
-                    </Form-item>
-                  </div>
+    <!-- <h2 class="Title">电子劵流通记录</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required prop="brandId">
+                <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <data-range
+                  @dataChange="startTimeChange"
+                  placeholder="交易时间查询范围"
+                  hour="00:00"
+                  :time="formData.queryStartTime"
+                  start
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <data-range
+                  hour="24:00"
+                  placeholder="交易时间查询范围"
+                  @dataChange="endTimeChange"
+                  :time="formData.queryEndTime"
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required prop="merchantId">
+                <Select v-model="formData.merchantId" placeholder="请选择经销商" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in distributorList"
+                    :key="index"
+                  >{{ item.merchantName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <Input v-model.trim="formData.storeId" placeholder="用户归属"></Input>
+              </Form-item>
+            </div>
+            <div class="btn-left w10">
+              <div class="searchBox">
+                <div class="btn-left search-left" @click="showQuery=!showQuery">
+                  <button type="button">
+                    {{showQuery?'收起':'更多'}}
+                    <Icon
+                      type="ios-arrow-down"
+                      size="14"
+                      style="margin-top:-2px;"
+                      v-if="!showQuery"
+                    />
+                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
+                  </button>
                 </div>
-              </transition>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">共查询到 <span class='numColor'>{{ pageNum }}</span> 条记录</span>
-              
-              <exportBtn  class="btn-right" @btnClick="submit('export')" title="导出"/>
+                <div class="btn-right search-right" @click="submit('search')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+                </div>
+              </div>
             </div>
-            <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" ></hhTable>
-            
-        </div>
-        <div class="page-box">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+          </div>
+          <transition name="fade">
+            <div class="container" v-if="showQuery">
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input v-model.trim="formData.voucherNo" placeholder="电子劵号"></Input>
+                </Form-item>
+              </div>
             </div>
+          </transition>
+        </Form>
+      </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            共查询到
+            <span class="numColor">{{ pageNum }}</span> 条记录
+          </span>
+
+          <exportBtn class="btn-right" @btnClick="submit('export')" title="导出"/>
+        </div>
+        <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      
-      <!-- 导入导出历史 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="myModalisShow"
-            width=800>
-          <div slot="main" class="modal-main">
-            <!-- <h3>近一周导出历史</h3> -->
-            <div class="modal-table" style="margin-top:0;">
-              <div class="modal-table-top">
-                <span class="btn-left"><Icon type="md-alert" size="22" style="margin-right:5px;" />生成的数据报表可在【导出暂存】中保留7天,过期自动删除</span>
-                <refreshBtn @click.native="queryhistoryData" class="btn-right"/>
-              </div>
-              <!-- <hhTable :columns="columns" :pageData="historyData"  disabled-hover></hhTable> -->
-              <Table :columns="columns" :data="historyData"  disabled-hover></Table>
-            </div>
-          </div>
-       </myModal>
+    </div>
 
-       <!-- 时间溢出弹窗 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="timeModalShow">
-          <div slot="main" class="modal-main">
-            <h3>提示</h3>
-            <div class="modal-table">
-                <!-- <p style="text-align:center;">{{ str }}的范围超过31天，请缩小查询范围或者前往【历史数据】中下载历史数据</p> -->
-                <p style="text-align:center;">查询的范围超过31天，请缩小查询范围或者【导出】查看</p>
-            </div>
-            <div class="maintain-footer">
-                <Button @click="closeModal" type="text">知道了</Button>
-                <Button @click="goToHistory" style="color:#ff8a34;" type="text">导出</Button>
-            </div>
+    <!-- 导入导出历史 -->
+    <myModal class="myModal" @close="closeModal" :modal="myModalisShow" width="800">
+      <div slot="main" class="modal-main">
+        <!-- <h3>近一周导出历史</h3> -->
+        <div class="modal-table" style="margin-top:0;">
+          <div class="modal-table-top">
+            <span class="btn-left">
+              <Icon type="md-alert" size="22" style="margin-right:5px;"/>生成的数据报表可在【导出暂存】中保留7天,过期自动删除
+            </span>
+            <refreshBtn @click.native="queryhistoryData" class="btn-right"/>
           </div>
-       </myModal>
+          <!-- <hhTable :columns="columns" :pageData="historyData"  disabled-hover></hhTable> -->
+          <Table :columns="columns" :data="historyData" disabled-hover></Table>
+        </div>
+      </div>
+    </myModal>
 
-       <!-- 历史数据 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="historyShow"
-            width=800>
-          <div slot="main" class="modal-main" style="padding:0;">
-            <yearSelect :yearDataList="yearMonthData" />
-          </div>
-       </myModal>
+    <!-- 时间溢出弹窗 -->
+    <myModal class="myModal" @close="closeModal" :modal="timeModalShow">
+      <div slot="main" class="modal-main">
+        <h3>提示</h3>
+        <div class="modal-table">
+          <!-- <p style="text-align:center;">{{ str }}的范围超过31天，请缩小查询范围或者前往【历史数据】中下载历史数据</p> -->
+          <p style="text-align:center;">查询的范围超过31天，请缩小查询范围或者【导出】查看</p>
+        </div>
+        <div class="maintain-footer">
+          <Button @click="closeModal" type="text">知道了</Button>
+          <Button @click="goToHistory" style="color:#ff8a34;" type="text">导出</Button>
+        </div>
+      </div>
+    </myModal>
 
+    <!-- 历史数据 -->
+    <myModal class="myModal" @close="closeModal" :modal="historyShow" width="800">
+      <div slot="main" class="modal-main" style="padding:0;">
+        <yearSelect :yearDataList="yearMonthData"/>
+      </div>
+    </myModal>
   </div>
 </template>
 
@@ -347,7 +366,7 @@ export default {
         brandId: "",
         storeId: "", //用户归属
         voucherNo: "",
-        merchantId:"",
+        merchantId: ""
       },
       str: "",
       page: 1,
@@ -494,18 +513,13 @@ export default {
   methods: {
     getDistributorList(brandId) {
       this.distributorList = [];
-      this.formData.merchantId = ""
+      this.formData.merchantId = "";
       this.Global.doPost(
         "dealers/doQueryMerchantByBrandId.json",
         { brandId },
         res => {
           if (res.length) {
             this.distributorList = res;
-            // this.distributorList.unshift({
-            //   id:"all",
-            //   merchantName:"全部"
-            // })
-            // this.formData.merchantId = res[0].id
           }
         }
       );
@@ -577,15 +591,6 @@ export default {
       );
     },
     submit(type) {
-      // if (!this.formData.queryStartTime) {
-      //   this.$Message.error("请输入查询起始时间");
-      //   return false;
-      // }
-
-      // if (!this.formData.queryEndTime) {
-      //   this.$Message.error("请输入查询截止时间");
-      //   return false;
-      // }
       if (!this.formData.brandId) {
         this.$Message.error("品牌不能为空");
         return false;
@@ -609,7 +614,7 @@ export default {
         this.formData.queryStartTime
       );
       data["merchantId"] == "all" ? delete data["merchantId"] : "";
-      
+
       if (this.start.hour == "24:00") {
         data["queryStartTime"] = this.Global.setHoursData(
           this.start.time,

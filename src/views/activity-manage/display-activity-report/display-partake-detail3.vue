@@ -104,11 +104,6 @@
                       </Select>
                     </Form-item>
                   </Col>
-                  <Col span="8">
-                    <Form-item label="区域:">
-                      <Cascader :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
-                    </Form-item>
-                  </Col>
                 </Row>
               </Col>
             </Row>
@@ -180,10 +175,7 @@
 </template>
 
 <script>
-import area from "@/config/china_code_data.js";
-
 import {
-  dispalyExamineSuggesteStatus,
   displayParketCheckStatus,
   liquidationState,
   receiveState
@@ -430,7 +422,6 @@ export default {
         }
       ],
       pageData: [],
-      areaData: area,
       brandList: [],
       groupList: [],
       activityList: []

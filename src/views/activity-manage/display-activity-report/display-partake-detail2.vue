@@ -278,9 +278,6 @@
                 <Form-item>
                   <Input v-model.trim="formData.storeName" placeholder="请输入店铺名称"></Input>
                 </Form-item>
-                <Form-item>
-                  <Input v-model.trim="formData.id" placeholder="图像编号"></Input>
-                </Form-item>
               </div>
               <div class="btn-left w18">
                 <Form-item>
@@ -289,12 +286,7 @@
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Cascader
-                    :data="areaData"
-                    v-model="formData.areaCode"
-                    placeholder="地区"
-                    change-on-select
-                  ></Cascader>
+                  <Input v-model.trim="formData.id" placeholder="图像编号"></Input>
                 </Form-item>
               </div>
             </div>
@@ -380,7 +372,6 @@
 </template>
 
 <script>
-import area from "@/config/china_code_data.js";
 import dataRange from "@/components/data-range/data-range.vue";
 import imageLook from "@/components/imgLook/img-look.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
@@ -404,14 +395,12 @@ export default {
         storeName: "",
         workerName: "",
         workerPhone: "",
-        checkStatus: "",
-        areaCode: []
+        checkStatus: ""
       },
       rule: {
         queryStartTime: [{ validator: validateStart }],
         queryEndTime: [{ validator: validateEnd }]
       },
-      areaData: area,
       brandList: [],
       activityList: [],
       social: [],

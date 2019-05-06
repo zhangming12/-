@@ -281,7 +281,6 @@ import {
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
 import yearSelect from "@/components/year-select.vue";
-import DEV_CONFIG from "@/util/config.js";
 export default {
   name: "dealer-worker-manage-patrols-keepAlive",
   data() {

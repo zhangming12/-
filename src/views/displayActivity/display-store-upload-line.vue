@@ -220,10 +220,7 @@
 <script>
 import echarts from "echarts";
 import { storeDisplayUploadScanGrowthCurve } from "@/api/activity-manage/display-activity-manage.js";
-import {
-  dispalyExamineSuggesteStatus,
-  displayParketCheckStatus
-} from "@/util/ENUMS.js";
+import { displayParketCheckStatus } from "@/util/ENUMS.js";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间

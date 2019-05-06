@@ -136,7 +136,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
+              <Form-item required>
                 <data-range
                   @dataChange="startTimeChange"
                   hour="00:00"
@@ -146,7 +146,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
+              <Form-item required>
                 <data-range
                   placeholder="结束时间"
                   hour="24:00"
@@ -306,23 +306,16 @@
 <script>
 import area from "@/config/china_code_data.js";
 import fieldNameDes from "@/components/field-name-description.vue";
-import {
-  dispalyExamineSuggesteStatus
-} from "@/util/ENUMS.js";
 import hhTable from "@/components/table/table.vue";
 import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import {
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
   name: "display-upload-detail-keepAlive",

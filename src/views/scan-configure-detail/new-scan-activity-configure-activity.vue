@@ -149,7 +149,6 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 
@@ -350,7 +349,7 @@ export default {
       activityList: []
     };
   },
-  components: { dataRange, myModal, addNewBtn },
+  components: { myModal, addNewBtn },
   created() {
     this.groupId = this.$route.query.groupId;
     this.brandId = this.$route.query.brandId;

@@ -156,7 +156,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item  >
+              <Form-item>
                 <DatePicker
                   v-model="formData.queryTime"
                   type="daterange"
@@ -199,7 +199,6 @@
 <script>
 import fieldNameDes from "@/components/field-name-description.vue";
 import hhTable from "@/components/table/table.vue";
-import dataRange from "@/components/data-rang.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
@@ -268,7 +267,6 @@ export default {
     };
   },
   components: {
-    dataRange,
     exportBtn,
     hhTable,
     fieldNameDes

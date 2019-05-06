@@ -103,11 +103,6 @@
                       </Select>
                     </Form-item>
                   </Col>
-                  <Col span="8">
-                    <Form-item label="区域:">
-                      <Cascader :data="areaData" v-model="formData.areaCode" change-on-select></Cascader>
-                    </Form-item>
-                  </Col>
                 </Row>
               </Col>
             </Row>
@@ -179,12 +174,7 @@
 </template>
 
 <script>
-import area from "@/config/china_code_data.js";
-
-import {
-  dispalyExamineSuggesteStatus,
-  displayParketCheckStatus
-} from "@/util/ENUMS.js";
+import { displayParketCheckStatus } from "@/util/ENUMS.js";
 import dataRange from "@/components/data-range/data-range.vue";
 
 import {
@@ -209,8 +199,7 @@ export default {
         storeId: "",
         checkStatus: "",
         winStatus: "",
-        joinCode: "",
-        areaCode: []
+        joinCode: ""
       },
       page: 1,
       pageNum: 0,
@@ -423,7 +412,6 @@ export default {
         }
       ],
       pageData: [],
-      areaData: area,
       brandList: [],
       activityList: []
     };

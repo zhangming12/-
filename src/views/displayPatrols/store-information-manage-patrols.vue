@@ -128,126 +128,130 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">门店信息管理</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" :model="formData" :label-width="10">
-              <div class="container">
-                    <div class="btn-left w18">
-                        <Form-item required prop="brandId">
-                            <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue" clearable>
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item prop="merchantId">
-                            <Select v-model="formData.merchantId" placeholder="经销商" clearable>
-                                <Option :value="item.id" v-for="(item,index) in distributorList" :key="index">{{ item.merchantName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <!-- <Form-item required>
+    <!-- <h2 class="Title">门店信息管理</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required prop="brandId">
+                <Select
+                  v-model="formData.brandId"
+                  placeholder="品牌名称"
+                  @on-change="changeValue"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="merchantId">
+                <Select v-model="formData.merchantId" placeholder="经销商" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in distributorList"
+                    :key="index"
+                  >{{ item.merchantName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <!-- <Form-item required>
                             <Select v-model="formData.oneLevel" placeholder="一级组织" @on-change="oneLevelChange" clearable>
                                 <Option :value="item.id" v-for="(item,index) in oneLeverList" :key="index">{{item.areaName}}</Option>
                             </Select> 
-                        </Form-item> -->
-                        <Form-item required>
-                            <Input v-model.trim="formData.storeId" placeholder="客户ID"></Input>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <!-- <Form-item required>
+              </Form-item>-->
+              <Form-item required>
+                <Input v-model.trim="formData.storeId" placeholder="客户ID"></Input>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <!-- <Form-item required>
                             <Select v-model="formData.twoLevel"  placeholder="二级组织" @on-change="twoLevelChange" clearable>
                                 <Option :value="item.id" v-for="(item,index) in twoLeverList" :key="index">{{item.areaName}}</Option>
                             </Select> 
-                        </Form-item> -->
-                        <Form-item required>
-                            <Input v-model.trim="formData.phone" placeholder="手机号码"></Input>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <!-- <Form-item  required>
+              </Form-item>-->
+              <Form-item required>
+                <Input v-model.trim="formData.phone" placeholder="手机号码"></Input>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <!-- <Form-item  required>
                             <Select v-model="formData.threeLevel"  placeholder="三级组织" @on-change="threeLevelChange" clearable>
                                 <Option :value="item.id" v-for="(item,index) in threeLeverList" :key="index">{{item.areaName}}</Option>
                             </Select> 
-                        </Form-item> -->
-                        <Form-item required>
-                          <Select v-model="formData.status" placeholder="全部状态" clearable>
-                            <Option value="0" >拉黑</Option>
-                            <Option value="1" >正常</Option>
-                        </Select> 
-                    </Form-item>
-                    </div>
-                    
-                    <div class="btn-left w10">
-                        <div class="searchBox">
-                            <!-- <div class="btn-left search-left" @click="showQuery=!showQuery">
+              </Form-item>-->
+              <Form-item required>
+                <Select v-model="formData.status" placeholder="全部状态" clearable>
+                  <Option value="0">拉黑</Option>
+                  <Option value="1">正常</Option>
+                </Select>
+              </Form-item>
+            </div>
+
+            <div class="btn-left w10">
+              <div class="searchBox">
+                <!-- <div class="btn-left search-left" @click="showQuery=!showQuery">
                               <button type="button">
                                   {{showQuery?'收起':'更多'}}
                                   <Icon type="ios-arrow-down" size="14" style="margin-top:-2px;" v-if="!showQuery"/>
                                   <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
                               </button>
-                            </div> -->
-                            <div class="btn-right search-right" @click="submit('search')">
-                              <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                            </div>
-                        </div>
-                    </div>
+                </div>-->
+                <div class="btn-right search-right" @click="submit('search')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+                </div>
               </div>
-              <transition name="fade">
-                <div class="container" v-if="showQuery">
-                  <div class="btn-left w18">
-                    <!-- <Form-item  required>
+            </div>
+          </div>
+          <transition name="fade">
+            <div class="container" v-if="showQuery">
+              <div class="btn-left w18">
+                <!-- <Form-item  required>
                       <Select v-model="formData.fourLevel"  placeholder="四级组织" clearable>
                           <Option :value="item.id" v-for="(item,index) in fourLeverList" :key="index">{{item.areaName}}</Option>
                       </Select> 
-                    </Form-item> -->
-                    
-                  </div>
-                  <div class="btn-left w18">
-                    
-                    
-                    
-                  </div>
-                  
-                  <div class="btn-left w18">
-                    <!-- <Form-item required>
+                </Form-item>-->
+              </div>
+              <div class="btn-left w18"></div>
+
+              <div class="btn-left w18">
+                <!-- <Form-item required>
                         <Input v-model.trim="formData.jionCode" placeholder="客户编号"></Input>
-                    </Form-item> -->
-                    
-                  </div>
-                  <div class="btn-left w18">
-                    
-                    
-                  </div>
-                  <div class="btn-left w18">
-                    
-                    <!-- <Form-item required>
+                </Form-item>-->
+              </div>
+              <div class="btn-left w18"></div>
+              <div class="btn-left w18">
+                <!-- <Form-item required>
                         <Input v-model.trim="formData.salesRoute" placeholder="线路编号"></Input>
-                    </Form-item> -->
-                  </div>
-                  
-                </div>
-              </transition>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">共查询到 <span class='numColor'>{{ pageNum }}</span> 条记录</span>
-              
-              <exportBtn  class="btn-right" @btnClick="submit('export')" title="导出"/>
+                </Form-item>-->
+              </div>
             </div>
-            <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" ></hhTable>
-            
+          </transition>
+        </Form>
+      </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            共查询到
+            <span class="numColor">{{ pageNum }}</span> 条记录
+          </span>
+
+          <exportBtn class="btn-right" @btnClick="submit('export')" title="导出"/>
         </div>
-        <div class="page-box">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-            </div>
+        <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -262,8 +266,6 @@ import config from "@/util/config.js";
 import {
   queryOrganizationDictList //查询四级组织数据
 } from "@/api/common.js";
-import yearSelect from "@/components/year-select.vue";
-import DEV_CONFIG from "@/util/config.js";
 export default {
   name: "store-information-manage-patrols-keepAlive",
   data() {
@@ -388,7 +390,7 @@ export default {
                 "详情"
               )
             ];
-            let str = params.row.status == 1 ? '拉黑' : '恢复正常'
+            let str = params.row.status == 1 ? "拉黑" : "恢复正常";
             tag.push(
               h(
                 "button",
@@ -397,7 +399,7 @@ export default {
                     padding: "3px 7px"
                   },
                   attrs: {
-                    id: params.row.status == 1 ? 'fail' : 'success'
+                    id: params.row.status == 1 ? "fail" : "success"
                   },
                   on: {
                     click: () => {
@@ -408,8 +410,8 @@ export default {
                           this.Global.doPost(
                             "store/settingPatrolStoreByStatus.json",
                             {
-                              id:params.row.signLoadId,
-                              status:params.row.status == 1 ? 0 : 1
+                              id: params.row.signLoadId,
+                              status: params.row.status == 1 ? 0 : 1
                             },
                             res => {
                               this.$Message.success(`${str}成功`);
@@ -465,7 +467,7 @@ export default {
       str: "",
       page: 1,
       pageNum: 0,
-      
+
       pageData: [],
       distributorList: [],
       brandList: [],
@@ -479,13 +481,12 @@ export default {
     exportBtn,
     myModal,
     hhTable,
-    yearSelect,
     refreshBtn
   },
   created() {
     this.Global.doPostNoLoading(
       "condition/queryBrands.json",
-      { date: 7,  scope: "a" },
+      { date: 7, scope: "a" },
       res => {
         this.brandList = [];
         Object.entries(res).forEach(item => {
@@ -710,12 +711,12 @@ export default {
       this.str = "导出";
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
-     
+
       let url = this.Global.getExportUrl(
         "store/queryWithPageByPatrolStoreExport.json",
         data
       );
-      window.open(url)
+      window.open(url);
     },
     changeValue(value) {
       this.oneLeverList = [];
@@ -728,7 +729,7 @@ export default {
       this.getDistributorList(value);
       //查询一级组织数据
       // queryOrganizationDictList({ brandId: value, parentId: 0 }).then(res => {
-        
+
       //   if (res && res.status == 1) {
       //     this.oneLeverList = res.data;
       //   }

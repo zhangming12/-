@@ -220,7 +220,6 @@ import {
 import area from "@/config/areaCode.js";
 import {
   queryDisplayLiquidateRecord, //查询列表
-  callLiquidateByActivityId, //清算费用
   callDisplayAwardPrice //全部发奖
 } from "@/api/activity-manage/display-activity-manage.js";
 import {

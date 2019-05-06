@@ -245,10 +245,7 @@
 
 <script>
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
-import {
-  workerDisplayUploadCompletionRateRanking,
-  workerDisplayUploadPerformanceRanking
-} from "@/api/activity-manage/display-activity-manage.js";
+import { workerDisplayUploadCompletionRateRanking } from "@/api/activity-manage/display-activity-manage.js";
 
 export default {
   name: "display-worker-doneRanking-keepAlive",

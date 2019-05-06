@@ -429,7 +429,6 @@ span.btn {
 <script>
 import area from "@/config/china_code_data.js";
 
-import { dispalyExamineSuggesteStatus } from "@/util/ENUMS.js";
 import dataRange from "@/components/data-rang.vue";
 import importBtn from "@/components/Button/import-btn.vue";
 import exportBtn from "@/components/Button/export-btn.vue";

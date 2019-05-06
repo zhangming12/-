@@ -438,10 +438,6 @@
 
 <script>
 import area from "@/config/china_code_data.js";
-
-import {
-  dispalyExamineSuggesteStatus,
-} from "@/util/ENUMS.js";
 import imageLook from "@/components/imgLook/img-look.vue";
 import dataRange from "@/components/data-rang.vue";
 import myModal from "@/components/Modal/my-modal.vue";

@@ -177,7 +177,6 @@ export default {
           title: "审核意见",
           key: "userName",
           align: "center",
-          // width: 120,
           tooltip: true,
           render: (h, params) => {
             let tag = [
@@ -207,7 +206,6 @@ export default {
     hhTable,
     fieldNameDes
   },
-  created() {},
   methods: {
     submit(name) {
       this.page = 1;

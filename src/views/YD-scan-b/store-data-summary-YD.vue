@@ -370,16 +370,8 @@ export default {
         this.pageNum = res.items;
         this.page = res.page;
         this.pageData = res.datalist;
-        for (let i = 0, len = res.datalist.length; i < len; i++) {
-          res.datalist[i].time =
-            this.Global.createTime(res.datalist[i].showStartTime) +
-            "至" +
-            this.Global.createTime(res.datalist[i].showEndTime);
-        }
       });
     }
   }
 };
 </script>
-
-

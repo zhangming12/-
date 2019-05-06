@@ -183,198 +183,215 @@
 </style>
 
 <template>
-	<div id="Main">
-        <!-- <h2 class="Title">成功图像审核</h2> -->
-        <div class="main-container">
-            <div class="box">
-                <Form ref="form" :model="formData" :label-width="10">
-                    <div class="container">
-                        <div class="btn-left w18">
-                            <Form-item required prop="brandId">
-                                <Select v-model="formData.brandId" placeholder="品牌名称"  @on-change="changeValue">
-                                    <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                                </Select>
-                            </Form-item>
-                        </div>    
-                        <div class="btn-left w18">
-                            <Form-item    required>
-                                <data-range @dataChange="startTimeChange" placeholder="拍摄开始时间" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item    required>
-                                <data-range hour="24:00" placeholder="拍摄结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                            </Form-item>
-                        </div>
-                        
-                        <div class="btn-left w18">
-                            <Form-item prop="groupId" required>
-                                <Select v-model="formData.groupId" placeholder="活动名称" @on-change="getActivityList" clearable>
-                                    <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                                </Select>
-                            </Form-item> 
-                        </div>
-                        <div class="btn-left w18">
-                            <Form-item prop="activityId">
-                                <Select v-model="formData.activityId" placeholder="子活动名称" clearable>
-                                    <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                                </Select>
-                            </Form-item>
-                        </div>
-                        <div class="btn-left w10">
-                            <div class="searchBox">
-                                <div class="btn-left search-left" @click="showQuery=!showQuery">
-                                <button type="button">
-                                    {{showQuery?'收起':'更多'}}
-                                    <Icon type="ios-arrow-down" size="14" style="margin-top:-2px;" v-if="!showQuery"/>
-                                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
-                                </button>
-                                </div>
-                                <div class="btn-right search-right" @click="submit('search')">
-                                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <transition name="fade">
-                        <div class="container" v-if="showQuery">
-                            <div class="btn-left w18">
-                                <Form-item>
-                                    <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
-                                </Form-item>
-                            </div>
-                            <div class="btn-left w18">
-                                <Form-item required>
-                                    <Input v-model.trim="formData.storeName" placeholder="门店名称"></Input>
-                                </Form-item>
-                            </div>
-                            <div class="btn-left w18">
-                                <Form-item required>
-                                    <Input v-model.trim="formData.salesRoute" placeholder="销售路线"></Input>
-                                </Form-item>
-                            </div>
-                        </div>
-                    </transition>
-                </Form>
+  <div id="Main">
+    <!-- <h2 class="Title">成功图像审核</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required prop="brandId">
+                <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <data-range placeholder="拍摄开始时间" hour="00:00" v-model="formData.queryStartTime"></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <data-range hour="24:00" placeholder="拍摄结束时间" v-model="formData.queryEndTime"></data-range>
+              </Form-item>
             </div>
 
-            <div class="export" style="overflow:hidden;" v-if="storeGoodsList && storeGoodsList.length">
-                <!-- <span @click="handleAllSurePage">全选</span> -->
-                <span @click="handleBatchSure">批量确认</span>
+            <div class="btn-left w18">
+              <Form-item prop="groupId" required>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="活动名称"
+                  @on-change="getActivityList"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in groupList"
+                    :key="index"
+                  >{{ item.groupName }}</Option>
+                </Select>
+              </Form-item>
             </div>
-            <div class="box" style="width:100%;padding:40px 10px 10px;overflow:hidden;" v-if="storeGoodsList && storeGoodsList.length">
-                <CheckboxGroup size="large" v-model="social">
-                    <div class="card" v-for="(item,index) in storeGoodsList" :key="index">
-                        <div class="card-top">
-                            <div class="card-left">
-                              <div class="check-box">
-                                  <Checkbox size="large" :label="index">
-                                      <span style="display:none;"></span>
-                                  </Checkbox>
-                              </div>
-                              <div class="video-box">
-                                  <div class="video">
-                                      <div class="video-main">
-                                          <video :src="item.defaultRadioUrl" v-if="item.defaultRadioUrl" controls></video>
-                                          <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
-                                          <img class="triangle" src="../../assets/image/triangle-first.jpg">
-                                      </div>
-                                      
-                                  </div>
-                                  <div class="video">
-                                      <div class="video-main">
-                                          <video :src="item.radioUrl" v-if="item.radioUrl" controls></video>
-                                          <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
-                                          <img class="triangle" src="../../assets/image/triangle-this.jpg">
-                                      </div>
-                                      
-                                  </div>
-                              </div>
-                              <div class="content-box">
-                                  <Row style="width:100%;">
-                                      <Col span="8">
-                                          <div class="item-box">
-                                              <p>
-                                                  <span>提交时间：</span>
-                                                  <span>{{ item.uploadTime  | formatYearMonth}}</span>
-                                              </p>
-                                          </div>
-                                          <div class="item-box">
-                                              <span>客户编号：</span>
-                                              <span>{{ item.joinCode }}</span>
-                                          </div>
-                                          <div class="item-box">
-                                              <p :title="item.workerName">
-                                                  <span>业代姓名：</span>
-                                                  <span>{{ item.workerName }}</span>
-                                              </p>
-                                          </div>
-                                      </Col>
-                                      <Col span="8">
-                                          <div class="item-box">
-                                              <span>活动名称：</span>
-                                              <span>{{ item.activityName }}</span>
-                                          </div>
-                                          <div class="item-box">
-                                              <span>门店名称：</span>
-                                              <span>{{ item.storeName }}</span>
-                                          </div>
-                                      
-                                          
-                                      </Col>
-                                      <Col span="8">
-                                          <div class="item-box">
-                                              <p :title="item.presentName">
-                                                  <span>活动分组：</span>
-                                                  <span>{{ item.activityTag }}</span>
-                                              </p>
-                                          </div>
-                                          <div class="item-box">
-                                              <span>销售路线：</span>
-                                              <span>{{ item.salesRoute }}</span>
-                                          </div>
-                                      </Col>
-                                      <Col span="23">
-                                          <div class="item-box">
-                                              <span class="status">审核状态：</span>
-                                              <RadioGroup  v-model="item.status"> 
-                                                <Radio :label="1">通过</Radio>
-                                                <Radio :label="2">不通过</Radio>
-                                                <Radio :label="3">退回</Radio>
-                                              </RadioGroup>
-                                          </div>
-                                          <div class="item-box">
-                                              <span class="status">审核意见：</span>
-                                              <Input v-model.trim="item.checkMessage" placeholder="审核意见"></Input>
-                                          </div>
-                                      </Col>
-                                  </Row>
-                              </div>
-                              <div class="btn-box">
-                                  <Button  type="primary" @click="save(item,index)">保存</Button>
-                              </div>
-                            </div>
-                        </div>
-                    </div>
-                </CheckboxGroup>
+            <div class="btn-left w18">
+              <Form-item prop="activityId">
+                <Select v-model="formData.activityId" placeholder="子活动名称" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in activityList"
+                    :key="index"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
             </div>
-            <div class="noData" v-else>暂无数据</div>
-            <div class="page-box">
-                <div style="float: right;">
-                    <Page :total="pageNum" :page-size='pageSize' :current="page" @on-change="changePage"></Page>
+            <div class="btn-left w10">
+              <div class="searchBox">
+                <div class="btn-left search-left" @click="showQuery=!showQuery">
+                  <button type="button">
+                    {{showQuery?'收起':'更多'}}
+                    <Icon
+                      type="ios-arrow-down"
+                      size="14"
+                      style="margin-top:-2px;"
+                      v-if="!showQuery"
+                    />
+                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
+                  </button>
                 </div>
+                <div class="btn-right search-right" @click="submit('search')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+                </div>
+              </div>
             </div>
+          </div>
+          <transition name="fade">
+            <div class="container" v-if="showQuery">
+              <div class="btn-left w18">
+                <Form-item>
+                  <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input v-model.trim="formData.storeName" placeholder="门店名称"></Input>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item required>
+                  <Input v-model.trim="formData.salesRoute" placeholder="销售路线"></Input>
+                </Form-item>
+              </div>
+            </div>
+          </transition>
+        </Form>
+      </div>
+
+      <div class="export" style="overflow:hidden;" v-if="storeGoodsList && storeGoodsList.length">
+        <span @click="handleBatchSure">批量确认</span>
+      </div>
+      <div
+        class="box"
+        style="width:100%;padding:40px 10px 10px;overflow:hidden;"
+        v-if="storeGoodsList && storeGoodsList.length"
+      >
+        <CheckboxGroup size="large" v-model="social">
+          <div class="card" v-for="(item,index) in storeGoodsList" :key="index">
+            <div class="card-top">
+              <div class="card-left">
+                <div class="check-box">
+                  <Checkbox size="large" :label="index">
+                    <span style="display:none;"></span>
+                  </Checkbox>
+                </div>
+                <div class="video-box">
+                  <div class="video">
+                    <div class="video-main">
+                      <video :src="item.defaultRadioUrl" v-if="item.defaultRadioUrl" controls></video>
+                      <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
+                      <img class="triangle" src="../../assets/image/triangle-first.jpg">
+                    </div>
+                  </div>
+                  <div class="video">
+                    <div class="video-main">
+                      <video :src="item.radioUrl" v-if="item.radioUrl" controls></video>
+                      <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
+                      <img class="triangle" src="../../assets/image/triangle-this.jpg">
+                    </div>
+                  </div>
+                </div>
+                <div class="content-box">
+                  <Row style="width:100%;">
+                    <Col span="8">
+                      <div class="item-box">
+                        <p>
+                          <span>提交时间：</span>
+                          <span>{{ item.uploadTime | formatYearMonth}}</span>
+                        </p>
+                      </div>
+                      <div class="item-box">
+                        <span>客户编号：</span>
+                        <span>{{ item.joinCode }}</span>
+                      </div>
+                      <div class="item-box">
+                        <p :title="item.workerName">
+                          <span>业代姓名：</span>
+                          <span>{{ item.workerName }}</span>
+                        </p>
+                      </div>
+                    </Col>
+                    <Col span="8">
+                      <div class="item-box">
+                        <span>活动名称：</span>
+                        <span>{{ item.activityName }}</span>
+                      </div>
+                      <div class="item-box">
+                        <span>门店名称：</span>
+                        <span>{{ item.storeName }}</span>
+                      </div>
+                    </Col>
+                    <Col span="8">
+                      <div class="item-box">
+                        <p :title="item.presentName">
+                          <span>活动分组：</span>
+                          <span>{{ item.activityTag }}</span>
+                        </p>
+                      </div>
+                      <div class="item-box">
+                        <span>销售路线：</span>
+                        <span>{{ item.salesRoute }}</span>
+                      </div>
+                    </Col>
+                    <Col span="23">
+                      <div class="item-box">
+                        <span class="status">审核状态：</span>
+                        <RadioGroup v-model="item.status">
+                          <Radio :label="1">通过</Radio>
+                          <Radio :label="2">不通过</Radio>
+                          <Radio :label="3">退回</Radio>
+                        </RadioGroup>
+                      </div>
+                      <div class="item-box">
+                        <span class="status">审核意见：</span>
+                        <Input v-model.trim="item.checkMessage" placeholder="审核意见"></Input>
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
+                <div class="btn-box">
+                  <Button type="primary" @click="save(item,index)">保存</Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CheckboxGroup>
+      </div>
+      <div class="noData" v-else>暂无数据</div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :page-size="pageSize" :current="page" @on-change="changePage"></Page>
         </div>
-	</div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import dataRange from "@/components/data-range/data-range.vue";
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
   name: "success-image-audit-keepAlive",
   components: {
@@ -385,14 +402,6 @@ export default {
       showQuery: false,
       groupList: [], //活动包名
       saveData: {},
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME,
@@ -493,71 +502,22 @@ export default {
       this.page = size;
       this.init();
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     init() {
       if (!this.formData.groupId) {
         this.$Message.error("活动包不能为空");
         return;
       }
       var data = this.Global.JsonChange(this.formData);
-      data["queryStartTime"] = this.Global.createTime(this.formData.queryStartTime);
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
-      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
       data["brandId"] = this.formData.brandId;
-      this.Global.doPost(
-        "uploadReport/querySuccessVideo.json",
-        data,
-        res => {
-          this.storeGoodsList = res.datalist;
-          this.pageNum = res.items;
-          this.currentPage = res.page;
-          this.social = [];
-        }
-      );
-    },
-
-    handleAllSurePage() {
-      //单页面全选
-      this.social = [];
-      for (let i = 0; i < this.storeGoodsList.length; i++) {
-        this.social.push(i);
-      }
+      this.Global.doPost("uploadReport/querySuccessVideo.json", data, res => {
+        this.storeGoodsList = res.datalist;
+        this.pageNum = res.items;
+        this.currentPage = res.page;
+        this.social = [];
+      });
     },
     handleBatchSure() {
       //批量确认
@@ -568,7 +528,7 @@ export default {
       let len = this.social.length;
       let dataList = [];
       for (let i = 0; i < len; i++) {
-        let n = this.social[i]
+        let n = this.social[i];
         let statusC = this.storeGoodsList[n].status;
         if (!statusC) {
           this.$Message.error("请选择审核状态");
@@ -588,11 +548,15 @@ export default {
         this.Global.deleteEmptyProperty(obj);
         dataList.push(obj);
       }
-      this.Global.doPost("uploadReport/successVideoBatchAudit.json", dataList, res => {
-        this.$Message.success("批量审核成功");
-        this.init();
-        this.social = [];
-      });
+      this.Global.doPost(
+        "uploadReport/successVideoBatchAudit.json",
+        dataList,
+        res => {
+          this.$Message.success("批量审核成功");
+          this.init();
+          this.social = [];
+        }
+      );
     }
   },
 

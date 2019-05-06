@@ -102,10 +102,6 @@ footer {
     <div class="box" style="margin-top: 15px;">
       <div class="contentTop">
         <Button @click="uploadExcel" class="btn-export" icon="android-add" type="primary">导入</Button>
-
-        <!-- <div class='export'>
-                     <div @click="uploadExcel"><Icon type="android-add" size="14"></Icon>导入</div>
-        </div>-->
         <div class="upDate">
           <Upload
             :action="url"
@@ -272,5 +268,3 @@ export default {
   }
 };
 </script>
-
-
