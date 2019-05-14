@@ -9,12 +9,14 @@
     </Badge>
     <no-data :noneStatus="noneStatus"/>
     <upload-file/>
+    <show-photo/>
   </div>
 </template>
 <script>
 import noData from "@/components/NoData/no-data.vue";
 import uploadFile from "@/components/uploadFile/upload-file.vue";
 import auditBar from "@/components/auditItem/audit-bar.vue";
+import showPhoto from "@/components/showPhoto/show-photo.vue";
 export default {
   data() {
     return {
@@ -44,7 +46,7 @@ export default {
       time: ""
     };
   },
-  components: { auditBar, noData, uploadFile },
+  components: { auditBar, noData, uploadFile, showPhoto },
   mounted() {},
   methods: {}
 };

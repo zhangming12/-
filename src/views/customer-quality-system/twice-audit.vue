@@ -40,37 +40,13 @@
 .numColor {
   color: @primary-color;
 }
-.photo {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  .photo-left,
-  .photo-right {
-    flex: 1;
-    .photo-title {
-      text-align: center;
-    }
-    .photo-img {
-      padding: 10px;
-      box-sizing: border-box;
-      img {
-        display: block;
-        max-width: 100%;
-        border: 1px solid #e5e5e5;
-        min-height: 100px;
-      }
-    }
-  }
-}
 .ivu-modal-footer {
   border: none !important;
 }
 .audit-bar-father {
-  // position: sticky;
   box-sizing: border-box;
   padding: 0 10px;
   z-index: 1;
-  // margin-bottom: 20px;
 }
 </style>
 
@@ -82,7 +58,7 @@
         <Form ref="form" :model="formData" :label-width="10">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item  >
+              <Form-item>
                 <data-range
                   placeholder="上传开始时间"
                   hour="00:00"
@@ -92,38 +68,28 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item  >
+              <Form-item>
                 <data-range hour="24:00" placeholder="上传结束时间" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item prop="brandId">
-                <Select
-                  v-model="formData.brandId"
-                  placeholder="品牌名称"
-                  @on-change="changeValue"
-                  clearable
-                >
+                <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
                   <Option
-                    :value="item.id"
+                    :value="item.brandId"
                     v-for="(item,index) in brandList"
-                    :key="item.id"
+                    :key="item.brandId"
                   >{{ item.brandName }}</Option>
                 </Select>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item>
-                <Select
-                  v-model="formData.groupId"
-                  placeholder="活动名称"
-                  @on-change="getActivityList"
-                  clearable
-                >
+                <Select v-model="formData.groupId" placeholder="活动名称*" @on-change="getActivityList">
                   <Option
-                    :value="item.id"
+                    :value="item.groupId"
                     v-for="(item,index) in groupList"
-                    :key="item.id"
+                    :key="item.groupId"
                   >{{ item.groupName }}</Option>
                 </Select>
               </Form-item>
@@ -132,15 +98,15 @@
               <Form-item prop="activityId">
                 <Select
                   v-model="formData.activityId"
-                  placeholder="子活动名称"
+                  placeholder="项目*"
                   @on-change="getpresentList"
                   clearable
                 >
                   <Option
-                    :value="item.id"
+                    :value="item.activityId"
                     v-for="(item,index) in activityList"
-                    :key="item.id"
-                  >{{ item.name }}</Option>
+                    :key="item.activityId"
+                  >{{ item.activityName }}</Option>
                 </Select>
               </Form-item>
             </div>
@@ -170,10 +136,10 @@
                 <Form-item prop="activityId">
                   <Select v-model="formData.presentId" placeholder="分组" clearable>
                     <Option
-                      :value="item.id"
+                      :value="item.presentId"
                       v-for="(item,index) in presentNameList"
-                      :key="item.id"
-                    >{{ item.activityTag }}</Option>
+                      :key="item.presentId"
+                    >{{ item.presentName }}</Option>
                   </Select>
                 </Form-item>
               </div>
@@ -184,7 +150,7 @@
                       :value="item.id"
                       v-for="(item,index) in teamList"
                       :key="item.id"
-                    >{{ item.teamName }}</Option>
+                    >{{ item.brandName }}</Option>
                   </Select>
                 </Form-item>
               </div>
@@ -195,7 +161,7 @@
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Input v-model.trim="formData.storeName" placeholder="门店名称"></Input>
+                  <Input v-model.trim="formData.id" placeholder="图像编号"></Input>
                 </Form-item>
               </div>
               <div class="btn-left w18">
@@ -208,7 +174,12 @@
         </Form>
       </div>
       <div class="audit-bar-father box">
-        <audit-bar :barData="barData"/>
+        <audit-bar
+          @batchPass="batchPass"
+          @batchNoPass="batchNoPass"
+          :barData="barData"
+          :barDataKey="barDataKey"
+        />
       </div>
       <div
         class="box clear container"
@@ -224,11 +195,11 @@
             :index="index"
             @lookDetail="lookDetail"
             @save="save"
-            @showPhoto="showPhoto"
           ></audit-item>
         </div>
       </div>
-      <div class="noData" v-else>暂无数据</div>
+      <!-- <div class="noData" v-else>暂无数据</div> -->
+      <no-data v-else :noneStatus="noneStatus"/>
     </div>
     <!-- 审核意见 -->
     <Modal
@@ -244,9 +215,9 @@
         <Form :model="formItem" :label-width="60">
           <FormItem label="状态:">
             <RadioGroup v-model="formItem.checkStatus" @on-change="handleIsPass">
-              <Radio label="1001">通过</Radio>
-              <Radio label="2">不通过</Radio>
-              <Radio v-if="formItem.isBack == 0" label="3">退回</Radio>
+              <Radio :label="1">通过</Radio>
+              <Radio :label="2">不通过</Radio>
+              <Radio v-if="formItem.isBack == 0" :label="3">退回</Radio>
             </RadioGroup>
           </FormItem>
 
@@ -275,75 +246,81 @@
         <Button type="warning" @click="saveEditStatus">确定</Button>
       </div>
     </Modal>
-    <!-- 显示门头照 -->
-    <Modal v-model="photoShow" width="1000">
-      <p slot="header" style="color:#f60;text-align:center">门头照</p>
-      <div class="photo">
-        <div class="photo-left">
-          <div class="photo-title">上传门头照</div>
-          <div class="photo-img">
-            <img src alt>
-          </div>
-        </div>
-        <div class="photo-right">
-          <div class="photo-title">签约门头照</div>
-          <div class="photo-img">
-            <img src alt>
-          </div>
-        </div>
-      </div>
-      <div slot="footer" style="display:none;">
-        <Button type="warning" @click="photoShow = false">确定</Button>
-      </div>
-    </Modal>
   </div>
 </template>
 
 <script>
 import dataRange from "@/components/data-range/data-range.vue";
-import {
-  queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
-} from "@/api/common.js";
+import noData from "@/components/NoData/no-data.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import auditItem from "@/components/auditItem/audit-item.vue";
 import auditBar from "@/components/auditItem/audit-bar.vue";
 export default {
-  name: "first-audit-keepAlive",
+  name: "twice-audit-keepAlive",
   components: {
     dataRange,
     auditItem,
-    auditBar
+    auditBar,
+    noData
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (from.name == "returnNotice") {
+        let {
+          queryStartTime,
+          queryEndTime,
+          brandId,
+          groupId,
+          activityId,
+          presentId,
+          teamId
+        } = vm.$route.query;
+        vm.formData.queryStartTime = queryStartTime;
+        vm.formData.queryEndTime = queryEndTime;
+        vm.formData.brandId = brandId;
+        vm.formData.groupId = groupId;
+        vm.formData.activityId = activityId;
+        vm.formData.teamId = teamId;
+        if (presentId) {
+          vm.formData.presentId = presentId;
+        }
+        vm.init();
+      }
+    });
   },
   data() {
     return {
+      noneStatus: false,
       barData: [
         {
           title: "总数",
-          key: "total"
+          key: "totalNum"
         },
         {
           title: "已复审",
-          key: "total"
+          key: "reviewNum"
         },
         {
           title: "复审率",
-          key: "total"
+          key: "precent"
         },
         {
           title: "正确数",
-          key: "total"
+          key: "correctNum"
         },
         {
           title: "错误数",
-          key: "total"
+          key: "errorNum"
         },
         {
           title: "正确率",
-          key: "total"
+          key: "correctPrecent"
         }
       ],
+      barDataKey: {
+        isDis: false
+      },
       teamList: [], //团队
-      photoShow: false, //门头照显示
       showList: [
         {
           title: "提交时间",
@@ -354,12 +331,12 @@ export default {
           key: "id"
         },
         {
-          title: "活动名称",
+          title: "项目名称",
           key: "activityName"
         },
         {
           title: "活动分组",
-          key: "activityTag"
+          key: "presentName"
         },
         {
           title: "预警",
@@ -375,7 +352,6 @@ export default {
       index: null,
       showQuery: false,
       groupList: [], //活动包名
-      saveData: {},
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME,
@@ -395,8 +371,7 @@ export default {
       goodsStausShow: false,
       formItem: {
         storeName: "",
-        checkStatus: "",
-        isBack: null
+        checkStatus: ""
       },
       presentNameList: [],
       checkMessage: "",
@@ -415,13 +390,6 @@ export default {
     this.queryTeam();
   },
   watch: {
-    "formItem.checkStatus"(val) {
-      if (val == 2001 || val == 1001) {
-        this.activityIsPass = false;
-      } else if (val == 1002 || val == 1003 || val == 2 || val == 3) {
-        this.activityIsPass = true;
-      }
-    },
     goodsStausShow(val) {
       //模态框关闭，清空
       if (val == false) {
@@ -431,40 +399,111 @@ export default {
   },
 
   methods: {
-    // 查询团队
-    queryTeam(val) {
-      this.Global.doPostNoLoading("", {}, res => {
-        this.teamList = res;
-      });
-    },
-    //查询品牌
-    queryBrand() {
-      this.Global.doPostNoLoading(
-        "condition/queryBrands.json",
-        { date: 7, activityType: 3, scope: "a" },
+    batchNoPass(val) {
+      var data = this.Global.JsonChange(this.formData);
+      this.Global.deleteEmptyProperty(data);
+      data["queryEndTime"] = this.Global.createTime(
+        new Date(data["queryEndTime"]).getTime()
+      );
+      data["queryStartTime"] = this.Global.createTime(
+        new Date(data["queryStartTime"]).getTime()
+      );
+      data["checkMessage"] = val;
+      this.Global.doPost(
+        "audit/doVideoBatchSecondAuditOfNotPassThrough.json",
+        data,
         res => {
-          this.brandList = [];
-          Object.entries(res).forEach(item => {
-            this.brandList.push({ id: Number(item[0]), brandName: item[1] });
-          });
-          if (this.brandList && this.brandList.length) {
-            this.formData.brandId = this.brandList[0].id;
-            this.changeValue(this.formData.brandId);
-          }
+          this.$Message.info("系统已经收到您的指令，后台将自动完成");
+          this.storeGoodsList = null;
+          this.clearBarData();
         }
       );
     },
-    // 显示门头照
-    showPhoto(index) {
-      this.photoShow = true;
+    batchPass() {
+      var data = this.Global.JsonChange(this.formData);
+      this.Global.deleteEmptyProperty(data);
+      data["queryEndTime"] = this.Global.createTime(
+        new Date(data["queryEndTime"]).getTime()
+      );
+      data["queryStartTime"] = this.Global.createTime(
+        new Date(data["queryStartTime"]).getTime()
+      );
+      this.Global.doPost(
+        "audit/doVideoBatchSecondAuditOfPassThrough.json",
+        data,
+        res => {
+          this.$Message.info("系统已经收到您的指令，后台将自动完成");
+          this.storeGoodsList = null;
+          this.clearBarData();
+        }
+      );
     },
-    //根据项目获取分组
-    getpresentList(value) {
-      this.presentNameList = [];
-      this.$set(this.formData, "presentId", "");
-      queryActivityPresentVOByactivityId(value).then(res => {
-        if (res && res.status == 1) {
-          this.presentNameList = res.data;
+    queryBarData(data) {
+      this.Global.doPostNoLoading("audit/querySecondData.json", data, res => {
+        this.barDataKey = res[0];
+        this.barDataKey.precent =
+          this.barDataKey.precent.toFixed(4) * 100 + "%";
+        this.barDataKey.correctPrecent =
+          this.barDataKey.correctPrecent.toFixed(4) * 100 + "%";
+        // this.barDataKey.isDis = false;
+        if (res[0].totalNum == res[0].reviewNum && res[0].reviewNum != 0) {
+          //当总数等于已复审且不为0时，自动调全部通过接口
+          delete data["currentPage"];
+          delete data["pageSize"];
+          data["queryEndTime"] = this.Global.createTime(
+            new Date(data["queryEndTime"]).getTime()
+          );
+          data["queryStartTime"] = this.Global.createTime(
+            new Date(data["queryStartTime"]).getTime()
+          );
+          this.Global.doPostNoLoading(
+            "audit/doVideoSecondAuditSingle.json",
+            data,
+            res => {
+              this.queryBarData(data);
+            }
+          );
+        }
+      });
+    },
+    clearBarData() {
+      this.barDataKey = {
+        totalNum: 0,
+        reviewNum: 0,
+        precent: "0%",
+        correctNum: 0,
+        errorNum: 0,
+        correctPrecent: "0%"
+      };
+    },
+    //获取userType
+    getUserType() {
+      return JSON.parse(window.sessionStorage.getItem("user")).userType;
+    },
+    //查询团队
+    queryTeam() {
+      let userType = this.getUserType();
+      let api = "";
+      let data = "";
+      if (userType == "p") {
+        api = "audit/queryAllTeam.json";
+      } else {
+        api = "audit/queryTeamByUser.json";
+        data = 666;
+      }
+      this.Global.doPostNoLoading(api, data, res => {
+        this.teamList = res;
+        if (res && res.length) {
+          this.formData.teamId = res[0].id;
+        }
+      });
+    },
+    queryBrand() {
+      this.Global.doPostNoLoading("audit/queryBrandByTeam.json", "1", res => {
+        this.brandList = res;
+        if (res && res.length) {
+          this.$set(this.formData, "brandId", res[0].brandId);
+          this.changeValue(this.formData.brandId);
         }
       });
     },
@@ -472,50 +511,64 @@ export default {
     changeValue(value) {
       this.groupList = [];
       this.formData.groupId = "";
+      if (!value) return;
       this.Global.doPostNoLoading(
-        "condition/queryGroup.json",
-        { date: 7, activityType: 3, scope: "a", brandId: value },
+        "audit/queryGroupByBrandAndTeam.json",
+        value,
         res => {
-          Object.entries(res).forEach(item => {
-            this.groupList.push({ id: Number(item[0]), groupName: item[1] });
-          });
+          this.groupList = res;
           if (this.groupList && this.groupList.length) {
-            this.formData.groupId = this.groupList[0].id;
+            this.formData.groupId = this.groupList[0].groupId;
             this.getActivityList(this.formData.groupId);
           }
         }
       );
     },
     //根据活动获取项目
-    getActivityList(value) {
+    getActivityList(val) {
       this.activityList = [];
       this.formData.activityId = "";
+      if (!val) return;
+      //查询活动
+      this.Global.doPostNoLoading(
+        "audit/queryActivityByBrandAndTeam.json",
+        val,
+        res => {
+          this.activityList = res;
+          if (res && res.length) {
+            this.formData.activityId = res[0].activityId;
+            this.getpresentList(this.formData.activityId);
+          }
+        }
+      );
+    },
+    //根据项目获取分组
+    getpresentList(value) {
+      this.presentNameList = [];
+      this.$set(this.formData, "presentId", "");
       if (!value) return;
       this.Global.doPostNoLoading(
-        "condition/queryActivity.json",
-        { date: 7, activityType: 3, scope: "a", groupId: value },
+        "audit/queryPresentByActivityAndTeam.json",
+        value,
         res => {
-          Object.entries(res).forEach(item => {
-            this.activityList.push({ id: Number(item[0]), name: item[1] });
-          });
+          this.presentNameList = res;
         }
       );
     },
     //审核状态变化
     radioChange(obj) {
       let { index, val } = obj;
-      let arr = val.split("-");
       this.index = index;
-      this.saveData.brandId = this.storeGoodsList[index].brandId;
-      this.saveData.groupId = this.storeGoodsList[index].groupId;
-      this.formItem.isBack = this.storeGoodsList[index].isBack;
 
+      this.formItem.checkStatus = val;
       this.displayExamineWordList = [];
-      this.wordList = this.getDisplayExamineWord(
-        this.saveData.brandId,
-        this.saveData.groupId
-      );
-      if (val != 1001) {
+
+      if (val != 1) {
+        let { brandId, groupId, presentId, isBack } = this.storeGoodsList[
+          index
+        ];
+        this.formItem.isBack = isBack;
+        this.wordList = this.getDisplayExamineWord(brandId, groupId, presentId);
         this.goodsStausShow = true;
         this.activityIsPass = true;
       }
@@ -559,44 +612,74 @@ export default {
         this.$Message.error("活动包不能为空");
         return;
       }
+      if (!this.formData.teamId) {
+        this.$Message.error("团队不能为空");
+        return;
+      }
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = 1;
       data["pageSize"] = this.pageSize;
-      data["brandId"] = this.formData.brandId;
-      data["level"] = 1;
-      this.Global.doPost(
-        "displayYxtg/queryAcrossAuditByUpdatedVersion.json",
-        data,
-        res => {
-          this.allNum = res.items;
-          this.storeGoodsList = res.datalist;
-          if (res.datalist && res.datalist.length) {
-            res.datalist.forEach(item => {
-              let imageList = [];
-              if (item.image) {
-                imageList = item.image.filter(val => val);
+      this.queryBarData(data);
+      this.Global.doPost("audit/querySecnodVideo.json", data, res => {
+        this.noneStatus = true;
+        this.storeGoodsList = res;
+        if (res && res.length) {
+          res.forEach(item => {
+            let imageList = [];
+            if (item.image) {
+              imageList = item.image.filter(val => val);
+            }
+            item.submitTime = new Date(item.submitTime).pattern(
+              "yyyy-MM-dd hh:mm:ss"
+            );
+            item.storeRange = item.storeRange > 200 ? "位置偏移" : "无";
+            item.imageList = imageList;
+            item.checkProject = {};
+            item.len = 0;
+
+            let firstImageList = [];
+            if (item.firstRadio) {
+              if (item.firstRadio.image) {
+                firstImageList = item.firstRadio.image.filter(val => val);
               }
-              item.submitTime = new Date(item.submitTime).pattern(
-                "yyyy-MM-dd hh:mm:ss"
-              );
-              item.storeRange = item.storeRange > 200 ? "位置偏移" : "无";
-              item.imageList = imageList;
-              item.checkProject = {};
-              item.len = 0;
-              let firstImageList = [];
-              if (item.firstRadio) {
-                if (item.firstRadio.image) {
-                  firstImageList = item.firstRadio.image.filter(val => val);
+            }
+            item.firstImageList = firstImageList;
+
+            if (item.fileType == "radio") {
+              item.imageOneUrl = item.firstRadio
+                ? item.firstRadio.radioUrl
+                : "";
+              item.imageTwoUrl = item.radioUrl;
+            } else {
+              item.imageOneUrl = item.firstRadio ? item.firstRadio.image : [];
+              item.imageTwoUrl = item.image;
+            }
+            item.status = item.checkFirstOneStatus;
+            item.checkMessage = item.checkFirstOneMessage;
+            item.showBack =
+              !item.firstTwoBatchMessage && !item.secondBatchMessage
+                ? false
+                : true;
+            if (item.showBack) {
+              let backMessage = "";
+              if (item.firstTwoBatchMessage) {
+                backMessage += `复：${item.firstTwoBatchMessage}`;
+              }
+              if (item.secondBatchMessage) {
+                if (item.firstTwoBatchMessage) {
+                  backMessage += "|";
                 }
+                backMessage += `质：${item.secondBatchMessage}`;
               }
-              item.firstImageList = firstImageList;
-            });
-          }
-          this.pageNum = res.items;
-          // this.page = res.page;
+              item.backMessage = backMessage;
+            } else {
+              item.backMessage = "";
+            }
+          });
         }
-      );
+        this.pageNum = res.items;
+      });
     },
     //获取tooltip的位置
     getPosition(index) {
@@ -622,27 +705,19 @@ export default {
     },
     //弹窗保存
     saveEditStatus() {
-      let objList = this.saveData;
       if (!this.formItem.checkStatus) {
         this.$Message.warning("请选择审核状态");
         return false;
       }
-      if (this.formItem.checkStatus != "1001" && !this.checkMessage) {
+      if (this.formItem.checkStatus != 1 && !this.checkMessage) {
         this.$Message.warning("请选择不通过的原因");
         return false;
       }
-      if (
-        this.formItem.checkStatus == "2" ||
-        this.formItem.checkStatus == "3"
-      ) {
+      if (this.formItem.checkStatus == 2 || this.formItem.checkStatus == 3) {
         //不通过、退回
-        objList["checkMessage"] = this.checkMessage;
+        this.storeGoodsList[this.index].checkMessage = this.checkMessage;
       }
-      objList["checkStatus"] = this.formItem.checkStatus;
-      this.storeGoodsList[this.index].checkMessage = objList["checkMessage"];
-      this.storeGoodsList[this.index].status = `${this.index}-${
-        this.formItem.checkStatus
-      }`;
+      this.storeGoodsList[this.index].status = this.formItem.checkStatus;
 
       this.goodsStausShow = false;
       this.formItem = {};
@@ -655,6 +730,21 @@ export default {
     handleIsPass(val) {
       this.activityIsPass = val == "2001" || val == "1001" ? false : true;
     },
+    //计算审核率
+    calculationRate() {
+      this.barDataKey.precent = this.barDataKey.totalNum
+        ? (
+            (this.barDataKey.reviewNum * 100) /
+            this.barDataKey.totalNum
+          ).toFixed(2) + "%"
+        : "0%";
+      this.barDataKey.correctPrecent = this.barDataKey.reviewNum
+        ? (
+            (this.barDataKey.correctNum * 100) /
+            this.barDataKey.reviewNum
+          ).toFixed(2) + "%"
+        : "0%";
+    },
     //保存
     save(obj) {
       let { item, index } = obj;
@@ -663,37 +753,40 @@ export default {
         this.$Message.error("请选择审核状态");
         return false;
       }
-      statusC = statusC.split("-")[1];
-
       var params = {
         id: item.id,
         brandId: item.brandId,
         groupId: item.groupId,
         activityId: item.activityId,
         checkMessage: item.checkMessage,
-        checkStatus: parseInt(statusC, 10)
+        checkStatus: statusC,
+        memo: item.memo
       };
-      let data = item.presentSkuVO;
-      if (data) {
-        if (data.isSkuNecessary == 1) {
-          params["skuNecessary"] = item.skuNecessary;
-        }
-      }
       if (statusC == 2 || statusC == 3) {
         if (!item.checkMessage) {
           this.$Message.error("请输入审核意见");
           return false;
         }
       }
-      if (statusC == 1001) {
+      if (statusC == 1) {
         delete params["checkMessage"];
       }
-      this.Global.doPost("displayYxtg/displayVideoAudit.json", params, res => {
+      this.Global.doPost("audit/doVideoSecondAudit.json", params, res => {
         this.storeGoodsList.splice(index, 1);
-        this.saveData = {};
         this.goodsStausShow = false;
         this.$Message.success("保存成功");
         this.formItem.status = "";
+
+        this.barDataKey.reviewNum++;
+        // 判断审核是否与初审状态相同
+        if (item.status == item.checkFirstOneStatus) {
+          //相同
+          this.barDataKey.correctNum++; //正确数 + 1
+        } else {
+          //不同
+          this.barDataKey.errorNum++; //错误数 + 1
+        }
+        this.calculationRate();
         if (this.storeGoodsList.length == 0) {
           this.init();
         }

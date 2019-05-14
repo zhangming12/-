@@ -63,27 +63,17 @@ span.btn {
           <div class="container">
             <div class="btn-left w18">
               <Form-item required>
-                <DatePicker
-                  style="display:block;"
-                  type="date"
-                  v-model="formData.queryStartTime"
-                  placeholder="开始时间"
-                ></DatePicker>
+                <data-range hour="00:00" v-model="formData.queryStartTime" placeholder="开始时间"/>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item required>
-                <DatePicker
-                  style="display:block;"
-                  type="date"
-                  v-model="formData.queryEndTime"
-                  placeholder="结束时间"
-                ></DatePicker>
+                <data-range hour="24:00" v-model="formData.queryEndTime" placeholder="结束时间"/>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item prop="brandId">
-                <Input placeholder="图像编号" clearable v-model.trim="formData.id"/>
+                <Input placeholder="图像编号" clearable v-model.trim="formData.recordId"/>
               </Form-item>
             </div>
           </div>
@@ -119,6 +109,7 @@ span.btn {
 import { EDFAULT_THREE_AGOTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 
 import hhTable from "@/components/table/table.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 export default {
   name: "return-notice-keepAlive",
@@ -140,14 +131,14 @@ export default {
         },
         {
           title: "图像编号",
-          key: "userName",
+          key: "recordId",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "团队",
-          key: "userName",
+          key: "teamName",
           align: "center",
           minWidth: 120,
           tooltip: true
@@ -161,41 +152,38 @@ export default {
         },
         {
           title: "结果",
-          key: "userName",
+          key: "checkStatus",
           align: "center",
           minWidth: 120,
-          tooltip: true
+          tooltip: true,
+          render: (h, params) => {
+            let result = {
+              1: "通过",
+              1001: "通过",
+              1002: "不通过",
+              2001: "通过",
+              2: "不通过",
+              3: "退回"
+            };
+            return h("div", result[params.row.checkStatus]);
+          }
         },
         {
           title: "时间",
-          key: "userName",
+          key: "operateTime",
           align: "center",
           minWidth: 120,
-          tooltip: true
+          tooltip: true,
+          render: (h, params) => {
+            let time = this.Global.createTime(params.row.operateTime);
+            return h("div", time);
+          }
         },
         {
           title: "审核意见",
-          key: "userName",
+          key: "checkMessage",
           align: "center",
-          tooltip: true,
-          render: (h, params) => {
-            let tag = [
-              h("span", [
-                999999999,
-                h(
-                  "sup",
-                  {
-                    style: {
-                      color: "red",
-                      display: true ? "inline" : "none"
-                    }
-                  },
-                  "new"
-                )
-              ])
-            ];
-            return h("div", tag);
-          }
+          tooltip: true
         }
       ],
       pageSize: 20,
@@ -204,7 +192,8 @@ export default {
   },
   components: {
     hhTable,
-    fieldNameDes
+    fieldNameDes,
+    dataRange
   },
   methods: {
     submit(name) {
@@ -220,26 +209,12 @@ export default {
       var data = this.Global.JsonChange(this.formData);
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
-      if (this.formData.queryStartTime) {
-        data["queryStartTime"] = this.Global.createTime(
-          this.formData.queryStartTime
-        );
-      } else {
-        delete data["queryStartTime"];
-      }
-      if (this.formData.queryEndTime) {
-        data["queryEndTime"] = this.Global.createTime(
-          this.formData.queryEndTime
-        );
-      } else {
-        delete data["queryEndTime"];
-      }
       this.Global.deleteEmptyProperty(data);
-      this.Global.doPost("verific/getVerificData.json", data, res => {
+      this.Global.doPost("audit/auditLog.json", data, res => {
+        this.pageData = res.datalist;
         this.noneStatus = true;
         this.pageNum = res.items;
         this.page = res.page;
-        this.pageData = res.datalist;
       });
     }
   }

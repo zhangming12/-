@@ -1,12 +1,18 @@
 <template>
   <div id="app">
-        <router-view></router-view>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 export default {
-  name: "app"
+  name: "app",
+  created() {
+    // this.$store.dispatch("getNoticeMsg");
+    // setInterval(() => {
+    //   this.$store.dispatch("getNoticeMsg");
+    // }, 3600000);
+  }
 };
 </script>
 
@@ -71,15 +77,15 @@ li {
   padding: 10px 0 10px 10px !important;
   font-size: 14px;
 }
-.ivu-menu-vertical .ivu-menu-item{
+.ivu-menu-vertical .ivu-menu-item {
   font-size: 12px;
   padding: 10px 24px !important;
 }
 
-.ivu-tooltip{
+.ivu-tooltip {
   width: 100% !important;
 }
-.ivu-tooltip-rel{
+.ivu-tooltip-rel {
   overflow: hidden !important;
   white-space: nowrap !important;
   text-overflow: ellipsis !important;

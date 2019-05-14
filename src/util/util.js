@@ -227,11 +227,9 @@ let util = {
             )
     },
     checkPhone(phone) {
-        if (!/^1[3456789]\d{9}$/.test(phone)) {
+        if (!/^1[3456789]\d{9}$/.test(phone))
             return false;
-        } else {
-            return true;
-        }
+        return true;
     },
     getHoursData(time) {
         let num = Number(this.createTime(time).slice(11, 2));
@@ -239,7 +237,6 @@ let util = {
     },
     setHoursData(time, val) {
         if (!time) {
-            // iVue.Message.info("时间不能为空");
             return false;
         }
         let str = "";
@@ -635,19 +632,6 @@ let util = {
         }
         return o;
     },
-    // checkTime(sTime, eTime) {
-    //     if (sTime && eTime) {
-    //         if (this.strToTime(sTime) >= this.strToTime(eTime)) {
-    //             return false
-    //         }
-    //         return true
-    //     } else {
-    //         return false
-    //     }
-    // },
-    // strToTime(str) {
-
-    // },
     ENUMS: {
         goodsType: {
             '0': '电子券',

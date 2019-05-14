@@ -43,7 +43,7 @@ export const routers = [{
             {
                 path: '/widthdraw',
                 name: 'widthdraw',
-                title: '转入&提现',
+                title: '转出&提现',
                 component: _import('account/widthdraw/list')
             },
             {
@@ -1699,11 +1699,18 @@ export const routers = [{
                 component: _import('protocolRelated/agreement-audit-query')
             },
             {
-                //湛江太古码包回导
+                //惠合码包回导
                 path: '/zhanJiangCodeExport',
                 name: 'zhanJiangCodeExport',
-                title: "湛江太古码包回导",
+                title: "惠合码包回导",
                 component: _import('code-management-maintenance/zhan-jiang-code-export')
+            },
+            {
+                //惠合码包回导
+                path: '/huiheCodeExport',
+                name: 'huiheCodeExport',
+                title: "惠合码包回导",
+                component: _import('code-management-maintenance/hui-he-code-export')
             },
             {
                 //审核记录(单)
@@ -2085,11 +2092,18 @@ export const routers = [{
                 component: _import('ZJTGActivity/integrated-console')
             },
             {
-                //审核
+                //审核(J)
                 path: '/outSourceAudit',
                 name: 'outSourceAudit',
-                title: "审核",
+                title: "审核(J)",
                 component: _import('audit/out-source-audit')
+            },
+            {
+                //审核(W)
+                path: '/outSourceAuditW',
+                name: 'outSourceAuditW',
+                title: "审核(W)",
+                component: _import('audit/out-source-audit-w')
             },
             {
                 //审核记录
@@ -2266,10 +2280,10 @@ export const routers = [{
                 component: _import('customer-quality-system/testing-record')
             },
             {
-                //质检记录-复审
+                //复审记录
                 path: '/testingRecordTwice',
                 name: 'testingRecordTwice',
-                title: "质检记录-复审",
+                title: "复审记录",
                 component: _import('customer-quality-system/testing-record-twice')
             },
             {

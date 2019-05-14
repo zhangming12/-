@@ -9,16 +9,6 @@
   min-height: 100%;
   background: #ffffff;
   padding-bottom: 60px;
-  .form {
-    display: flex;
-    justify-content: space-between;
-  }
-  .container {
-    flex: 1;
-    .w18 {
-      width: 20%;
-    }
-  }
   .w10 {
     width: 12.5%;
   }
@@ -140,32 +130,94 @@ span.btn {
         <Form ref="form" class="form" :model="formData" :label-width="10" :rules="rule">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item   required>
-                <DatePicker type="date" v-model="formData.queryStartTime" placeholder="开始时间"></DatePicker>
+              <Form-item required>
+                <data-range hour="00:00" v-model="formData.queryStartTime" placeholder="开始时间"/>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
-                <DatePicker type="date" v-model="formData.queryEndTime" placeholder="结束时间"></DatePicker>
+              <Form-item required>
+                <data-range hour="24:00" v-model="formData.queryEndTime" placeholder="结束时间"/>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="brandId">
+                <Select
+                  v-model="formData.brandId"
+                  placeholder="品牌名称"
+                  @on-change="changeValue"
+                  clearable
+                >
+                  <Option
+                    :value="item.brandId"
+                    v-for="(item,index) in brandList"
+                    :key="item.brandId"
+                  >{{ item.brandName }}</Option>
+                </Select>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item>
-                <Select v-model="formData.type" placeholder="类型" clearable>
-                  <Option value="all">全部</Option>
-                  <Option value="success">质检</Option>
-                  <Option value="fail">复审</Option>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="活动名称"
+                  @on-change="getActivityList"
+                  clearable
+                >
+                  <Option
+                    :value="item.groupId"
+                    v-for="(item,index) in groupList"
+                    :key="item.groupId"
+                  >{{ item.groupName }}</Option>
                 </Select>
               </Form-item>
             </div>
-          </div>
-          <div class="btn-right w10">
-            <div class="searchBox">
-              <div class="btn-right search-right" @click="submit('form')">
-                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+            <div class="btn-left w18">
+              <Form-item prop="activityId">
+                <Select v-model="formData.activityId" placeholder="子活动名称" clearable>
+                  <Option
+                    :value="item.activityId"
+                    v-for="(item,index) in activityList"
+                    :key="item.activityId"
+                  >{{ item.activityName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-right w10">
+              <div class="searchBox">
+                <div class="btn-left search-left" @click="showQuery=!showQuery">
+                  <button type="button">
+                    {{showQuery?'收起':'更多'}}
+                    <Icon
+                      type="ios-arrow-down"
+                      size="14"
+                      style="margin-top:-2px;"
+                      v-if="!showQuery"
+                    />
+                    <Icon type="ios-arrow-up" size="14" style="margin-top:-2px;" v-else/>
+                  </button>
+                </div>
+                <div class="btn-right search-right" @click="submit('search')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+                </div>
               </div>
             </div>
           </div>
+
+          <transition name="fade">
+            <div class="container" v-if="showQuery">
+              <div class="btn-left w18">
+                <Form-item prop="groupId" required>
+                  <Select v-model="formData.teamId" placeholder="团队" clearable>
+                    <Option
+                      :value="item.id"
+                      v-for="(item,index) in teamList"
+                      :key="item.id"
+                    >{{ item.brandName }}</Option>
+                  </Select>
+                </Form-item>
+              </div>
+            </div>
+          </transition>
         </Form>
       </div>
       <div class="table-box box">
@@ -191,12 +243,14 @@ span.btn {
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 
 import myModal from "@/components/Modal/my-modal.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import hhTable from "@/components/table/table.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 export default {
   name: "testing-record-keepAlive",
   data() {
     return {
+      showQuery: false,
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME
@@ -221,98 +275,188 @@ export default {
         },
         {
           title: "团队",
-          key: "userName",
+          key: "teamName",
+          align: "center",
+          minWidth: 120,
+          tooltip: true
+        },
+        {
+          title: "时间",
+          key: "time",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "品牌",
-          key: "userName",
+          key: "brandName",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "活动",
-          key: "userName",
+          key: "groupName",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "项目",
-          key: "userName",
+          key: "activityName",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "分组",
-          key: "userName",
+          key: "presentName",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
-          title: "审核数",
-          key: "userName",
+          title: "总数",
+          key: "totalNum",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
-          title: "错误数",
-          key: "userName",
+          title: "抽检率",
+          key: "sampleRate",
+          align: "center",
+          minWidth: 120,
+          tooltip: true
+        },
+        {
+          title: "正确率",
+          key: "correctPrecent",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "结果",
-          key: "userName",
+          key: "operateType",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "数量",
-          key: "userName",
+          key: "actualNum",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "操作时间",
-          key: "userName",
+          key: "operateTime",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "意见",
-          key: "result",
+          key: "message",
           align: "center",
           minWidth: 120,
-          tooltip: true,
-          render: (h, params) => {
-            let result =
-              params.row.result == "success" ? "核销成功" : "核销失败";
-            return h("div", result);
-          }
+          tooltip: true
         }
       ],
       pageSize: 10,
-      pageData: []
+      pageData: [],
+      brandList: [],
+      groupList: [],
+      activityList: [],
+      teamList: []
     };
   },
   components: {
     myModal,
     hhTable,
-    fieldNameDes
+    fieldNameDes,
+    dataRange
   },
-  created() {},
+  created() {
+    this.queryBrand();
+    this.queryTeam();
+  },
   methods: {
+    //获取userType
+    getUserType() {
+      return JSON.parse(window.sessionStorage.getItem("user")).userType;
+    },
+    //查询团队
+    queryTeam() {
+      let userType = this.getUserType();
+      let api = "audit/queryAllTeam.json";
+      let data = "";
+      // if (userType == "p") {
+      //   // api = "audit/queryAllTeam.json";
+      // } else {
+      //   // api = "audit/queryTeamByUser.json";
+      //   data = 666;
+      // }
+      this.Global.doPostNoLoading(api, data, res => {
+        this.teamList = res;
+      });
+    },
+    queryBrand() {
+      this.Global.doPostNoLoading(
+        "condition/queryBrands.json",
+        { date: 7, activityType: 3, scope: "a" },
+        res => {
+          this.brandList = [];
+          Object.entries(res).forEach(item => {
+            this.brandList.push({
+              brandId: Number(item[0]),
+              brandName: item[1]
+            });
+          });
+          if (this.brandList && this.brandList.length) {
+            this.formData.brandId = res[0].brandId;
+          }
+        }
+      );
+    },
+    changeValue(value) {
+      this.groupList = [];
+      this.formData.groupId = "";
+      if (!value) return;
+      //查询活动包
+      this.Global.doPostNoLoading(
+        "condition/queryGroup.json",
+        { date: 7, activityType: 3, scope: "a", brandId: value },
+        res => {
+          Object.entries(res).forEach(item => {
+            this.groupList.push({
+              groupId: Number(item[0]),
+              groupName: item[1]
+            });
+          });
+        }
+      );
+    },
+    getActivityList(val) {
+      this.activityList = [];
+      this.formData.activityId = "";
+      if (!val) return;
+      //查询活动
+      this.Global.doPostNoLoading(
+        "condition/queryActivity.json",
+        { date: 7, activityType: 3, scope: "a", groupId: val },
+        res => {
+          Object.entries(res).forEach(item => {
+            this.activityList.push({
+              activityId: Number(item[0]),
+              activityName: item[1]
+            });
+          });
+        }
+      );
+    },
     submit(name) {
       this.page = 1;
       this.init();
@@ -335,38 +479,22 @@ export default {
       var data = this.Global.JsonChange(this.formData);
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
-      if (this.formData.queryStartTime) {
-        data["queryStartTime"] = this.Global.createTime(
-          this.formData.queryStartTime
-        );
-        if (this.start.hour == "24:00") {
-          data["queryStartTime"] = this.Global.setHoursData(
-            this.start.time,
-            this.start.hour
-          );
-        }
-      } else {
-        delete data["queryStartTime"];
-      }
-      if (this.formData.queryEndTime) {
-        data["queryEndTime"] = this.Global.createTime(
-          this.formData.queryEndTime
-        );
-        if (this.end.hour == "24:00") {
-          data["queryEndTime"] = this.Global.setHoursData(
-            this.end.time,
-            this.end.hour
-          );
-        }
-      } else {
-        delete data["queryEndTime"];
-      }
+      data["checkType"] = "2";
       this.Global.deleteEmptyProperty(data);
-      this.Global.doPost("verific/getVerificData.json", data, res => {
+      this.Global.doPost("audit/queryQualityRecheckRecord.json", data, res => {
         this.noneStatus = true;
         this.pageNum = res.items;
         this.page = res.page;
         this.pageData = res.datalist;
+        let result = {
+          "1": "批量通过",
+          "2": "批量不通过",
+          "3": "完成"
+        };
+        res.datalist.forEach(item => {
+          item.operateTime = this.Global.createTime(item.operateTime);
+          item.operateType = result[item.operateType];
+        });
       });
     }
   }

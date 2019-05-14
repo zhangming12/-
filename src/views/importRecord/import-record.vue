@@ -333,10 +333,6 @@ export default {
                   on: {
                     click: () => {
                       let url = DEV_CONFIG.downloadServer + params.row.filePath;
-                      // let url = this.Global.getExportUrl(
-                      //   "downloadFile.json",
-                      //   params.row.clientType
-                      // );
                       window.open(url);
                     }
                   }

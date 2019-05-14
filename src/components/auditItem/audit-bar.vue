@@ -39,26 +39,26 @@
       <Col span="3" v-for="(item,key,index) in barData" :key="index">
         <div class="bar-item">
           <span>{{ item.title }} :</span>
-          <span>{{ item.value ? item.value : 0 }}</span>
+          <span>{{ barDataKey[item.key] }}</span>
         </div>
       </Col>
       <Col span="2" offset="2">
         <div class="bar-item">
-          <Button type="default" @click="batchPass">全部通过</Button>
+          <Button type="default" :disabled="barDataKey.isDis" @click="batchPass">全部通过</Button>
         </div>
       </Col>
       <Col span="2">
         <div class="bar-item">
-          <Button type="default" @click="noPass">全部不通过</Button>
+          <Button type="default" :disabled="barDataKey.isDis" @click="noPass">全部不通过</Button>
         </div>
       </Col>
     </Row>
     <Modal v-model="showNoPass" width="400">
       <div class="audit-bar-modal">
         <div class="bar-modal-head">
-          <span>总数：200个</span>
-          <span>抽检率：45%</span>
-          <span>正确率：48%</span>
+          <span>总数：{{ barDataKey['totalNum'] }}个</span>
+          <span>抽检率：{{ barDataKey['precent'] }}</span>
+          <span>正确率：{{ barDataKey['correctPrecent'] }}</span>
         </div>
         <div class="bar-modal-main">
           <Input
@@ -84,6 +84,9 @@ export default {
   props: {
     barData: {
       type: Array
+    },
+    barDataKey: {
+      type: Object
     }
   },
   data() {

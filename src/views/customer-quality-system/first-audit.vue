@@ -15,6 +15,7 @@
       border: 1px solid #e5e5e5;
       float: left;
       width: 47%;
+      height: 445px;
       margin-left: 2%;
       border-radius: 2px;
       margin-bottom: 10px;
@@ -39,28 +40,6 @@
 .numColor {
   color: @primary-color;
 }
-.photo {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  .photo-left,
-  .photo-right {
-    flex: 1;
-    .photo-title {
-      text-align: center;
-    }
-    .photo-img {
-      padding: 10px;
-      box-sizing: border-box;
-      img {
-        display: block;
-        max-width: 100%;
-        border: 1px solid #e5e5e5;
-        min-height: 100px;
-      }
-    }
-  }
-}
 .ivu-modal-footer {
   border: none !important;
 }
@@ -74,48 +53,33 @@
         <Form ref="form" :model="formData" :label-width="10">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item  >
-                <data-range
-                  placeholder="上传开始时间"
-                  hour="00:00"
-                  v-model="formData.queryStartTime"
-                  start
-                ></data-range>
+              <Form-item>
+                <data-range placeholder="上传开始时间" hour="00:00" v-model="formData.queryStartTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item  >
+              <Form-item>
                 <data-range hour="24:00" placeholder="上传结束时间" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item prop="brandId">
-                <Select
-                  v-model="formData.brandId"
-                  placeholder="品牌名称"
-                  @on-change="changeValue"
-                  clearable
-                >
+                <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
                   <Option
-                    :value="item.id"
+                    :value="item.brandId"
                     v-for="(item,index) in brandList"
-                    :key="item.id"
+                    :key="item.brandId"
                   >{{ item.brandName }}</Option>
                 </Select>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item>
-                <Select
-                  v-model="formData.groupId"
-                  placeholder="活动名称"
-                  @on-change="getActivityList"
-                  clearable
-                >
+                <Select v-model="formData.groupId" placeholder="活动名称*" @on-change="getActivityList">
                   <Option
-                    :value="item.id"
+                    :value="item.groupId"
                     v-for="(item,index) in groupList"
-                    :key="item.id"
+                    :key="item.groupId"
                   >{{ item.groupName }}</Option>
                 </Select>
               </Form-item>
@@ -124,15 +88,15 @@
               <Form-item prop="activityId">
                 <Select
                   v-model="formData.activityId"
-                  placeholder="子活动名称"
+                  placeholder="项目*"
                   @on-change="getpresentList"
                   clearable
                 >
                   <Option
-                    :value="item.id"
+                    :value="item.activityId"
                     v-for="(item,index) in activityList"
-                    :key="item.id"
-                  >{{ item.name }}</Option>
+                    :key="item.activityId"
+                  >{{ item.activityName }}</Option>
                 </Select>
               </Form-item>
             </div>
@@ -162,26 +126,35 @@
                 <Form-item prop="activityId">
                   <Select v-model="formData.presentId" placeholder="子活动分组" clearable>
                     <Option
-                      :value="item.id"
+                      :value="item.presentId"
                       v-for="(item,index) in presentNameList"
-                      :key="item.id"
-                    >{{ item.activityTag }}</Option>
+                      :key="item.presentId"
+                    >{{ item.presentName }}</Option>
                   </Select>
                 </Form-item>
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
+                  <Input v-model.trim="formData.joinCode" placeholder="客户编号" clearable></Input>
                 </Form-item>
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Input v-model.trim="formData.storeName" placeholder="门店名称"></Input>
+                  <Input v-model.trim="formData.id" placeholder="图像编号" clearable></Input>
                 </Form-item>
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Input v-model.trim="formData.salesRoute" placeholder="销售路线"></Input>
+                  <Input v-model.trim="formData.salesRoute" placeholder="销售路线" clearable></Input>
+                </Form-item>
+              </div>
+              <div class="btn-left w18">
+                <Form-item prop="activityId">
+                  <Select v-model="formData.defer" placeholder="状态" clearable>
+                    <Option value="all">全部</Option>
+                    <Option value="0">初审</Option>
+                    <Option value="1">暂缓</Option>
+                  </Select>
                 </Form-item>
               </div>
             </div>
@@ -195,7 +168,10 @@
       >
         <p style="padding-left:10px;margin-bottom:10px;">
           待处理记录
-          <span class="numColor">{{ allNum }}</span>
+          <span class="numColor">{{ allNum }},</span>
+          有
+          <span class="numColor">{{ deferNum }}</span>
+          条暂缓
         </p>
         <div class="card" v-for="(item,index) in storeGoodsList" :key="index">
           <audit-item
@@ -207,11 +183,9 @@
             showReprieve
             @lookDetail="lookDetail"
             @save="save"
-            @showPhoto="showPhoto"
           ></audit-item>
         </div>
       </div>
-      <!-- <div class="noData" v-else>暂无数据</div> -->
       <no-data v-else :noneStatus="noneStatus"/>
     </div>
     <!-- 审核意见 -->
@@ -228,9 +202,9 @@
         <Form :model="formItem" :label-width="60">
           <FormItem label="状态:">
             <RadioGroup v-model="formItem.checkStatus" @on-change="handleIsPass">
-              <Radio label="1001">通过</Radio>
-              <Radio label="2">不通过</Radio>
-              <Radio v-if="formItem.isBack == 0" label="3">退回</Radio>
+              <Radio :label="1">通过</Radio>
+              <Radio :label="2">不通过</Radio>
+              <Radio v-if="formItem.isBack == 0" :label="3">退回</Radio>
             </RadioGroup>
           </FormItem>
 
@@ -259,36 +233,12 @@
         <Button type="warning" @click="saveEditStatus">确定</Button>
       </div>
     </Modal>
-    <!-- 显示门头照 -->
-    <Modal v-model="photoShow" width="1000">
-      <p slot="header" style="color:#f60;text-align:center">门头照</p>
-      <div class="photo">
-        <div class="photo-left">
-          <div class="photo-title">上传门头照</div>
-          <div class="photo-img">
-            <img src alt>
-          </div>
-        </div>
-        <div class="photo-right">
-          <div class="photo-title">签约门头照</div>
-          <div class="photo-img">
-            <img src alt>
-          </div>
-        </div>
-      </div>
-      <div slot="footer" style="display:none;">
-        <Button type="warning" @click="photoShow = false">确定</Button>
-      </div>
-    </Modal>
   </div>
 </template>
 
 <script>
 import dataRange from "@/components/data-range/data-range.vue";
 import noData from "@/components/NoData/no-data.vue";
-import {
-  queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
-} from "@/api/common.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import auditItem from "@/components/auditItem/audit-item.vue";
 export default {
@@ -300,8 +250,8 @@ export default {
   },
   data() {
     return {
+      deferNum: 0,
       noneStatus: false,
-      photoShow: false, //门头照显示
       showList: [
         {
           title: "提交时间",
@@ -312,12 +262,12 @@ export default {
           key: "id"
         },
         {
-          title: "活动名称",
+          title: "项目名称",
           key: "activityName"
         },
         {
           title: "活动分组",
-          key: "activityTag"
+          key: "presentName"
         },
         {
           title: "预警",
@@ -333,7 +283,6 @@ export default {
       index: null,
       showQuery: false,
       groupList: [], //活动包名
-      saveData: {},
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME,
@@ -345,7 +294,8 @@ export default {
         workerName: "",
         workerPhone: "",
         joinCode: "",
-        salesRoute: ""
+        salesRoute: "",
+        defer: "all"
       },
       brandList: [],
       activityList: [],
@@ -353,8 +303,7 @@ export default {
       goodsStausShow: false,
       formItem: {
         storeName: "",
-        checkStatus: "",
-        isBack: null
+        checkStatus: ""
       },
       presentNameList: [],
       checkMessage: "",
@@ -372,13 +321,6 @@ export default {
   },
   mounted() {},
   watch: {
-    "formItem.checkStatus"(val) {
-      if (val == 2001 || val == 1001) {
-        this.activityIsPass = false;
-      } else if (val == 1002 || val == 1003 || val == 2 || val == 3) {
-        this.activityIsPass = true;
-      }
-    },
     goodsStausShow(val) {
       //模态框关闭，清空
       if (val == false) {
@@ -387,34 +329,12 @@ export default {
     }
   },
   methods: {
-    //查询品牌
     queryBrand() {
-      this.Global.doPostNoLoading(
-        "condition/queryBrands.json",
-        { date: 7, activityType: 3, scope: "a" },
-        res => {
-          this.brandList = [];
-          Object.entries(res).forEach(item => {
-            this.brandList.push({ id: Number(item[0]), brandName: item[1] });
-          });
-          if (this.brandList && this.brandList.length) {
-            this.formData.brandId = this.brandList[0].id;
-            this.changeValue(this.formData.brandId);
-          }
-        }
-      );
-    },
-    // 显示门头照
-    showPhoto(index) {
-      this.photoShow = true;
-    },
-    //根据项目获取分组
-    getpresentList(value) {
-      this.presentNameList = [];
-      this.$set(this.formData, "presentId", "");
-      queryActivityPresentVOByactivityId(value).then(res => {
-        if (res && res.status == 1) {
-          this.presentNameList = res.data;
+      this.Global.doPostNoLoading("audit/queryBrandByTeam.json", "1", res => {
+        this.brandList = res;
+        if (res && res.length) {
+          this.$set(this.formData, "brandId", res[0].brandId);
+          this.changeValue(this.formData.brandId);
         }
       });
     },
@@ -422,61 +342,75 @@ export default {
     changeValue(value) {
       this.groupList = [];
       this.formData.groupId = "";
+      if (!value) return;
       this.Global.doPostNoLoading(
-        "condition/queryGroup.json",
-        { date: 7, activityType: 3, scope: "a", brandId: value },
+        "audit/queryGroupByBrandAndTeam.json",
+        value,
         res => {
-          Object.entries(res).forEach(item => {
-            this.groupList.push({ id: Number(item[0]), groupName: item[1] });
-          });
+          this.groupList = res;
           if (this.groupList && this.groupList.length) {
-            this.formData.groupId = this.groupList[0].id;
+            this.formData.groupId = this.groupList[0].groupId;
             this.getActivityList(this.formData.groupId);
           }
         }
       );
     },
     //根据活动获取项目
-    getActivityList(value) {
+    getActivityList(val) {
       this.activityList = [];
       this.formData.activityId = "";
+      if (!val) return;
+      //查询活动
+      this.Global.doPostNoLoading(
+        "audit/queryActivityByBrandAndTeam.json",
+        val,
+        res => {
+          this.activityList = res;
+          if (res && res.length) {
+            this.formData.activityId = res[0].activityId;
+            this.getpresentList(this.formData.activityId);
+          }
+        }
+      );
+    },
+    //根据项目获取分组
+    getpresentList(value) {
+      this.presentNameList = [];
+      this.$set(this.formData, "presentId", "");
       if (!value) return;
       this.Global.doPostNoLoading(
-        "condition/queryActivity.json",
-        { date: 7, activityType: 3, scope: "a", groupId: value },
+        "audit/queryPresentByActivityAndTeam.json",
+        value,
         res => {
-          Object.entries(res).forEach(item => {
-            this.activityList.push({ id: Number(item[0]), name: item[1] });
-          });
+          this.presentNameList = res;
         }
       );
     },
     //审核状态变化
     radioChange(obj) {
       let { index, val } = obj;
-      let arr = val.split("-");
       this.index = index;
-      this.saveData.brandId = this.storeGoodsList[index].brandId;
-      this.saveData.groupId = this.storeGoodsList[index].groupId;
-      this.formItem.isBack = this.storeGoodsList[index].isBack;
 
+      this.formItem.checkStatus = val;
       this.displayExamineWordList = [];
-      this.wordList = this.getDisplayExamineWord(
-        this.saveData.brandId,
-        this.saveData.groupId
-      );
-      if (val != 1001) {
+
+      if (val != 1) {
+        let { brandId, groupId, presentId, isBack } = this.storeGoodsList[
+          index
+        ];
+        this.formItem.isBack = isBack;
+        this.wordList = this.getDisplayExamineWord(brandId, groupId, presentId);
         this.goodsStausShow = true;
         this.activityIsPass = true;
       }
     },
     //获取审核话术
-    getDisplayExamineWord(brandId, groupId) {
+    getDisplayExamineWord(brandId, groupId, presentId) {
       this.wordList = [];
       this.displayExamineWordList = [];
       this.Global.doPost(
         "displayYxtg/queryAuditReason.json",
-        { brandId, groupId },
+        { brandId, groupId, presentId },
         res => {
           if (res && res.length) {
             this.wordList = res;
@@ -498,7 +432,6 @@ export default {
         return item.content.indexOf(val) != -1;
       });
     },
-
     //查询
     submit(name) {
       this.page = 1;
@@ -509,45 +442,77 @@ export default {
         this.$Message.error("活动包不能为空");
         return;
       }
+      if (!this.formData.activityId) {
+        this.$Message.error("项目不能为空");
+        return;
+      }
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = 1;
       data["pageSize"] = this.pageSize;
-      data["brandId"] = this.formData.brandId;
-      data["level"] = 1;
-      this.Global.doPost(
-        "displayYxtg/queryAcrossAuditByUpdatedVersion.json",
-        data,
-        res => {
-          this.noneStatus = true;
-          this.allNum = res.items;
-          this.storeGoodsList = res.datalist;
-          if (res.datalist && res.datalist.length) {
-            res.datalist.forEach(item => {
-              let imageList = [];
-              if (item.image) {
-                imageList = item.image.filter(val => val);
+      if (this.formData.defer == "all") {
+        delete data["defer"];
+      }
+      this.Global.doPost("audit/queryFirstVideo.json", data, res => {
+        this.noneStatus = true;
+        this.allNum = res.items;
+        this.storeGoodsList = res.datalist;
+        this.deferNum = res.itemsPerPage;
+        if (res.datalist && res.datalist.length) {
+          res.datalist.forEach(item => {
+            let imageList = [];
+            if (item.image) {
+              imageList = item.image.filter(val => val);
+            }
+            item.submitTime = new Date(item.submitTime).pattern(
+              "yyyy-MM-dd hh:mm:ss"
+            );
+            item.storeRange = item.storeRange > 200 ? "位置偏移" : "无";
+            item.imageList = imageList;
+            item.checkProject = {};
+            item.len = 0;
+
+            let firstImageList = [];
+            if (item.firstRadio) {
+              if (item.firstRadio.image) {
+                firstImageList = item.firstRadio.image.filter(val => val);
               }
-              item.submitTime = new Date(item.submitTime).pattern(
-                "yyyy-MM-dd hh:mm:ss"
-              );
-              item.storeRange = item.storeRange > 200 ? "位置偏移" : "无";
-              item.imageList = imageList;
-              item.checkProject = {};
-              item.len = 0;
-              let firstImageList = [];
-              if (item.firstRadio) {
-                if (item.firstRadio.image) {
-                  firstImageList = item.firstRadio.image.filter(val => val);
+            }
+            item.firstImageList = firstImageList;
+
+            if (item.fileType == "radio") {
+              item.imageOneUrl = item.firstRadio
+                ? item.firstRadio.radioUrl
+                : "";
+              item.imageTwoUrl = item.radioUrl;
+            } else {
+              item.imageOneUrl = item.firstRadio ? item.firstRadio.image : [];
+              item.imageTwoUrl = item.image;
+            }
+
+            item.showBack =
+              !item.firstTwoBatchMessage && !item.secondBatchMessage
+                ? false
+                : true;
+            if (item.showBack) {
+              let backMessage = "";
+              if (item.firstTwoBatchMessage) {
+                backMessage += `复：${item.firstTwoBatchMessage}`;
+              }
+              if (item.secondBatchMessage) {
+                if (item.firstTwoBatchMessage) {
+                  backMessage += "|";
                 }
+                backMessage += `质：${item.secondBatchMessage}`;
               }
-              item.firstImageList = firstImageList;
-            });
-          }
-          this.pageNum = res.items;
-          // this.page = res.page;
+              item.backMessage = backMessage;
+            } else {
+              item.backMessage = "";
+            }
+          });
         }
-      );
+        this.pageNum = res.items;
+      });
     },
     //获取tooltip的位置
     getPosition(index) {
@@ -573,27 +538,19 @@ export default {
     },
     //弹窗保存
     saveEditStatus() {
-      let objList = this.saveData;
       if (!this.formItem.checkStatus) {
         this.$Message.warning("请选择审核状态");
         return false;
       }
-      if (this.formItem.checkStatus != "1001" && !this.checkMessage) {
+      if (this.formItem.checkStatus != 1 && !this.checkMessage) {
         this.$Message.warning("请选择不通过的原因");
         return false;
       }
-      if (
-        this.formItem.checkStatus == "2" ||
-        this.formItem.checkStatus == "3"
-      ) {
+      if (this.formItem.checkStatus == 2 || this.formItem.checkStatus == 3) {
         //不通过、退回
-        objList["checkMessage"] = this.checkMessage;
+        this.storeGoodsList[this.index].checkMessage = this.checkMessage;
       }
-      objList["checkStatus"] = this.formItem.checkStatus;
-      this.storeGoodsList[this.index].checkMessage = objList["checkMessage"];
-      this.storeGoodsList[this.index].status = `${this.index}-${
-        this.formItem.checkStatus
-      }`;
+      this.storeGoodsList[this.index].status = this.formItem.checkStatus;
 
       this.goodsStausShow = false;
       this.formItem = {};
@@ -604,51 +561,56 @@ export default {
       this.formItem = {};
     },
     handleIsPass(val) {
-      this.activityIsPass = val == "2001" || val == "1001" ? false : true;
+      this.activityIsPass = val == 1 ? false : true;
     },
     //保存
     save(obj) {
       let { item, index } = obj;
-      let statusC = item.status;
-      if (!statusC) {
-        this.$Message.error("请选择审核状态");
-        return false;
-      }
-      statusC = statusC.split("-")[1];
-
-      var params = {
-        id: item.id,
-        brandId: item.brandId,
-        groupId: item.groupId,
-        activityId: item.activityId,
-        checkMessage: item.checkMessage,
-        checkStatus: parseInt(statusC, 10)
-      };
-      let data = item.presentSkuVO;
-      if (data) {
-        if (data.isSkuNecessary == 1) {
-          params["skuNecessary"] = item.skuNecessary;
-        }
-      }
-      if (statusC == 2 || statusC == 3) {
-        if (!item.checkMessage) {
-          this.$Message.error("请输入审核意见");
+      let { defer } = item;
+      //暂缓
+      if (defer == 1) {
+        let data = { id: item.id };
+        this.Global.doPost("audit/updateVideoDefer.json", data, res => {
+          this.$Message.success("暂缓成功");
+          if (this.formData.defer == 0) {
+            //当选择的状态为初审时，删除
+            this.storeGoodsList.splice(index, 1);
+          }
+        });
+      } else {
+        //正常的审核流程
+        let statusC = item.status;
+        if (!statusC) {
+          this.$Message.error("请选择审核状态");
           return false;
         }
-      }
-      if (statusC == 1001) {
-        delete params["checkMessage"];
-      }
-      this.Global.doPost("displayYxtg/displayVideoAudit.json", params, res => {
-        this.storeGoodsList.splice(index, 1);
-        this.saveData = {};
-        this.goodsStausShow = false;
-        this.$Message.success("保存成功");
-        this.formItem.status = "";
-        if (this.storeGoodsList.length == 0) {
-          this.init();
+        var params = {
+          id: item.id,
+          brandId: item.brandId,
+          groupId: item.groupId,
+          activityId: item.activityId,
+          checkMessage: item.checkMessage,
+          checkStatus: statusC,
+          memo: item.memo
+        };
+        if (statusC == 2 || statusC == 3) {
+          if (!item.checkMessage) {
+            this.$Message.error("请输入审核意见");
+            return false;
+          }
+        } else {
+          delete params["checkMessage"];
         }
-      });
+        this.Global.doPost("audit/doVideoFirstAudit.json", params, res => {
+          this.storeGoodsList.splice(index, 1);
+          this.goodsStausShow = false;
+          this.$Message.success("保存成功");
+          this.formItem.status = "";
+          if (this.storeGoodsList.length == 0) {
+            this.init();
+          }
+        });
+      }
     }
   }
 };

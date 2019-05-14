@@ -47,8 +47,9 @@ export default new vuex.Store({
     actions: {
         //获取noticeMsg
         getNoticeMsg(context) {
-            Util.doPost('condition/queryBrands.json', {}, res => {
-                context.commit('setNoticeMsg', 11);
+            Util.doPost('audit/unReadNum.json', {}, res => {
+                console.log(res);
+                context.commit('setNoticeMsg', res);
             })
         },
     },

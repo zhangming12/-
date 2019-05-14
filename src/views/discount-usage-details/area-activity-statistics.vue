@@ -128,114 +128,140 @@
 </style>
 <template>
   <div id="Main">
-      <!-- <h2 class="Title">区域奖品统计报表(市)</h2> -->
-      <div class="main-container">
-        <div class="box">
-          <Form ref="form" :model="formData" :label-width="10">
-              <div class="container">
-                    <div class="btn-left w18">
-                        <Form-item required prop="brandId">
-                            <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue" clearable>
-                                <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item  prop="groupId" required>
-                            <Select v-model="formData.groupId" placeholder="活动名称*" @on-change="getActivityList" clearable>
-                                <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item required prop="activityId">
-                            <Select v-model="formData.activityId" placeholder="子活动名" clearable>
-                                <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                            </Select>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item    required>
-                            <data-range @dataChange="startTimeChange" hour="00:00" :time="formData.queryStartTime" start></data-range>
-                        </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                        <Form-item    required>
-                            <data-range hour="24:00" placeholder="结束时间" @dataChange="endTimeChange" :time="formData.queryEndTime"></data-range>
-                        </Form-item>
-                    </div>
-                    
-                    <div class="btn-left w10">
-                        <div class="searchBox">
-                            <div class="btn-right search-right" @click="submit('search')">
-                            <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                            </div>
-                        </div>
-                    </div>
+    <!-- <h2 class="Title">区域奖品统计报表(市)</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item required prop="brandId">
+                <Select
+                  v-model="formData.brandId"
+                  placeholder="品牌名称*"
+                  @on-change="changeValue"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item prop="groupId" required>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="活动名称*"
+                  @on-change="getActivityList"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in groupList"
+                    :key="index"
+                  >{{ item.groupName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required prop="activityId">
+                <Select v-model="formData.activityId" placeholder="子活动名" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in activityList"
+                    :key="index"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <data-range
+                  @dataChange="startTimeChange"
+                  hour="00:00"
+                  :time="formData.queryStartTime"
+                  start
+                ></data-range>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <data-range
+                  hour="24:00"
+                  placeholder="结束时间"
+                  @dataChange="endTimeChange"
+                  :time="formData.queryEndTime"
+                ></data-range>
+              </Form-item>
+            </div>
+
+            <div class="btn-left w10">
+              <div class="searchBox">
+                <div class="btn-right search-right" @click="submit('search')">
+                  <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+                </div>
               </div>
-          </Form>
-        </div>
-        <div class="table-box box">
-            <div class="contentTop">
-              <span class="btn-left">共查询到 <span class='numColor'>{{pageNum}}</span> 条记录</span>
-              
-              <exportBtn  class="btn-right" @btnClick="submit('export')" title="导出"/>
-              <exportBtn  class="btn-right" @btnClick="myModalisShow = true" title="导出暂存"/>
             </div>
-            <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" ></hhTable>
-            
+          </div>
+        </Form>
+      </div>
+      <div class="table-box box">
+        <div class="contentTop">
+          <span class="btn-left">
+            共查询到
+            <span class="numColor">{{pageNum}}</span> 条记录
+          </span>
+
+          <exportBtn class="btn-right" @btnClick="submit('export')" title="导出"/>
+          <exportBtn class="btn-right" @btnClick="myModalisShow = true" title="导出暂存"/>
         </div>
-        <div class="page-box">
-            <div style="float: right;">
-                <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-            </div>
+        <hhTable ref="table" :columns="columns1" :pageData="pageData" :noneStatus="noneStatus"></hhTable>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      
-      <!-- 导入导出历史 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="myModalisShow"
-            width=800>
-          <div slot="main" class="modal-main">
-            <!-- <h3>近一周导出历史</h3> -->
-            <div class="modal-table" style="margin-top:0;">
-              <div class="modal-table-top">
-                <span class="btn-left"><Icon type="md-alert" size="22" style="margin-right:5px;" />生成的数据报表可在【导出暂存】中保留7天,过期自动删除</span>
-                <refreshBtn @click.native="queryhistoryData" class="btn-right"/>
-              </div>
-              <!-- <hhTable :columns="columns" :pageData="historyData"  disabled-hover></hhTable> -->
-              <Table :columns="columns" :data="historyData"  disabled-hover></Table>
-            </div>
-          </div>
-       </myModal>
+    </div>
 
-       <!-- 时间溢出弹窗 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="timeModalShow">
-          <div slot="main" class="modal-main">
-            <h3>提示</h3>
-            <div class="modal-table">
-                <p style="text-align:center;">{{ str }}的范围超过31天，请缩小查询范围或者前往【历史数据】中下载历史数据</p>
-            </div>
-            <div class="maintain-footer">
-                <Button @click="closeModal" type="text">知道了</Button>
-                <Button @click="goToHistory" style="color:#ff8a34;" type="text">前往【历史数据】</Button>
-            </div>
+    <!-- 导入导出历史 -->
+    <myModal class="myModal" @close="closeModal" :modal="myModalisShow" width="800">
+      <div slot="main" class="modal-main">
+        <!-- <h3>近一周导出历史</h3> -->
+        <div class="modal-table" style="margin-top:0;">
+          <div class="modal-table-top">
+            <span class="btn-left">
+              <Icon type="md-alert" size="22" style="margin-right:5px;"/>生成的数据报表可在【导出暂存】中保留7天,过期自动删除
+            </span>
+            <refreshBtn @click.native="queryhistoryData" class="btn-right"/>
           </div>
-       </myModal>
+          <Table :columns="columns" :data="historyData" disabled-hover></Table>
+        </div>
+      </div>
+    </myModal>
 
-       <!-- 历史数据 -->
-       <myModal class="myModal"
-            @close="closeModal"
-            :modal="historyShow"
-            width=800>
-          <div slot="main" class="modal-main" style="padding:0;">
-            <yearSelect :yearDataList="yearMonthData" />
-          </div>
-       </myModal>
+    <!-- 时间溢出弹窗 -->
+    <myModal class="myModal" @close="closeModal" :modal="timeModalShow">
+      <div slot="main" class="modal-main">
+        <h3>提示</h3>
+        <div class="modal-table">
+          <p style="text-align:center;">{{ str }}的范围超过31天，请缩小查询范围或者前往【历史数据】中下载历史数据</p>
+        </div>
+        <div class="maintain-footer">
+          <Button @click="closeModal" type="text">知道了</Button>
+          <Button @click="goToHistory" style="color:#ff8a34;" type="text">前往【历史数据】</Button>
+        </div>
+      </div>
+    </myModal>
 
+    <!-- 历史数据 -->
+    <myModal class="myModal" @close="closeModal" :modal="historyShow" width="800">
+      <div slot="main" class="modal-main" style="padding:0;">
+        <yearSelect :yearDataList="yearMonthData"/>
+      </div>
+    </myModal>
   </div>
 </template>
 
@@ -686,11 +712,6 @@ export default {
       this.Global.doPost("report/activityDailyExportNew.json", data, res => {
         this.myModalisShow = true;
       });
-      // var url = this.Global.getExportUrl(
-      //   "report/activityDetailReportNewExport.json",
-      //   data
-      // );
-      // window.open(url);
     },
 
     changeValue(value) {

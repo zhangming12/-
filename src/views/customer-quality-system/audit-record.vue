@@ -7,19 +7,6 @@
   padding-bottom: 0;
   background: #fff;
 }
-
-.ivu-table-row {
-  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1) !important;
-  transform: translateY(0px);
-}
-
-.time {
-  float: left;
-  padding: 0px 10px;
-  border: 1px solid @primary-color;
-  margin-right: 10px;
-  cursor: pointer;
-}
 .form {
   position: relative;
   display: flex;
@@ -86,29 +73,6 @@
     }
   }
 }
-.sitem {
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: row;
-}
-.switch {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  align-items: center;
-  .left,
-  .right {
-    //   border: 1px solid #e5e5e5;
-    width: 40%;
-    text-align: center;
-    cursor: pointer;
-    color: white;
-    background-color: #999;
-  }
-  .active {
-    background-color: @primary-color;
-  }
-}
 .table-box {
   .btns {
     text-align: right;
@@ -135,6 +99,29 @@
     }
   }
 }
+.modal-mains {
+  box-sizing: border-box;
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+  h3 {
+    text-align: center;
+    font-size: 14px;
+  }
+  .modal-table {
+    max-height: 500px;
+    overflow-y: auto;
+    margin-top: 10px;
+    .modal-table-top {
+      overflow: hidden;
+      height: 30px;
+      line-height: 30px;
+      .numColor {
+        color: @primary-color;
+      }
+    }
+  }
+}
 </style>
 
 <template>
@@ -145,17 +132,12 @@
         <Form ref="form" :model="formData" :label-width="10">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item  >
-                <data-range
-                  placeholder="上传开始时间"
-                  hour="00:00"
-                  v-model="formData.queryStartTime"
-                  start
-                ></data-range>
+              <Form-item>
+                <data-range placeholder="上传开始时间" hour="00:00" v-model="formData.queryStartTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item  >
+              <Form-item>
                 <data-range hour="24:00" placeholder="上传结束时间" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>
@@ -168,9 +150,9 @@
                   clearable
                 >
                   <Option
-                    :value="item.id"
+                    :value="item.brandId"
                     v-for="(item,index) in brandList"
-                    :key="item.id"
+                    :key="item.brandId"
                   >{{ item.brandName }}</Option>
                 </Select>
               </Form-item>
@@ -184,9 +166,9 @@
                   clearable
                 >
                   <Option
-                    :value="item.id"
+                    :value="item.groupId"
                     v-for="(item,index) in groupList"
-                    :key="item.id"
+                    :key="item.groupId"
                   >{{ item.groupName }}</Option>
                 </Select>
               </Form-item>
@@ -194,16 +176,16 @@
             <div class="btn-left w18">
               <Form-item prop="activityId">
                 <Select
+                  @on-change="getpresentList"
                   v-model="formData.activityId"
                   placeholder="子活动名称"
-                  @on-change="getpresentList"
                   clearable
                 >
                   <Option
-                    :value="item.id"
+                    :value="item.activityId"
                     v-for="(item,index) in activityList"
-                    :key="item.id"
-                  >{{ item.name }}</Option>
+                    :key="item.activityId"
+                  >{{ item.activityName }}</Option>
                 </Select>
               </Form-item>
             </div>
@@ -233,10 +215,10 @@
                 <Form-item prop="activityId">
                   <Select v-model="formData.presentId" placeholder="子活动分组" clearable>
                     <Option
-                      :value="item.id"
+                      :value="item.presentId"
                       v-for="(item,index) in presentNameList"
-                      :key="item.id"
-                    >{{ item.activityTag }}</Option>
+                      :key="item.presentId"
+                    >{{ item.presentName }}</Option>
                   </Select>
                 </Form-item>
               </div>
@@ -247,17 +229,17 @@
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Input v-model.trim="formData.storeName" placeholder="店铺ID"></Input>
+                  <Input v-model.trim="formData.storeId" placeholder="店铺ID"></Input>
                 </Form-item>
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Input v-model.trim="formData.salesRoute" placeholder="图像编号"></Input>
+                  <Input v-model.trim="formData.id" placeholder="图像编号"></Input>
                 </Form-item>
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Select v-model="formData.status" placeholder="结果" clearable>
+                  <Select v-model="formData.checkStatus" placeholder="结果" clearable>
                     <Option value="1">通过</Option>
                     <Option value="3">退回</Option>
                     <Option value="2">不通过</Option>
@@ -274,7 +256,18 @@
             此表共包含
             <span class="numColor">{{pageNum}}</span>条数据
           </span>
-          <exportBtn class="btn-right" title="导出" @click.native="exportExcel"/>
+          <exportBtn
+            v-if="Global.getConfig().hide == 0"
+            class="btn-right"
+            @btnClick="exportExcel"
+            title="导出"
+          />
+          <exportBtn
+            v-if="Global.getConfig().hide == 0"
+            class="btn-right"
+            @btnClick="myModalisShow = true"
+            title="导出暂存"
+          />
         </div>
         <div class="table-box">
           <zmTable
@@ -314,6 +307,7 @@
           </zmTable>
         </div>
       </div>
+      <!-- <videoImageLook/> -->
       <div class="page-box">
         <div>
           <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
@@ -329,60 +323,179 @@
         </div>
       </div>
     </myModal>
+    <!-- 导入导出历史 -->
+    <myModal class="myModal" @close="closeModal" :modal="myModalisShow" width="800">
+      <div slot="main" class="modal-mains">
+        <div class="modal-table" style="margin-top:0;">
+          <div class="modal-table-top">
+            <span class="btn-left">
+              <Icon type="md-alert" size="22" style="margin-right:5px;"/>生成的数据报表可在【导出暂存】中保留7天,过期自动删除
+            </span>
+            <refreshBtn @click.native="queryhistoryData" class="btn-right"/>
+          </div>
+          <Table :columns="columns" :data="historyData" disabled-hover></Table>
+        </div>
+      </div>
+    </myModal>
   </div>
 </template>
 
 <script>
+const RESULT = {
+  "0": "待审核",
+  "1": "通过",
+  "2": "不通过",
+  "3": "退回"
+};
 import myModal from "@/components/Modal/my-modal.vue";
 import exportBtn from "@/components/Button/export-btn.vue";
+import refreshBtn from "@/components/Button/refresh-btn.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 import zmTable from "@/components/zmTable/table.vue";
 import dataRange from "@/components/data-range/data-range.vue";
-import {
-  queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
-} from "@/api/common.js";
+import videoImageLook from "@/components/VideoImageLook/video-image-look.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
   name: "audit-allocation-keepAlive",
   components: {
     zmTable,
     myModal,
+    refreshBtn,
     fieldNameDes,
     dataRange,
-    exportBtn
+    exportBtn,
+    videoImageLook
   },
   data() {
     return {
+      myModalisShow: false,
+      historyData: [],
       moreHead: [
         {
           title: "阶段",
           width: 10,
-          key: "one"
+          key: "step"
         },
         {
           title: "团队",
           width: 10,
-          key: "one"
+          key: "team"
         },
         {
           title: "审核人",
           width: 10,
-          key: "one"
+          key: "user"
         },
         {
           title: "结果",
           width: 10,
-          key: "one"
+          key: "result"
         },
         {
           title: "时间",
           width: 20,
-          key: "one"
+          key: "time"
         },
         {
           title: "审核意见",
           width: 40,
-          key: "one"
+          key: "message"
+        }
+      ],
+      columns: [
+        {
+          title: "导出时间",
+          type: "createTime",
+          width: 150,
+          align: "center",
+          render: (h, params) => {
+            return h("div", this.Global.createTime(params.row.createTime));
+          }
+        },
+        {
+          title: "数据来源",
+          key: "menu",
+          minWidth: 140,
+          align: "center",
+          tooltip: true
+        },
+        {
+          title: "文件名",
+          key: "fileRename",
+          minWidth: 140,
+          align: "center",
+          tooltip: true
+        },
+        {
+          title: "状态",
+          key: "result",
+          minWidth: 80,
+          align: "center",
+          tooltip: true,
+          render: (h, params) => {
+            let str = "";
+            let color = "";
+            if (params.row.result == "Down") {
+              str = "已完成";
+              color = "#19be6b";
+            } else {
+              str = "生成中";
+            }
+            return h(
+              "div",
+              {
+                style: {
+                  color: color
+                }
+              },
+              str
+            );
+          }
+        },
+        {
+          title: "执行人",
+          key: "userName",
+          minWidth: 140,
+          align: "center",
+          tooltip: true
+        },
+        {
+          title: "操作",
+          key: "action",
+          minWidth: 100,
+          align: "center",
+          render: (h, params) => {
+            let color = "";
+            if (params.row.result == "Down") {
+              color = "#066ACD";
+            }
+            return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "text",
+                    size: "small",
+                    disabled: params.row.result == "NotDown"
+                  },
+                  style: {
+                    marginRight: "5px",
+                    color: color
+                  },
+                  on: {
+                    click: () => {
+                      let url = this.Global.getExportUrl(
+                        "download.file",
+                        params.row.fileUrl
+                      );
+                      window.open(url);
+                    }
+                  }
+                },
+                "下载"
+              )
+            ]);
+          }
         }
       ],
       showQuery: false,
@@ -436,19 +549,22 @@ export default {
         },
         {
           title: "最终结果",
-          key: "groupName",
+          key: "checkStatus",
           align: "center",
-          tooltip: true
+          tooltip: true,
+          render: (h, params) => {
+            return h("div", RESULT[params.row.checkStatus]);
+          }
         },
         {
           title: "审核时间",
-          key: "groupName",
+          key: "checkTime",
           align: "center",
           tooltip: true
         },
         {
           title: "审核意见",
-          key: "groupName",
+          key: "checkMessage",
           align: "center",
           tooltip: true
         },
@@ -457,24 +573,15 @@ export default {
           align: "center",
           render: (h, params) => {
             let tag = [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "default",
-                    size: "small"
-                  },
-                  style: {
-                    border: "none"
-                  },
-                  on: {
-                    click: () => {
-                      this.showVideoModal(params.row);
-                    }
-                  }
+              h(videoImageLook, {
+                props: {
+                  fileType: params.row.fileType,
+                  url: params.row.url
                 },
-                "查看"
-              )
+                style: {
+                  border: "none"
+                }
+              })
             ];
             return h("div", tag);
           }
@@ -499,32 +606,6 @@ export default {
                     click: () => {
                       this.$refs.table.changeExpend(params);
                       params.row.selectStatus = !params.row.selectStatus;
-                      return;
-                      if (params.row.flag) {
-                        this.$refs.table.changeExpend(params);
-                        params.row.selectStatus = !params.row.selectStatus;
-                      } else {
-                        //第一次请求
-                        this.Global.doPost(
-                          "report/getUserInfo.json",
-                          {
-                            userType: "B",
-                            storeId: params.row.storeId
-                          },
-                          res => {
-                            this.$refs.table.changeExpend(params);
-                            params.row.flag = true;
-
-                            try {
-                              params.row.nickName = res[0].nickName;
-                              params.row.recPhone = res[0].recPhone;
-                            } catch (error) {
-                              console.error(error);
-                            }
-                            params.row.selectStatus = !params.row.selectStatus;
-                          }
-                        );
-                      }
                     }
                   }
                 },
@@ -537,111 +618,99 @@ export default {
       ],
       page: 1,
       pageNum: 0,
-      pageData: [
-        {
-          presentList: [
-            {
-              one: "1  的成本价举办超级大白菜大家彼此进步时间从北京"
-            },
-            {
-              one: "2"
-            }
-          ]
-        },
-        {
-          presentList: [
-            {
-              one: "3"
-            },
-            {
-              one: "4"
-            }
-          ]
-        },
-        {
-          presentList: [
-            {
-              one: "5"
-            }
-          ]
-        }
-      ],
+      pageData: [],
       brandList: [],
       groupList: [],
       pageSize: 10
     };
   },
   created() {
-    this.Global.doPost(
-      "condition/queryBrands.json",
-      { date: 15, scope: "a", activityTypes: [3, 6] },
-      res => {
-        this.brandList = [];
-        Object.entries(res).forEach(item => {
-          this.brandList.push({ id: Number(item[0]), brandName: item[1] });
-        });
-        this.formData.brandId = this.brandList[0].id;
-        this.changeValue(this.formData.brandId);
-      }
-    );
+    this.queryBrand();
   },
-  watch: {},
+  watch: {
+    myModalisShow(val) {
+      if (val) {
+        this.queryhistoryData();
+      } else {
+        this.historyData = [];
+      }
+    }
+  },
   methods: {
+    closeModal() {
+      this.myModalisShow = false;
+    },
+    queryhistoryData() {
+      let data = {
+        userType: "审核记录"
+      };
+      this.Global.doPost("import/getCreateFileInfor.json", data, res => {
+        this.historyData = res.datalist;
+      });
+    },
     //导出
     exportExcel() {
-      if (!this.brand) {
-        this.$Message.error("请选择品牌");
-        return false;
-      }
-      var url = this.Global.getExportUrl(
-        "report/displayGoodsVerifyRecordExport.json",
-        { brandId: this.brand }
+      this.str = "导出";
+      var data = this.Global.JsonChange(this.formData);
+      data["queryStartTime"] = this.Global.createTime(
+        this.formData.queryStartTime
       );
-      window.open(url);
+      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
+      this.Global.deleteEmptyProperty(data);
+      this.Global.doPost("audit/exportAuditLog.json", data, res => {
+        this.myModalisShow = true;
+      });
     },
     //根据项目获取分组
     getpresentList(value) {
       this.presentNameList = [];
       this.$set(this.formData, "presentId", "");
-      queryActivityPresentVOByactivityId(value).then(res => {
-        if (res && res.status == 1) {
-          this.presentNameList = res.data;
+      if (!value) return;
+      this.Global.doPostNoLoading(
+        "audit/queryPresentByActivityAndTeam.json",
+        value,
+        res => {
+          this.presentNameList = res;
+        }
+      );
+    },
+    queryBrand() {
+      this.Global.doPostNoLoading("audit/queryBrandByTeam.json", "1", res => {
+        this.brandList = res;
+        if (res && res.length) {
+          this.$set(this.formData, "brandId", res[0].brandId);
+          this.changeValue(this.formData.brandId);
         }
       });
     },
-    //根据品牌获取活动
-    changeValue(value, isFirst) {
+
+    changeValue(value) {
       this.groupList = [];
       this.formData.groupId = "";
+      if (!value) return;
+      //查询活动包
       this.Global.doPostNoLoading(
-        "condition/queryGroup.json",
-        { date: 7, activityType: 3, scope: "a", brandId: value },
+        "audit/queryGroupByBrandAndTeam.json",
+        value,
         res => {
-          Object.entries(res).forEach(item => {
-            this.groupList.push({ id: Number(item[0]), groupName: item[1] });
-          });
-          if (this.groupList && this.groupList.length) {
-            this.formData.groupId = this.groupList[0].id;
+          this.groupList = res;
+          if (res && res.length) {
+            this.$set(this.formData, "groupId", res[0].groupId);
             this.getActivityList(this.formData.groupId);
-            if (isFirst) {
-              this.init();
-            }
           }
         }
       );
     },
-    //根据活动获取项目
-    getActivityList(value) {
+    getActivityList(val) {
       this.activityList = [];
       this.formData.activityId = "";
-      if (!value) return;
+      if (!val) return;
+      //查询活动
       this.Global.doPostNoLoading(
-        "condition/queryActivity.json",
-        { date: 7, activityType: 3, scope: "a", groupId: value },
+        "audit/queryActivityByBrandAndTeam.json",
+        val,
         res => {
-          Object.entries(res).forEach(item => {
-            this.activityList.push({ id: Number(item[0]), name: item[1] });
-          });
+          this.activityList = res;
         }
       );
     },
@@ -664,16 +733,48 @@ export default {
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
-      this.Global.doPost(
-        "activity/queryGroupWithPageByIsScore.json",
-        data,
-        res => {
-          this.pageData = res.datalist;
-          this.pageNum = res.items;
-          this.page = res.page;
-          this.noneStatus = true;
-        }
-      );
+      this.Global.doPost("audit/queryAuditLog.json", data, res => {
+        this.pageData = res.datalist;
+        this.pageNum = res.items;
+        this.page = res.page;
+        this.noneStatus = true;
+        res.datalist.map(item => {
+          item.checkTime = item.checkTime
+            ? this.Global.createTime(item.checkTime)
+            : "";
+          let presentList = [
+            {
+              step: "初审",
+              team: item.firstTeam,
+              user: item.firstUserName,
+              time: this.Global.createTime(item.checkFirstOneTime),
+              message: item.checkFirstOneMessage,
+              result: RESULT[item.checkFirstOneStatus]
+            }
+          ];
+          if (item.checkFirstTwoTime) {
+            presentList.push({
+              step: "复审",
+              team: item.secondTeam,
+              user: item.secondUserName,
+              time: this.Global.createTime(item.checkFirstTwoTime),
+              message: item.checkFirstTwoMessage,
+              result: RESULT[item.checkFirstTwoStatus]
+            });
+          }
+          if (item.checkSecondTime) {
+            presentList.push({
+              step: "质检",
+              team: item.finalTeam,
+              user: item.finalUserName,
+              time: this.Global.createTime(item.checkSecondTime),
+              message: item.checkSecondMessage,
+              result: RESULT[item.checkSecondStatus]
+            });
+          }
+          item.presentList = presentList;
+        });
+      });
     }
   }
 };

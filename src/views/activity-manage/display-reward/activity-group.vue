@@ -178,6 +178,17 @@
   color: @primary-color;
   cursor: pointer;
 }
+
+.word-import {
+  height: 32px;
+  // padding-left: 20%;
+  .word {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  display: flex;
+  flex-direction: row;
+}
 </style>
 
 <template>
@@ -716,6 +727,13 @@
                     </Col>
                   </Row>
                 </div>
+
+                <!-- 新增审核话术导入 -->
+                <!-- <div class="word-import" style="margin-top:10px;">
+                  <span class="word">审核话术：</span>
+                  <importBtn @click.native="importShow = true"/>
+                  <exportBtn @click.native="exportExcel"/>
+                </div>-->
               </div>
             </div>
           </div>
@@ -723,6 +741,32 @@
         </div>
       </div>
     </div>
+    <!-- 审核话术导入 -->
+    <Modal v-model="importShow">
+      <h2 style="text-align:center;">导入</h2>
+      <i-Form>
+        <div style="overflow:hidden;">
+          <div
+            class="upDate"
+            style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;"
+          >
+            <Upload
+              :action="url"
+              :show-upload-list="false"
+              :on-success="handleSuccess"
+              :on-error="handleError"
+            >
+              <Icon type="ios-folder" size="14" color="#53a3f4"/>
+              {{uploadText}}
+            </Upload>
+          </div>
+        </div>
+      </i-Form>
+      <div slot="footer" style="text-align:center;">
+        <i-button type="text" @click="closeModel">取消</i-button>
+        <i-button type="success" @click="uploadExcel">确定</i-button>
+      </div>
+    </Modal>
     <Modal v-model="skuIsShow" width="1000" style="height:600px;" id="skuContainer">
       <h3 slot="header" style="text-align:center;">SKU设置</h3>
       <skuModel
@@ -742,13 +786,18 @@
 import skuModel from "../../activity-statistics-C/setting-SKU.vue";
 import upData from "@/assets/js/upload.js";
 import PROJECT_CONFIG from "@/util/config.js";
+import config from "@/util/config.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import index from "vue";
 import addBtn from "@/components/Button/addNew-btn.vue";
 import configureBtn from "@/components/configureBtn/configure-btn.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
+import importBtn from "@/components/Button/import-btn.vue";
 export default {
   data() {
     return {
+      uploadText: "请选择上传文件",
+      importShow: false,
       showSkuNum: true,
       showSkuRule: true,
       skuData: {},
@@ -777,7 +826,8 @@ export default {
       displayActivityData: [],
       skuSettingData: {},
       recoredSkuList: {},
-      categoryList: []
+      categoryList: [],
+      url: config.uploadWorkerExcel
     };
   },
   mounted() {
@@ -787,7 +837,9 @@ export default {
   components: {
     skuModel,
     addBtn,
-    configureBtn
+    configureBtn,
+    exportBtn,
+    importBtn
   },
   created() {
     let str = ":00";
@@ -814,9 +866,38 @@ export default {
         this.aid = "";
         this.gid = "";
       }
+    },
+    importShow(val) {
+      if (!val) {
+        this.uploadText = "请选择上传文件";
+      }
     }
   },
   methods: {
+    handleError() {},
+    handleSuccess(response, file, fileList) {
+      this.uploadText = file.name;
+      var url = response.data;
+      if (url) {
+        this.uploadUrl = url;
+      }
+    },
+    //导出审核话术
+    exportExcel() {
+      if (!this.groupId) {
+        this.$Message.warning("请先保存活动包");
+        return;
+      }
+      let data = {
+        brandId: this.brandId ? this.brandId : this.formData.brandId,
+        groupId: this.groupId
+      };
+      var url = this.Global.getExportUrl(
+        "displayYxtg/exportAuditExplain.json",
+        data
+      );
+      window.open(url);
+    },
     sCategoryListChange(index) {
       this.$set(this.presentList[index], "sCategoryList", []);
     },
@@ -847,6 +928,29 @@ export default {
           this.getsCategoryList(skuNecessary)
         );
       }
+    },
+    closeModel() {
+      this.importShow = false;
+    },
+    uploadExcel() {
+      if (!this.groupId) {
+        this.$Message.error("请先保存活动包");
+        return false;
+      }
+      if (!this.uploadUrl) {
+        this.$Message.error("请核实上传文件");
+        return false;
+      }
+      let data = {
+        loadFilePath: this.uploadUrl,
+        brandId: this.brandId ? this.brandId : this.formData.brandId,
+        groupId: this.groupId
+      };
+      this.Global.doPost("displayYxtg/importAuditExplain.json", data, () => {
+        this.$Message.success("导入成功");
+        this.importShow = false;
+        this.uploadText = "选择导入文件";
+      });
     },
     resertNum() {
       this.showSkuNum = false;
@@ -969,9 +1073,6 @@ export default {
     },
     myReplace(str, f, e) {
       if (!str) return null;
-      // let reg = new RegExp(f, "g");
-      // return str.replace(reg, e);
-      // debugger;
       str = str.split(f);
       str = str.join(e);
       return str;
@@ -1010,7 +1111,6 @@ export default {
           this.presentList[index]["radioUrl"] = res.radioUrl;
           this.presentList[index]["id"] = res.id;
           this.presentList[index]["isModify"] = true;
-          // this.presentList[index]["showMore"] = true;
           this.presentList[index]["type"] = type;
           this.presentList[index]["isOpenCheck"] =
             res.isOpenCheck == 1 ? true : false;
@@ -1166,8 +1266,6 @@ export default {
           showMore: true,
           type: "add"
         });
-        // console.log("cesshi")
-        // return
         this.ind = this.presentList.length - 1;
       }
     },
@@ -1333,10 +1431,6 @@ export default {
       }
       obj1["activityId"] = this.id;
       obj1["isSkuNecessary"] = 0;
-
-      // obj1["id"] = auditData.id;
-
-      // obj1["activityTag"] = auditData.activityTag;
       obj1["activityTag"] = encodeURI(auditData.activityTag);
       obj1["endWinTime"] = this.Global.setHoursData(
         auditData.endWinTime,

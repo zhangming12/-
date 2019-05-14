@@ -5,7 +5,7 @@ html {
 }
 </style>
 <template>
-    <layout></layout>
+  <layout></layout>
 </template>
 <script>
 import layout from "./layout/layout.vue";

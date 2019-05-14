@@ -11,10 +11,10 @@
   position: relative;
   display: flex;
   .container {
-    width: 70%;
+    width: 87.5%;
 
     .w18 {
-      width: 25%;
+      width: 20%;
     }
   }
   .w10 {
@@ -112,7 +112,12 @@
           <div class="container">
             <div class="btn-left w18">
               <Form-item prop="brandId">
-                <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue">
+                <Select
+                  v-model="formData.brandId"
+                  clearable
+                  placeholder="品牌名称"
+                  @on-change="changeValue"
+                >
                   <Option
                     :value="item.id"
                     v-for="(item,index) in brandList"
@@ -123,7 +128,12 @@
             </div>
             <div class="btn-left w18">
               <Form-item prop="id">
-                <Select v-model="formData.id" placeholder="活动名称">
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="活动名称"
+                  @on-change="getActivityList"
+                  clearable
+                >
                   <Option
                     :value="item.id"
                     v-for="(item,index) in groupList"
@@ -133,22 +143,33 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
+              <Form-item prop="activityId">
+                <Select v-model="formData.activityId" placeholder="项目名称" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in activityList"
+                    :key="item.id"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
               <Form-item prop="id">
-                <Select v-model="formData.id" placeholder="状态">
-                  <Option value="0">进行中</Option>
+                <Select v-model="formData.status" placeholder="状态" clearable>
+                  <Option value="2">进行中</Option>
                   <Option value="1">未开始</Option>
-                  <Option value="2">已结束</Option>
+                  <Option value="3">已结束</Option>
                 </Select>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item>
-                <Select v-model="formData.id" placeholder="团队">
+                <Select v-model="formData.teamId" placeholder="团队" clearable>
                   <Option
                     :value="item.id"
                     v-for="(item,index) in teamList"
                     :key="index"
-                  >{{ item.name }}</Option>
+                  >{{ item.brandName }}</Option>
                 </Select>
               </Form-item>
             </div>
@@ -178,22 +199,37 @@
             disabled-hover
           >
             <div class="moreBox" slot="moreBox" slot-scope="props">
-              <div class="m-items" v-for="item in pageData[props.slotData].presentList">
+              <div class="m-items" v-for="(item,index) in pageData[props.slotData].presentList">
                 <div class="m-item" style="width:20%;">
-                  <Tooltip :max-width="250" placement="bottom-start" transfer :content="item.name">
-                    <span class="title">项目名称：</span>
-                    <span class="content">{{ item.name }}</span>
+                  <Tooltip
+                    :max-width="250"
+                    placement="bottom-start"
+                    transfer
+                    :content="item.activityName"
+                  >
+                    <span class="title">分组名称：</span>
+                    <span class="content">{{ item.presentName }}</span>
                   </Tooltip>
                 </div>
 
                 <div class="m-item" style="width:60%;">
-                  <Tooltip :max-width="250" placement="bottom-start" transfer :content="item.team">
+                  <Tooltip
+                    :max-width="250"
+                    placement="bottom-start"
+                    transfer
+                    :content="item.teamNameList"
+                  >
                     <span class="title">团队：</span>
-                    <span class="content">{{ item.team }}</span>
+                    <span class="content">{{ item.teamNameList }}</span>
                   </Tooltip>
                 </div>
                 <div class="m-item" style="width:20%;text-align:right;">
-                  <Button size="small" class="btn-right" type="primary" @click="showTeamModal">团队设置</Button>
+                  <Button
+                    size="small"
+                    class="btn-right"
+                    type="primary"
+                    @click="showTeamModal('A',item,props.slotData,index)"
+                  >团队设置</Button>
                 </div>
               </div>
             </div>
@@ -214,13 +250,13 @@
           <CheckboxGroup v-model="selectedTeam">
             <div class="item" v-for="item in teamList" :key="item.id">
               <Checkbox :label="item.id">
-                <span>{{ item.name }}</span>
+                <span>{{ item.brandName }}</span>
               </Checkbox>
             </div>
           </CheckboxGroup>
         </div>
         <div class="team-footer">
-          <Button type="primary">确定新建</Button>
+          <Button @click="sureSave" type="primary">确定</Button>
         </div>
       </div>
     </myModal>
@@ -230,7 +266,7 @@
         <h3>抽检率</h3>
         <div class="rate-box">
           <InputNumber
-            v-model.trim.number="samplingRate"
+            v-model.trim.number="samplingRateData.samplingRate"
             :max="100"
             :min="0"
             placeholder="抽检率"
@@ -239,7 +275,7 @@
           <span>%</span>
         </div>
         <div class="team-footer">
-          <Button type="primary">确定</Button>
+          <Button @click="save" type="primary">确定</Button>
         </div>
       </div>
     </myModal>
@@ -257,11 +293,26 @@ export default {
     myModal,
     fieldNameDes
   },
+  watch: {
+    showRate(val) {
+      if (!val) {
+        this.$set(this.samplingRateData, "samplingRate", null);
+      }
+    },
+    showTeam(val) {
+      if (!val) {
+        this.selectedTeam = [];
+        this.groupTeamDatas = {};
+      }
+    }
+  },
   data() {
     return {
       showRate: false,
       noneStatus: false,
-      samplingRate: null, //抽检率
+      samplingRateData: {
+        samplingRate: null //抽检率
+      },
       formData: {
         brandId: "",
         groupId: ""
@@ -287,17 +338,33 @@ export default {
           tooltip: true
         },
         {
-          title: "状态",
+          title: "项目名称",
           key: "activityName",
           align: "center",
           tooltip: true
         },
         {
-          title: "抽检率",
-          key: "presentName",
+          title: "状态",
+          key: "activityStatus",
           align: "center",
           tooltip: true,
           render: (h, params) => {
+            let result = {
+              1: "未开始",
+              2: "进行中",
+              3: "已结束"
+            };
+            return h("div", result[params.row.activityStatus]);
+          }
+        },
+        {
+          title: "抽检率",
+          key: "samplingRate",
+          align: "center",
+          tooltip: true,
+          render: (h, params) => {
+            let rate = params.row.samplingRate;
+            rate = rate ? rate * 100 + "%" : null;
             var tag = [
               h(
                 "span",
@@ -312,7 +379,7 @@ export default {
                   },
                   on: {}
                 },
-                "80%"
+                rate
               ),
               h(
                 "Button",
@@ -326,7 +393,8 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.showRateModal(params.row);
+                      this.samplingRateData.activityId = params.row.id;
+                      this.showRateModal(params.row.samplingRate);
                     }
                   }
                 },
@@ -355,7 +423,8 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.showTeamModal(params.row);
+                      this.groupTeamDatas.activityId = params.row.id;
+                      this.showTeamModal("G");
                     }
                   }
                 },
@@ -373,30 +442,20 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.$refs.table.changeExpend(params);
-                      params.row.selectStatus = !params.row.selectStatus;
-                      return;
                       if (params.row.flag) {
                         this.$refs.table.changeExpend(params);
                         params.row.selectStatus = !params.row.selectStatus;
                       } else {
                         //第一次请求
                         this.Global.doPost(
-                          "report/getUserInfo.json",
+                          "audit/queryActivityAndTeamRefByGroupId.json",
                           {
-                            userType: "B",
-                            storeId: params.row.storeId
+                            activityId: params.row.id
                           },
                           res => {
+                            params.row.presentList = res;
                             this.$refs.table.changeExpend(params);
                             params.row.flag = true;
-
-                            try {
-                              params.row.nickName = res[0].nickName;
-                              params.row.recPhone = res[0].recPhone;
-                            } catch (error) {
-                              console.error(error);
-                            }
                             params.row.selectStatus = !params.row.selectStatus;
                           }
                         );
@@ -413,69 +472,15 @@ export default {
       ],
       page: 1,
       pageNum: 0,
-      teamList: [
-        {
-          name: "111",
-          id: 1
-        },
-        {
-          name: "222",
-          id: 2
-        },
-        {
-          name: "333",
-          id: 3
-        },
-        {
-          name: "444",
-          id: 4
-        },
-        {
-          name: "555",
-          id: 5
-        }
-      ], //团队数据
+      teamList: [], //团队数据
       showTeam: false, //显示团队弹窗
       selectedTeam: [], //已选择的team
-      pageData: [
-        {
-          presentList: [
-            {
-              name: "1  的成本价举办超级大白菜大家彼此进步时间从北京",
-              team:
-                "的成本价举办超级大白菜大家彼此进步时间从北京的成本价举办超级大白菜大家彼此进步时间从北京的成本价举办超级大白菜大家彼此进步时间从北京的成本价举办超级大白菜大家彼此进步时间从北京"
-            },
-            {
-              name: "2",
-              team: "dchjh"
-            }
-          ]
-        },
-        {
-          presentList: [
-            {
-              name: "3",
-              team: "djfgjh"
-            },
-            {
-              name: "4",
-              team: "dchjh"
-            }
-          ]
-        },
-        {
-          presentList: [
-            {
-              name: "5",
-              team: "djfgjh"
-            }
-          ]
-        }
-      ],
+      pageData: [],
       brandList: [],
       groupList: [],
-      pageSize: 10,
-      flag: null
+      activityList: [],
+      groupTeamDatas: {},
+      pageSize: 10
     };
   },
   created() {
@@ -491,15 +496,107 @@ export default {
         this.changeValue(this.formData.brandId);
       }
     );
+    this.queryTeam();
   },
-  watch: {},
   methods: {
-    showTeamModal() {
-      this.showTeam = true;
-      // this.pageData[0].presentList[0].team = "12";
-      // this.$set(this.pageData[0].presentList[0], "team", Math.random());
+    getActivityList(value) {
+      this.activityList = [];
+      this.formData.activityId = "";
+      if (!value) return;
+      this.Global.doPostNoLoading(
+        "condition/queryActivity.json",
+        { groupId: value },
+        res => {
+          Object.entries(res).forEach(item => {
+            this.activityList.push({ id: Number(item[0]), name: item[1] });
+          });
+        }
+      );
     },
-    showRateModal() {
+    getTeamName(arr) {
+      let str = "";
+      if (!arr.length) return "";
+      this.teamList.forEach(item => {
+        arr.forEach(v => {
+          if (v == item.id) {
+            str += `${item.brandName}、`;
+          }
+        });
+      });
+      return str;
+    },
+    //活动包级别的团队选择
+    sureSave() {
+      if (!this.selectedTeam.length) {
+        this.$Message.info("请选择团队");
+        return false;
+      }
+      let data = {
+        teamIds: this.selectedTeam
+      };
+      let api = "audit/addVideoBatchDistribute.json";
+      if (this.groupTeamDatas.type == "G") {
+        data["activityId"] = this.groupTeamDatas.activityId;
+      } else {
+        api = "audit/addVideoDistribute.json";
+        data["presentId"] = this.groupTeamDatas.presentId;
+      }
+      this.Global.doPost(api, data, res => {
+        this.$Message.success("保存成功");
+        if (this.groupTeamDatas.type == "G") {
+          this.init();
+        } else {
+          let teams = this.getTeamName(this.selectedTeam);
+          let { fIndex, sIndex } = this.groupTeamDatas;
+          this.$set(
+            this.pageData[fIndex].presentList[sIndex],
+            "teamNameList",
+            teams
+          );
+        }
+        this.showTeam = false;
+      });
+    },
+    //设置抽检率
+    save() {
+      if (!this.samplingRateData.samplingRate) {
+        this.$Message.info("请设置抽检率");
+        return false;
+      }
+      let data = {
+        activityId: this.samplingRateData.activityId,
+        samplingRate: this.samplingRateData.samplingRate / 100
+      };
+      this.Global.doPost("audit/updateSamplingRate.json", data, res => {
+        this.$Message.success("设置成功");
+        this.showRate = false;
+        this.init();
+      });
+    },
+    showTeamModal(type, item, fIndex, sIndex) {
+      this.groupTeamDatas.type = type;
+      if (item) {
+        let { teamIdList, presentId } = item;
+        this.selectedTeam = teamIdList.split("、").map(v => v - 0);
+        this.groupTeamDatas.presentId = presentId;
+      }
+      if (fIndex || fIndex == 0) {
+        this.groupTeamDatas.fIndex = fIndex;
+      }
+      if (sIndex || sIndex == 0) {
+        this.groupTeamDatas.sIndex = sIndex;
+      }
+      this.showTeam = true;
+    },
+    //查询团队
+    queryTeam() {
+      let data = "";
+      this.Global.doPostNoLoading("audit/queryAllTeam.json", data, res => {
+        this.teamList = res;
+      });
+    },
+    showRateModal(rate) {
+      this.samplingRateData.samplingRate = rate ? rate * 100 : null;
       this.showRate = true;
     },
     closeModal() {
@@ -512,6 +609,7 @@ export default {
       let flag = item.showMore;
       this.$set(this.pageData[index], "showMore", !flag);
     },
+
     changeValue(value) {
       this.groupList = [];
       this.formData.groupId = "";
@@ -523,6 +621,10 @@ export default {
           Object.entries(res).forEach(item => {
             this.groupList.push({ id: Number(item[0]), groupName: item[1] });
           });
+          if (this.groupList.length) {
+            this.formData.groupId = this.groupList[0].groupId;
+            this.getActivityList(this.formData.groupId);
+          }
         }
       );
     },
@@ -539,16 +641,12 @@ export default {
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
-      this.Global.doPost(
-        "activity/queryGroupWithPageByIsScore.json",
-        data,
-        res => {
-          this.pageData = res.datalist;
-          this.pageNum = res.items;
-          this.page = res.page;
-          this.noneStatus = true;
-        }
-      );
+      this.Global.doPost("audit/queryAllActivity.json", data, res => {
+        this.pageData = res.datalist;
+        this.pageNum = res.items;
+        this.page = res.page;
+        this.noneStatus = true;
+      });
     }
   }
 };

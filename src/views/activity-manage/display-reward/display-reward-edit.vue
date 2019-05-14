@@ -6,9 +6,7 @@
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
   padding: 30px 20px;
-  // padding-bottom: 20;
   background: #fff;
-  // overflow: hidden;
 }
 
 .ivu-table-row {
@@ -30,7 +28,6 @@
   display: block;
 }
 .container {
-  // height: 470px;
   position: relative;
   .top-left {
     float: left;
@@ -45,7 +42,6 @@
     .upload-box {
       text-align: center;
       margin-top: 10px;
-      // margin:10px 0 5px 40px;
       span {
         text-align: center;
         margin-top: 8px;
@@ -58,9 +54,6 @@
     width: 80%;
   }
   .word-import {
-    // position: absolute;
-    // bottom: 0;
-    // left: 0;
     height: 32px;
     padding-left: 20%;
     .word {
@@ -109,12 +102,10 @@
         text-align: center;
         line-height: 40px;
         font-size: 12px;
-        // color: white;
         font-weight: bold;
       }
     }
     .activityContent {
-      // height: 40px;
       line-height: 40px;
       .ContentMain {
         width: 100%;
@@ -127,7 +118,6 @@
           outline: none;
         }
         .btn {
-          // padding: 6px 10px;
           padding: 3px 7px;
           transition: all 0.2s;
         }
@@ -148,9 +138,7 @@
   height: 40px;
   .btn {
     float: right;
-    // padding: 5px 10px;
     padding: 3px 7px;
-    // background: rgba(0, 0, 0, 0) !important;
   }
 }
 
@@ -523,7 +511,6 @@
                       </Select>
                     </Col>
                   </Row>
-
                   <span v-else>{{item.startTime}}</span>
                 </div>
               </Col>
@@ -614,7 +601,6 @@
                     type="text"
                     @click="modifyData(index)"
                   >修改</Button>
-                  <!-- <Button :class="type == 'look'?'grayColor':''" v-if="!item.isModify" class="btn border-right" id="fail" type="text" @click="closeActivityItem(index)">删除</Button> -->
                   <Button
                     :class="type == 'look'?'grayColor':''"
                     v-if="!item.isModify"
@@ -750,7 +736,6 @@ export default {
         endTime: [{ validator: validateEnd }],
         brandId: [{ required: true, message: "请选择品牌名称" }],
         name: [{ required: true, message: "请输入陈列活动名称" }]
-        // bizAreaList: [{ required: true, message: "请选择活动区域" }]
       },
       deleteActivityList: [], //删除活动
       deletePresentList: [], //删除活动分组
@@ -763,7 +748,6 @@ export default {
       notifyImg: "",
       activityImg: "",
       bizAreaList: [],
-      // activityIndex: 0,
       ind: null, //分组下标
       displayActivityData: [],
       areaDataShow: [],
@@ -988,7 +972,6 @@ export default {
           path: "/displayReward-edit",
           query
         });
-        // this.activityDetail()
         this.activityDetail(this.groupId, brandId);
       });
     },
@@ -999,7 +982,6 @@ export default {
         ? this.displayActivityList[index].confValue
         : "";
       data["confValue"] = data["confValue"] == "video" ? "" : data["confValue"];
-      // delete data["confValue"];
       data["id"] = this.displayActivityList[index].id;
       data["groupId"] = this.groupId;
       data["brandId"] = this.brandId ? this.brandId : this.formData.brandId;
@@ -1019,7 +1001,6 @@ export default {
       data["name"] = this.displayActivityList[index].name;
       this.Global.doPost("displayYxtg/updateActivity.json", data, res => {
         this.$Message.success("保存成功");
-        // this.cancel(index);
         this.displayActivityList[index].isModify = false;
         this.activityTempData = {};
         this.displayActivityList[index]["endTime"] = this.Global.createTime(
@@ -1322,8 +1303,6 @@ export default {
           "displayYxtg/getActivityList.json",
           { id, brandId },
           res => {
-            // return;
-
             this.formData.brandId = res.brandId;
             this.formData["groupName"] = res.groupName;
             this.formData["groupSummary"] = res.summary;
@@ -1352,7 +1331,6 @@ export default {
             this.formData["pictureUrlOne"] = res.pictureUrlOne; //未上传背景图
             this.formData["pictureUrlTwo"] = res.pictureUrlTwo; //已上传背景图
             this.areaName = this.findAreaName(this.bizAreaList);
-            console.log(this.formData);
             //活动数据
             for (let i = 0; i < res.activityList.length; i++) {
               res.activityList[i].isModify = false;
@@ -1391,17 +1369,6 @@ export default {
     },
     goBack() {
       this.$router.push({ path: "/displayReward" });
-    },
-    handleTagsOption(name, index) {
-      if (name === "save") {
-        this.saveActivity(index);
-      }
-      if (name === "cancel") {
-        this.cancel(index);
-      }
-      if (name === "delete") {
-        this.closeActivityItem(index);
-      }
     }
   },
   filters: {

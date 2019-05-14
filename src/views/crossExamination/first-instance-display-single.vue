@@ -529,6 +529,10 @@
                             <span
                               :class="item.storeRange > 200 ? 'warnColor' : ''"
                             >{{ item.storeRange > 200 ? "位置偏移" :"无" }}</span>
+                            <show-photo
+                              :uploadPhoto="item.newStoreImage"
+                              :signPhoto="item.storeImage"
+                            />
                           </p>
                         </div>
 
@@ -675,6 +679,7 @@
 import dataRange from "@/components/data-range/data-range.vue";
 import checkLook from "@/components/checkLook/check-look.vue";
 import myTooltip from "@/components/tooltip/tooltip.vue";
+import showPhoto from "@/components/showPhoto/show-photo.vue";
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
@@ -686,7 +691,8 @@ export default {
     dataRange,
     imageLook,
     checkLook,
-    myTooltip
+    myTooltip,
+    showPhoto
   },
   data() {
     return {
@@ -698,10 +704,6 @@ export default {
       displayExamineWordList: [],
       index: null,
       flag: null,
-      startTime: EDFAULT_STARTTIME,
-      endTime: EDFAULT_ENDTIME,
-      startHour: "00:00",
-      endHour: "24:00",
       showQuery: false,
       groupList: [], //活动包名
       enterTime: null,
@@ -1222,7 +1224,6 @@ export default {
         this.$Message.info("请选择需要批量确认的视频");
         return false;
       }
-
       let dataList = [];
       for (let i = 0; i < len; i++) {
         let arr = social[i];

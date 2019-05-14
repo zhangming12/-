@@ -37,7 +37,7 @@ html {
     .top-middle-box {
       height: 40px;
       margin: auto;
-      width: 640px;
+      width: 700px;
     }
     .bigOrSmall {
       position: absolute;
@@ -139,7 +139,7 @@ html {
             @selectChange="brandClick"
             v-model="formData.groupId"
             :check="true"
-            :width="160"
+            :width="200"
             :selectLict="brandList"
             placeholder="选择活动包名"
           ></select-box>

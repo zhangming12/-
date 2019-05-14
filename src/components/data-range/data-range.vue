@@ -108,6 +108,7 @@ export default {
     changeTime(val) {
       if (val) {
         val = `${val} ${this.hourData}:00`;
+        // val = this.Global.createTime(new Date(val).getTime());
       } else {
         val = "";
       }
@@ -117,6 +118,7 @@ export default {
       if (this.yearData) {
         let yearData = new Date(this.yearData).pattern("yyyy-MM-dd");
         val = `${yearData} ${val}:00`;
+        // val = this.Global.createTime(new Date(val).getTime());
       } else {
         val = "";
       }

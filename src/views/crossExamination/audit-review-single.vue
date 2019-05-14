@@ -288,24 +288,13 @@
         <Form ref="form" :model="formData" :label-width="10">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item   required>
-                <data-range
-                  @dataChange="startTimeChange"
-                  placeholder="申请开始时间"
-                  hour="00:00"
-                  :time="formData.queryStartTime"
-                  start
-                ></data-range>
+              <Form-item required>
+                <data-range placeholder="申请开始时间" hour="00:00" v-model="formData.queryStartTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
-                <data-range
-                  hour="24:00"
-                  placeholder="申请结束时间"
-                  @dataChange="endTimeChange"
-                  :time="formData.queryEndTime"
-                ></data-range>
+              <Form-item required>
+                <data-range hour="24:00" placeholder="申请结束时间" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
@@ -531,6 +520,10 @@
                           <span
                             :class="item.storeRange > 200 ? 'warnColor' : ''"
                           >{{ item.storeRange > 200 ? "位置偏移" :"无" }}</span>
+                          <show-photo
+                            :uploadPhoto="item.newStoreImage"
+                            :signPhoto="item.storeImage"
+                          />
                         </p>
                       </div>
 
@@ -627,13 +620,6 @@
                         </Row>
                       </div>
                       <div class="item-box" v-if="item.isOpenCheck == 1">
-                        <!-- <check-look 
-                                            :key="item.id" 
-                                            :checkList="[]" 
-                                            @getRadioData="getRadioData" 
-                                            :index="index" 
-                                            :showAudit="item.presentSkuVO.isSkuNecessary == 1 || item.presentSkuVO.skuNum" 
-                        :allData="item"></check-look>-->
                         <check-look
                           :position="getPosition(index)"
                           :presentId="item.presentSkuVO.presentId"
@@ -770,10 +756,11 @@
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import imageLook from "@/components/imgLook/img-look.vue";
 import checkLook from "@/components/checkLook/check-look.vue";
 import myTooltip from "@/components/tooltip/tooltip.vue";
+import showPhoto from "@/components/showPhoto/show-photo.vue";
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
@@ -784,7 +771,8 @@ export default {
     dataRange,
     imageLook,
     checkLook,
-    myTooltip
+    myTooltip,
+    showPhoto
   },
   data() {
     return {
@@ -808,14 +796,6 @@ export default {
       ruleBoxData: [], //规则框数据
       ruleBox: [], //规则框是否显示
       saveData: {},
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
-      },
       formData: {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME,
@@ -1240,28 +1220,6 @@ export default {
       var time = this.Global.createTime(val);
       return time;
     },
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     getKey(index) {
       return Date.now() + index;
     },
@@ -1271,23 +1229,6 @@ export default {
         return;
       }
       var data = this.Global.JsonChange(this.formData);
-      data["queryStartTime"] = this.Global.createTime(
-        this.formData.queryStartTime
-      );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
-
-      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;

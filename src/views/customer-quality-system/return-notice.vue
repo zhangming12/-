@@ -63,22 +63,12 @@ span.btn {
           <div class="container">
             <div class="btn-left w18">
               <Form-item required>
-                <DatePicker
-                  style="display:block;"
-                  type="date"
-                  v-model="formData.queryStartTime"
-                  placeholder="开始时间"
-                ></DatePicker>
+                <data-range hour="00:00" v-model="formData.queryStartTime" placeholder="开始时间"/>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item required>
-                <DatePicker
-                  style="display:block;"
-                  type="date"
-                  v-model="formData.queryEndTime"
-                  placeholder="结束时间"
-                ></DatePicker>
+                <data-range hour="24:00" v-model="formData.queryEndTime" placeholder="结束时间"/>
               </Form-item>
             </div>
             <div class="btn-left w18">
@@ -90,9 +80,9 @@ span.btn {
                   clearable
                 >
                   <Option
-                    :value="item.id"
+                    :value="item.brandId"
                     v-for="(item,index) in brandList"
-                    :key="item.id"
+                    :key="item.brandId"
                   >{{ item.brandName }}</Option>
                 </Select>
               </Form-item>
@@ -106,21 +96,21 @@ span.btn {
                   clearable
                 >
                   <Option
-                    :value="item.id"
+                    :value="item.groupId"
                     v-for="(item,index) in groupList"
-                    :key="item.id"
+                    :key="item.groupId"
                   >{{ item.groupName }}</Option>
                 </Select>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item prop="activityId">
-                <Select v-model="formData.activityId" placeholder="项目名称" clearable>
+                <Select v-model="formData.activityId" placeholder="子活动名称" clearable>
                   <Option
-                    :value="item.id"
+                    :value="item.activityId"
                     v-for="(item,index) in activityList"
-                    :key="item.id"
-                  >{{ item.name }}</Option>
+                    :key="item.activityId"
+                  >{{ item.activityName }}</Option>
                 </Select>
               </Form-item>
             </div>
@@ -142,7 +132,6 @@ span.btn {
           </span>
         </div>
         <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
-        <Button @click="changeNotice" type="primary">change</Button>
       </div>
       <div class="page-box">
         <div style="float: right;">
@@ -156,7 +145,7 @@ span.btn {
 
 <script>
 import { EDFAULT_THREE_AGOTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
-
+import dataRange from "@/components/data-range/data-range.vue";
 import hhTable from "@/components/table/table.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
 export default {
@@ -179,90 +168,105 @@ export default {
           width: 70
         },
         {
-          title: "操作人",
-          key: "userName",
+          title: "时间",
+          key: "time",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "品牌",
-          key: "userName",
+          key: "brandName",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "活动",
-          key: "userName",
+          key: "groupName",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "项目",
-          key: "userName",
+          key: "activityName",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "分组",
-          key: "userName",
+          key: "presentName",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
-          title: "批量退回数",
-          key: "userName",
+          title: "总数",
+          key: "totalNum",
           align: "center",
           width: 120,
+          tooltip: true
+        },
+        {
+          title: "抽检率",
+          key: "sampleRate",
+          align: "center",
+          minWidth: 120,
+          tooltip: true
+        },
+        {
+          title: "正确率",
+          key: "correctPrecent",
+          align: "center",
+          minWidth: 120,
+          tooltip: true
+        },
+        {
+          title: "批量退回",
+          key: "actualNum",
+          align: "center",
+          minWidth: 120,
           tooltip: true,
           render: (h, params) => {
             let tag = [
-              h("span", [
-                999999999,
-                h(
-                  "sup",
-                  {
-                    style: {
-                      color: "red",
-                      display: true ? "inline" : "none"
-                    }
-                  },
-                  "new"
-                )
-              ])
+              h(
+                "span",
+                {
+                  style: {
+                    display: "inline"
+                  }
+                },
+                params.row.actualNum
+              ),
+              h(
+                "sup",
+                {
+                  style: {
+                    color: "red",
+                    display: params.row.status == 1 ? "inline" : "none"
+                  }
+                },
+                "new"
+              )
             ];
             return h("div", tag);
           }
         },
         {
-          title: "数量",
-          key: "userName",
-          align: "center",
-          minWidth: 120,
-          tooltip: true
-        },
-        {
           title: "退回时间",
-          key: "userName",
+          key: "operateTime",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "退回意见",
-          key: "result",
+          key: "message",
           align: "center",
           minWidth: 120,
-          tooltip: true,
-          render: (h, params) => {
-            let result =
-              params.row.result == "success" ? "核销成功" : "核销失败";
-            return h("div", result);
-          }
+          tooltip: true
         },
         {
           title: "操作",
@@ -275,18 +279,48 @@ export default {
                 {
                   props: {
                     type: "default",
-                    size: "small"
-                  },
-                  style: {
-                    display: true ? "block" : "none"
+                    size: "small",
+                    disabled: params.row.finish == 1 ? false : true
                   },
                   on: {
                     click: () => {
-                      let query = {};
-                      this.$router.push({
-                        path: "/twiceAudit",
-                        query
-                      });
+                      let {
+                        startTime,
+                        endTime,
+                        brandId,
+                        groupId,
+                        activityId,
+                        presentId,
+                        teamId,
+                        videoLogId
+                      } = params.row;
+                      let data = {
+                        queryStartTime: startTime,
+                        queryEndTime: endTime,
+                        brandId,
+                        groupId,
+                        activityId,
+                        presentId,
+                        id: videoLogId
+                      };
+                      this.Global.deleteEmptyProperty(data);
+                      this.Global.doPost(
+                        "audit/querySecondAuditNum.json",
+                        data,
+                        res => {
+                          if (res && res != 0) {
+                            delete data["id"];
+                            data["teamId"] = teamId;
+                            this.$router.push({
+                              path: "/twiceAudit",
+                              query: data
+                            });
+                          } else {
+                            params.row.finish = 0;
+                            this.$Message.info("该条记录已处理");
+                          }
+                        }
+                      );
                     }
                   }
                 },
@@ -301,12 +335,13 @@ export default {
       groupList: [],
       activityList: [],
       pageSize: 10,
-      pageData: [{ userName: "不到解放碑加班费教师的奋笔疾书办法" }]
+      pageData: []
     };
   },
   components: {
     hhTable,
-    fieldNameDes
+    fieldNameDes,
+    dataRange
   },
   created() {
     this.queryBrand();
@@ -314,58 +349,36 @@ export default {
   },
   methods: {
     changeNotice() {
-      // this.$store.dispatch("getNoticeMsg");
-      let num = this.$store.state.noticeMsg;
-      num++;
-      this.$store.commit("setNoticeMsg", num);
+      this.$store.dispatch("getNoticeMsg");
     },
-    //查询品牌
     queryBrand() {
-      this.Global.doPostNoLoading(
-        "condition/queryBrands.json",
-        { date: 7, activityType: 3, scope: "a" },
-        res => {
-          this.brandList = [];
-          Object.entries(res).forEach(item => {
-            this.brandList.push({ id: Number(item[0]), brandName: item[1] });
-          });
-          // if (this.brandList && this.brandList.length) {
-          //   this.formData.brandId = this.brandList[0].id;
-          //   this.changeValue(this.formData.brandId);
-          // }
-        }
-      );
+      this.Global.doPostNoLoading("audit/queryBrandByTeam.json", "1", res => {
+        this.brandList = res;
+      });
     },
-    //根据品牌获取活动
     changeValue(value) {
       this.groupList = [];
-      this.$set(this.formData, "groupId", "");
+      this.formData.groupId = "";
+      if (!value) return;
+      //查询活动包
       this.Global.doPostNoLoading(
-        "condition/queryGroup.json",
-        { date: 7, activityType: 3, scope: "a", brandId: value },
+        "audit/queryGroupByBrandAndTeam.json",
+        value,
         res => {
-          Object.entries(res).forEach(item => {
-            this.groupList.push({ id: Number(item[0]), groupName: item[1] });
-          });
-          // if (this.groupList && this.groupList.length) {
-          //   this.formData.groupId = this.groupList[0].id;
-          //   this.getActivityList(this.formData.groupId);
-          // }
+          this.groupList = res;
         }
       );
     },
-    //根据活动获取项目
-    getActivityList(value) {
+    getActivityList(val) {
       this.activityList = [];
-      this.$set(this.formData, "activityId", "");
-      if (!value) return;
+      this.formData.activityId = "";
+      if (!val) return;
+      //查询活动
       this.Global.doPostNoLoading(
-        "condition/queryActivity.json",
-        { date: 7, activityType: 3, scope: "a", groupId: value },
+        "audit/queryActivityByBrandAndTeam.json",
+        val,
         res => {
-          Object.entries(res).forEach(item => {
-            this.activityList.push({ id: Number(item[0]), name: item[1] });
-          });
+          this.activityList = res;
         }
       );
     },
@@ -391,26 +404,18 @@ export default {
       var data = this.Global.JsonChange(this.formData);
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
-      if (this.formData.queryStartTime) {
-        data["queryStartTime"] = this.Global.createTime(
-          this.formData.queryStartTime
-        );
-      } else {
-        delete data["queryStartTime"];
-      }
-      if (this.formData.queryEndTime) {
-        data["queryEndTime"] = this.Global.createTime(
-          this.formData.queryEndTime
-        );
-      } else {
-        delete data["queryEndTime"];
-      }
+      data["checkType"] = 2;
       this.Global.deleteEmptyProperty(data);
-      this.Global.doPost("verific/getVerificData.json", data, res => {
+      this.Global.doPost("audit/returnNotice.json", data, res => {
         this.noneStatus = true;
         this.pageNum = res.items;
         this.page = res.page;
         this.pageData = res.datalist;
+        res.datalist.map(item => {
+          item.time = `${item.startTime}至${item.endTime}`;
+          item.operateTime = this.Global.createTime(item.operateTime);
+        });
+        this.changeNotice();
       });
     }
   }

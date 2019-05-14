@@ -172,35 +172,45 @@
               <div class="right" :class="{'active': noAudit}" @click="auditClick('noAudit')">待审</div>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="brandId" required>
-                <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
+              <Form-item prop="brandId">
+                <Select
+                  v-model="formData.brandId"
+                  placeholder="品牌名称"
+                  @on-change="changeValue"
+                  clearable
+                >
                   <Option
-                    :value="item.id"
+                    :value="item.brandId"
                     v-for="(item,index) in brandList"
-                    :key="index"
+                    :key="item.brandId"
                   >{{ item.brandName }}</Option>
                 </Select>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="groupId" required>
-                <Select v-model="formData.groupId" placeholder="活动名称*" @on-change="getActivityList">
+              <Form-item>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="活动名称"
+                  @on-change="getActivityList"
+                  clearable
+                >
                   <Option
-                    :value="item.id"
+                    :value="item.groupId"
                     v-for="(item,index) in groupList"
-                    :key="index"
+                    :key="item.groupId"
                   >{{ item.groupName }}</Option>
                 </Select>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item prop="activityId" required>
-                <Select v-model="formData.activityId" placeholder="项目名称" clearable>
+              <Form-item prop="activityId">
+                <Select v-model="formData.activityId" placeholder="子活动名称" clearable>
                   <Option
-                    :value="item.id"
+                    :value="item.activityId"
                     v-for="(item,index) in activityList"
-                    :key="index"
-                  >{{ item.name }}</Option>
+                    :key="item.activityId"
+                  >{{ item.activityName }}</Option>
                 </Select>
               </Form-item>
             </div>
@@ -247,7 +257,7 @@ export default {
         activityId: ""
       },
       pageData: [],
-      columns1: [
+      defaultList: [
         {
           title: "序号",
           type: "index",
@@ -275,92 +285,48 @@ export default {
         },
         {
           title: "上传周期",
-          key: "presentName",
+          key: "proid",
           align: "center",
           tooltip: true
         },
         {
           title: "状态",
-          key: "generalField",
+          key: "status",
           align: "center",
           tooltip: true
         },
         {
           title: "审核团队",
-          key: "proid",
+          key: "teamNameList",
           align: "center",
           tooltip: true
         },
         {
           title: "初审",
-          key: "proid",
+          key: "firstNum",
           align: "center",
           tooltip: true
         },
         {
           title: "上传时间",
-          key: "uploadTime",
+          key: "minFirstTime",
           align: "center",
-          tooltip: true,
-          render: (h, parmas) => {
-            if (parmas.row.uploadTime) {
-              return h(
-                "div",
-                parmas.row.uploadTime.substring(
-                  parmas.row.uploadTime.length - 14
-                )
-              );
-            }
-            return "";
-          }
+          tooltip: true
         },
         {
           title: "复审",
-          key: "proid",
+          key: "secondNum",
           align: "center",
           tooltip: true
         },
         {
           title: "上传时间",
-          key: "uploadTime",
-          align: "center",
-          tooltip: true,
-          render: (h, parmas) => {
-            if (parmas.row.uploadTime) {
-              return h(
-                "div",
-                parmas.row.uploadTime.substring(
-                  parmas.row.uploadTime.length - 14
-                )
-              );
-            }
-            return "";
-          }
-        },
-        {
-          title: "质检",
-          key: "proid",
+          key: "minSecondTime",
           align: "center",
           tooltip: true
-        },
-        {
-          title: "上传时间",
-          key: "uploadTime",
-          align: "center",
-          tooltip: true,
-          render: (h, parmas) => {
-            if (parmas.row.uploadTime) {
-              return h(
-                "div",
-                parmas.row.uploadTime.substring(
-                  parmas.row.uploadTime.length - 14
-                )
-              );
-            }
-            return "";
-          }
         }
       ],
+      columns1: [],
       pageNum: 0, //总页数
       page: 1, //当前页
       pageSize: 10, //每页数据条数，默认10条
@@ -370,27 +336,36 @@ export default {
     };
   },
   created() {
-    this.Global.doPost(
-      "condition/queryBrands.json",
-      { date: 7, activityTypes: [3, 6], scope: "a" },
-      res => {
-        this.brandList = [];
-        Object.entries(res).forEach(item => {
-          this.brandList.push({ id: Number(item[0]), brandName: item[1] });
-        });
-        if (this.brandList && this.brandList.length) {
-          this.formData.brandId = this.brandList[0].id;
-          this.init();
-          this.changeValue(this.formData.brandId);
+    this.queryBrand();
+    let userType = this.getUserType();
+    if (userType == "P") {
+      this.columns1 = [
+        ...this.defaultList,
+        {
+          title: "质检",
+          key: "finalNum",
+          align: "center",
+          tooltip: true
+        },
+        {
+          title: "上传时间",
+          key: "minFinalTime",
+          align: "center",
+          tooltip: true
         }
-      }
-    );
+      ];
+    } else {
+      this.columns1 = [...this.defaultList];
+    }
   },
   components: {
     hhTable
   },
   watch: {},
   methods: {
+    getUserType() {
+      return JSON.parse(window.sessionStorage.getItem("user")).userType;
+    },
     auditClick(val) {
       this[val] = !this[val];
       if (val == "noAudit") {
@@ -400,35 +375,38 @@ export default {
       }
       this.init();
     },
+    queryBrand() {
+      this.Global.doPostNoLoading("audit/queryBrandByTeam.json", "1", res => {
+        this.brandList = res;
+        if (res && res.length) {
+          this.$set(this.formData, "brandId", res[0].brandId);
+          this.changeValue(this.formData.brandId);
+        }
+      });
+    },
     changeValue(value) {
       this.groupList = [];
       this.formData.groupId = "";
       if (!value) return;
+      //查询活动包
       this.Global.doPostNoLoading(
-        "condition/queryGroup.json",
-        { date: 7, scope: "a", brandId: value },
+        "audit/queryGroupByBrandAndTeam.json",
+        value,
         res => {
-          Object.entries(res).forEach(item => {
-            this.groupList.push({ id: Number(item[0]), groupName: item[1] });
-          });
-          // if (this.groupList && this.groupList.length) {
-          //   this.formData.groupId = this.groupList[0].id;
-          //   this.getActivityList(this.formData.groupId);
-          // }
+          this.groupList = res;
         }
       );
     },
-    getActivityList(value) {
+    getActivityList(val) {
       this.activityList = [];
       this.formData.activityId = "";
-      if (!value) return;
+      if (!val) return;
+      //查询活动
       this.Global.doPostNoLoading(
-        "condition/queryActivity.json",
-        { date: 7, scope: "a", groupId: value },
+        "audit/queryActivityByBrandAndTeam.json",
+        val,
         res => {
-          Object.entries(res).forEach(item => {
-            this.activityList.push({ id: Number(item[0]), name: item[1] });
-          });
+          this.activityList = res;
         }
       );
     },
@@ -440,15 +418,15 @@ export default {
       this.page = 1;
       this.init();
     },
+    formateTime(time) {
+      if (time) return new Date(time).parttern("yyyy-MM-dd hh:mm:ss");
+      return null;
+    },
     init() {
       if (!this.formData.brandId) {
         this.$Message.info("品牌不能为空");
         return false;
       }
-      // if (!this.formData.groupId) {
-      //   this.$Message.info("活动包不能为空");
-      //   return false;
-      // }
       let data = {
         brandId: this.formData.brandId,
         activityId: this.formData.activityId,
@@ -457,27 +435,29 @@ export default {
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
       if (this.noAudit) {
-        data["checkStatus"] = 0;
+        data["level"] = 2;
       }
       if (this.tNoAudit) {
-        data["checkStatus"] = 4;
+        data["level"] = 1;
       }
       this.Global.deleteEmptyProperty(data);
-      this.Global.doPost(
-        "auditIntegral/queryWaitingAuditTeam.json",
-        data,
-        res => {
-          this.pageNum = res.items;
-          this.page = res.page;
-          this.pageData = res.datalist;
-          this.noneStatus = true;
+      this.Global.doPost("audit/queryOverOrWaitAuditVideo.json", data, res => {
+        this.pageNum = res.items;
+        this.page = res.page;
+        this.noneStatus = true;
+        if (res && res.length) {
           res.datalist.forEach(item => {
             item.proid = `${this.Global.createTime(
               item.startTime
             )}至${this.Global.createTime(item.endTime)}`;
+            item.minFinalTime = this.formateTime(item.minFinalTime);
+            item.minSecondTime = this.formateTime(item.minSecondTime);
+            item.minFirstTime = this.formateTime(item.minFirstTime);
+            item.status = this.noAudit ? "待审核" : "超时";
           });
         }
-      );
+        this.pageData = res.datalist;
+      });
     }
   }
 };

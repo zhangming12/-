@@ -24,8 +24,7 @@ const app = {
             name: 'home'
         }], // 面包屑数组
         menuList: [],
-        messageCount: 0,
-        dontCache: ['text-editor', 'artical-publish'] // 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
+        messageCount: 0
     },
     mutations: {
         setTagsList(state, list) {
@@ -128,10 +127,6 @@ const app = {
             state.messageCount = count;
         },
         increateTag(state, tagObj) {
-            // if (!Util.oneOf(tagObj.name, state.dontCache)) {
-            //     state.cachePage.push(tagObj.name);
-            //     localStorage.cachePage = JSON.stringify(state.cachePage);
-            // }
             state.pageOpenedList.push(tagObj);
             sessionStorage.pageOpenedList = JSON.stringify(state.pageOpenedList);
         }

@@ -41,13 +41,9 @@
       .video {
         width: 100%;
         height: 213px;
-        //   display: flex;
-        //   justify-content: center;
-
         .video-main {
           width: 250px;
           position: relative;
-          // height: 213px;
           video {
             width: 250px;
             height: 213px;
@@ -91,7 +87,7 @@
     .btn-box {
       margin-top: 10px;
       margin-right: 10px;
-      overflow: hidden;
+      height: 40px;
       .btn {
         margin-right: 10px;
       }
@@ -103,6 +99,9 @@
     }
   }
 }
+.redColor {
+  color: red;
+}
 </style>
 
 <template>
@@ -112,16 +111,16 @@
         <div class="video-box">
           <div class="video">
             <div class="video-main" v-if="itemData.fileType == 'radio'">
-              <video :src="itemData.firstRadio.radioUrl" v-if="itemData.firstRadio" controls></video>
+              <video :src="itemData.imageOneUrl" v-if="itemData.firstRadio" controls></video>
               <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
               <img class="triangle" src="../../assets/image/triangle-first.jpg">
             </div>
             <div class="video-main" v-if="itemData.fileType == 'image'">
               <imageLook
-                :key="itemData.firstImageList[0]"
+                :key="itemData.imageOneUrl[0]"
                 :position="position"
-                v-if="itemData.firstImageList.length"
-                :imageList="itemData.firstImageList"
+                v-if="itemData.imageOneUrl.length"
+                :imageList="itemData.imageOneUrl"
               />
               <img v-else src="../../assets/image/nullImage.png" class="noneVideoUrl">
               <img class="triangle" src="../../assets/image/triangle-first.jpg">
@@ -129,16 +128,16 @@
           </div>
           <div class="video">
             <div class="video-main" v-if="itemData.fileType == 'radio'">
-              <video :src="itemData.radioUrl" v-if="itemData.radioUrl" controls></video>
+              <video :src="itemData.imageTwoUrl" v-if="itemData.imageTwoUrl" controls></video>
               <img v-else src="../../assets/image/nullVideo.png" class="noneVideoUrl">
               <img class="triangle" src="../../assets/image/triangle-this.jpg">
             </div>
             <div class="video-main" v-if="itemData.fileType == 'image'">
               <imageLook
-                :key="itemData.imageList[0]"
+                :key="itemData.imageTwoUrl[0]"
                 :position="position"
-                v-if="itemData.imageList.length"
-                :imageList="itemData.imageList"
+                v-if="itemData.imageTwoUrl.length"
+                :imageList="itemData.imageTwoUrl"
               />
               <img v-else src="../../assets/image/nullImage.png" class="noneVideoUrl">
               <img class="triangle" src="../../assets/image/triangle-this.jpg">
@@ -156,11 +155,11 @@
                   <span
                     :class="{'redColor':item.type == '门头照' && itemData[item.key] == '位置偏移'}"
                   >{{ itemData[item.key]}}</span>
-                  <span
-                    class="typeSpan"
-                    @click="showPhoto"
+                  <show-photo
                     v-if="item.type == '门头照'"
-                  >( {{ item.type }} )</span>
+                    :uploadPhoto="itemData.newStoreImage"
+                    :signPhoto="itemData.storeImage"
+                  />
                 </p>
               </div>
             </Col>
@@ -168,9 +167,9 @@
               <div class="item-box">
                 <span class="status">审核状态：</span>
                 <RadioGroup v-model="itemData.status" @on-change="radioChange">
-                  <Radio :label="index + '-1001'">通过</Radio>
-                  <Radio :label="index + '-2'">不通过</Radio>
-                  <Radio v-if="itemData.isBack == 0" :label="index + '-3'">退回</Radio>
+                  <Radio :label="1">通过</Radio>
+                  <Radio :label="2">不通过</Radio>
+                  <Radio v-if="itemData.isBack == 0" :label="3">退回</Radio>
                 </RadioGroup>
                 <div class="tooltip" style="display:inline-block;">
                   <my-tooltip
@@ -193,23 +192,32 @@
             v-if="showReprieve"
             style="width:100px;margin-top:5px;margin-right:10px;"
             size="small"
+            :class="{'redColor':itemData.defer == 1}"
+            v-model="itemData.defer"
           >
             <Option :value="0">其他</Option>
             <Option :value="1">暂缓</Option>
           </Select>
-          <span class="btn-span btn-left">
+          <span class="btn-span btn-left" v-if="itemData.showBack">
             审核退回
             <my-tooltip
-              :auditPolicy="itemData.auditPolicy"
+              :auditPolicy="itemData.backMessage"
               :placement="position"
               style="margin-left:5px;"
             />
           </span>
+          <audit-memo class="btn-left" style="margin-top:7px;" v-model="itemData.memo"/>
+          <span
+            v-if="itemData.cheatNum"
+            class="btn-span btn-left redColor"
+            style="margin-left:15px;cursor:pointer;"
+          >作弊{{itemData.cheatNum}}次</span>
           <Button type="primary" class="btn btn-right" @click="save(itemData)">保存</Button>
           <Button
             class="btn btn-right"
             type="info"
             @click="lookDetail(itemData)"
+            v-if="showLookDetail"
             style="margin-right:10px;"
           >查看详情</Button>
         </div>
@@ -225,6 +233,8 @@
 <script>
 import imageLook from "@/components/imgLook/img-look.vue";
 import myTooltip from "@/components/tooltip/tooltip.vue";
+import showPhoto from "@/components/showPhoto/show-photo.vue";
+import auditMemo from "@/components/auditItem/audit-memo.vue";
 export default {
   name: "audit-item",
   props: {
@@ -247,19 +257,23 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      showLookDetail: false
+    };
   },
   components: {
     imageLook,
-    myTooltip
+    myTooltip,
+    showPhoto,
+    auditMemo
+  },
+  created() {
+    this.showLookDetail = this.Global.getConfig().hide == 0;
   },
   methods: {
-    //显示门头照
-    showPhoto() {
-      this.$emit("showPhoto", this.index);
-    },
     //保存
     save(item) {
+      this.$set(item, "memo", item.memo);
       this.$emit("save", { item, index: this.index });
     },
     //查看详情

@@ -143,15 +143,20 @@ export default {
     };
   },
   created() {
-    this.Global.doPostNoLoading("condition/queryBrands.json", {}, res => {
-      this.brandList = [];
-      Object.entries(res).forEach(item => {
-        this.brandList.push({ id: Number(item[0]), brandName: item[1] });
-      });
-      if (this.$route.query.type === "add") {
-        this.formData.brandId = this.brandList[0].id;
+    this.Global.doPostNoLoading(
+      "condition/queryBrands.json",
+      // { tbType: "team" },
+      {},
+      res => {
+        this.brandList = [];
+        Object.entries(res).forEach(item => {
+          this.brandList.push({ id: Number(item[0]), brandName: item[1] });
+        });
+        if (this.$route.query.type === "add") {
+          this.formData.brandId = this.brandList[0].id;
+        }
       }
-    });
+    );
     let implode = (arr, parentId, level) => {
       let newArr = [];
       if (arr.length === 0) {

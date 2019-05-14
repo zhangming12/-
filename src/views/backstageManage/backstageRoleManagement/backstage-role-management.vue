@@ -89,93 +89,100 @@
 .numColor {
   color: #ff8a34;
 }
-
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">后台角色管理</h2> -->
-        <div class="main-container">
-          <div class="box">
-              <Form ref="form" class="form" :model="formData" :label-width="10">
-                  <div class="container">
-                    <div class="btn-left w18">
-                      <Form-item prop='brandId'>
-                        <Select v-model="formData.brandId" placeholder="品牌名称">
-                          <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                        </Select>
-                      </Form-item>
-                    </div>
-                    <div class="btn-left w18">
-                      <Form-item prop='workerName'>
-                        <Input v-model.trim='formData.workerName' placeholder="请输入角色"></Input>
-                      </Form-item>
-                    </div>
-                  </div>
-                  <div class="btn-right w10">
-                      <div class="searchBox">
-                        <div class="btn-right search-right" @click="submit('form')">
-                          <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                        </div>
-                      </div>
-                  </div>
-              </Form>        
-          </div>
-          <div class="box" style='margin-top: 15px;overflow: hidden;text-align:center;'>
-            <div class='contentTop'>
-              <span class="btn-left">共查询到 <span class='numColor'>{{pageNum}}</span> 条数据</span>
-              <addNewBtn class="btn-right" @click.native="createNewAccount" title="新建角色"/>
+  <div id="Main">
+    <!-- <h2 class="Title">后台角色管理</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" class="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item prop="brandId">
+                <Select v-model="formData.brandId" placeholder="品牌名称">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
             </div>
-            <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-          </div>
-          <div class="page-box">
-            <div style="float: right;">
-              <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+            <div class="btn-left w18">
+              <Form-item prop="workerName">
+                <Input v-model.trim="formData.workerName" placeholder="请输入角色"></Input>
+              </Form-item>
             </div>
           </div>
-        </div>
-        <Modal
-            :title="type == 'add'?'新建后台账户':'修改后台账户'"
-            v-model="showUnlock"
-            class-name="vertical-center-modal">
-             <Form :model="formItem" :label-width="90"  :rules="rule">
-                 <FormItem label="用户名" prop="userName" style="padding-bottom:10px;">
-                    <Input v-model="formItem.userName"></Input>
-                </FormItem>
-                <FormItem label="密码" prop="password">
-                    <Input v-model="formItem.password" type="password"></Input>
-                </FormItem>
-                <FormItem label="手机号" prop="phone">
-                    <Input v-model="formItem.phone"></Input>
-                </FormItem>
-            </Form>
-            <div slot="footer">
-              <div style="text-align:center">
-                <i-button type="success" @click="cancel">取消</i-button>
-                <i-button type="primary" @click="userBind">确定</i-button>
+          <div class="btn-right w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
               </div>
-                
             </div>
-        </Modal>
-        <Modal
-            title="设置账户角色"
-            v-model="showSettingRole"
-            @on-ok="roleSureSetting"
-            width="800"
-            class-name="vertical-center-modal">
-             <div class="roleBox">
-                 <div class="roleBoxLeft">
-                     <h5>待选择</h5>
-                     <Tree ref="tree" :data="baseData" multiple show-checkbox @on-check-change="dataChange"></Tree>
-                 </div>
-                 <div class="roleBoxRight">
-                     <h5>已选择</h5>
-                     <Tree :data="baseData" show-checkbox></Tree>
-                 </div>
-             </div>
-             <!-- var treeData = this.$refs.tree.getCheckedNodes(); -->
-        </Modal>
+          </div>
+        </Form>
+      </div>
+      <div class="box" style="margin-top: 15px;overflow: hidden;text-align:center;">
+        <div class="contentTop">
+          <span class="btn-left">
+            共查询到
+            <span class="numColor">{{pageNum}}</span> 条数据
+          </span>
+          <addNewBtn class="btn-right" @click.native="createNewAccount" title="新建角色"/>
+        </div>
+        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      </div>
+      <div class="page-box">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
     </div>
+    <Modal
+      :title="type == 'add'?'新建后台账户':'修改后台账户'"
+      v-model="showUnlock"
+      class-name="vertical-center-modal"
+    >
+      <Form :model="formItem" :label-width="90" :rules="rule">
+        <FormItem label="用户名" prop="userName" style="padding-bottom:10px;">
+          <Input v-model="formItem.userName"></Input>
+        </FormItem>
+        <FormItem label="密码" prop="password">
+          <Input v-model="formItem.password" type="password"></Input>
+        </FormItem>
+        <FormItem label="手机号" prop="phone">
+          <Input v-model="formItem.phone"></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <div style="text-align:center">
+          <i-button type="success" @click="cancel">取消</i-button>
+          <i-button type="primary" @click="userBind">确定</i-button>
+        </div>
+      </div>
+    </Modal>
+    <Modal
+      title="设置账户角色"
+      v-model="showSettingRole"
+      @on-ok="roleSureSetting"
+      width="800"
+      class-name="vertical-center-modal"
+    >
+      <div class="roleBox">
+        <div class="roleBoxLeft">
+          <h5>待选择</h5>
+          <Tree ref="tree" :data="baseData" multiple show-checkbox @on-check-change="dataChange"></Tree>
+        </div>
+        <div class="roleBoxRight">
+          <h5>已选择</h5>
+          <Tree :data="baseData" show-checkbox></Tree>
+        </div>
+      </div>
+      <!-- var treeData = this.$refs.tree.getCheckedNodes(); -->
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -344,16 +351,21 @@ export default {
     };
   },
   created() {
-    this.Global.doPostNoLoading("condition/queryBrands.json", {}, res => {
-      this.brandList = [];
-      Object.entries(res).forEach(item => {
-        this.brandList.push({ id: Number(item[0]), brandName: item[1] });
-      });
-      if (this.brandList && this.brandList.length) {
-        this.formData.brandId = this.brandList[0].id;
-        this.init();
+    this.Global.doPostNoLoading(
+      "condition/queryBrands.json",
+      // { tbType: "team" },
+      {},
+      res => {
+        this.brandList = [];
+        Object.entries(res).forEach(item => {
+          this.brandList.push({ id: Number(item[0]), brandName: item[1] });
+        });
+        if (this.brandList && this.brandList.length) {
+          this.formData.brandId = this.brandList[0].id;
+          this.init();
+        }
       }
-    });
+    );
   },
   watch: {
     showUnlock(val) {
@@ -421,9 +433,9 @@ export default {
       );
     },
     init() {
-      if(!this.formData.brandId){
+      if (!this.formData.brandId) {
         this.$Message.error("请选择品牌");
-        return false
+        return false;
       }
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);

@@ -1,4 +1,4 @@
-// 批量审核统计
+// 质检数据统计
 <style lang="less" scoped>
 @import "../../config/index.less";
 #Main {
@@ -110,21 +110,23 @@ span.btn {
         <Form ref="form" class="form" :model="formData" :label-width="10" :rules="rule">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item   required>
-                <DatePicker type="date" v-model="formData.queryStartTime" placeholder="开始时间"></DatePicker>
+              <Form-item required>
+                <data-range hour="00:00" v-model="formData.queryStartTime" placeholder="开始时间"/>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
-                <DatePicker type="date" v-model="formData.queryEndTime" placeholder="结束时间"></DatePicker>
+              <Form-item required>
+                <data-range hour="24:00" v-model="formData.queryEndTime" placeholder="结束时间"/>
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item>
+              <Form-item prop="groupId" required>
                 <Select v-model="formData.teamId" placeholder="团队" clearable>
-                  <Option value="all">全部</Option>
-                  <Option value="success">成功</Option>
-                  <Option value="fail">失败</Option>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in teamList"
+                    :key="item.id"
+                  >{{ item.brandName }}</Option>
                 </Select>
               </Form-item>
             </div>
@@ -162,6 +164,7 @@ import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索�
 
 import hhTable from "@/components/table/table.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 export default {
   name: "batch-audit-statistics-keepAlive",
   data() {
@@ -185,50 +188,64 @@ export default {
         },
         {
           title: "团队",
-          key: "userName",
+          key: "teamName",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "正确数",
-          key: "userName",
+          key: "correctNum",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "不正确数",
-          key: "userName",
+          key: "unCorrectNum",
           align: "center",
           minWidth: 120,
           tooltip: true
         },
         {
           title: "质检正确率",
-          key: "userName",
+          key: "qualityAccuracy",
           align: "center",
           minWidth: 120,
           tooltip: true
         }
       ],
       pageSize: 10,
-      pageData: []
+      pageData: [],
+      teamList: []
     };
   },
   components: {
     hhTable,
-    fieldNameDes
+    fieldNameDes,
+    dataRange
   },
   created() {
-    this.getTeamData();
+    this.queryTeam();
   },
   methods: {
-    getTeamData() {
-      let data = {};
-      this.Global.doPost("", data, res => {
-        this.teamData = res;
-        this.getUserData();
+    //获取userType
+    getUserType() {
+      return JSON.parse(window.sessionStorage.getItem("user")).userType;
+    },
+    //查询团队
+    queryTeam() {
+      let userType = this.getUserType();
+      // let api = "";
+      // let data = "";
+      // if (userType == "p") {
+      //   api = "audit/queryAllTeam.json";
+      // } else {
+      //   api = "audit/queryTeamByUser.json";
+      //   data = 666;
+      // }
+      this.Global.doPostNoLoading("audit/queryAllTeam.json", "", res => {
+        this.teamList = res;
       });
     },
     getUserData(val) {
@@ -259,34 +276,9 @@ export default {
       var data = this.Global.JsonChange(this.formData);
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
-      if (this.formData.queryStartTime) {
-        data["queryStartTime"] = this.Global.createTime(
-          this.formData.queryStartTime
-        );
-        if (this.start.hour == "24:00") {
-          data["queryStartTime"] = this.Global.setHoursData(
-            this.start.time,
-            this.start.hour
-          );
-        }
-      } else {
-        delete data["queryStartTime"];
-      }
-      if (this.formData.queryEndTime) {
-        data["queryEndTime"] = this.Global.createTime(
-          this.formData.queryEndTime
-        );
-        if (this.end.hour == "24:00") {
-          data["queryEndTime"] = this.Global.setHoursData(
-            this.end.time,
-            this.end.hour
-          );
-        }
-      } else {
-        delete data["queryEndTime"];
-      }
+      data["checkType"] = 2;
       this.Global.deleteEmptyProperty(data);
-      this.Global.doPost("verific/getVerificData.json", data, res => {
+      this.Global.doPost("audit/qualityDataStatistics.json", data, res => {
         this.noneStatus = true;
         this.pageNum = res.items;
         this.page = res.page;

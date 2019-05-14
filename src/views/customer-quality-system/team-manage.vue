@@ -71,29 +71,21 @@
     <!-- <h2 class="Title">团队管理</h2> -->
     <div class="main-container">
       <div class="box">
-        <Form ref="form" class="form" :model="formData" :label-width="10" :rules="rule">
+        <Form ref="form" class="form" :model="formData" :label-width="10">
           <div class="container">
             <div class="btn-left w18">
               <Form-item required>
-                <Input placeholder="团队名称" v-model.trim="formData.teamName" clearable/>
+                <Input placeholder="团队名称" v-model.trim="formData.brandName" clearable/>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item required>
-                <Input placeholder="负责人" v-model.trim="formData.account" clearable/>
+                <Input placeholder="负责人" v-model.trim="formData.userName" clearable/>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item required>
                 <Input placeholder="手机号" v-model.trim="formData.phone" clearable/>
-              </Form-item>
-            </div>
-            <div class="btn-left w18">
-              <Form-item required>
-                <Select v-model="formData.status" clearable placeholder="状态">
-                  <Option value="1">停用</Option>
-                  <Option value="2">启用</Option>
-                </Select>
               </Form-item>
             </div>
           </div>
@@ -130,35 +122,17 @@
         <div class="modal-table">
           <Form ref="form" :model="formDatas" :label-width="88">
             <Form-item label="团队名称" required>
-              <Input
-                :disabled="type == 'modify'"
-                v-model.trim="formDatas.brandName"
-                placeholder="团队名称"
-              />
+              <Input v-model.trim="formDatas.brandName" placeholder="团队名称"/>
             </Form-item>
-            <Form-item label="负责人" required>
-              <Input
-                :disabled="type == 'look'"
-                v-model.trim="formDatas.brandDesc"
-                placeholder="负责人"
-              />
+            <Form-item label="负责人">
+              <Input v-model.trim="formDatas.userName" placeholder="负责人"/>
             </Form-item>
-            <Form-item label="手机号" required>
-              <Input :disabled="type == 'look'" v-model.trim="formDatas.phone" placeholder="手机号"/>
-            </Form-item>
-            <Form-item label="是否脱敏" required>
-              <RadioGroup v-model="formDatas.tuomin">
-                <Radio label="1">
-                  <span>是</span>
-                </Radio>
-                <Radio label="0">
-                  <span>否</span>
-                </Radio>
-              </RadioGroup>
+            <Form-item label="手机号">
+              <Input v-model.trim="formDatas.phone" placeholder="手机号"/>
             </Form-item>
             <div class="modal-fotter" style="text-align:center;">
-              <Button v-if="type != 'add'" @click="closeModal" type="default">取消</Button>
-              <Button @click="saveNewPresent" type="default">确定</Button>
+              <Button @click="closeModal" type="default">取消</Button>
+              <Button @click="addTeam" type="default">确定</Button>
             </div>
           </Form>
         </div>
@@ -171,14 +145,11 @@
 import addNewBtn from "@/components/Button/addNew-btn.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import hhTable from "@/components/table/table.vue";
-import upData from "@/assets/js/upload.js";
-import PROJECT_CONFIG from "@/util/config.js";
 export default {
   name: "team-manage-keepAlive",
   data() {
     return {
       myModalisShow: false,
-      brandId: "",
       formData: {
         brandId: "",
         name: ""
@@ -187,7 +158,6 @@ export default {
       page: 1,
       pageNum: 0,
       pageSize: 10,
-      rule: {},
       columns1: [
         {
           title: "序号",
@@ -197,14 +167,14 @@ export default {
         },
         {
           title: "团队名称",
-          key: "id",
+          key: "brandName",
           minWidth: 160,
           align: "center",
           tooltip: true
         },
         {
           title: "负责人",
-          key: "brandName",
+          key: "userName",
           minWidth: 160,
           align: "center",
           tooltip: true
@@ -212,14 +182,7 @@ export default {
 
         {
           title: "手机号",
-          key: "brandDesc",
-          minWidth: 160,
-          align: "center",
-          tooltip: true
-        },
-        {
-          title: "状态",
-          key: "creditLine",
+          key: "phone",
           minWidth: 160,
           align: "center",
           tooltip: true
@@ -258,8 +221,7 @@ export default {
       ],
       type: "",
       pageData: [],
-      formDatas: {},
-      menuData: {}
+      formDatas: {}
     };
   },
   components: { myModal, addNewBtn, hhTable },
@@ -269,11 +231,7 @@ export default {
   watch: {
     myModalisShow(val) {
       if (!val) {
-        this.formDatas = {
-          brandId: "",
-          presentType: "",
-          activityTag: ""
-        };
+        this.formDatas = {};
       }
     }
   },
@@ -284,51 +242,32 @@ export default {
     },
     setData(row, type) {
       this.type = type;
-      this.formDatas = {
-        id: row.brandId,
-        name: row.name,
-        type: row.type + ""
-      };
+      let { id, brandName, userName, phone } = row;
+      this.formDatas = { id, brandName, userName, phone };
     },
-    saveNewPresent() {
+    addTeam() {
       if (!this.formDatas.brandName) {
-        this.$Message.error("品牌名称不能为空");
+        this.$Message.error("团队名称不能为空");
         return false;
       }
-      if (!this.formDatas.userName) {
-        this.$Message.error("联系人不能为空");
-        return false;
-      }
-      if (!this.formDatas.phone) {
-        this.$Message.error("手机号不能为空");
-        return false;
+      if (this.formDatas.phone) {
+        if (!this.Global.checkPhone(this.formDatas.phone)) {
+          this.$Message.error("请输入正确的手机号");
+          return false;
+        }
       }
       let data = this.Global.JsonChange(this.formDatas);
       this.Global.deleteEmptyProperty(data);
+      let api = "audit/addTeam.json";
 
       if (this.type == "modify") {
-        delete data["type"];
-        data["id"] = this.formDatas.id;
-        data["userId"] = this.formDatas.userId;
-        this.Global.doPost("brand/doUpdate.json", data, res => {
-          let str = "修改成功";
-          this.$Message.success(str);
-          this.menuData.brandName = this.formDatas.brandName;
-          this.menuData.brandId = this.brandId;
-
-          this.myModalisShow = false;
-          this.init();
-        });
-      } else {
-        this.Global.doPost("brand/doSave.json", data, res => {
-          let str = this.type == "modify" ? "修改成功" : "保存成功";
-          this.$Message.success(str);
-          this.menuData.brandId = res.id;
-          this.menuData.brandName = this.formDatas.brandName;
-          this.myModalisShow = false;
-          this.init();
-        });
+        api = "audit/updateTeam.json";
       }
+      this.Global.doPost(api, data, res => {
+        this.$Message.success("新建成功");
+        this.myModalisShow = false;
+        this.init();
+      });
     },
     closeModal() {
       this.myModalisShow = false;
@@ -356,7 +295,7 @@ export default {
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
       this.Global.deleteEmptyProperty(data);
-      this.Global.doPost("brand/doQueryWithPageByUser.json", data, res => {
+      this.Global.doPost("audit/queryTeam.json", data, res => {
         this.pageData = res.datalist;
         this.noneStatus = true;
         this.pageNum = res.items;

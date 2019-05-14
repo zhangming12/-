@@ -236,7 +236,8 @@
             <div class="btn-left w18">
               <Form-item prop="brandId">
                 <Select v-model="formData.brandId" @on-change="changeValue" placeholder="品牌ID">
-                  <Option :value="1">1</Option>
+                  <Option :value="8">8</Option>
+                  <Option :value="15">15</Option>
                   <Option :value="25">25</Option>
                 </Select>
               </Form-item>
@@ -484,7 +485,7 @@ export default {
         queryStartTime: EDFAULT_STARTTIME,
         queryEndTime: EDFAULT_ENDTIME,
         groupId: 123, //活动包名ID
-        brandId: 1,
+        brandId: 8,
         activityId: "",
         storeId: "",
         storeName: "",
@@ -498,18 +499,15 @@ export default {
       brandList: [],
       activityList: [],
       allGroupList: {
-        "1": [123],
-        // "8": [157, 160],
-        // "15": [126],
-        "25": [151]
+        "8": [157],
+        "15": [126],
+        "25": [151, 155]
       },
       allActivityList: {
-        "151": [537, 539, 540, 541, 542, 543, 652],
-        // "155": [559, 560, 561, 562, 563, 565, 566, 687],
-        "123": [482, 571, 573, 574, 575]
-        // "126": [476, 479],
-        // "157": [572],
-        // "160": [582]
+        "151": [538],
+        "155": [559, 560, 561, 562, 563, 564, 565, 566, 687],
+        "157": [572],
+        "126": [476, 479]
       },
       social: [],
       storeGoodsList: null,
@@ -540,7 +538,7 @@ export default {
     };
   },
   created() {
-    this.changeValue(1);
+    this.changeValue(8);
   },
   watch: {
     "formItem.checkStatus"(val) {
@@ -718,7 +716,6 @@ export default {
         this.$Message.info("项目ID不能为空");
         return false;
       }
-
       var data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       data["pageSize"] = this.pageSize;
