@@ -549,11 +549,11 @@ export default {
         },
         {
           title: "最终结果",
-          key: "checkStatus",
+          key: "checkSecondStatus",
           align: "center",
           tooltip: true,
           render: (h, params) => {
-            return h("div", RESULT[params.row.checkStatus]);
+            return h("div", RESULT[params.row.checkSecondStatus]);
           }
         },
         {
@@ -564,7 +564,7 @@ export default {
         },
         {
           title: "审核意见",
-          key: "checkMessage",
+          key: "checkSecondMessage",
           align: "center",
           tooltip: true
         },
@@ -739,8 +739,8 @@ export default {
         this.page = res.page;
         this.noneStatus = true;
         res.datalist.map(item => {
-          item.checkTime = item.checkTime
-            ? this.Global.createTime(item.checkTime)
+          item.checkTime = item.checkSecondTime
+            ? this.Global.createTime(item.checkSecondTime)
             : "";
           let presentList = [
             {

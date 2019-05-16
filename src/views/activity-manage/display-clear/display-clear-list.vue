@@ -382,7 +382,7 @@ export default {
         },
         {
           // 1 合适  0 不合格
-          title: "合格情况",
+          title: "视频审核结果",
           key: "auditCountQualified",
           width: 120,
           align: "center",

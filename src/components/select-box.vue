@@ -73,26 +73,38 @@ import func from './vue-temp/vue-editor-bridge';
 }
 </style>
 <template>
-  <div class="container" v-clickoutside = "handClose">
-        <div :style="returnStyle" class="select-box" style="margin-right:20px;">
-          <div @click="topClick" class="select-top-box">
-              <span v-show="!name">{{placeholder}}</span>
-              <span v-show="name">{{name}}</span>
-              <div class="select-top-extra">
-                  <Icon type="md-arrow-dropdown" style="margin-top:-2px;" size="20"  v-show="!mainBoxShow" @click="topClick" color="#FFD300"/>
-                  <Icon type="md-arrow-dropup" style="margin-top:-2px;" v-show="mainBoxShow" @click="topClick" size="20" color="#FFD300"/>
-              </div>
-          </div>
-          <div v-show="mainBoxShow" class="select-main-box">
-              <ul>
-                  <li v-if="total" @click="totalClick">全部</li>
-                  <li v-if="province" @click="totalClick">全国</li>
-                  <li @click="liClick(item)" v-for="(item ,index) in selectLict" :key="index">
-                      {{item.label}}
-                  </li>
-              </ul>
-          </div>
+  <div class="container" v-clickoutside="handClose">
+    <div :style="returnStyle" class="select-box" style="margin-right:20px;">
+      <div @click="topClick" class="select-top-box">
+        <span v-show="!name">{{placeholder}}</span>
+        <span v-show="name">{{name}}</span>
+        <div class="select-top-extra">
+          <i-icon
+            type="md-arrow-dropdown"
+            style="margin-top:-2px;"
+            size="20"
+            v-show="!mainBoxShow"
+            @click="topClick"
+            color="#FFD300"
+          />
+          <i-icon
+            type="md-arrow-dropup"
+            style="margin-top:-2px;"
+            v-show="mainBoxShow"
+            @click="topClick"
+            size="20"
+            color="#FFD300"
+          />
         </div>
+      </div>
+      <div v-show="mainBoxShow" class="select-main-box">
+        <ul>
+          <li v-if="total" @click="totalClick">全部</li>
+          <li v-if="province" @click="totalClick">全国</li>
+          <li @click="liClick(item)" v-for="(item ,index) in selectLict" :key="index">{{item.label}}</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -136,13 +148,13 @@ export default {
         return [];
       }
     },
-    total:{
-      type:Boolean,
-      default:false
+    total: {
+      type: Boolean,
+      default: false
     },
-    province:{
-      type:Boolean,
-      default:false
+    province: {
+      type: Boolean,
+      default: false
     },
     width: {
       type: [Number, String],
@@ -152,13 +164,12 @@ export default {
       type: [Number, String],
       default: 30
     },
-    check:{
-      type:[String,Number,Boolean],
-      default:false
+    check: {
+      type: [String, Number, Boolean],
+      default: false
     }
   },
-  created() {
-  },
+  created() {},
   computed: {
     returnStyle() {
       let style = {};
@@ -170,20 +181,18 @@ export default {
       return style;
     }
   },
-  mounted() {
-  },
+  mounted() {},
   watch: {
-    selectLict(val){
+    selectLict(val) {
       this.name = "";
       this.value = "";
-      if(val && val.length && this.check){
+      if (val && val.length && this.check) {
         this.name = val[0].label;
         this.value = val[0].value;
-
       }
     },
-    province(val){
-      if(val){
+    province(val) {
+      if (val) {
         this.selectLict = this.selectLict.splice(1);
       }
     }
@@ -200,26 +209,25 @@ export default {
       this.name = item.label;
       this.value = item.value;
       this.$emit("input", item.value);
-      this.$emit('selectChange',item.value);
+      this.$emit("selectChange", item.value);
     },
-    totalClick(){
+    totalClick() {
       this.mainBoxShow = false;
       if (this.name == "全部" || this.name == "全国") {
         return false;
       }
-      if(this.province){
+      if (this.province) {
         this.name = "全国";
         this.value = "0";
         this.$emit("input", this.value);
-        this.$emit('selectChange',this.value);
+        this.$emit("selectChange", this.value);
       }
-      if(this.total){
+      if (this.total) {
         this.name = "全部";
         this.value = "";
         this.$emit("input", this.value);
-        this.$emit('selectChange',this.value);
+        this.$emit("selectChange", this.value);
       }
-      
     },
     topClick(e) {
       e.stopPropagation();

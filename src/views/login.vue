@@ -262,85 +262,78 @@ button {
 
 
 <template>
-    <div id="Bg">
-        <!-- 登录界面  -->
-        <div id="Box" v-if="login">
-            <div class="logo">
+  <div id="Bg">
+    <!-- 登录界面  -->
+    <div id="Box" v-if="login">
+      <div class="logo"></div>
+      <div class="title">惠合营销服务管理平台</div>
+      <div id="login" @keyup.enter="submit">
+        <div class="formBox">
+          <div class="Title">用户登录</div>
+          <div class="Form">
+            <input type="text" placeholder="用户名" v-model.trim="formData.loginAccount">
+            <input type="password" placeholder="密   码" v-model.trim="formData.loginPwd">
+            <div class="forget">
+              <span @click="forget">忘记密码</span>
             </div>
-            <div class="title">
-                惠合营销服务管理平台
-            </div>
-            <div id="login" @keyup.enter="submit">
-                <div class="formBox">
-                    <div class="Title">
-                        用户登录
-                    </div>
-                    <div class="Form">
-                        <input type="text" placeholder="用户名" v-model.trim="formData.loginAccount" >
-                        <input type="password" placeholder="密   码" v-model.trim="formData.loginPwd" >
-                        <div class="forget" > <span @click='forget'>忘记密码</span></div>
-                        <div class="submit" @click="submit">
-                            登录
-                        </div>
-                    </div>
-                </div>
-            </div>   
+            <div class="submit" @click="submit">登录</div>
+          </div>
         </div>
-        <!-- 忘记密码 -->
-        <div id="forgetPas" v-else>
-            <div class="Top" @click="forget">
-                马上登录
-            </div>
-            <div class="Title">
-                找回密码
-            </div>
-            <div class="content">
-                <ul class="steps">
-                    <li :class="counm==0?'process':counm > 0?'finish':''">
-                        <div class="header"></div>
-                        <div class="tail"></div>
-                    </li>
-                    <li :class="counm==1?'process':counm > 1?'finish':''">
-                        <div class="header"></div>
-                        <div class="tail"></div>
-                    </li>
-                    <li :class="counm==2?'process':counm > 2?'finish':''">
-                        <div class="header"></div>
-                        <div class="tail"></div>
-                    </li>
-                </ul>
-                <ul class="stepTitle">
-                    <li :class="counm==0?'active':counm > 0?'active':''">确认用户名</li>
-                    <li :class="counm==1?'active':counm > 1?'active':''">验证身份</li>
-                    <li :class="counm==2?'active':counm > 2?'active':''">找回密码</li>
-                </ul>
-                <div class="heng"></div>
-                <div class="stepOne" v-if="counm == 0 ">
-                    <input type="text" placeholder="用户名" v-model.trim="user">
-                    <div class="next" @click="validateUser">下一步</div>
-                </div>
-                <div class="stepTwo" v-if="counm == 1 ">
-                    <div class="showPhone">{{ encryptPhone }}</div>
-                    <div class="inputBox">
-                        <input type="text" placeholder="验证码" v-model="authCode">
-                        <button :class="[{ disStatus: disabledStatus },'sendCode']" @click="sendMsg" :disabled="disabledStatus">
-                            {{ codeMsg }}
-                        </button>
-                    </div>
-                    <div class="next" @click="checkPhone">下一步</div>
-                </div>
-                <div class="stepThree" v-if="counm == 2 ">
-                    <div class="reset">
-                        <input type="text" placeholder="重置密码" ref="reset">
-                        <div class="eyeBox" @click="changeType">
-                            <Icon :type="iconType?'md-eye':'md-eye-off'" size="16"></Icon>
-                        </div>
-                    </div>
-                    <div class="next" @click="complate">完成</div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <!-- 忘记密码 -->
+    <div id="forgetPas" v-else>
+      <div class="Top" @click="forget">马上登录</div>
+      <div class="Title">找回密码</div>
+      <div class="content">
+        <ul class="steps">
+          <li :class="counm==0?'process':counm > 0?'finish':''">
+            <div class="header"></div>
+            <div class="tail"></div>
+          </li>
+          <li :class="counm==1?'process':counm > 1?'finish':''">
+            <div class="header"></div>
+            <div class="tail"></div>
+          </li>
+          <li :class="counm==2?'process':counm > 2?'finish':''">
+            <div class="header"></div>
+            <div class="tail"></div>
+          </li>
+        </ul>
+        <ul class="stepTitle">
+          <li :class="counm==0?'active':counm > 0?'active':''">确认用户名</li>
+          <li :class="counm==1?'active':counm > 1?'active':''">验证身份</li>
+          <li :class="counm==2?'active':counm > 2?'active':''">找回密码</li>
+        </ul>
+        <div class="heng"></div>
+        <div class="stepOne" v-if="counm == 0 ">
+          <input type="text" placeholder="用户名" v-model.trim="user">
+          <div class="next" @click="validateUser">下一步</div>
+        </div>
+        <div class="stepTwo" v-if="counm == 1 ">
+          <div class="showPhone">{{ encryptPhone }}</div>
+          <div class="inputBox">
+            <input type="text" placeholder="验证码" v-model="authCode">
+            <button
+              :class="[{ disStatus: disabledStatus },'sendCode']"
+              @click="sendMsg"
+              :disabled="disabledStatus"
+            >{{ codeMsg }}</button>
+          </div>
+          <div class="next" @click="checkPhone">下一步</div>
+        </div>
+        <div class="stepThree" v-if="counm == 2 ">
+          <div class="reset">
+            <input type="text" placeholder="重置密码" ref="reset">
+            <div class="eyeBox" @click="changeType">
+              <i-icon :type="iconType?'md-eye':'md-eye-off'" size="16"></i-icon>
+            </div>
+          </div>
+          <div class="next" @click="complate">完成</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 export default {

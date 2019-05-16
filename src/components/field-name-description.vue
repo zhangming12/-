@@ -54,17 +54,13 @@
 }
 </style>
 <template>
-  <div class="field-name-des" v-clickoutside = "handClose">
-    <Icon type="md-help-circle" class="icon-modal-toast" color="#999999" size="25"/>
+  <div class="field-name-des" v-clickoutside="handClose">
+    <i-icon type="md-help-circle" class="icon-modal-toast" color="#999999" size="25"/>
     <div class="toast-modal">
       <div class="toast-main" v-if="nameList.length">
-          <p v-for="(item,index) in nameList" :key="index">
-            <span class="modal-title">
-                {{item.title}} ,
-            </span>
-            <span class="modal-content">
-                {{item.content}}
-            </span>
+        <p v-for="(item,index) in nameList" :key="index">
+          <span class="modal-title">{{item.title}} ,</span>
+          <span class="modal-content">{{item.content}}</span>
         </p>
       </div>
       <p v-else style="text-align:center;text-indent:0;">暂无字段说明</p>
@@ -75,9 +71,7 @@
 export default {
   name: "fieldNameDes",
   data() {
-    return {
-
-    };
+    return {};
   },
   directives: {
     clickoutside: {

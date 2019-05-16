@@ -1,12 +1,6 @@
 
-<style lang="less" scoped>
+<style lang="less">
 @import "../../config/index.less";
-.box {
-  width: 100%;
-  margin: 0 auto 15px;
-  padding-bottom: 0;
-  background: #fff;
-}
 .form {
   position: relative;
   display: flex;
@@ -42,6 +36,10 @@
     }
   }
 }
+.esp-box th,
+.esp-box td {
+  border-right: 1px solid #ccc !important;
+}
 </style>
 
 <template>
@@ -66,20 +64,13 @@
           </div>
         </Form>
       </div>
-      <div class="box" style="padding:10px">
+      <div class="box esp-box" style="padding:10px">
         <div class="contentTop">
           <span class="btn-left">
             此表共包含
             <span class="numColor">{{pageNum}}</span>条数据
           </span>
         </div>
-        <!-- <hhTable
-          ref="table"
-          :columns="columns"
-          :pageData="pageData"
-          :noneStatus="noneStatus"
-          disabled-hover
-        ></hhTable>-->
         <Table
           ref="table"
           :columns="columns"

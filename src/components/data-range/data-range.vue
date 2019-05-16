@@ -93,12 +93,19 @@ export default {
     placeholder: {
       type: String,
       default: "开始时间"
+    },
+    isEcho: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
     value(val) {
       if (val) {
         this.yearData = this.value.slice(0, 10);
+        if (this.isEcho) {
+          this.hourData = val.slice(11, 16);
+        }
       } else {
         this.yearData = "";
       }

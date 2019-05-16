@@ -16,7 +16,7 @@
 <template>
   <div class="my_tooltip">
     <Tooltip :max-width="maxWidth" transfer :placement="placement">
-      <Icon type="md-help-circle" size="20"/>
+      <i-icon type="md-help-circle" size="20"/>
       <div slot="content">
         <p class="my_p" v-for="v in APStr" :key="v">{{ v }}</p>
       </div>

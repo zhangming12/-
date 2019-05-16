@@ -226,12 +226,10 @@ import {
   distributionStatus //发放状态
 } from "@/util/ENUMS.js";
 
-
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
 import configs from "@/util/config.js";
-
 
 import config from "@/util/config.js";
 
@@ -402,7 +400,7 @@ export default {
         },
         {
           // 1 合适  0 不合格
-          title: "合格情况",
+          title: "视频审核结果",
           key: "auditCountQualified",
           width: 120,
           align: "center",

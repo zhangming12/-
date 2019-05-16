@@ -31,7 +31,7 @@
             type="text"
             @click="toggleClick"
           >
-            <Icon type="md-menu" size="23" color="#fff"/>
+            <i-icon type="md-menu" size="23" color="#fff"/>
           </Button>
         </div>
         <!-- 三级分类 -->
@@ -44,18 +44,18 @@
               v-if=" item.resType === 'template' "
               @click="changeMenu(index)"
             >
-              <Icon :type="item.resIcon" size="23"/>
+              <i-icon :type="item.resIcon" size="23"/>
               {{item.resName}}
             </li>
           </ul>
         </div>
         <div class="header-avator-con">
           <!-- <div class="closeBtn" @click="goToNotice">
-            <Icon type="ios-mail" style="margin-top:2px;" color="red" size="25"/>
+            <i-icon type="ios-mail" style="margin-top:2px;" color="red" size="25"/>
             <sup v-if="$store.state.noticeMsg" class="sup">{{ $store.state.noticeMsg }}</sup>
           </div>-->
           <div class="closeBtn" @click="loginOut">
-            <Icon type="md-power" color="rgba(255,255,255,.7)" size="20"/>
+            <i-icon type="md-power" color="rgba(255,255,255,.7)" size="20"/>
           </div>
         </div>
       </div>

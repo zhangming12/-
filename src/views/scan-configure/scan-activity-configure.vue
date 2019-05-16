@@ -228,13 +228,19 @@
               <Form-item label="活动时间:" required>
                 <Row>
                   <Col span="11">
-                    <data-range :dis="type == 'look'" hour="00:00" v-model="formData1.startTime"></data-range>
+                    <data-range
+                      :dis="type == 'look'"
+                      hour="00:00"
+                      v-model="formData1.startTime"
+                      isEcho
+                    ></data-range>
                   </Col>
                   <Col span="11" offset="1">
                     <data-range
                       placeholder="结束时间"
                       :dis="type == 'look'"
                       hour="24:00"
+                      isEcho
                       v-model="formData1.endTime"
                     ></data-range>
                   </Col>
@@ -443,7 +449,7 @@
                             placement="bottom"
                             hour="00:00"
                             v-model="item.endWinTime"
-                            start
+                            isEcho
                           ></data-range>
                         </Form-item>
                       </Col>
@@ -853,8 +859,10 @@ export default {
         res => {
           //基础设置
           this.formData1 = res.base;
-          this.formData1.startTime = this.Global.createTime(res.base.startTime);
-          this.formData1.endTime = this.Global.createTime(res.base.endTime);
+          let startTime = this.Global.createTime(res.base.startTime);
+          let endTime = this.Global.createTime(res.base.endTime);
+          this.formData1.startTime = startTime;
+          this.formData1.endTime = endTime;
 
           this.formData1.activityName = res.base.name;
           this.bizAreaList = res.base.areaList;

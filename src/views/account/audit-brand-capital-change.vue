@@ -147,7 +147,7 @@
           <div class="container">
             <div class="btn-left w18">
               <Form-item required>
-                <data-range hour="00:00" v-model="formData.queryStartTime" start></data-range>
+                <data-range hour="00:00" v-model="formData.queryStartTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">

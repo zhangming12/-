@@ -1706,13 +1706,6 @@ export const routers = [{
                 component: _import('code-management-maintenance/zhan-jiang-code-export')
             },
             {
-                //惠合码包回导
-                path: '/huiheCodeExport',
-                name: 'huiheCodeExport',
-                title: "惠合码包回导",
-                component: _import('code-management-maintenance/hui-he-code-export')
-            },
-            {
                 //审核记录(单)
                 path: '/auditRecordSingle',
                 name: 'auditRecordSingle',

@@ -73,49 +73,54 @@
 </style>
 
 <template>
-    <div ref="scrollCon" @DOMMouseScroll="handlescroll" @mousewheel="handlescroll" class="tags-outer-scroll-con">
-        <div class="btn-con left-btn">
-        <Button type="text" @click="handleScroll(300)">
-            <Icon :size="18" type="ios-arrow-back" />
-        </Button>
-        </div>
-        <div class="btn-con right-btn">
-        <Button type="text" @click="handleScroll(-300)">
-            <Icon :size="18" type="ios-arrow-forward" />
-        </Button>
-        </div>
-        <div class="close-all-tag-con">
-            <Dropdown transfer @on-click="handleTagsOption">
-                <Button size="small" type="primary">
-                    选项
-                    <!-- <Icon type="arrow-down-b"></Icon> -->
-                    <Icon type="md-arrow-dropdown" size="20"/>
-                </Button>
-                <DropdownMenu slot="list">
-                    <DropdownItem name="clearAll">关闭所有</DropdownItem>
-                    <DropdownItem name="clearOthers">关闭其他</DropdownItem>
-                </DropdownMenu>
-            </Dropdown>
-        </div>
-        <!-- <div id="tag-left">1</div> -->
-        <div ref="scrollBody" class="tags-inner-scroll-body" :style="{left: tagBodyLeft + 'px'}">
-            <transition-group name="taglist-moving-animation">
-                <Tag 
-                    type="dot"
-                    v-for="(item, index) in pageTagsList" 
-                    ref="tagsPageOpened"
-                    :key="index"
-                    :name="item.path"
-                    @on-close="closePage"
-                    @click.native="linkTo(item)"
-                    :closable="item.path==='/index'?false:true"
-                    :color="item.path===currentPageName?'#fe8600':'default'"
-                    :style="borderStyle(item.path,currentPageName)"
-                >{{ item.title }}</Tag>
-            </transition-group>
-        </div>
-         <!-- <div id="tag-right">1</div> -->
+  <div
+    ref="scrollCon"
+    @DOMMouseScroll="handlescroll"
+    @mousewheel="handlescroll"
+    class="tags-outer-scroll-con"
+  >
+    <div class="btn-con left-btn">
+      <Button type="text" @click="handleScroll(300)">
+        <i-icon :size="18" type="ios-arrow-back"/>
+      </Button>
     </div>
+    <div class="btn-con right-btn">
+      <Button type="text" @click="handleScroll(-300)">
+        <i-icon :size="18" type="ios-arrow-forward"/>
+      </Button>
+    </div>
+    <div class="close-all-tag-con">
+      <Dropdown transfer @on-click="handleTagsOption">
+        <Button size="small" type="primary">
+          选项
+          <!-- <i-icon type="arrow-down-b"></i-icon> -->
+          <i-icon type="md-arrow-dropdown" size="20"/>
+        </Button>
+        <DropdownMenu slot="list">
+          <DropdownItem name="clearAll">关闭所有</DropdownItem>
+          <DropdownItem name="clearOthers">关闭其他</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </div>
+    <!-- <div id="tag-left">1</div> -->
+    <div ref="scrollBody" class="tags-inner-scroll-body" :style="{left: tagBodyLeft + 'px'}">
+      <transition-group name="taglist-moving-animation">
+        <Tag
+          type="dot"
+          v-for="(item, index) in pageTagsList"
+          ref="tagsPageOpened"
+          :key="index"
+          :name="item.path"
+          @on-close="closePage"
+          @click.native="linkTo(item)"
+          :closable="item.path==='/index'?false:true"
+          :color="item.path===currentPageName?'#fe8600':'default'"
+          :style="borderStyle(item.path,currentPageName)"
+        >{{ item.title }}</Tag>
+      </transition-group>
+    </div>
+    <!-- <div id="tag-right">1</div> -->
+  </div>
 </template>
 
 <script>
@@ -167,7 +172,7 @@ export default {
       }
     },
     closePage(event, name) {
-      console.log(this)
+      console.log(this);
       let pageOpenedList = this.$store.state.app.pageOpenedList;
       let lastPageObj = pageOpenedList[0];
       if (this.currentPageName === name) {

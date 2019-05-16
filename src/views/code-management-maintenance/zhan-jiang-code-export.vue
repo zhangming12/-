@@ -123,126 +123,214 @@
     }
   }
 }
+.upload-list {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  margin-left: 10px;
+  text-align: center;
+  // line-height: 60px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+  margin-right: 4px;
+  .img {
+    width: 98px;
+    height: 98px;
+    box-sizing: border-box;
+    border: 1px solid #e5e5e5;
+    text-align: center;
+  }
+}
+.upload-list-cover {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  background: rgba(0, 0, 0, 0.6);
+}
+.upload-list:hover .upload-list-cover {
+  display: block;
+}
+.upload-list-cover i {
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 100px;
+}
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">湛江太古码包回导</h2> -->
+  <div id="Main">
+    <!-- <h2 class="Title">湛江太古码包回导</h2> -->
     <div class="main-container">
       <div class="box">
         <Form ref="form" class="form" :model="formData" :label-width="10">
           <div class="container">
             <div class="btn-left w18">
-                <Form-item required prop="brandId">
-                    <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue">
-                        <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                    </Select>
-                    <!-- <Input value="湛江太古" readonly/> -->
-                </Form-item>
-            </div>    
-            <div class="btn-left w18">
-                <Form-item>
-                    <Select v-model="formData.groupId" placeholder="活动包名*" @on-change="getActivityList" clearable>
-                        <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                    </Select>
-                </Form-item>
+              <Form-item required prop="brandId">
+                <Select v-model="formData.brandId" placeholder="品牌名称" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
             </div>
             <div class="btn-left w18">
-                <Form-item>
-                    <Select v-model="formData.activityId" placeholder="活动名称*" clearable>
-                        <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                    </Select>
-                </Form-item>
+              <Form-item>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="活动包名*"
+                  @on-change="getActivityList"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in groupList"
+                    :key="index"
+                  >{{ item.groupName }}</Option>
+                </Select>
+              </Form-item>
             </div>
-                
+            <div class="btn-left w18">
+              <Form-item>
+                <Select v-model="formData.activityId" placeholder="活动名称*" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in activityList"
+                    :key="index"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
             </div>
-            <div class="btn-left w10">
-                    <div class="searchBox">
-                        <div class="btn-right search-right" @click="submit('search')">
-                            <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <div class="btn-left w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('search')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
+              </div>
+            </div>
+          </div>
         </Form>
       </div>
-      <div class="box tableBox" >
+      <div class="box tableBox">
         <div class="contentTop">
-          <!-- <fieldNameDes class="btn-right" :nameList='nameList'/> -->
-          <importBtn  class="btn-right" @btnClick="exportExport = true" />
+          <importBtn class="btn-right" @btnClick="exportExport = true"/>
           <div class="btn-right">
-            <Tooltip class="btn-right" max-width="200" content="1.excle第一行是表头;2.文件名字是码包号;3.每一行数据只有二维码，并且在第一列;">
+            <Tooltip
+              class="btn-right"
+              max-width="200"
+              content="1.excle第一行是表头;2.文件名字是码包号;3.每一行数据只有二维码，并且在第一列;"
+            >
               <span style="margin-right:20px;color:red;font-weight:bolder;">注意</span>
             </Tooltip>
           </div>
-          
         </div>
-        <!-- <Table :columns="columns1" :data="pageData" disabled-hover></Table> -->
-        <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable> 
+        <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
       </div>
-      <div class="page-box" >
+      <div class="page-box">
         <div>
           <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
-      <fieldNameDes :nameList='nameList'/>
+      <fieldNameDes :nameList="nameList"/>
     </div>
-    
-    <myModal class="myModal"
-            @close="closeModal"
-            :modal="exportExport">
+
+    <myModal class="myModal" @close="closeModal" width="600" :modal="exportExport">
       <div slot="main" class="modal-main">
         <h3>导入</h3>
         <div class="modal-table">
-            <Form ref="form" :model="formData" :label-width="88">
-                <Form-item required prop="brandId" label="品牌名称">
-                    <Select v-model="exportExportData.brandId" placeholder="品牌名称" @on-change="exportChangeValue">
-                        <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                    </Select>
-                    <!-- <Input value="湛江太古" readonly/> -->
-                </Form-item>
-                <Form-item required prop="groupId" label="活动包名">
-                    <Select v-model="exportExportData.groupId" placeholder="活动包名" @on-change="exportGetActivityList" clearable>
-                        <Option :value="item.id" v-for="(item,index) in exportGroupList" :key="index">{{ item.groupName }}</Option>
-                    </Select>
-                </Form-item>
-                <Form-item required prop="activityId" label="活动名称" >
-                    <Select v-model="exportExportData.activityId" placeholder="活动名称" clearable @on-change="getActivityName">
-                        <Option :value="item.id" v-for="(item,index) in exportActivityList" :key="index">{{ item.name }}</Option>
-                    </Select>
-                </Form-item>
-                <Form-item required prop="qrUseType" label="码使用类型" >
-                    <Select v-model="exportExportData.qrUseType" placeholder="码使用类型" clearable>
-                        <Option value="B">B端</Option>
-                        <Option value="C">C端</Option>
-                    </Select>
-                </Form-item>
-                <Form-item label="上传文件" required>
-                  <div style="overflow:hidden;">
-                    <div class='upDate' style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;">
-                        <Upload :action="importUrl" 
-                        :show-upload-list=false
-                        :on-success='handleSuccess'
-                        :on-error='handleError'
-                        >
-                        <Icon type="ios-folder" size='14' color='#53a3f4'></Icon>
-                        <span>{{exportExportData.uploadText}}</span>
-                        </Upload>
+          <Form ref="form" :model="formData" :label-width="88">
+            <Form-item required prop="brandId" label="品牌名称">
+              <Select
+                v-model="exportExportData.brandId"
+                placeholder="品牌名称"
+                @on-change="exportChangeValue"
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item required prop="groupId" label="活动包名">
+              <Select
+                v-model="exportExportData.groupId"
+                placeholder="活动包名"
+                @on-change="exportGetActivityList"
+                clearable
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in exportGroupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item required prop="activityId" label="活动名称">
+              <Select
+                v-model="exportExportData.activityId"
+                placeholder="活动名称"
+                clearable
+                @on-change="getActivityName"
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in exportActivityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+            </Form-item>
+            <Form-item required prop="qrUseType" label="码使用类型">
+              <Select v-model="exportExportData.qrUseType" placeholder="码使用类型" clearable>
+                <Option value="B">B端</Option>
+                <Option value="C">C端</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="上传文件" required>
+              <div class="upload-table" style="flex-direction:row;justify-content:flex-start;">
+                <div class="upload-list" v-for="(item,index) in uploadList" :key="index">
+                  <template v-if="item.status === 'finished'">
+                    <div class="img">{{item.name}}</div>
+                    <div class="upload-list-cover">
+                      <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
                     </div>
-                  </div>
-                </Form-item>
-                <!-- <div class='demo' @click='download'>
-                  <Icon type="ios-paper-outline" size='14' color='@primary-color'></Icon>
-                  <span>下载模版</span>
-                </div> -->
-                <div class="fotter" style="text-align:center;">
-                    <Button @click="closeModal" type="primary">取消</Button>
-                    <Button type="success" @click="uploadExcel">导入</Button>
+                  </template>
                 </div>
-            </Form>
+                <Upload
+                  ref="upload"
+                  :show-upload-list="false"
+                  :default-file-list="defaultList"
+                  :on-success="handleSuccess"
+                  :format="['xlsx','xls']"
+                  :on-format-error="handleFormatError"
+                  multiple
+                  type="drag"
+                  :action="importUrl"
+                  style="display: inline-block;width:100px; margin-left:10px;"
+                >
+                  <div style="width: 100px;height:100px;line-height: 100px;">
+                    <Icon type="md-add" size="20"/>
+                  </div>
+                </Upload>
+              </div>
+            </Form-item>
+            <div class="fotter" style="text-align:center;">
+              <Button @click="closeModal" type="primary">取消</Button>
+              <Button type="success" @click="uploadExcel">导入</Button>
+            </div>
+          </Form>
         </div>
       </div>
     </myModal>
-	</div>
+  </div>
 </template>
 
 <script>
@@ -255,25 +343,21 @@ export default {
   name: "zhan-jiang-code-export-keepAlive",
   data() {
     return {
-      nameList:[
+      nameList: [
         {
-          title:'1',
-          content:"excle第一行是表头"
+          title: "1",
+          content: "excle第一行是表头"
         },
         {
-          title:'2',
-          content:"文件名字是码包号"
+          title: "2",
+          content: "文件名字是码包号"
         },
         {
-          title:'3',
-          content:"每一行数据只有二维码，并且在第一列"
-        },
+          title: "3",
+          content: "每一行数据只有二维码，并且在第一列"
+        }
       ],
-      exportExportData: {
-        uploadText: "选择上传文件",
-        // brandId:18,
-        // brandName:"湛江太古"
-      },
+      exportExportData: {},
       exportExport: false,
       noneStatus: false,
       newBuildModel: false,
@@ -289,7 +373,6 @@ export default {
         {
           title: "序号",
           type: "index",
-          // tooltip: true,
           align: "center"
         },
         {
@@ -390,6 +473,8 @@ export default {
           }
         }
       ],
+      uploadList: [],
+      defaultList: [],
       pageNum: 0, //总页数
       page: 1, //当前页
       pageSize: 10, //每页数据条数，默认10条
@@ -413,28 +498,27 @@ export default {
           this.formData.brandId = this.brandList[0].id;
           this.exportExportData.brandId = this.brandList[0].id;
           this.changeValue(this.formData.brandId);
+          this.exportChangeValue(this.exportExportData.brandId);
         }
-        
       }
     );
-    // this.changeValue(18);
-    // this.exportChangeValue(18);
   },
-  watch:{
-    exportExport(val){
-      if(!val){
-        this.exportExportData = {
-          uploadText: "选择上传文件",
-          brandId:18,
-          brandName:"湛江太古"
-        };
+  watch: {
+    exportExport(val) {
+      if (!val) {
+        this.uploadList = [];
+        this.$refs.upload.fileList = [];
+        this.exportExportData = {};
+      } else {
+        this.uploadList = this.$refs.upload.fileList;
       }
     }
   },
   components: {
     importBtn,
     myModal,
-    hhTable,fieldNameDes
+    hhTable,
+    fieldNameDes
   },
   methods: {
     getActivityName(val) {
@@ -446,12 +530,15 @@ export default {
         }
       });
     },
-    handleError() {},
-    handleSuccess(response, file, fileList) {
-      this.exportExportData.uploadText = file.name;
-      var url = response.data;
-      if (url) {
-        this.exportExportData.loadFilePath = url;
+    handleRemove(file) {
+      const fileList = this.$refs.upload.fileList;
+      this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+    },
+    handleSuccess(res, file, fileList) {
+      if (res.status == 1) {
+        file.data = res.data;
+      } else {
+        this.$Message.info(res.errorMsg);
       }
     },
     closeModal() {
@@ -474,29 +561,38 @@ export default {
         this.$Message.error("码使用类型不能为空");
         return false;
       }
-      if (!this.exportExportData.loadFilePath) {
-        this.$Message.error("请核实上传文件");
+      if (!this.uploadList.length) {
+        this.$Message.error("请上传文件");
         return false;
       }
       let brandName = "";
       this.brandList.forEach(item => {
-        if(item.id == this.exportExportData.brandId){
+        if (item.id == this.exportExportData.brandId) {
           brandName = item.brandName;
         }
-      })
+      });
+      let loadFilePath = [];
+      this.uploadList.forEach(item => {
+        loadFilePath.push(item.data);
+      });
       let params = {
-        loadFilePath: this.exportExportData.loadFilePath,
+        loadFilePath,
         brandId: this.exportExportData.brandId,
         activityId: this.exportExportData.activityId,
         brandName,
         activityName: this.exportExportData.activityName
       };
       //导入
-      console.log(params);
       this.Global.doPost("codepackage/importPackage.json", params, res => {
-        this.init();
+        // this.init();
         this.$Message.success("上传成功");
         this.exportExport = false;
+      });
+    },
+    handleFormatError(file) {
+      this.$Notice.warning({
+        title: "上传文件的格式不对",
+        desc: "请选择zip格式的文件上传"
       });
     },
     changeValue(value) {
@@ -561,7 +657,6 @@ export default {
       this.exportActivityList = [];
       this.exportExportData.activityId = "";
       if (!value) return;
-
       this.Global.doPost(
         "condition/queryActivity.json",
         { date: 7, activityType: 1, scope: "a", groupId: value },
@@ -595,7 +690,6 @@ export default {
         return false;
       }
       let data = this.Global.JsonChange(this.formData);
-      // data['brandId'] = 18;
       data["currentPage"] = size ? size : this.page;
       data["pageSize"] = this.pageSize;
       this.Global.deleteEmptyProperty(data);
@@ -606,6 +700,11 @@ export default {
         this.pageData = res.datalist;
         this.noneStatus = true;
       });
+    }
+  },
+  filters: {
+    sizeFilter(val) {
+      return `${(val / 1024 / 1024).toFixed(1)}M`;
     }
   }
 };

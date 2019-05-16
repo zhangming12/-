@@ -24,7 +24,7 @@
       :on-error="handleError"
       :on-format-error="handleFormatError"
     >
-      <Icon type="ios-folder" size="14" color="#53a3f4"/>
+      <i-icon type="ios-folder" size="14" color="#53a3f4"/>
       {{uploadText}}
     </Upload>
   </div>

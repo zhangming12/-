@@ -52,7 +52,7 @@
         <Dropdown @on-click="handleClick">
           <Button type="primary">
             已上传陈列视频用户统计
-            <Icon type="arrow-down-b"></Icon>
+            <i-icon type="arrow-down-b"></i-icon>
           </Button>
           <DropdownMenu slot="list">
             <DropdownItem name="0">导出全部</DropdownItem>
@@ -80,7 +80,7 @@
         <Dropdown @on-click="displayUploadUserTrackStatisticsForMonthExport">
           <Button type="primary">
             已上传陈列视频用户统计（带月份）
-            <Icon type="arrow-down-b"></Icon>
+            <i-icon type="arrow-down-b"></i-icon>
           </Button>
           <DropdownMenu slot="list">
             <DropdownItem name="0">导出全部</DropdownItem>

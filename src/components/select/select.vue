@@ -39,23 +39,41 @@
 }
 </style>
 <template>
-    <div class="select-con" v-clickoutside = "handClose">
-        <Input clearable class="select-inp" placeholder="活动名称" @on-blur="onBlur" @on-focus="onFocus" @on-change="onChange" v-model="value">
-            <Icon type="ios-arrow-down" @click="showMore" class="select-icon" v-if="!iconStatus"  slot="suffix" />
-            <Icon type="ios-arrow-up" @click="showMore" class="select-icon" v-if="iconStatus"  slot="suffix" />
-        </Input>
-        
-        <ul class="select-box" v-if="iconStatus && selectList.length > 0">
-            <li @click="liClick(item,index)" v-for="(item,index) in selectList" :key="index">
-                <span>
-                    {{ item.name }}
-                </span>
-            </li>
-        </ul>
-        <ul class="select-box" v-else-if="iconStatus && selectList.length < 0">
-            <li @click="liClick('none')">暂无数据</li>
-        </ul>
-    </div>
+  <div class="select-con" v-clickoutside="handClose">
+    <Input
+      clearable
+      class="select-inp"
+      placeholder="活动名称"
+      @on-blur="onBlur"
+      @on-focus="onFocus"
+      @on-change="onChange"
+      v-model="value"
+    >
+      <i-icon
+        type="ios-arrow-down"
+        @click="showMore"
+        class="select-icon"
+        v-if="!iconStatus"
+        slot="suffix"
+      />
+      <i-icon
+        type="ios-arrow-up"
+        @click="showMore"
+        class="select-icon"
+        v-if="iconStatus"
+        slot="suffix"
+      />
+    </Input>
+
+    <ul class="select-box" v-if="iconStatus && selectList.length > 0">
+      <li @click="liClick(item,index)" v-for="(item,index) in selectList" :key="index">
+        <span>{{ item.name }}</span>
+      </li>
+    </ul>
+    <ul class="select-box" v-else-if="iconStatus && selectList.length < 0">
+      <li @click="liClick('none')">暂无数据</li>
+    </ul>
+  </div>
 </template>
 <script>
 export default {
@@ -128,7 +146,7 @@ export default {
     },
     onBlur() {
       let flag = false;
-      console.log(this.selectList)
+      console.log(this.selectList);
       this.selectList.forEach(item => {
         if (item.name == this.value) {
           flag = true;

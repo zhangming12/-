@@ -385,7 +385,7 @@ export default {
           align: "center"
         },
         {
-          title: "合格情况",
+          title: "视频合格情况",
           key: "auditCountQualified",
           width: 120,
           align: "center",
