@@ -3,37 +3,10 @@
 #Main {
   height: 100%;
 }
-.main-container {
-  position: relative;
-  min-height: 100%;
-  background: #ffffff;
-  padding-bottom: 60px;
-  .page-box {
-    overflow: hidden;
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-  }
-}
-.form {
-  position: relative;
-  display: flex;
-  .container {
-    width: 35%;
-    margin: auto;
-    .w18 {
-      width: 50%;
-    }
-  }
-}
 .contentTop {
   height: 40px;
   line-height: 40px;
   margin-bottom: 0;
-}
-.ivu-table-row {
-  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1) !important;
-  transform: translateY(0px);
 }
 .table-box {
   padding: 0 10px;
@@ -41,48 +14,6 @@
   .numColor {
     color: @primary-color;
   }
-}
-
-//搜索条件 时间控件
-.ivu-date-picker {
-  display: block;
-}
-//搜索条件 radio按钮
-.ivu-radio-wrapper {
-  margin-right: 30px;
-}
-.myModal {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  .modal-main {
-    box-sizing: border-box;
-    padding: 10px;
-    width: 100%;
-    height: 100%;
-    h3 {
-      text-align: center;
-      font-size: 14px;
-    }
-    .modal-table {
-      max-height: 500px;
-      overflow-y: auto;
-      margin-top: 10px;
-      .modal-table-top {
-        overflow: hidden;
-        height: 30px;
-        line-height: 30px;
-        .numColor {
-          color: @primary-color;
-        }
-      }
-    }
-  }
-}
-.ivu-input {
-  text-align: center !important;
 }
 </style>
 <template>
@@ -102,49 +33,24 @@
       </div>
       <div class="page-box">
         <div style="float: right;">
-          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+          <Page :total="pageNum" :page-size="pageSize" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
     </div>
-
-    <myModal class="myModal" @close="closeModal" :modal="myModalisShow">
-      <div slot="main" class="modal-main">
-        <h3>近一周导出历史</h3>
-        <div class="modal-table">
-          <div class="modal-table-top">
-            <span class="btn-left">
-              此表共包含
-              <span class="numColor">100</span>条数据
-            </span>
-          </div>
-          <Table :columns="columns" :data="pageData" disabled-hover></Table>
-        </div>
-      </div>
-    </myModal>
   </div>
 </template>
 
 <script>
-import dataRange from "@/components/data-rang.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
-import myModal from "@/components/Modal/my-modal.vue";
-
-import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
   name: "scan-activity-configure-activity",
-
   data() {
     return {
-      myModalisShow: false,
-      formData: {
-        brandId: "",
-        status: ""
-      },
       brandId: "",
       groupId: "",
-      page: 1,
       pageNum: 0,
-      rule: {},
+      page: 1,
+      pageSize: 20,
       columns1: [
         {
           title: "序号",
@@ -259,93 +165,17 @@ export default {
           }
         }
       ],
-      columns: [
-        {
-          title: "时间",
-          type: "index",
-          minWidth: 140,
-          align: "center"
-        },
-        {
-          title: "文件名",
-          key: "groupName",
-          minWidth: 140,
-          align: "center"
-        },
-        {
-          title: "状态",
-          key: "uploadTime",
-          minWidth: 80,
-          align: "center",
-          render: (h, params) => {
-            return h("div", this.Global.createTime(params.row.uploadTime));
-          }
-        },
-        {
-          title: "操作",
-          key: "action",
-          minWidth: 100,
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "text",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
-                  on: {
-                    click: () => {
-                      let { id } = params.row;
-                      let queryParams = {
-                        id,
-                        activityId,
-                        storeId,
-                        displayActCategory: "partake",
-                        displayBackType: "C"
-                      };
-                      this.$router.push({
-                        path: "/displayResultOneEdit",
-                        query: queryParams
-                      });
-                    }
-                  }
-                },
-                "查看"
-              )
-            ]);
-          }
-        }
-      ],
-      pageData: [],
-      brandList: [],
-      activityList: []
+      pageData: []
     };
   },
-  components: { dataRange, myModal, addNewBtn },
+  components: { addNewBtn },
   created() {
     this.groupId = this.$route.query.groupId;
     this.brandId = this.$route.query.brandId;
-    if (this.groupId) {
-      this.Global.doPost(
-        "activityMaintain/getActivityList.json",
-        { groupId: this.groupId },
-        res => {
-          this.pageData = res.datalist;
-          this.pageNum = res.items;
-          this.page = res.page;
-        }
-      );
-    }
+    this.page = 1;
+    this.init();
   },
   methods: {
-    closeModal() {
-      this.myModalisShow = false;
-    },
     // 新建活动
     addNewActivity() {
       this.$router.push({
@@ -358,26 +188,25 @@ export default {
       });
     },
     changePage(size) {
-      this.init(size, 10);
+      this.page = size;
+      this.init();
     },
-    init(currentPage, pageSize) {
-      this.pageNum = 0;
-      var data = this.Global.JsonChange(this.formData);
-      data["currentPage"] = currentPage;
-      data["pageSize"] = pageSize;
-      this.Global.deleteEmptyProperty(data);
-      this.Global.doPost("", data, res => {
-        console.log(res);
-      });
-    },
-    exportExcel() {
-      var data = this.Global.JsonChange(this.formData);
-      this.Global.deleteEmptyProperty(data);
-      var url = this.Global.getExportUrl(
-        "uploadReport/organizationUploadDetailExport.json",
-        data
-      );
-      window.open(url);
+    init() {
+      if (this.groupId) {
+        let data = {
+          groupId: this.groupId,
+          pageSize: this.pageSize,
+          currentPage: this.page
+        };
+        this.Global.doPost(
+          "activityMaintain/getActivityList.json",
+          data,
+          res => {
+            this.pageData = res.datalist;
+            this.pageNum = res.items;
+          }
+        );
+      }
     }
   }
 };

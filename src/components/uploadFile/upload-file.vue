@@ -7,10 +7,13 @@
   text-align: center;
   cursor: pointer;
   border-radius: 2px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   padding: 0 5px;
+  p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+  }
 }
 </style>
 
@@ -24,24 +27,28 @@
       :on-error="handleError"
       :on-format-error="handleFormatError"
     >
-      <i-icon type="ios-folder" size="14" color="#53a3f4"/>
-      {{uploadText}}
+      <p :title="uploadText">
+        <i-icon type="ios-folder" size="14" color="#53a3f4"/>
+        {{ uploadText }}
+      </p>
     </Upload>
   </div>
 </template>
 
 <script>
-import upData from "@/assets/js/upload.js";
-import config from "@/util/config.js";
+/**
+ * 二次封装iview Upload组件用于上传excel文件
+ * @param {String} value 文件路径
+ * @param {Array} format 支持的上传文件格式
+ */
+import PROJECT_CONFIG from "@/util/config.js";
 export default {
   name: "upload-file",
   data() {
     return {
-      upData: upData, //上传的额外参数
-      timeStr: "", //上传的时刻的时间戳
       fileUrl: this.value,
-      uploadText: "shang",
-      url: config.uploadWorkerExcel
+      uploadText: this.title,
+      url: PROJECT_CONFIG.uploadWorkerExcel
     };
   },
   props: {
@@ -53,33 +60,29 @@ export default {
       //支持的上传文件格式
       type: Array,
       default() {
-        return ["xlsx", "xlsm", "csv", "xls"];
+        return ["xlsx", "xlsm", "xls"];
       }
     },
     title: {
       type: String,
       default: "上传文件"
     }
-    // uploadText: {
-    //   type: String,
-    //   default: "建议上传大小"
-    // }
   },
   watch: {
     value(val) {
       this.fileUrl = val;
+    },
+    title(val) {
+      this.uploadText = val;
     }
   },
   methods: {
     handleError() {},
     handleSuccess(response, file, fileList) {
-      // debugger;
       this.uploadText = file.name;
-      console.log(file.name);
       var url = response.data;
       if (url) {
         this.fileUrl = url;
-        // return;
         this.$emit("input", url);
       }
     },
@@ -92,5 +95,3 @@ export default {
   }
 };
 </script>
-
-

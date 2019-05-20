@@ -16,6 +16,17 @@ function timeToString(time) {
     str = year + '-' + month + '-' + day + " 00:00:00";
     return str;
 }
+
+// function formateTime(str) {
+//     //将日期字符串转为时间戳
+//     str = str.replace(/-/g, "/");
+//     return new Date(str).getTime();
+// }
+
+// function timeToString(time) {
+//     //将时间戳转为字符串
+//     return `${new Date(Number(time)).pattern('yyyy-MM-dd')} 00:00:00`;
+// }
 //搜索条件 时间默认当天 00:00:00-23:59:59
 let myDate = new Date();
 let tomorrowTimestamp = myDate.getTime();
@@ -47,7 +58,6 @@ export let toadyDate = getDate(0) + ' 00:00:00';
 let threeAgoDate = getDate(-3)
 let defaultTime = todayYear + '-' + todayMonth + '-' + todayDate; //2018-02-08
 let default7Ago = todayYear + '-' + todayMonth + '-' + sevenAgoDate; //2018-02-08
-// let tomorrow 
 
 let defaultSameTime = todayYear + '-' + todayMonth + '-01'; // 2018-02-01
 

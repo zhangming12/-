@@ -419,7 +419,7 @@ export default {
       this.init();
     },
     formateTime(time) {
-      if (time) return new Date(time).parttern("yyyy-MM-dd hh:mm:ss");
+      if (time) return new Date(time).parttern("yyyy-MM-dd HH:mm:ss");
       return null;
     },
     init() {

@@ -58,7 +58,7 @@ Date.prototype.pattern = function(fmt) { // 日期处理
     var o = {
         "M+": this.getMonth() + 1, //月份
         "d+": this.getDate(), //日
-        "h+": this.getHours() % 12 == 0 ? 12 : this.getHours() % 12, //小时
+        "h+": this.getHours() == 0 ? 0 : this.getHours() % 12 == 0 ? 12 : this.getHours() % 12, //小时
         "H+": this.getHours(), //小时
         "m+": this.getMinutes(), //分
         "s+": this.getSeconds(), //秒

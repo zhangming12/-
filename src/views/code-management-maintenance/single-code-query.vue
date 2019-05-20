@@ -288,7 +288,7 @@ export default {
   },
   filters: {
     formateTime(val) {
-      return new Date(Number(val)).pattern("yyyy-MM-dd hh:mm:ss");
+      return new Date(Number(val)).pattern("yyyy-MM-dd HH:mm:ss");
     },
     statusFilter(val) {
       let str = "";

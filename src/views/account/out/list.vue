@@ -185,14 +185,6 @@ export default {
           key: "remitPrice",
           align: "center"
         },
-        // {
-        //   title: "状态",
-        //   key: "payStatus",
-        //   align: "center",
-        //   render: (h, params) => {
-        //     return h("div", this.Global.ENUMS.payStatus[params.row.payStatus]);
-        //   }
-        // },
         {
           title: "备注",
           key: "memo",

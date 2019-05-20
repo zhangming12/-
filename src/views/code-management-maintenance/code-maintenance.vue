@@ -2,9 +2,6 @@
 @import "../../config/index.less";
 .box {
   width: 100%;
-  // box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
-  // margin: 0 auto 15px;
-  // padding: 30px 20px 0;
   background: #fff;
 }
 
@@ -91,7 +88,6 @@
   left: 50%;
   margin-left: -150px;
   margin-top: -250px;
-  // border: 1px solid black;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
   padding: 20px;
   background: #f5f7f9;
@@ -146,139 +142,213 @@
 </style>
 
 <template>
-	<div id="Main">
-		<!-- <h2 class="Title">活动码包维护</h2> -->
+  <div id="Main">
+    <!-- <h2 class="Title">活动码包维护</h2> -->
     <div class="main-container">
       <div class="box">
-          <Form ref="form" class="form" :model="formData" :label-width="10">
-              <div class="container">
-                  <div class="btn-left w18">
-                      <Form-item prop="brandId" required>
-                          <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
-                              <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                          </Select>
-                      </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                      <Form-item required>
-                          <Select v-model="formData.groupId" placeholder="活动名称*" @on-change="getActivityList" clearable>
-                              <Option :value="item.id" v-for="(item,index) in groupList" :key="index">{{ item.groupName }}</Option>
-                          </Select>
-                      </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                      <Form-item required>
-                          <Select v-model="formData.activityId" placeholder="子活动名*" clearable>
-                              <Option :value="item.id" v-for="(item,index) in activityList" :key="index">{{ item.name }}</Option>
-                          </Select>
-                      </Form-item>
-                  </div>
-                  
+        <Form ref="form" class="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item prop="brandId" required>
+                <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in brandList"
+                    :key="index"
+                  >{{ item.brandName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <Select
+                  v-model="formData.groupId"
+                  placeholder="活动名称*"
+                  @on-change="getActivityList"
+                  clearable
+                >
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in groupList"
+                    :key="index"
+                  >{{ item.groupName }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+            <div class="btn-left w18">
+              <Form-item required>
+                <Select v-model="formData.activityId" placeholder="子活动名*" clearable>
+                  <Option
+                    :value="item.id"
+                    v-for="(item,index) in activityList"
+                    :key="index"
+                  >{{ item.name }}</Option>
+                </Select>
+              </Form-item>
+            </div>
+          </div>
+          <div class="btn-right w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
               </div>
-              <div class="btn-right w10">
-                      <div class="searchBox">
-                          <div class="btn-right search-right" @click="submit('form')">
-                              <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                          </div>
-                      </div>
-                  </div>
-          </Form>
+            </div>
+          </div>
+        </Form>
       </div>
       <div class="box tableBox">
         <div class="contentTop">
-            <span class="btn-left">此表共包含 <span class='numColor'>{{pageNum}}</span> 条数据</span>
-            <addNewBtn  class="btn-right" @btnClick="newBuildModel=true;type='add'" />
+          <span class="btn-left">
+            此表共包含
+            <span class="numColor">{{pageNum}}</span> 条数据
+          </span>
+          <addNewBtn class="btn-right" @btnClick="newBuildModel=true;type='add'"/>
         </div>
-        <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable> 
+        <hhTable :columns="columns1" :pageData="pageData" :noneStatus="noneStatus" disabled-hover></hhTable>
       </div>
       <div class="page-box">
-          <div>
-            <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-          </div>
+        <div>
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
         </div>
+      </div>
     </div>
 
-    <Modal
-      v-model="newBuildModel"
-      width='900'>
+    <Modal v-model="newBuildModel" width="900">
       <h2 style="text-align:center;margin-bottom:20px;" v-if="type == 'look'">查看码包配置</h2>
       <h2 style="text-align:center;margin-bottom:20px;" v-if="type == 'modify'">修改码包配置</h2>
       <h2 style="text-align:center;margin-bottom:20px;" v-if="type == 'add'">新建活动码包设置</h2>
       <i-Form ref="form" :model="formItem" :label-width="88" :rules="rule">
-          <Row>
-              <Col span="8">
-                    <Form-item label="品牌名称:" prop="brandId" required>
-                        <Select v-if="type == 'add'" v-model="formItem.brandId" placeholder="请选择" :disabled="type == 'look' || type == 'modify'" @on-change="newChangeValue">
-                            <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                        </Select>
-                         <span v-else>{{formItem.brandName}}</span>
-                    </Form-item>
-                    <Form-item label="投放终端:" prop="qrUseType" required>
-                        <Radio-group v-model="formItem.qrUseType" >
-                            <Radio :disabled="type == 'look'" label='C'>消费者(C)</Radio>
-                            <Radio :disabled="type == 'look'" label='B'>门店(B)</Radio>
-                        </Radio-group>
-                    </Form-item>
-                    <Form-item label="码长度:" prop="qrLen" required>
-                        <Input-number v-model="formItem.qrLen" :readonly="type == 'look'" :max="50" :min="8" :value="1"></Input-number>
-                    </Form-item>
-                    <Form-item label="备注说明:" prop="memo">
-                        <i-input v-model.trim="formItem.memo" :readonly="type == 'look'" placeholder="请输入备注说明"></i-input>
-                    </Form-item>
+        <Row>
+          <Col span="8">
+            <Form-item label="品牌名称:" prop="brandId" required>
+              <Select
+                v-if="type == 'add'"
+                v-model="formItem.brandId"
+                placeholder="请选择"
+                :disabled="type == 'look' || type == 'modify'"
+                @on-change="newChangeValue"
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in brandList"
+                  :key="index"
+                >{{ item.brandName }}</Option>
+              </Select>
+              <span v-else>{{formItem.brandName}}</span>
+            </Form-item>
+            <Form-item label="投放终端:" prop="qrUseType" required>
+              <Radio-group v-model="formItem.qrUseType">
+                <Radio :disabled="type == 'look'" label="C">消费者(C)</Radio>
+                <Radio :disabled="type == 'look'" label="B">门店(B)</Radio>
+              </Radio-group>
+            </Form-item>
+            <Form-item label="码长度:" prop="qrLen" required>
+              <Input-number
+                v-model="formItem.qrLen"
+                :readonly="type == 'look'"
+                :max="50"
+                :min="8"
+                :value="1"
+              ></Input-number>
+            </Form-item>
+            <Form-item label="备注说明:" prop="memo">
+              <i-input
+                v-model.trim="formItem.memo"
+                :readonly="type == 'look'"
+                placeholder="请输入备注说明"
+              ></i-input>
+            </Form-item>
+          </Col>
+          <Col span="8">
+            <Form-item label="活动包名:" required>
+              <Select
+                v-if="type == 'add'"
+                v-model="formItem.groupId"
+                placeholder="请选择"
+                :disabled="type == 'look' || type == 'modify'"
+                @on-change="newGetActivityList"
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in newGroupList"
+                  :key="index"
+                >{{ item.groupName }}</Option>
+              </Select>
+              <span v-else>{{formItem.groupName}}</span>
+            </Form-item>
+            <!-- 1 shi 0 fou -->
+            <Form-item label="识别明码:" prop="useMemoCode" required>
+              <Radio-group v-model="formItem.useMemoCode" :disabled="type == 'look'">
+                <Radio :disabled="type == 'look'" :label="1">是</Radio>
+                <Radio :disabled="type == 'look'" :label="0">否</Radio>
+              </Radio-group>
+            </Form-item>
+            <Form-item label="码包库位:" prop="brandId" required>
+              <Row>
+                <Col span="10">
+                  <input
+                    type="number"
+                    v-model="formItem.beginDepot"
+                    :readonly="type == 'look'"
+                    :min="1"
+                    :max="10"
+                    class="numberInput"
+                  >
                 </Col>
-                <Col span="8">
-                    <Form-item label="活动包名:" required>
-                        <Select v-if="type == 'add'" v-model="formItem.groupId" placeholder="请选择" :disabled="type == 'look' || type == 'modify'" @on-change="newGetActivityList">
-                          <Option :value="item.id" v-for="(item,index) in newGroupList" :key="index">{{ item.groupName }}</Option>
-                        </Select>
-                        <span v-else>{{formItem.groupName}}</span>
-                    </Form-item>
-                    <!-- 1 shi 0 fou -->
-                    <Form-item label="识别明码:" prop="useMemoCode" required>
-                        <Radio-group v-model="formItem.useMemoCode" :disabled="type == 'look'">
-                            <Radio :disabled="type == 'look'" :label='1'>是</Radio>
-                            <Radio :disabled="type == 'look'" :label='0'>否</Radio>
-                        </Radio-group>
-                    </Form-item>
-                    <Form-item label="码包库位:" prop="brandId" required>
-                        <Row>
-                            <Col span="10">
-                                <input type="number" v-model="formItem.beginDepot" :readonly="type == 'look'" :min="1" :max="10" class="numberInput">
-                            </Col>
-                            <Col span="2" style="text-align:center;">至</Col>
-                            <Col span="10">
-                                <input :readonly="type == 'look'" type="number" v-model="formItem.endDepot" :min="1" :max="10" class="numberInput">
-                            </Col>
-                        </Row>
-                    </Form-item>
+                <Col span="2" style="text-align:center;">至</Col>
+                <Col span="10">
+                  <input
+                    :readonly="type == 'look'"
+                    type="number"
+                    v-model="formItem.endDepot"
+                    :min="1"
+                    :max="10"
+                    class="numberInput"
+                  >
                 </Col>
-                <Col span="8">
-                    <Form-item label="活动名称:" prop="activityId" required>
-                        <Select v-if="type == 'add'" v-model="formItem.activityId" placeholder="请选择" :disabled="type == 'look' || type == 'modify'">
-                            <Option :value="item.id" v-for="(item,index) in newActivityList" :key="index">{{ item.name }}</Option>
-                        </Select>
-                        <!-- <Input readonly v-model="formItem.activityName" v-else></Input> -->
-                        <span v-else>{{formItem.activityName}}</span>
-                    </Form-item>
-                    <!-- 1 shi 0 fou -->
-                    <Form-item label="流水串号:" prop="flowingNum" required>
-                        <Radio-group v-model="formItem.flowingNum">
-                            <Radio :disabled="type == 'look'" :label='1'>是</Radio>
-                            <Radio :disabled="type == 'look'" :label='0'>否</Radio>
-                        </Radio-group>
-                    </Form-item>
-                    <Form-item label="流水线:" prop="pipeLine">
-                        <i-input v-model.trim="formItem.pipeLine" placeholder="请输入流水线" :readonly="type == 'look'"></i-input>
-                    </Form-item>
-                </Col>
-          </Row>
+              </Row>
+            </Form-item>
+          </Col>
+          <Col span="8">
+            <Form-item label="活动名称:" prop="activityId" required>
+              <Select
+                v-if="type == 'add'"
+                v-model="formItem.activityId"
+                placeholder="请选择"
+                :disabled="type == 'look' || type == 'modify'"
+              >
+                <Option
+                  :value="item.id"
+                  v-for="(item,index) in newActivityList"
+                  :key="index"
+                >{{ item.name }}</Option>
+              </Select>
+              <!-- <Input readonly v-model="formItem.activityName" v-else></Input> -->
+              <span v-else>{{formItem.activityName}}</span>
+            </Form-item>
+            <!-- 1 shi 0 fou -->
+            <Form-item label="流水串号:" prop="flowingNum" required>
+              <Radio-group v-model="formItem.flowingNum">
+                <Radio :disabled="type == 'look'" :label="1">是</Radio>
+                <Radio :disabled="type == 'look'" :label="0">否</Radio>
+              </Radio-group>
+            </Form-item>
+            <Form-item label="流水线:" prop="pipeLine">
+              <i-input
+                v-model.trim="formItem.pipeLine"
+                placeholder="请输入流水线"
+                :readonly="type == 'look'"
+              ></i-input>
+            </Form-item>
+          </Col>
+        </Row>
       </i-Form>
       <div slot="footer" style="text-align:center;">
         <i-button type="text" @click="cancel">取消</i-button>
         <i-button v-if="type != 'look'" type="success" @click="sureCreate('form')">确定</i-button>
       </div>
     </Modal>
-	</div>
+  </div>
 </template>
 
 <script>
@@ -380,10 +450,6 @@ export default {
                         groupId: params.row.groupId,
                         activityId: params.row.activityId,
                         qrRuleId: params.row.qrRuleId
-                        // brandId: 1,
-                        // groupId: 1,
-                        // activityId: 1,
-                        // qrRuleId: 1
                       };
                       this.$router.push({
                         path: "/activityCodeList",
@@ -493,14 +559,11 @@ export default {
                                 endDepot,
                                 useMemoCode
                               };
-                              console.log(query);
                               this.Global.deleteEmptyProperty(query);
-                              console.log(query);
                               this.Global.doPost(
                                 "codepackage/deleterule.json",
                                 query,
                                 res => {
-                                  console.log(res);
                                   this.$Message.success("删除成功");
                                   this.init();
                                 }
@@ -646,7 +709,6 @@ export default {
       this.formItem.activityId = activityId;
       this.newBuildModel = true;
       this.Global.doPost("codepackage/showinformation.json", data, res => {
-        console.log(res);
         this.formItem = res;
       });
     },
@@ -743,7 +805,7 @@ export default {
       this.init();
     },
     formatYearMonth(time) {
-      return new Date(Number(time)).pattern("yyyy-MM-dd hh:mm:ss");
+      return new Date(Number(time)).pattern("yyyy-MM-dd HH:mm:ss");
     },
     exportExcel() {
       var data = this.Global.JsonChange(this.formData);
@@ -775,13 +837,11 @@ export default {
       let data = {
         brandId: this.formData.brandId,
         activityId: this.formData.activityId
-        // groupId: this.formData.groupId
       };
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
       this.Global.deleteEmptyProperty(data);
       this.Global.doPost("codepackage/querycodepackage.json", data, res => {
-        console.log(res);
         this.pageNum = res.items;
         this.page = res.page;
         this.pageData = res.datalist;

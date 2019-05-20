@@ -162,6 +162,10 @@
   cursor: pointer;
   line-height: 100px;
 }
+.upload-table {
+  max-height: 220px;
+  overflow-y: auto;
+}
 </style>
 
 <template>
@@ -592,7 +596,7 @@ export default {
     handleFormatError(file) {
       this.$Notice.warning({
         title: "上传文件的格式不对",
-        desc: "请选择zip格式的文件上传"
+        desc: "请选择正确格式的文件上传"
       });
     },
     changeValue(value) {
@@ -675,7 +679,7 @@ export default {
       this.init();
     },
     formatYearMonth(time) {
-      return new Date(Number(time)).pattern("yyyy-MM-dd hh:mm:ss");
+      return new Date(Number(time)).pattern("yyyy-MM-dd HH:mm:ss");
     },
     submit() {
       this.init(1);

@@ -611,7 +611,7 @@ export default {
               imageList = item.image.filter(val => val);
             }
             item.submitTime = new Date(item.submitTime).pattern(
-              "yyyy-MM-dd hh:mm:ss"
+              "yyyy-MM-dd HH:mm:ss"
             );
             item.storeRange = item.storeRange > 200 ? "位置偏移" : "无";
             item.imageList = imageList;

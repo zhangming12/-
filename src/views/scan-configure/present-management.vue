@@ -94,15 +94,11 @@
     }
     .modal-table {
       max-height: 500px;
-      // overflow-y: auto;
       margin-top: 10px;
       .modal-table-top {
         overflow: hidden;
         height: 30px;
         line-height: 30px;
-        // .numColor {
-        //   color: @primary-color;
-        // }
       }
     }
   }
@@ -121,7 +117,6 @@
   margin-left: 20px;
   position: relative;
   .zhezhao {
-    // background: red;
     cursor: not-allowed;
     width: 105px;
     height: 85px;
@@ -432,6 +427,8 @@ export default {
       ],
       type: "",
       pageData: [],
+      pageSize: 0,
+      page: 1,
       brandList: [],
       activityList: [],
       timeStr: "",
@@ -544,13 +541,14 @@ export default {
       this.init(this.page, 10);
     },
     changePage(size) {
+      this.page = size;
       this.init(size, 10);
     },
     init(currentPage, pageSize) {
       this.pageNum = 0;
       var data = this.Global.JsonChange(this.formData);
-      data["currentPage"] = currentPage;
-      data["pageSize"] = pageSize;
+      data["currentPage"] = this.page;
+      data["pageSize"] = this.pageSize;
       data["brandId"] = this.brandId;
       this.Global.deleteEmptyProperty(data);
       this.Global.doPost(

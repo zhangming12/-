@@ -2328,6 +2328,13 @@ export const routers = [{
                 component: _import('tools/new-custom-log')
             },
             {
+                //关联门店查询
+                path: '/queryRelationStore',
+                name: 'queryRelationStore',
+                title: "关联门店查询",
+                component: _import('tools/query-relation-store')
+            },
+            {
                 //测试
                 path: '/demo',
                 name: "demo",

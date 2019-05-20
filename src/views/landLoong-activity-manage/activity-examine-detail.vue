@@ -469,7 +469,7 @@ export default {
     },
     formatDate(time) {
       var date = new Date(time);
-      return formatDate(date, "yyyy-MM-dd hh:mm:ss");
+      return formatDate(date, "yyyy-MM-dd HH:mm:ss");
     },
     formatYear(time) {
       return formatYear(time);

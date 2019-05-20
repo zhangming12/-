@@ -631,7 +631,7 @@ export default {
       );
     },
     formateTime(time) {
-      return new Date(time).pattern("yyyy-MM-dd hh:mm:ss");
+      return new Date(time).pattern("yyyy-MM-dd HH:mm:ss");
     },
     submit(name) {
       if (!this.formData.brandId) {

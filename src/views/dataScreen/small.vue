@@ -234,10 +234,10 @@
       <div class="boxs">
         <!-- 品牌的选择 -->
         <div class="activityChange" @click="showPackage">
-          <div id="activity" style="width: 180px;">
+          <div id="activity" style="width: 200px;">
             <div :id="formData.groupId" style="color: #d5ab32;" class="Title">{{groupName}}</div>
 
-            <ul class="List" :class="{ 'show': showGroup}" style="width: 180px;left: -10px;">
+            <ul class="List" :class="{ 'show': showGroup}" style="width: 200px;left: -10px;">
               <li
                 v-for="(item,index) in groupList"
                 :key="index"
@@ -251,10 +251,10 @@
         </div>
         <!-- 活动的选择 -->
         <div class="activityChange" @click="show">
-          <div id="activity" style="width: 180px;">
+          <div id="activity" style="width: 200px;">
             <div :id="formData.activityId" style="color: #d5ab32;" class="Title">{{activityName}}</div>
 
-            <ul class="List" :class="{ 'show': showList}" style="width: 180px;left: -10px;">
+            <ul class="List" :class="{ 'show': showList}" style="width: 200px;left: -10px;">
               <li id title="全部" @click="changeActivity">全部</li>
               <li
                 v-for="(item,index) in activityList"
@@ -269,7 +269,6 @@
 
         <div class="selectBox">
           <div style="display: flex;">
-            <!-- <div id='province' style='width: 120px;' @click='province'> -->
             <!-- 省的选择 -->
             <div id="province" style="width: 120px;" @click="province">
               <div style="color: #fb8833" class="Title">{{pro}}</div>
@@ -305,11 +304,9 @@
       </div>
 
       <router-link to="/bigScreen" v-if="bigStatus">
-        <!-- <Icon type="arrow-expand" size="22" color="#fff" class='small'></Icon> -->
         <Icon type="ios-expand" size="22" color="#fff" class="small"/>
       </router-link>
       <router-link to="/dataScreen" v-else>
-        <!-- <Icon type="arrow-shrink" size="22" color="#fff" class='big'></Icon> -->
         <Icon type="ios-contract" size="22" color="#fff" class="big"/>
       </router-link>
     </div>
@@ -1050,7 +1047,6 @@ export default {
       );
 
       this.Global.doPostNoLoading("lastMonthReport.json", prarms, res => {
-        console.log(res);
         this.storeMonthScanReport(res);
         this.storeMonthJoinReport(res);
       });

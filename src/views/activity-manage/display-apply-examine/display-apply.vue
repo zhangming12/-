@@ -2,14 +2,11 @@
 @import "../../../config/index.less";
 .box {
   width: 100%;
-  // box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
-  // padding: 30px 20px;
   padding-bottom: 0;
   background: #fff;
 }
 .ivu-table-row {
-  // box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1) !important;
   transform: translateY(0px);
 }
 //搜索条件 时间控件
@@ -425,15 +422,12 @@ export default {
             } else if (index == 4) {
               this.pageData[i]["displayApplyStatus"] = "退回";
             }
-            this.pageData[i]["displayApplyTime"] = this.formateTime(
+            this.pageData[i]["displayApplyTime"] = this.Global.createTime(
               this.pageData[i]["displayApplyTime"]
             );
           }
         }
       });
-    },
-    formateTime(time) {
-      return new Date(time).pattern("yyyy-MM-dd hh:mm:ss");
     },
     exportExcel() {
       var data = this.Global.JsonChange(this.formData);
@@ -498,5 +492,3 @@ export default {
   }
 };
 </script>
-
-

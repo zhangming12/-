@@ -361,7 +361,7 @@ export default {
       });
     },
     formatYearMonth(time) {
-      return new Date(Number(time)).pattern("yyyy-MM-dd hh:mm:ss");
+      return new Date(Number(time)).pattern("yyyy-MM-dd HH:mm:ss");
     },
     submit() {
       this.init();
