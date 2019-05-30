@@ -754,9 +754,7 @@ export default {
       );
     },
     getPosition(index) {
-      if (!index) return "right";
-      if (index % 2 == 0) return "right";
-      else return "left";
+      return index % 2 == 0 ? "right" : "left";
     },
     setStatus(val, flag, index) {
       if (val == 0) {

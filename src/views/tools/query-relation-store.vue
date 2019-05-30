@@ -34,15 +34,12 @@
           <div class="container">
             <div class="btn-left w18">
               <Form-item>
-                <Select v-model="formData.type" clearable placeholder="类型">
-                  <Option value="1">店员</Option>
-                  <Option value="2">连锁门店</Option>
-                </Select>
+                <Input placeholder="用户ID" v-model.trim="formData.userId" clearable></Input>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item>
-                <Input placeholder="用户ID" v-model.trim="formData.userId" clearable></Input>
+                <Input placeholder="手机号" v-model.trim="formData.brandName" clearable></Input>
               </Form-item>
             </div>
           </div>
@@ -86,59 +83,71 @@ export default {
           title: "序号",
           type: "index",
           align: "center",
-          width: 120
+          width: 70
         },
         {
-          title: "类型",
-          key: "partakeType",
-          align: "center"
-        },
-        {
-          title: "店主/负责人",
-          key: "storeId",
-          align: "center"
-        },
-        {
-          title: "店员/分店",
-          key: "wxNickName",
-          align: "center"
-        },
-        {
-          title: "操作",
-          key: "action",
+          title: "连锁组织ID",
+          key: "organId",
           align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "primary",
-                    size: "small"
-                  },
-                  on: {
-                    click: () => {}
-                  }
-                },
-                "解除"
-              )
-            ]);
-          }
+          tooltip: true
+        },
+        {
+          title: "连锁组织名称",
+          key: "organName",
+          align: "center",
+          tooltip: true
+        },
+        {
+          title: "连锁组织负责人姓名",
+          key: "organUser",
+          align: "center",
+          width: 180,
+          tooltip: true
+        },
+        {
+          title: "连锁组织手机号",
+          key: "organPhone",
+          align: "center",
+          tooltip: true
+        },
+        {
+          title: "分店ID",
+          key: "storeId",
+          align: "center",
+          tooltip: true
+        },
+        {
+          title: "分店名称",
+          key: "storeName",
+          align: "center",
+          tooltip: true
+        },
+        {
+          title: "分店店主姓名",
+          key: "storeUser",
+          align: "center",
+          tooltip: true
+        },
+        {
+          title: "分店手机号",
+          key: "storePhone",
+          align: "center",
+          tooltip: true
         }
       ],
-      pageData: [{}]
+      pageData: []
     };
   },
   components: { exportBtn },
   created() {
-    this.init();
+    // this.init();
   },
   methods: {
     exportExcel() {
       let data = this.Global.JsonChange(this.formData);
       this.Global.deleteEmptyProperty(data);
       var url = this.Global.getExportUrl(
-        "report/displayGoodsVerifyRecordExport.json",
+        "organization/workerRelationExport.json",
         data
       );
       window.open(url);
@@ -156,7 +165,7 @@ export default {
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = this.page;
       data["pageSize"] = this.pageSize;
-      this.Global.doPost("personnel/queryStoreInfoList.json", data, res => {
+      this.Global.doPost("organization/getRelation.json", data, res => {
         this.pageNum = res.items;
         this.pageData = res.datalist;
         this.page = res.page;

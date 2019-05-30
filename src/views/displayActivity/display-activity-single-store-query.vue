@@ -267,7 +267,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
+              <Form-item required>
                 <data-range
                   @dataChange="startTimeChange"
                   hour="00:00"
@@ -277,7 +277,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
+              <Form-item required>
                 <data-range
                   hour="24:00"
                   placeholder="结束时间"
@@ -401,9 +401,8 @@
                       :class="[item.checkStatus == 2 ? 'notPass' : item.checkStatus == 0 || item.checkStatus == 1001 || item.checkStatus == 1002 || item.checkStatus == 1003 || item.checkStatus == 2001?'waiting':item.checkStatus == 1 || item.checkStatus == 4?'pass':'']"
                     >{{ item.checkStatus | displayCheck }}</span>
                   </div>
-                  <!-- v-if="item.fileType == 'radio'" -->
                   <div class="showVideo" v-if="item.fileType == 'radio'">
-                    <video :src="item.radioUrl" :ref=""playVideo" + index" controls></video>
+                    <video :src="item.radioUrl" :ref="'playVideo' + index" controls></video>
                   </div>
                   <div class="showVideo" v-if="item.fileType == 'image'">
                     <imageLook
@@ -417,14 +416,10 @@
             </Row>
           </div>
         </div>
-        <!-- <div v-else style='text-align: center;'>
-                    暂无数据  
-        </div>-->
         <div class="noData-box" :class="noneStatus?'no-data':'no-search'" v-else>
           <!-- 暂无数据 -->
           {{ noneStatus ? '暂无数据' :"请搜索后查询"}}
         </div>
-        <!-- </div> -->
       </div>
       <div class="page-box">
         <div class="btn-right">
@@ -442,12 +437,8 @@ import imageLook from "@/components/imgLook/img-look.vue";
 import dataRange from "@/components/data-rang.vue";
 import myModal from "@/components/Modal/my-modal.vue";
 import fieldNameDes from "@/components/field-name-description.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
-import { validateStart, validateEnd } from "@/util/index.js";//验证规则
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
+import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
 
 export default {
   name: "display-activity-single-store-query-keepAlive",
@@ -478,8 +469,7 @@ export default {
       },
       page: 1,
       pageNum: 0,
-      rule: {
-      },
+      rule: {},
       brandList: [],
       activityList: []
     };
@@ -510,11 +500,7 @@ export default {
   methods: {
     getPosition(index) {
       let n = index % 4;
-      if (n == 0 || n == 1) {
-        return "right";
-      } else {
-        return "left";
-      }
+      return n == 0 || n == 2 ? "right" : "left";
     },
     closeModal() {
       this.myModalisShow = false;
@@ -660,12 +646,6 @@ export default {
           }
         }
       );
-    },
-    handleEdit() {
-      this.$router.push({
-        path: "/displayReward-edit",
-        query: { type: "edit" }
-      });
     }
   },
   filters: {

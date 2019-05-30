@@ -264,7 +264,7 @@ export default {
         api = "audit/updateTeam.json";
       }
       this.Global.doPost(api, data, res => {
-        this.$Message.success("新建成功");
+        this.$Message.success(this.type == "add" ? "新建成功" : "修改成功");
         this.myModalisShow = false;
         this.init();
       });

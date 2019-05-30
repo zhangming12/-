@@ -215,9 +215,6 @@
           <div class="container">
             <div class="btn-left w18">
               <Form-item>
-                <!-- <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
-                          <Option :value="item.id" v-for="(item,index) in brandList" :key="index">{{ item.brandName }}</Option>
-                </Select>-->
                 <Input value="银鹭" readonly></Input>
               </Form-item>
             </div>
@@ -281,9 +278,6 @@
             <div class="container" v-if="showQuery">
               <div class="btn-left w18">
                 <Form-item>
-                  <!-- <Select v-model="formData.oneLevel" placeholder="一级组织" @on-change="oneLevelChange" clearable>
-                          <Option :value="item.id" v-for="(item,index) in oneLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                  </Select>-->
                   <Input value="销售中心" readonly></Input>
                 </Form-item>
                 <Form-item>
@@ -292,9 +286,6 @@
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <!-- <Select v-model="formData.twoLevel"  placeholder="二级组织" @on-change="twoLevelChange" clearable>
-                          <Option :value="item.id" v-for="(item,index) in twoLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                  </Select>-->
                   <Input value="闽南营业部" readonly></Input>
                 </Form-item>
                 <Form-item>
@@ -303,9 +294,6 @@
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <!-- <Select v-model="formData.threeLevel"  placeholder="三级组织" @on-change="threeLevelChange" clearable>
-                          <Option :value="item.id" v-for="(item,index) in threeLeverList" :key="index"><span :title="item.areaName" class="text-overflow">{{item.areaName}}</span></Option>
-                  </Select>-->
                   <Input value="集美处" readonly></Input>
                 </Form-item>
                 <Form-item>
@@ -575,18 +563,6 @@ export default {
         this.$Message.error("请输入查询截止时间");
         return false;
       }
-      //   if (!this.formData.brandId) {
-      //     this.$Message.error("品牌不能为空");
-      //     return false;
-      //   }
-      //   if (!this.formData.groupId) {
-      //     this.$Message.error("活动包名不能为空");
-      //     return false;
-      //   }
-      // if (!this.formData.activityId) {
-      //   this.$Message.error("活动不能为空");
-      //   return false;
-      // }
       this.page = 1;
       this.init(this.page, 10);
     },
@@ -633,7 +609,6 @@ export default {
       );
     },
     exportExcel() {
-      console.log("qqqqq");
       var data = this.Global.JsonChange(this.formData);
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
@@ -687,16 +662,9 @@ export default {
       );
       //查询一级组织数据
       queryOrganizationDictList({ brandId: value, parentId: 0 }).then(res => {
-        console.log(res.data);
         if (res && res.status == 1) {
           this.oneLeverList = res.data;
         }
-      });
-    },
-    handleEdit() {
-      this.$router.push({
-        path: "/displayReward-edit",
-        query: { type: "edit" }
       });
     }
   },

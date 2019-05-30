@@ -8,10 +8,10 @@
 export default {
   name: "app",
   created() {
-    // this.$store.dispatch("getNoticeMsg");
-    // setInterval(() => {
-    //   this.$store.dispatch("getNoticeMsg");
-    // }, 3600000);
+    this.$store.dispatch("getNoticeMsg");
+    setInterval(() => {
+      this.$store.dispatch("getNoticeMsg");
+    }, 3600000);
   }
 };
 </script>

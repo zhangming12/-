@@ -111,100 +111,101 @@
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">后台账户管理</h2> -->
-        <div class="main-container">
-          <div class="box">
-            <Form ref="form" class="form" :model="formData" :label-width="10">
-                <div class="container">
-                  <div class="btn-left w18">
-                    <Form-item  prop='brandId'>
-                      <Input v-model.trim='formData.loginAccount' placeholder="账户"></Input>
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item  prop='brandId'>
-                      <Input v-model.trim='formData.phone' placeholder="手机号"></Input>
-                    </Form-item>
-                  </div>
-                  <div class="btn-left w18">
-                    <Form-item prop='loginAccount'>
-                      <Input v-model.trim='formData.userName' placeholder="员工姓名"></Input>
-                    </Form-item>
-                  </div>
-                </div>
-                <div class="btn-right w10">
-                    <div class="searchBox">
-                      <div class="btn-right search-right" @click="submit('form')">
-                        <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
-                      </div>
-                    </div>
-                </div>
-            </Form>        
-          </div>
-          <div class="box" style='margin-top: 15px;overflow: hidden;text-align:center;'>
-            <div class='contentTop'>
-              <span class="btn-left">共查询到 <span class='numColor'>{{pageNum}}</span> 条数据</span>
-              <addNewBtn class="btn-right" @click.native="createNewAccount" title="新建后台账户"/>
+  <div id="Main">
+    <!-- <h2 class="Title">后台账户管理</h2> -->
+    <div class="main-container">
+      <div class="box">
+        <Form ref="form" class="form" :model="formData" :label-width="10">
+          <div class="container">
+            <div class="btn-left w18">
+              <Form-item>
+                <Input v-model.trim="formData.loginAccount" placeholder="账户"></Input>
+              </Form-item>
             </div>
-            <Table :columns="columns1" :data="pageData" disabled-hover></Table>
-              
-          </div>
-          <div class="page-box" style="margin: 10px;overflow: hidden">
-                <div style="float: right;">
-                    <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
-                </div>
+            <div class="btn-left w18">
+              <Form-item>
+                <Input v-model.trim="formData.phone" placeholder="手机号"></Input>
+              </Form-item>
             </div>
-        </div>
-        <Modal
-            :title="type == 'add'?'新建后台账户':'修改后台账户'"
-            v-model="showUnlock"
-            width=800
-            class-name="vertical-center-modal">
-             <Form :model="formItem" :label-width="90" ref="form" :rules="rule">
-                 <Row>
-                   <Col span="10" offset='1'>
-                    <FormItem label="账户" prop="loginAccount" required>
-                        <Input v-model="formItem.loginAccount"></Input>
-                    </FormItem>
-                   </Col>
-                   <Col span="10" offset='1'>
-                    <FormItem label="手机号" prop="phone" required>
-                        <Input v-model="formItem.phone"></Input>
-                    </FormItem>
-                   </Col>
-                   <Col span="10" offset='1' v-if="type == 'add'">
-                    <FormItem v-if="type == 'add'" label='密码' prop="loginPwd" required>
-                        <Input v-model.trim="formItem.loginPwd" type="password"></Input>
-                    </FormItem>
-                   </Col>
-                   <Col span="10" offset='1'>
-                    <FormItem label="员工姓名"  prop="loginAccount" required>
-                        <Input v-model="formItem.userName"></Input>
-                    </FormItem>
-                   </Col>
-                   
-                 </Row>
-                <div class="selectBox">
-                    <div class="left">
-                      <h4>待选择</h4>
-                      <Tree @on-check-change='checkChange' ref="fatherTree" :data="baseData" show-checkbox></Tree>
-                    </div>
-                    <div class="right">
-                      <h4>已选择</h4>
-                      <Tree :data="checkedData" ref="tree"></Tree>
-                    </div>
-                </div>
-            </Form>
-            <div slot="footer">
-              <div style="text-align:center">
-                <i-button type="success" @click="cancel">取消</i-button>
-                <i-button type="primary" @click="userBind('form')">确定</i-button>
+            <div class="btn-left w18">
+              <Form-item>
+                <Input v-model.trim="formData.userName" placeholder="员工姓名"></Input>
+              </Form-item>
+            </div>
+          </div>
+          <div class="btn-right w10">
+            <div class="searchBox">
+              <div class="btn-right search-right" @click="submit('form')">
+                <Button shape="circle" icon="ios-search" type="primary">搜索</Button>
               </div>
-                
             </div>
-        </Modal>
+          </div>
+        </Form>
+      </div>
+      <div class="box" style="margin-top: 15px;overflow: hidden;text-align:center;">
+        <div class="contentTop">
+          <span class="btn-left">
+            共查询到
+            <span class="numColor">{{pageNum}}</span> 条数据
+          </span>
+          <addNewBtn class="btn-right" @click.native="createNewAccount" title="新建后台账户"/>
+        </div>
+        <Table :columns="columns1" :data="pageData" disabled-hover></Table>
+      </div>
+      <div class="page-box" style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+        </div>
+      </div>
     </div>
+    <Modal
+      :title="type == 'add'?'新建后台账户':'修改后台账户'"
+      v-model="showUnlock"
+      width="800"
+      class-name="vertical-center-modal"
+    >
+      <Form :model="formItem" :label-width="90" ref="form" :rules="rule">
+        <Row>
+          <Col span="10" offset="1">
+            <FormItem label="账户" prop="loginAccount" required>
+              <Input v-model="formItem.loginAccount"></Input>
+            </FormItem>
+          </Col>
+          <Col span="10" offset="1">
+            <FormItem label="手机号" prop="phone" required>
+              <Input v-model="formItem.phone"></Input>
+            </FormItem>
+          </Col>
+          <Col span="10" offset="1" v-if="type == 'add'">
+            <FormItem v-if="type == 'add'" label="密码" prop="loginPwd" required>
+              <Input v-model.trim="formItem.loginPwd" type="password"></Input>
+            </FormItem>
+          </Col>
+          <Col span="10" offset="1">
+            <FormItem label="员工姓名" prop="loginAccount" required>
+              <Input v-model="formItem.userName"></Input>
+            </FormItem>
+          </Col>
+        </Row>
+        <div class="selectBox">
+          <div class="left">
+            <h4>待选择</h4>
+            <Tree @on-check-change="checkChange" ref="fatherTree" :data="baseData" show-checkbox></Tree>
+          </div>
+          <div class="right">
+            <h4>已选择</h4>
+            <Tree :data="checkedData" ref="tree"></Tree>
+          </div>
+        </div>
+      </Form>
+      <div slot="footer">
+        <div style="text-align:center">
+          <i-button type="success" @click="cancel">取消</i-button>
+          <i-button type="primary" @click="userBind('form')">确定</i-button>
+        </div>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -377,67 +378,65 @@ export default {
       this.checkedData = [];
       const arr = [];
       val.forEach(item => {
-        let obj = null
-        if(item.parentId){
+        let obj = null;
+        if (item.parentId) {
           //子节点
           //先找到父级
           let flag = false;
           this.checkedData.forEach(val => {
-            if(val.id == item.parentId){
+            if (val.id == item.parentId) {
               flag = true;
-              obj = val
+              obj = val;
             }
-          })
-          if(flag){
+          });
+          if (flag) {
             obj.children.push({
-              title:item.title,
-              id:item.id,
-              expand:true,
-              parentId:item.parentId
-            })
-          }else{
-            obj = {}
-            this.brandList.forEach( nn => {
-              if(nn.id == item.parentId){
-                obj.title = nn.title
+              title: item.title,
+              id: item.id,
+              expand: true,
+              parentId: item.parentId
+            });
+          } else {
+            obj = {};
+            this.brandList.forEach(nn => {
+              if (nn.id == item.parentId) {
+                obj.title = nn.title;
                 obj.id = nn.id;
                 obj.expand = true;
               }
-            })
+            });
             obj.children = [];
             obj.parentId = null;
             obj.children.push({
-              title:item.title,
-              id:item.id,
-              expand:true,
-              parentId:item.parentId
-            })
-            this.checkedData.push(obj)
+              title: item.title,
+              id: item.id,
+              expand: true,
+              parentId: item.parentId
+            });
+            this.checkedData.push(obj);
           }
-        }else{
+        } else {
           //父节点
           //先找到该父节点是否已经存在
           let flag = false;
           this.checkedData.forEach(val => {
-            if(val.id == item.parentId){
+            if (val.id == item.parentId) {
               //存在
               flag = true;
-              obj = val
+              obj = val;
             }
-          })
-          if(flag){
-            val.children.push(
-              {
-                title:item.title,
-                id:item.id,
-                expand:true,
-                children:[]
-              }
-            )
+          });
+          if (flag) {
+            val.children.push({
+              title: item.title,
+              id: item.id,
+              expand: true,
+              children: []
+            });
           }
         }
-      })
-      return 
+      });
+      return;
       // const arr = []; //定义children为空的集合
       const children = []; //定义children不为空的集合
       const jh = []; //定义和children内容相同的集合
@@ -532,32 +531,29 @@ export default {
             res.forEach(item => {
               let obj = {};
               obj.title = item.brandName;
-              // obj.id = item.brandId;
               obj.id = null;
               this.brandList.push({
-                id:item.brandId,
-                title:item.brandName
-              })
+                id: item.brandId,
+                title: item.brandName
+              });
               obj.parentId = null;
-              if(item.roleList && item.roleList.length){
-                obj.children = []
+              if (item.roleList && item.roleList.length) {
+                obj.children = [];
                 item.roleList.forEach(val => {
-                  obj.children.push(
-                    {
-                      title:val.roleName,
-                      id:val.id,
-                      parentId:item.brandId
-                    }
-                  )
-                })
+                  obj.children.push({
+                    title: val.roleName,
+                    id: val.id,
+                    parentId: item.brandId
+                  });
+                });
               }
-              this.baseData.push(obj)
-            })
+              this.baseData.push(obj);
+            });
           }
           //查询选中的资源
           if (this.type == "modify") {
             this.checkedData = [];
-            let datas = []
+            let datas = [];
             let resData = this.formItem.roleIds.split("/");
             this.baseData.forEach((item, index) => {
               item.children.forEach((j, num) => {
@@ -573,8 +569,6 @@ export default {
                 });
               });
             });
-            // console.log(datas)
-            // this.checkedData = datas
             this.checkChange(datas);
           }
         }
@@ -585,6 +579,8 @@ export default {
       this.Global.deleteEmptyProperty(data);
 
       let datas = this.$refs["fatherTree"].getCheckedNodes();
+      // console.log(datas);
+      // return;
       let list = [];
       datas.forEach(item => {
         if (item.id) {
@@ -598,14 +594,6 @@ export default {
         this.cancel();
         this.init();
       });
-      // let data = this.Global.JsonChange(this.formItem);
-      // this.Global.deleteEmptyProperty(data);
-      // data.userId = this.selectId;
-      // this.Global.doPost("admin/doUpdate.json", data, res => {
-      //   this.$Message.success("修改账户成功");
-      //   this.cancel();
-      //   this.init();
-      // });
     },
     // 删除
     remove(userId) {

@@ -538,12 +538,6 @@ export default {
           }
         }
       );
-    },
-    handleEdit() {
-      this.$router.push({
-        path: "/displayReward-edit",
-        query: { type: "edit" }
-      });
     }
   }
 };

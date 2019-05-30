@@ -144,8 +144,9 @@ export let distributionStatus = {
     }
     //清算发奖-审查状态
 export let mergeGiveAwardCheckStatus = {
-        '1': '正常',
-        '2': '异常'
+        '1': '合格',
+        '2': '异常',
+        '0': '不合格'
     }
     //清算发奖-是否提现
 export let mergeGiveAwardRecStatus = {
@@ -157,7 +158,9 @@ export let mergeGiveAwardRecStatus = {
     //广东清算发奖-综合判定状态
 export let gdSyntheticalStatus = {
         '0': '不合格',
-        '1': '合格'
+        '1': '合格',
+        '-1': "未上传",
+        '3': "退回"
     }
     //CNY-点亮
 export let CNYSignStatus = {

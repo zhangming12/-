@@ -54,12 +54,24 @@
           <div class="container">
             <div class="btn-left w18">
               <Form-item>
-                <data-range placeholder="上传开始时间" hour="00:00" v-model="formData.queryStartTime"></data-range>
+                <!-- <data-range placeholder="上传开始时间" hour="00:00" v-model="formData.queryStartTime"></data-range> -->
+                <DatePicker
+                  style="display:block;"
+                  v-model="formData.queryStartTime"
+                  type="datetime"
+                  placeholder="上传开始时间"
+                ></DatePicker>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item>
-                <data-range hour="24:00" placeholder="上传结束时间" v-model="formData.queryEndTime"></data-range>
+                <DatePicker
+                  style="display:block;"
+                  v-model="formData.queryEndTime"
+                  type="datetime"
+                  placeholder="上传结束时间"
+                ></DatePicker>
+                <!-- <data-range hour="24:00" placeholder="上传结束时间" v-model="formData.queryEndTime"></data-range> -->
               </Form-item>
             </div>
             <div class="btn-left w18">
@@ -447,6 +459,10 @@ export default {
         return;
       }
       var data = this.Global.JsonChange(this.formData);
+      data["queryStartTime"] = this.Global.createTime(
+        this.formData.queryStartTime
+      );
+      data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
       this.Global.deleteEmptyProperty(data);
       data["currentPage"] = 1;
       data["pageSize"] = this.pageSize;
@@ -479,6 +495,7 @@ export default {
               }
             }
             item.firstImageList = firstImageList;
+            item.oldDefer = item.defer;
 
             if (item.fileType == "radio") {
               item.imageOneUrl = item.firstRadio
@@ -516,9 +533,7 @@ export default {
     },
     //获取tooltip的位置
     getPosition(index) {
-      if (!index) return "right";
-      if (index % 2 == 0) return "right";
-      else return "left";
+      return index % 2 == 0 ? "right" : "left";
     },
     //查看详情
     lookDetail(val) {
@@ -529,7 +544,7 @@ export default {
         storeId
       };
       queryParams = this.Global.JsonChange(queryParams);
-      queryParams["displayActCategory"] = "singleOne";
+      queryParams["displayActCategory"] = "firstAudit";
       this.Global.deleteEmptyProperty(queryParams);
       this.$router.push({
         path: "/auditDetail",
@@ -566,51 +581,59 @@ export default {
     //保存
     save(obj) {
       let { item, index } = obj;
-      let { defer } = item;
+      let { defer, oldDefer, id } = item;
       //暂缓
-      if (defer == 1) {
-        let data = { id: item.id };
-        this.Global.doPost("audit/updateVideoDefer.json", data, res => {
+      //并当查询条件不为暂缓时
+      if (defer == 1 && this.formData.defer != 1) {
+        if (oldDefer == 1) {
+          //原先就是暂缓状态现在还是暂缓状态点击保存
+          this.$Message.info("已是暂缓状态");
+          return false;
+        }
+        this.Global.doPost("audit/updateVideoDefer.json", { id }, res => {
           this.$Message.success("暂缓成功");
+          this.deferNum++;
           if (this.formData.defer == 0) {
             //当选择的状态为初审时，删除
             this.storeGoodsList.splice(index, 1);
           }
         });
-      } else {
-        //正常的审核流程
-        let statusC = item.status;
-        if (!statusC) {
-          this.$Message.error("请选择审核状态");
-          return false;
-        }
-        var params = {
-          id: item.id,
-          brandId: item.brandId,
-          groupId: item.groupId,
-          activityId: item.activityId,
-          checkMessage: item.checkMessage,
-          checkStatus: statusC,
-          memo: item.memo
-        };
-        if (statusC == 2 || statusC == 3) {
-          if (!item.checkMessage) {
-            this.$Message.error("请输入审核意见");
-            return false;
-          }
-        } else {
-          delete params["checkMessage"];
-        }
-        this.Global.doPost("audit/doVideoFirstAudit.json", params, res => {
-          this.storeGoodsList.splice(index, 1);
-          this.goodsStausShow = false;
-          this.$Message.success("保存成功");
-          this.formItem.status = "";
-          if (this.storeGoodsList.length == 0) {
-            this.init();
-          }
-        });
+        return false;
       }
+      //正常的审核流程
+      //当查询条件为暂缓时，视频状态也为暂缓时，也走正常审核流程
+      let { status, brandId, groupId, activityId, checkMessage, memo } = item;
+      if (!status) {
+        this.$Message.error("请选择审核状态");
+        return false;
+      }
+      var params = {
+        id,
+        brandId,
+        groupId,
+        activityId,
+        checkMessage,
+        checkStatus: status,
+        memo
+      };
+      if ((status == 2 || status == 3) && !checkMessage) {
+        //当审核状态为 不通过 或者 退回 时，审核意见必须有
+        this.$Message.error("请输入审核意见");
+        return false;
+      }
+      this.Global.doPost("audit/doVideoFirstAudit.json", params, res => {
+        this.storeGoodsList.splice(index, 1);
+        this.goodsStausShow = false;
+        this.$Message.success("保存成功");
+        this.formItem.status = "";
+        this.allNum--;
+        if (oldDefer == 1) {
+          this.deferNum--;
+        }
+        if (this.storeGoodsList.length == 0) {
+          this.init();
+        }
+      });
     }
   }
 };

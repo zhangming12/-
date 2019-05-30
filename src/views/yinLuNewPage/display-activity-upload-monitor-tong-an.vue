@@ -696,12 +696,6 @@ export default {
           this.oneLeverList = res.data;
         }
       });
-    },
-    handleEdit() {
-      this.$router.push({
-        path: "/displayReward-edit",
-        query: { type: "edit" }
-      });
     }
   },
   filters: {

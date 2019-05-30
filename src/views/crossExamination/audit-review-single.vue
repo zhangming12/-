@@ -984,9 +984,7 @@ export default {
       this.storeGoodsList[index].len = len;
     },
     getPosition(index) {
-      if (!index) return "right";
-      if (index % 2 == 0) return "right";
-      return "left";
+      return index % 2 == 0 ? "right" : "left";
     },
     riskSure() {
       let len = this.social.length;

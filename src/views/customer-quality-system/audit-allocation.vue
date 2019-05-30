@@ -57,7 +57,8 @@
       margin-left: 20px;
     }
     .team-select-box {
-      overflow: hidden;
+      overflow: auto;
+      max-height: 300px;
       .item {
         width: 50%;
         float: left;
@@ -112,12 +113,7 @@
           <div class="container">
             <div class="btn-left w18">
               <Form-item prop="brandId">
-                <Select
-                  v-model="formData.brandId"
-                  clearable
-                  placeholder="品牌名称"
-                  @on-change="changeValue"
-                >
+                <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
                   <Option
                     :value="item.id"
                     v-for="(item,index) in brandList"
@@ -128,12 +124,7 @@
             </div>
             <div class="btn-left w18">
               <Form-item prop="id">
-                <Select
-                  v-model="formData.groupId"
-                  placeholder="活动名称"
-                  @on-change="getActivityList"
-                  clearable
-                >
+                <Select v-model="formData.groupId" placeholder="活动名称*" @on-change="getActivityList">
                   <Option
                     :value="item.id"
                     v-for="(item,index) in groupList"
@@ -156,9 +147,9 @@
             <div class="btn-left w18">
               <Form-item prop="id">
                 <Select v-model="formData.status" placeholder="状态" clearable>
-                  <Option value="2">进行中</Option>
-                  <Option value="1">未开始</Option>
-                  <Option value="3">已结束</Option>
+                  <Option :value="2">进行中</Option>
+                  <Option :value="1">未开始</Option>
+                  <Option :value="3">已结束</Option>
                 </Select>
               </Form-item>
             </div>
@@ -293,6 +284,11 @@ export default {
     myModal,
     fieldNameDes
   },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.queryTeam();
+    });
+  },
   watch: {
     showRate(val) {
       if (!val) {
@@ -315,7 +311,8 @@ export default {
       },
       formData: {
         brandId: "",
-        groupId: ""
+        groupId: "",
+        status: 2
       },
       columns1: [
         {
@@ -492,8 +489,8 @@ export default {
         Object.entries(res).forEach(item => {
           this.brandList.push({ id: Number(item[0]), brandName: item[1] });
         });
-        this.formData.brandId = this.brandList[0].id;
-        this.changeValue(this.formData.brandId);
+        // this.formData.brandId = this.brandList[0].id;
+        // this.changeValue(this.formData.brandId);
       }
     );
     this.queryTeam();
@@ -553,6 +550,11 @@ export default {
             "teamNameList",
             teams
           );
+          this.$set(
+            this.pageData[fIndex].presentList[sIndex],
+            "teamIdList",
+            this.selectedTeam.join("、")
+          );
         }
         this.showTeam = false;
       });
@@ -577,7 +579,9 @@ export default {
       this.groupTeamDatas.type = type;
       if (item) {
         let { teamIdList, presentId } = item;
-        this.selectedTeam = teamIdList.split("、").map(v => v - 0);
+        if (teamIdList) {
+          this.selectedTeam = teamIdList.split("、").map(v => v - 0);
+        }
         this.groupTeamDatas.presentId = presentId;
       }
       if (fIndex || fIndex == 0) {
@@ -616,7 +620,7 @@ export default {
       if (!value) return;
       this.Global.doPostNoLoading(
         "condition/queryGroup.json",
-        { scope: "a", date: 7, brandId: value },
+        { scope: "a", date: 7, brandId: value, activityTypes: [3, 6] },
         res => {
           Object.entries(res).forEach(item => {
             this.groupList.push({ id: Number(item[0]), groupName: item[1] });
@@ -629,6 +633,14 @@ export default {
       );
     },
     submit(name) {
+      if (!this.formData.brandId) {
+        this.$Message.info("请选择品牌");
+        return false;
+      }
+      if (!this.formData.groupId) {
+        this.$Message.info("请选择活动");
+        return false;
+      }
       this.page = 1;
       this.init();
     },

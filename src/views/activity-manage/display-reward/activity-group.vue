@@ -729,11 +729,11 @@
                 </div>
 
                 <!-- 新增审核话术导入 -->
-                <!-- <div class="word-import" style="margin-top:10px;">
+                <div class="word-import" style="margin-top:10px;">
                   <span class="word">审核话术：</span>
-                  <importBtn @click.native="importShow = true"/>
-                  <exportBtn @click.native="exportExcel"/>
-                </div>-->
+                  <importBtn @click.native="showModal(index)"/>
+                  <exportBtn @click.native="exportExcel(index)"/>
+                </div>
               </div>
             </div>
           </div>
@@ -744,27 +744,10 @@
     <!-- 审核话术导入 -->
     <Modal v-model="importShow">
       <h2 style="text-align:center;">导入</h2>
-      <i-Form>
-        <div style="overflow:hidden;">
-          <div
-            class="upDate"
-            style="cursor:pointer;text-align:center;border: 1px solid #aeaeae;padding: 2px 12px;margin-right: 10px;width:150px;"
-          >
-            <Upload
-              :action="url"
-              :show-upload-list="false"
-              :on-success="handleSuccess"
-              :on-error="handleError"
-            >
-              <Icon type="ios-folder" size="14" color="#53a3f4"/>
-              {{uploadText}}
-            </Upload>
-          </div>
-        </div>
-      </i-Form>
+      <upload-file :fileTitle="uploadText" v-model="wordFilePath"/>
       <div slot="footer" style="text-align:center;">
         <i-button type="text" @click="closeModel">取消</i-button>
-        <i-button type="success" @click="uploadExcel">确定</i-button>
+        <i-button type="success" @click="uploadWord">确定</i-button>
       </div>
     </Modal>
     <Modal v-model="skuIsShow" width="1000" style="height:600px;" id="skuContainer">
@@ -786,6 +769,7 @@
 import skuModel from "../../activity-statistics-C/setting-SKU.vue";
 import upData from "@/assets/js/upload.js";
 import PROJECT_CONFIG from "@/util/config.js";
+import uploadFile from "@/components/uploadFile/upload-file.vue";
 import config from "@/util/config.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import index from "vue";
@@ -796,6 +780,8 @@ import importBtn from "@/components/Button/import-btn.vue";
 export default {
   data() {
     return {
+      wordFilePath: "", //审核话术文件路径
+      wordIndex: null,
       uploadText: "请选择上传文件",
       importShow: false,
       showSkuNum: true,
@@ -839,7 +825,8 @@ export default {
     addBtn,
     configureBtn,
     exportBtn,
-    importBtn
+    importBtn,
+    uploadFile
   },
   created() {
     let str = ":00";
@@ -870,34 +857,21 @@ export default {
     importShow(val) {
       if (!val) {
         this.uploadText = "请选择上传文件";
+        this.wordFilePath = "";
+        this.wordIndex = null;
       }
     }
   },
   methods: {
-    handleError() {},
-    handleSuccess(response, file, fileList) {
-      this.uploadText = file.name;
-      var url = response.data;
-      if (url) {
-        this.uploadUrl = url;
+    showModal(index) {
+      if (!this.presentList[index].id) {
+        this.$Message.info("请先保存分组，再上传审核话术");
+        return false;
       }
+      this.wordIndex = index;
+      this.importShow = true;
     },
-    //导出审核话术
-    exportExcel() {
-      if (!this.groupId) {
-        this.$Message.warning("请先保存活动包");
-        return;
-      }
-      let data = {
-        brandId: this.brandId ? this.brandId : this.formData.brandId,
-        groupId: this.groupId
-      };
-      var url = this.Global.getExportUrl(
-        "displayYxtg/exportAuditExplain.json",
-        data
-      );
-      window.open(url);
-    },
+
     sCategoryListChange(index) {
       this.$set(this.presentList[index], "sCategoryList", []);
     },
@@ -932,19 +906,40 @@ export default {
     closeModel() {
       this.importShow = false;
     },
-    uploadExcel() {
-      if (!this.groupId) {
-        this.$Message.error("请先保存活动包");
+    //导出审核话术
+    exportExcel(index) {
+      if (!this.presentList[index].id) {
+        this.$Message.warning("请先保存分组");
+        return;
+      }
+      let data = {
+        brandId: this.brandId ? this.brandId : this.formData.brandId,
+        groupId: this.groupId,
+        presentId: this.presentList[index].id,
+        activityId: this.id
+      };
+      var url = this.Global.getExportUrl(
+        "displayYxtg/exportAuditExplain.json",
+        data
+      );
+      window.open(url);
+    },
+    //导入审核话术
+    uploadWord() {
+      if (!this.presentList[this.wordIndex].id) {
+        this.$Message.error("请先保存分组");
         return false;
       }
-      if (!this.uploadUrl) {
+      if (!this.wordFilePath) {
         this.$Message.error("请核实上传文件");
         return false;
       }
       let data = {
-        loadFilePath: this.uploadUrl,
+        loadFilePath: this.wordFilePath,
         brandId: this.brandId ? this.brandId : this.formData.brandId,
-        groupId: this.groupId
+        groupId: this.groupId,
+        activityId: this.id,
+        presentId: this.presentList[this.wordIndex].id
       };
       this.Global.doPost("displayYxtg/importAuditExplain.json", data, () => {
         this.$Message.success("导入成功");

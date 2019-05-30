@@ -94,6 +94,7 @@
       .btn-span {
         height: 32px;
         display: flex;
+        margin-right: 10px;
         align-items: center;
       }
     }

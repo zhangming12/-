@@ -277,7 +277,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
+              <Form-item required>
                 <data-range
                   @dataChange="startTimeChange"
                   hour="00:00"
@@ -287,7 +287,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
+              <Form-item required>
                 <data-range
                   hour="24:00"
                   placeholder="结束时间"
@@ -791,12 +791,6 @@ export default {
         if (res && res.status == 1) {
           this.oneLeverList = res.data;
         }
-      });
-    },
-    handleEdit() {
-      this.$router.push({
-        path: "/displayReward-edit",
-        query: { type: "edit" }
       });
     }
   },

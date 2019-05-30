@@ -22,7 +22,6 @@ let util = {
         window.document.title = title;
     },
     ajax: axios.create({
-        // baseURL: ajaxUrl,
         baseURL: DEV_CONFIG.dataServer,
         timeout: 30000,
         // contentType: 'application/json;charset=UTF-8'
@@ -140,6 +139,9 @@ let util = {
                 }
             })
     },
+    // findHasSomePage(page){
+    //     let 
+    // },
     exportData(url, data) {
         axios({
             // 用axios发送post请求

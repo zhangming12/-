@@ -143,12 +143,7 @@
             </div>
             <div class="btn-left w18">
               <Form-item prop="brandId">
-                <Select
-                  v-model="formData.brandId"
-                  placeholder="品牌名称"
-                  @on-change="changeValue"
-                  clearable
-                >
+                <Select v-model="formData.brandId" placeholder="品牌名称*" @on-change="changeValue">
                   <Option
                     :value="item.brandId"
                     v-for="(item,index) in brandList"
@@ -159,12 +154,7 @@
             </div>
             <div class="btn-left w18">
               <Form-item>
-                <Select
-                  v-model="formData.groupId"
-                  placeholder="活动名称"
-                  @on-change="getActivityList"
-                  clearable
-                >
+                <Select v-model="formData.groupId" placeholder="活动名称*" @on-change="getActivityList">
                   <Option
                     :value="item.groupId"
                     v-for="(item,index) in groupList"
@@ -307,7 +297,6 @@
           </zmTable>
         </div>
       </div>
-      <!-- <videoImageLook/> -->
       <div class="page-box">
         <div>
           <Page :total="pageNum" :current="1" @on-change="changePage"></Page>
@@ -721,6 +710,14 @@ export default {
       this.showVideo = false;
     },
     submit(name) {
+      if (!this.formData.brandId) {
+        this.$Message.info("请选择品牌");
+        return false;
+      }
+      if (!this.formData.groupId) {
+        this.$Message.info("请选择活动");
+        return false;
+      }
       this.page = 1;
       this.init();
     },

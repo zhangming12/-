@@ -290,7 +290,7 @@
         <Form ref="form" :model="formData" :label-width="10">
           <div class="container">
             <div class="btn-left w18">
-              <Form-item  >
+              <Form-item>
                 <data-range
                   @dataChange="startTimeChange"
                   placeholder="申请开始时间"
@@ -301,7 +301,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item  >
+              <Form-item>
                 <data-range
                   hour="24:00"
                   placeholder="申请结束时间"
@@ -707,11 +707,7 @@ import myTooltip from "@/components/tooltip/tooltip.vue";
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import imageLook from "@/components/imgLook/img-look.vue";
 export default {
   name: "first-instance-display-single-keepAlive",
@@ -1198,15 +1194,11 @@ export default {
             });
           }
           this.pageNum = res.items;
-          // this.page = res.page;
         }
       );
-      // this.queryAuditNum();
     },
     getPosition(index) {
-      if (!index) return "right";
-      if (index % 2 == 0) return "right";
-      else return "left";
+      return index % 2 == 0 ? "right" : "left";
     },
     setStatus(val, flag, index) {
       if (val == 0) {

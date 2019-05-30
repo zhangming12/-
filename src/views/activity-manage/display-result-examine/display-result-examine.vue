@@ -302,12 +302,6 @@ footer {
 
 <template>
   <div id="Main">
-    <!-- <h2 class="Title" v-if="displayActCategory == 'OneLevel' ">陈列结果一级审核</h2>
-        <h2 class="Title" v-else-if=" displayActCategory == 'TwoLevel' ">陈列结果二级审核</h2>
-        <h2 class="Title" v-else-if=" displayActCategory == 'ThreeLevel' ">陈列确认及奖励发放</h2>
-         <h2 class="Title" v-else-if=" displayActCategory == 'partake' && displayBackType == 'C' ">陈列活动参与明细</h2>
-        <h2 class="Title" v-else-if=" displayActCategory == 'partake' && displayBackType == 'D' ">陈列活动参与明细2</h2>
-    <h2 class="Title" v-else-if=" displayActCategory == 'partake' && displayBackType == 'E' ">河北中粮陈列活动参与明细</h2>-->
     <div class="box">
       <!-- 店铺信息 -->
       <Form :model="formData" label-position="left" :label-width="0">
@@ -461,7 +455,9 @@ footer {
               <P>上传周期：{{firstRadio.uploadStartTime | formatYearMonth }}至{{firstRadio.uploadEndTime | formatYearMonth }}</P>
               <P style="white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">
                 坐标预警：
-                <span :class="{ 'colorError': firstRadio.locate == '异常'}">{{firstRadio.riskLocate}}</span>
+                <span
+                  :class="{ 'colorError': firstRadio.locate == '异常'}"
+                >{{firstRadio.riskLocate}}</span>
               </P>
               <p>状态预警：{{firstRadio.warningStatus | warningStatuFilter}}</p>
               <!-- 合格分项 -->
@@ -536,22 +532,12 @@ footer {
               <P>上传周期：{{thisRadio.uploadStartTime | formatYearMonth }}至{{thisRadio.uploadEndTime | formatYearMonth }}</P>
               <P style="white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">
                 坐标预警：
-                <span :class="{ 'colorError': thisRadio.locate == '异常'}">{{thisRadio.riskLocate}}</span>
+                <span
+                  :class="{ 'colorError': thisRadio.locate == '异常'}"
+                >{{thisRadio.riskLocate}}</span>
               </P>
               <p>状态预警：{{thisRadio.warningStatus | warningStatuFilter}}</p>
-              <!-- 合格分项 -->
-              <!-- <div class="qualified">
-                          <div class="left">合格分项:</div>
-                          <div class="right">
-                            <ul>
-                              <li v-for="(val,i) in qualifiedList" :key="i">
-                                <img v-if="val.value" src="../../../assets/image/SKU1.png" alt="">
-                                <img v-if="!val.value" src="../../../assets/image/SKU3.png" alt="">
-                                <span>{{val.name}}</span>
-                              </li>
-                            </ul>
-                          </div>
-              </div>-->
+
               <div class="qualified" v-if="thisRadio.isSku == 1&&thisRadio.skuScoreVO">
                 <div class="left">合格分项:</div>
                 <div class="right">
@@ -609,7 +595,7 @@ footer {
           <div class="goodsDetail">
             <!-- v-if="fileType == 'radio'" -->
             <div class="showVideoPlay" v-if="fileType == 'radio'">
-              <video :src="item.radioUrl" :ref=""playVideo" + index" controls></video>
+              <video :src="item.radioUrl" :ref="'playVideo' + index" controls></video>
             </div>
             <div class="showVideoPlay" v-if="fileType == 'image'">
               <imageLook
@@ -629,19 +615,7 @@ footer {
                 <span :class="{ 'colorError': item.locate == '异常'}">{{item.riskLocate}}</span>
               </P>
               <p>状态预警：{{item.warningStatus | warningStatuFilter}}</p>
-              <!-- 合格分项 -->
-              <!-- <div class="qualified">
-                          <div class="left">合格分项:</div>
-                          <div class="right">
-                            <ul>
-                              <li v-for="(val,i) in qualifiedList" :key="i">
-                                <img v-if="val.value" src="../../../assets/image/SKU1.png" alt="">
-                                <img v-if="!val.value" src="../../../assets/image/SKU3.png" alt="">
-                                <span>{{val.name}}</span>
-                              </li>
-                            </ul>
-                          </div>
-              </div>-->
+
               <div class="qualified" v-if="item.isSku == 1 && item.skuScoreVO">
                 <div class="left">合格分项:</div>
                 <div class="right">
@@ -694,16 +668,22 @@ footer {
       >
         <p style="margin-left:18px;" v-for="(item,index) in auditLogList" :key="index">
           {{index + 1}} , {{item.checkTime | formatYearMonth}} 由{{item.userId}}进行{{item.operateDesc}} ，审核状态为{{item.checkStatus | statusFilter}}
-          <span v-if="item.checkMessage">, 原因为{{ item.checkMessage }}</span>
+          <span
+            v-if="item.checkMessage"
+          >, 原因为{{ item.checkMessage }}</span>
         </p>
       </div>
     </div>
-    <footer v-if="displayActCategory == 'OneLevel'" class="footerBottun">
+    <footer v-if="displayActCategory == 'firstAudit'" class="footerBottun">
       <Button type="success" class="btn-back" @click="handleOnelevelBack">返回</Button>
     </footer>
-    <footer v-else-if=" displayActCategory == 'TwoLevel' " class="footerBottun">
+    <footer v-else-if=" displayActCategory == 'twiceAudit' " class="footerBottun">
       <Button type="success" class="btn-back" @click="handleTwolevelBack">返回</Button>
     </footer>
+    <footer v-else-if=" displayActCategory == 'qualityTesting' " class="footerBottun">
+      <Button type="success" class="btn-back" @click="handleThreeBack">返回</Button>
+    </footer>
+
     <footer class="footerBottun" v-else-if=" displayActCategory == 'ThreeLevel'">
       <Button type="success" class="btn-back" @click="handleThreelevelBack">返回</Button>
     </footer>
@@ -1121,13 +1101,11 @@ export default {
       }
     },
     getPosition(index) {
-      if (!index) return "right";
-      if (index % 2 == 0) return "right";
-      return "left";
+      return index % 2 == 0 ? "right" : "left";
     },
     handleOnelevelBack() {
       //一审返回
-      this.$router.push({ path: "/displayResultOne" });
+      this.$router.push({ path: "/firstAudit" });
     },
     handleOnelevelNewBack() {
       //一审新页面返回
@@ -1135,7 +1113,11 @@ export default {
     },
     handleTwolevelBack() {
       //二审返回
-      this.$router.push({ path: "/displayResultTwo" });
+      this.$router.push({ path: "/twiceAudit" });
+    },
+    handleThreeBack() {
+      //二审返回
+      this.$router.push({ path: "/qualityTesting" });
     },
     handleTwolevelNewBack() {
       //二审新页面返回

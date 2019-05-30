@@ -50,10 +50,10 @@
           </ul>
         </div>
         <div class="header-avator-con">
-          <!-- <div class="closeBtn" @click="goToNotice">
+          <div class="closeBtn" @click="goToNotice">
             <i-icon type="ios-mail" style="margin-top:2px;" color="red" size="25"/>
             <sup v-if="$store.state.noticeMsg" class="sup">{{ $store.state.noticeMsg }}</sup>
-          </div>-->
+          </div>
           <div class="closeBtn" @click="loginOut">
             <i-icon type="md-power" color="rgba(255,255,255,.7)" size="20"/>
           </div>

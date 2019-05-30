@@ -462,9 +462,7 @@ export default {
       );
     },
     getPosition(index) {
-      if (!index) return "right";
-      if (index % 2 == 0) return "right";
-      return "left";
+      return index % 2 == 0 ? "right" : "left";
     },
     submit(name) {
       if (!this.formData.queryStartTime) {

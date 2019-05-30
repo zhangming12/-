@@ -136,12 +136,6 @@
     }
     .goodsDetail {
       overflow: hidden;
-      // video{
-      //     height: 200px;
-      //     float: left;
-      //     width: 45%;
-      // }
-
       .showVideoPlay {
         height: 200px;
         position: relative;
@@ -163,9 +157,6 @@
           transition: opacity 0.5s;
           color: #fff;
           text-align: center;
-          // &:hover{
-          //     opacity: 1;
-          // }
           .maskTxt {
             position: absolute;
             top: 0;
@@ -175,10 +166,6 @@
             margin: auto;
             width: 60px;
             height: 40px;
-            // p:first-child{
-            //     margin-bottom: 15px;
-
-            // }
           }
         }
       }
@@ -613,12 +600,6 @@ export default {
         if (res && res.status == 1) {
           this.oneLeverList = res.data;
         }
-      });
-    },
-    handleEdit() {
-      this.$router.push({
-        path: "/displayReward-edit",
-        query: { type: "edit" }
       });
     }
   },

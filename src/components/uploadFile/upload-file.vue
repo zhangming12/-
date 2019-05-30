@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       fileUrl: this.value,
-      uploadText: this.title,
+      uploadText: this.fileTitle,
       url: PROJECT_CONFIG.uploadWorkerExcel
     };
   },
@@ -63,7 +63,7 @@ export default {
         return ["xlsx", "xlsm", "xls"];
       }
     },
-    title: {
+    fileTitle: {
       type: String,
       default: "上传文件"
     }
@@ -72,7 +72,7 @@ export default {
     value(val) {
       this.fileUrl = val;
     },
-    title(val) {
+    fileTitle(val) {
       this.uploadText = val;
     }
   },

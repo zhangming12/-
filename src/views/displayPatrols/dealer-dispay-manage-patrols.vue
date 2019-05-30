@@ -30,22 +30,12 @@
           <div class="container">
             <div class="btn-left w18">
               <Form-item>
-                <data-range
-                  @dataChange="startTimeChange"
-                  hour="00:00"
-                  :time="formData.queryStartTime"
-                  start
-                ></data-range>
+                <data-range hour="00:00" v-model="formData.queryStartTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
               <Form-item>
-                <data-range
-                  hour="24:00"
-                  placeholder="结束时间"
-                  @dataChange="endTimeChange"
-                  :time="formData.queryEndTime"
-                ></data-range>
+                <data-range hour="24:00" placeholder="结束时间" v-model="formData.queryEndTime"></data-range>
               </Form-item>
             </div>
             <div class="btn-left w18">
@@ -105,7 +95,7 @@
 
 <script>
 import area from "@/config/china_code_data.js";
-import dataRange from "@/components/data-rang.vue";
+import dataRange from "@/components/data-range/data-range.vue";
 import addNewBtn from "@/components/Button/addNew-btn.vue";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import { validateStart, validateEnd } from "@/util/index.js"; //验证规则
@@ -120,23 +110,13 @@ export default {
         brandId: "",
         //name:'',
         activityStatus: "",
-        areaCode: [],
-        queryTime: [EDFAULT_STARTTIME, EDFAULT_ENDTIME]
-      },
-      start: {
-        time: "",
-        hour: ""
-      },
-      end: {
-        time: EDFAULT_ENDTIME,
-        hour: "24:00"
+        areaCode: []
       },
       page: 1,
       pageNum: 0,
       rule: {
         queryStartTime: [{ validator: validateStart }],
-        queryEndTime: [{ validator: validateEnd }],
-        queryTime: [{ required: true, message: "选择日期跟时间" }]
+        queryEndTime: [{ validator: validateEnd }]
       },
       columns: [
         {
@@ -332,35 +312,9 @@ export default {
     );
   },
   methods: {
-    startTimeChange(value) {
-      this.start.hour = value.hour;
-      this.start.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryStartTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
-    endTimeChange(value) {
-      this.end.hour = value.hour;
-      this.end.time = value.time;
-      if (value.hour == "24:00") {
-        return;
-      }
-      this.formData.queryEndTime = this.Global.setHoursData(
-        value.time,
-        value.hour
-      );
-    },
     submit(name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          this.page = 1;
-          this.init(this.page, 10);
-        }
-      });
+      this.page = 1;
+      this.init(this.page, 10);
     },
     changePage(size) {
       this.init(size, 10);
@@ -370,20 +324,9 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
 
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
+
       this.Global.deleteEmptyProperty(data);
       if (this.formData.areaCode.length) {
         data["areaCode"] = this.formData.areaCode[
@@ -391,7 +334,6 @@ export default {
         ].toString();
       }
 
-      delete data["queryTime"];
       data["currentPage"] = currentPage;
       data["pageSize"] = pageSize;
       data["groupType"] = 6;
@@ -410,20 +352,9 @@ export default {
       data["queryStartTime"] = this.Global.createTime(
         this.formData.queryStartTime
       );
-      if (this.start.hour == "24:00") {
-        data["queryStartTime"] = this.Global.setHoursData(
-          this.start.time,
-          this.start.hour
-        );
-      }
 
       data["queryEndTime"] = this.Global.createTime(this.formData.queryEndTime);
-      if (this.end.hour == "24:00") {
-        data["queryEndTime"] = this.Global.setHoursData(
-          this.end.time,
-          this.end.hour
-        );
-      }
+
       this.Global.deleteEmptyProperty(data);
       var url = this.Global.getExportUrl(
         "report/activityDetailExport.json",
@@ -435,12 +366,6 @@ export default {
       this.$router.push({
         path: "/activityAddOrModifyPatrols",
         query: { type: "add" }
-      });
-    },
-    handleEdit() {
-      this.$router.push({
-        path: "/activityAddOrModifyPatrols",
-        query: { type: "edit" }
       });
     }
   }

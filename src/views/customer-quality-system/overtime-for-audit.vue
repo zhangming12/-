@@ -364,7 +364,9 @@ export default {
   watch: {},
   methods: {
     getUserType() {
-      return JSON.parse(window.sessionStorage.getItem("user")).userType;
+      return JSON.parse(
+        window.sessionStorage.getItem("user")
+      ).userType.toUpperCase();
     },
     auditClick(val) {
       this[val] = !this[val];
@@ -445,14 +447,20 @@ export default {
         this.pageNum = res.items;
         this.page = res.page;
         this.noneStatus = true;
-        if (res && res.length) {
-          res.datalist.forEach(item => {
+        if (res && res.datalist.length) {
+          res.datalist.map(item => {
             item.proid = `${this.Global.createTime(
               item.startTime
             )}至${this.Global.createTime(item.endTime)}`;
-            item.minFinalTime = this.formateTime(item.minFinalTime);
-            item.minSecondTime = this.formateTime(item.minSecondTime);
-            item.minFirstTime = this.formateTime(item.minFirstTime);
+            if (item.minFinalTime) {
+              item.minFinalTime = this.Global.createTime(item.minFinalTime);
+            }
+            if (item.minSecondTime) {
+              item.minSecondTime = this.Global.createTime(item.minSecondTime);
+            }
+            if (item.minFirstTime) {
+              item.minFirstTime = this.Global.createTime(item.minFirstTime);
+            }
             item.status = this.noAudit ? "待审核" : "超时";
           });
         }

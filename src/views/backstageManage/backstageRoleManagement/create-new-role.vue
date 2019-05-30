@@ -145,8 +145,7 @@ export default {
   created() {
     this.Global.doPostNoLoading(
       "condition/queryBrands.json",
-      // { tbType: "team" },
-      {},
+      { tbType: "team" },
       res => {
         this.brandList = [];
         Object.entries(res).forEach(item => {

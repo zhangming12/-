@@ -156,17 +156,17 @@
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
+                  <Input v-model.trim="formData.joinCode" placeholder="客户编号" clearable></Input>
                 </Form-item>
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Input v-model.trim="formData.id" placeholder="图像编号"></Input>
+                  <Input v-model.trim="formData.id" placeholder="图像编号" clearable></Input>
                 </Form-item>
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Input v-model.trim="formData.salesRoute" placeholder="销售路线"></Input>
+                  <Input v-model.trim="formData.salesRoute" placeholder="销售路线" clearable></Input>
                 </Form-item>
               </div>
             </div>
@@ -178,6 +178,7 @@
           @batchPass="batchPass"
           @batchNoPass="batchNoPass"
           :barData="barData"
+          useType="quality"
           :barDataKey="barDataKey"
         />
       </div>
@@ -276,7 +277,7 @@ export default {
           key: "reviewNum"
         },
         {
-          title: "抽率率",
+          title: "抽检率",
           key: "precent"
         },
         {
@@ -388,7 +389,11 @@ export default {
         "audit/doVideoBatchFinalAuditOfNotPassThrough.json",
         data,
         res => {
-          this.$Message.info("系统已经收到您的指令，后台将自动完成");
+          // this.$Message.info("系统已经收到您的指令，后台将自动完成");
+          this.$Message.info({
+            duration: 5,
+            content: "系统已经收到您的指令，后台将自动完成"
+          });
           this.storeGoodsList = null;
           this.clearBarData();
         }
@@ -407,7 +412,11 @@ export default {
         "audit/doVideoBatchFinalAuditOfPassThrough.json",
         data,
         res => {
-          this.$Message.info("系统已经收到您的指令，后台将自动完成");
+          // this.$Message.info("系统已经收到您的指令，后台将自动完成");
+          this.$Message.info({
+            duration: 5,
+            content: "系统已经收到您的指令，后台将自动完成"
+          });
           this.storeGoodsList = null;
           this.clearBarData();
         }
@@ -421,13 +430,14 @@ export default {
         } else {
           this.barDataKey.isDis = true;
         }
-        this.barDataKey.precent =
-          this.barDataKey.precent.toFixed(4) * 100 + "%";
-        this.barDataKey.correctPrecent = this.barDataKey.correctPrecent
-          ? this.barDataKey.correctPrecent.toFixed(4) * 100 + "%"
+        this.barDataKey.precent = this.barDataKey.precent
+          ? this.barDataKey.precent.toFixed(2) * 100 + "%"
           : "0%";
-        if (res[0].totalNum == res[0].reviewNum && res[0].reviewNum != 0) {
-          //当总数等于已复审且不为0时，自动调全部通过接口
+        this.barDataKey.correctPrecent = this.barDataKey.correctPrecent
+          ? this.barDataKey.correctPrecent.toFixed(2) * 100 + "%"
+          : "0%";
+        if (res[0].reviewNum != 0 && res[0].totalNum == res[0].reviewNum) {
+          //当总数等于已复审且不为0时，自动调批量接口
           delete data["currentPage"];
           delete data["pageSize"];
           data["queryEndTime"] = this.Global.createTime(
@@ -437,10 +447,11 @@ export default {
             new Date(data["queryStartTime"]).getTime()
           );
           this.Global.doPostNoLoading(
-            "audit/doVideoSecondAuditSingle.json",
+            "audit/doVideoFinalAuditSingle.json",
             data,
             res => {
-              this.queryBarData(data);
+              this.clearBarData();
+              // this.queryBarData(data);
             }
           );
         }
@@ -456,22 +467,9 @@ export default {
         correctPrecent: "0%"
       };
     },
-    //获取userType
-    getUserType() {
-      return JSON.parse(window.sessionStorage.getItem("user")).userType;
-    },
     //查询团队
     queryTeam() {
-      let userType = this.getUserType();
-      let api = "";
-      let data = "";
-      if (userType == "p") {
-        api = "audit/queryAllTeam.json";
-      } else {
-        api = "audit/queryTeamByUser.json";
-        data = 666;
-      }
-      this.Global.doPostNoLoading(api, data, res => {
+      this.Global.doPostNoLoading("audit/queryAllTeam.json", "", res => {
         this.teamList = res;
         if (res && res.length) {
           this.formData.teamId = res[0].id;
@@ -554,12 +552,12 @@ export default {
       }
     },
     //获取审核话术
-    getDisplayExamineWord(brandId, groupId) {
+    getDisplayExamineWord(brandId, groupId, presentId) {
       this.wordList = [];
       this.displayExamineWordList = [];
       this.Global.doPost(
         "displayYxtg/queryAuditReason.json",
-        { brandId, groupId },
+        { brandId, groupId, presentId },
         res => {
           if (res && res.length) {
             this.wordList = res;
@@ -590,6 +588,10 @@ export default {
     init() {
       if (!this.formData.groupId) {
         this.$Message.error("活动包不能为空");
+        return;
+      }
+      if (!this.formData.activityId) {
+        this.$Message.error("项目不能为空");
         return;
       }
       if (!this.formData.teamId) {
@@ -663,9 +665,7 @@ export default {
     },
     //获取tooltip的位置
     getPosition(index) {
-      if (!index) return "right";
-      if (index % 2 == 0) return "right";
-      else return "left";
+      return index % 2 == 0 ? "right" : "left";
     },
     //查看详情
     lookDetail(val) {
@@ -716,9 +716,11 @@ export default {
         ? this.barDataKey.reviewNum / this.barDataKey.totalNum
         : 0;
       if (precent >= this.barDataKey.samplingRate && precent != 0) {
-        this.barDataKey.isDis = false;
+        // this.barDataKey.isDis = false;
+        this.$set(this.barDataKey, "isDis", false);
       } else {
-        this.barDataKey.isDis = false;
+        // this.barDataKey.isDis = true;
+        this.$set(this.barDataKey, "isDis", true);
       }
       this.barDataKey.precent = precent
         ? (precent * 100).toFixed(2) + "%"

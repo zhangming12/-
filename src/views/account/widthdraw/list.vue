@@ -78,7 +78,6 @@
             <label style="float: left;">备注：</label>
             <div class="inputBox">
               <Input v-model.trim="memo"></Input>
-              <!-- <Input type="textarea" :autosize="{minRows: 5,maxRows: 7}" v-model.trim="memo"></Input> -->
             </div>
           </div>
         </Col>
@@ -96,10 +95,8 @@
           <div id="money">
             <label>确认转出金额：</label>
             <div class="inputBox">
-              <!-- <Input placeholder="请输入转入金额" v-model.trim="money" :disabled="true"></Input> -->
               <Input v-model.trim="text" placeholder="请输入转入金额" :readonly="true"></Input>
             </div>
-            <!-- <span>元</span> -->
           </div>
         </Col>
       </Row>
@@ -136,6 +133,7 @@ export default {
       });
       if (this.brandList && this.brandList.length) {
         this.brandId = this.brandList[0].id;
+        this.changeBrand(this.brandId);
       }
     });
   },
@@ -258,7 +256,7 @@ export default {
         }
       );
     },
-    changeBrand: function() {
+    changeBrand() {
       this.allBlance();
     },
     allBlance() {

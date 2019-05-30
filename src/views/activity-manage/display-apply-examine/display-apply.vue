@@ -482,12 +482,6 @@ export default {
         path: "/displayReward-edit",
         query: { type: "add" }
       });
-    },
-    handleEdit() {
-      this.$router.push({
-        path: "/displayReward-edit",
-        query: { type: "edit" }
-      });
     }
   }
 };

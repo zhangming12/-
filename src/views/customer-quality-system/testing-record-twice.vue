@@ -323,7 +323,7 @@ export default {
           tooltip: true
         },
         {
-          title: "抽检率",
+          title: "复审率",
           key: "sampleRate",
           align: "center",
           minWidth: 120,
@@ -384,10 +384,6 @@ export default {
     this.queryTeam();
   },
   methods: {
-    //获取userType
-    getUserType() {
-      return JSON.parse(window.sessionStorage.getItem("user")).userType;
-    },
     //查询团队
     queryTeam() {
       this.Global.doPostNoLoading("audit/queryAllTeam.json", "", res => {

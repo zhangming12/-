@@ -409,30 +409,20 @@ export default {
           }
         },
         {
+          title: "折扣奖励",
+          key: "liquidateAmount",
+          width: 100,
+          align: "center"
+        },
+        {
           //1 zhengchang 2 yichang
-          title: "稽查状态",
+          title: "综合判定结果",
           key: "checkStatus",
           width: 100,
           align: "center",
           render: (h, params) => {
             return mergeGiveAwardCheckStatus[params.row.checkStatus];
           }
-        },
-        {
-          // 1 合适  0 不合格
-          title: "综合判定状态",
-          key: "auditCountQualified",
-          width: 130,
-          align: "center",
-          render: (h, params) => {
-            return gdSyntheticalStatus[params.row.auditCountQualified];
-          }
-        },
-        {
-          title: "折扣奖励",
-          key: "liquidateAmount",
-          width: 100,
-          align: "center"
         },
         {
           //1010 已清算 4已发奖 0待清算 1带参与

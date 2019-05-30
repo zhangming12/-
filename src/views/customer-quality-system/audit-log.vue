@@ -97,7 +97,7 @@ span.btn {
       </div>
       <div class="page-box">
         <div style="float: right;">
-          <Page :total="pageNum" :current="page" @on-change="changePage"></Page>
+          <Page :total="pageNum" :pageSize="pageSize" :current="page" @on-change="changePage"></Page>
         </div>
       </div>
       <fieldNameDes/>
@@ -106,6 +106,21 @@ span.btn {
 </template>
 
 <script>
+const RESULT = {
+  "4-1": "初审通过",
+  "4-2": "初审不通过",
+  "4-3": "初审退回",
+  "5-1": "复审通过",
+  "5-2": "复审不通过",
+  "5-3": "复审退回",
+  "7-1": "质检通过",
+  "7-2": "质检不通过",
+  "7-3": "质检退回",
+  "6-1": "复审批量通过",
+  "6-2": "复审批量不通过",
+  "8-1": "质检批量通过",
+  "8-2": "质检批量不通过"
+};
 import { EDFAULT_THREE_AGOTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 
 import hhTable from "@/components/table/table.vue";
@@ -157,15 +172,10 @@ export default {
           minWidth: 120,
           tooltip: true,
           render: (h, params) => {
-            let result = {
-              1: "通过",
-              1001: "通过",
-              1002: "不通过",
-              2001: "通过",
-              2: "不通过",
-              3: "退回"
-            };
-            return h("div", result[params.row.checkStatus]);
+            if (params.row.checkStatus && params.row.recordType) {
+              let str = `${params.row.recordType}-${params.row.checkStatus}`;
+              return h("div", RESULT[str]);
+            }
           }
         },
         {

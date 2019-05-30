@@ -156,17 +156,17 @@
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Input v-model.trim="formData.joinCode" placeholder="客户编号"></Input>
+                  <Input v-model.trim="formData.joinCode" placeholder="客户编号" clearable></Input>
                 </Form-item>
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Input v-model.trim="formData.id" placeholder="图像编号"></Input>
+                  <Input v-model.trim="formData.id" placeholder="图像编号" clearable></Input>
                 </Form-item>
               </div>
               <div class="btn-left w18">
                 <Form-item>
-                  <Input v-model.trim="formData.salesRoute" placeholder="销售路线"></Input>
+                  <Input v-model.trim="formData.salesRoute" placeholder="销售路线" clearable></Input>
                 </Form-item>
               </div>
             </div>
@@ -413,7 +413,11 @@ export default {
         "audit/doVideoBatchSecondAuditOfNotPassThrough.json",
         data,
         res => {
-          this.$Message.info("系统已经收到您的指令，后台将自动完成");
+          // this.$Message.info("系统已经收到您的指令，后台将自动完成");
+          this.$Message.info({
+            duration: 5,
+            content: "系统已经收到您的指令，后台将自动完成"
+          });
           this.storeGoodsList = null;
           this.clearBarData();
         }
@@ -432,7 +436,10 @@ export default {
         "audit/doVideoBatchSecondAuditOfPassThrough.json",
         data,
         res => {
-          this.$Message.info("系统已经收到您的指令，后台将自动完成");
+          this.$Message.info({
+            duration: 5,
+            content: "系统已经收到您的指令，后台将自动完成"
+          });
           this.storeGoodsList = null;
           this.clearBarData();
         }
@@ -441,13 +448,16 @@ export default {
     queryBarData(data) {
       this.Global.doPostNoLoading("audit/querySecondData.json", data, res => {
         this.barDataKey = res[0];
-        this.barDataKey.precent =
-          this.barDataKey.precent.toFixed(4) * 100 + "%";
-        this.barDataKey.correctPrecent =
-          this.barDataKey.correctPrecent.toFixed(4) * 100 + "%";
-        // this.barDataKey.isDis = false;
-        if (res[0].totalNum == res[0].reviewNum && res[0].reviewNum != 0) {
-          //当总数等于已复审且不为0时，自动调全部通过接口
+        this.barDataKey.precent = this.barDataKey.precent
+          ? this.barDataKey.precent.toFixed(2) * 100 + "%"
+          : "0%";
+        this.barDataKey.correctPrecent = this.barDataKey.correctPrecent
+          ? this.barDataKey.correctPrecent.toFixed(2) * 100 + "%"
+          : "0%";
+        //如果查询条件里图像编号不为空，则不自动调自动批量接口
+        // if (this.formData.id) return;
+        if (res[0].reviewNum != 0 && res[0].totalNum == res[0].reviewNum) {
+          //当总数等于已复审且不为0时，自动调批量接口
           delete data["currentPage"];
           delete data["pageSize"];
           data["queryEndTime"] = this.Global.createTime(
@@ -460,7 +470,8 @@ export default {
             "audit/doVideoSecondAuditSingle.json",
             data,
             res => {
-              this.queryBarData(data);
+              this.clearBarData();
+              // this.queryBarData(data);
             }
           );
         }
@@ -478,14 +489,16 @@ export default {
     },
     //获取userType
     getUserType() {
-      return JSON.parse(window.sessionStorage.getItem("user")).userType;
+      return JSON.parse(
+        window.sessionStorage.getItem("user")
+      ).userType.toUpperCase();
     },
     //查询团队
     queryTeam() {
       let userType = this.getUserType();
       let api = "";
       let data = "";
-      if (userType == "p") {
+      if (userType == "P") {
         api = "audit/queryAllTeam.json";
       } else {
         api = "audit/queryTeamByUser.json";
@@ -574,12 +587,12 @@ export default {
       }
     },
     //获取审核话术
-    getDisplayExamineWord(brandId, groupId) {
+    getDisplayExamineWord(brandId, groupId, presentId) {
       this.wordList = [];
       this.displayExamineWordList = [];
       this.Global.doPost(
         "displayYxtg/queryAuditReason.json",
-        { brandId, groupId },
+        { brandId, groupId, presentId },
         res => {
           if (res && res.length) {
             this.wordList = res;
@@ -610,6 +623,10 @@ export default {
     init() {
       if (!this.formData.groupId) {
         this.$Message.error("活动包不能为空");
+        return;
+      }
+      if (!this.formData.activityId) {
+        this.$Message.error("项目不能为空");
         return;
       }
       if (!this.formData.teamId) {
@@ -696,7 +713,7 @@ export default {
         storeId
       };
       queryParams = this.Global.JsonChange(queryParams);
-      queryParams["displayActCategory"] = "singleOne";
+      queryParams["displayActCategory"] = "twiceAudit";
       this.Global.deleteEmptyProperty(queryParams);
       this.$router.push({
         path: "/auditDetail",

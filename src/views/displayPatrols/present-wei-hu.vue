@@ -11,7 +11,6 @@
 }
 .activity-content-group-box {
   transition: all 0.2s;
-  // border: 1px solid #cccccc;
   padding: 10px;
 }
 .ivu-table-row {
@@ -175,6 +174,15 @@
     font-size: 12px;
   }
 }
+.word-import {
+  height: 32px;
+  .word {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  display: flex;
+  flex-direction: row;
+}
 </style>
 
 <template>
@@ -183,7 +191,8 @@
       <div class="groupList">
         <div class="title">分组管理</div>
         <div class="contentTop">
-          <span class="btn-left">此表共包含
+          <span class="btn-left">
+            此表共包含
             <span class="numColor">{{ presentList.length }}</span> 条数据
           </span>
           <addBtn class="btn-right" @btnClick="addGroup"/>
@@ -249,7 +258,7 @@
                       v-if="!item.isModify"
                       id="fail"
                       @click="deleteGroup(index)"
-                    >删除</Button> -->
+                    >删除</Button>-->
                     <Button
                       type="text"
                       class="btn"
@@ -620,16 +629,28 @@
                     </Col>
                   </Row>
                 </div>
+                <!-- 新增审核话术导入 -->
+                <div class="word-import" style="margin-top:10px;">
+                  <span class="word">审核话术：</span>
+                  <importBtn @click.native="showModal(index)"/>
+                  <exportBtn @click.native="exportExcel(index)"/>
+                </div>
               </div>
             </div>
           </div>
           <div class="defaultWord" v-else>该活动下暂无分组</div>
-          <!-- <div class="createNewAct">
-                  <Button type="primary" @click="addGroup">新建分组</Button>
-          </div>-->
         </div>
       </div>
     </div>
+    <!-- 审核话术导入 -->
+    <Modal v-model="importShow">
+      <h2 style="text-align:center;">导入</h2>
+      <upload-file :fileTitle="uploadText" v-model="wordFilePath"/>
+      <div slot="footer" style="text-align:center;">
+        <i-button type="text" @click="closeModel">取消</i-button>
+        <i-button type="success" @click="uploadWord">确定</i-button>
+      </div>
+    </Modal>
     <Modal v-model="skuIsShow" width="1000" style="height:600px;" id="skuContainer">
       <h3 slot="header" style="text-align:center;">SKU设置</h3>
       <skuModel
@@ -651,12 +672,19 @@ import upData from "@/assets/js/upload.js";
 import PROJECT_CONFIG from "@/util/config.js";
 import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import index from "vue";
+import uploadFile from "@/components/uploadFile/upload-file.vue";
 import addBtn from "@/components/Button/addNew-btn.vue";
+import exportBtn from "@/components/Button/export-btn.vue";
+import importBtn from "@/components/Button/import-btn.vue";
 export default {
   data() {
     return {
+      wordFilePath: "", //审核话术文件路径
+      wordIndex: null,
+      uploadText: "请选择上传文件",
+      importShow: false,
       imageTimeStr: "",
-      imageTimeStr1:"",
+      imageTimeStr1: "",
       videoTimeStr: "",
       isSku: "",
       aid: "",
@@ -689,7 +717,10 @@ export default {
   },
   components: {
     skuModel,
-    addBtn
+    addBtn,
+    uploadFile,
+    exportBtn,
+    importBtn
   },
   created() {
     let str = ":00";
@@ -703,28 +734,9 @@ export default {
     this.brandId = this.$route.query.brandId;
     this.id = this.$route.query.id; //活动ID
     this.isSku = this.$route.query.isSku;
-    // if (type) {
-    // this.type = type;
-    // }
-    // if (this.id) {
     this.activityDetail(this.id);
-    // }
-    //获取实物折扣列表
-    // this.Global.doPost(
-
-    //   "goodsInfo/queryWithPage.json",
-    //   {
-    //     status: 1,
-    //     type: 1
-    //   },
-    //   res => {
-    //     this.jiangpinList = res.datalist;
-    //   }
-    // );
   },
-  beforeDestroy() {
-    // window.sessionStorage.removeItem("skuList");
-  },
+  beforeDestroy() {},
   watch: {
     skuIsShow(val) {
       let sku = document.getElementById("skuContainer");
@@ -736,11 +748,70 @@ export default {
         this.aid = "";
         this.gid = "";
       }
+    },
+    importShow(val) {
+      if (!val) {
+        this.uploadText = "请选择上传文件";
+        this.wordFilePath = "";
+        this.wordIndex = null;
+      }
     }
   },
   methods: {
+    showModal(index) {
+      this.wordIndex = index;
+      if (!this.presentList[index].id) {
+        this.$Message.info("请先保存分组，再上传审核话术");
+        return false;
+      }
+      this.importShow = true;
+    },
+
+    closeModel() {
+      this.importShow = false;
+    },
+    //导出审核话术
+    exportExcel(index) {
+      if (!this.presentList[index].id) {
+        this.$Message.warning("请先保存分组");
+        return;
+      }
+      let data = {
+        brandId: this.brandId ? this.brandId : this.formData.brandId,
+        groupId: this.groupId,
+        presentId: this.presentList[index].id,
+        activityId: this.id
+      };
+      var url = this.Global.getExportUrl(
+        "displayYxtg/exportAuditExplain.json",
+        data
+      );
+      window.open(url);
+    },
+    //导入审核话术
+    uploadWord() {
+      if (!this.presentList[this.wordIndex].id) {
+        this.$Message.error("请先保存分组");
+        return false;
+      }
+      if (!this.wordFilePath) {
+        this.$Message.error("请核实上传文件");
+        return false;
+      }
+      let data = {
+        loadFilePath: this.wordFilePath,
+        brandId: this.brandId ? this.brandId : this.formData.brandId,
+        groupId: this.groupId,
+        activityId: this.id,
+        presentId: this.presentList[this.wordIndex].id
+      };
+      this.Global.doPost("displayYxtg/importAuditExplain.json", data, () => {
+        this.$Message.success("导入成功");
+        this.importShow = false;
+        this.uploadText = "请选择上传文件";
+      });
+    },
     prizeChange(val, flag) {
-      console.log(val);
       this.presentList[this.ind].presentType = val;
       if (val == 2) {
         return;
@@ -845,7 +916,7 @@ export default {
           // this.presentList[index]["pictureUrl"] = res.pictureUrl;
           this.presentList[index]["imageUrl"] = res.imageUrl;
           this.presentList[index]["pictureUrl"] = res.pictureUrl;
-          
+
           this.presentList[index]["radioUrl"] = res.radioUrl;
           this.presentList[index]["id"] = res.id;
           this.presentList[index]["isModify"] = true;
@@ -893,7 +964,7 @@ export default {
                 id: "", //分组Id
                 goodsId: "",
                 imageUrl: "",
-                pictureUrl:"",
+                pictureUrl: "",
                 // pictureUrl: "",
                 radioUrl: "",
                 content: null,
@@ -969,7 +1040,7 @@ export default {
       // return this.checkImageWH(res, 710, 400);
     },
     beforeUploadVideo(res) {
-      this.videoTimeStr = Date.now()
+      this.videoTimeStr = Date.now();
       this.upData["key"] = "ecuda/image/" + this.videoTimeStr + res.name;
       // return this.checkImageWH(res, 700, 240);
     },
@@ -1023,7 +1094,10 @@ export default {
     videoUpload(response, file, fileList) {
       //陈列效果视频
       this.presentList[this.ind].radioUrl =
-        PROJECT_CONFIG.ossServer + "ecuda/image/" + this.videoTimeStr + file.name;
+        PROJECT_CONFIG.ossServer +
+        "ecuda/image/" +
+        this.videoTimeStr +
+        file.name;
       this.$set(this.presentList, this.ind, this.presentList[this.ind]);
     },
     handleFormatError(file) {

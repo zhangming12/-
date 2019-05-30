@@ -308,7 +308,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
+              <Form-item required>
                 <data-range
                   @dataChange="startTimeChange"
                   placeholder="申请开始时间"
@@ -319,7 +319,7 @@
               </Form-item>
             </div>
             <div class="btn-left w18">
-              <Form-item   required>
+              <Form-item required>
                 <data-range
                   hour="24:00"
                   placeholder="申请结束时间"
@@ -781,11 +781,7 @@ import imageLook from "@/components/imgLook/img-look.vue";
 import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 export default {
   name: "adealer-display-final-audit-patrols-keepAlive",
   components: {
@@ -953,9 +949,7 @@ export default {
       return str;
     },
     getPosition(index) {
-      if (!index) return "right";
-      if (index % 2 == 0) return "right";
-      else return "left";
+      return index % 2 == 0 ? "right" : "left";
     },
     showBigPicure(url) {
       this.pictureUrl = url;

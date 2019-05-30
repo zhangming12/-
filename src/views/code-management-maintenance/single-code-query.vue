@@ -270,7 +270,6 @@ export default {
 
       this.Global.doPost("codepackage/querycoderecord.json", data, res => {
         this.pageData = res.datalist;
-
         if (res.datalist && res.datalist.length) {
           this.baseInformationData = res.datalist[0];
           this.baseInformationData.activateTime = this.baseInformationData

@@ -400,11 +400,11 @@
           </Row>
         </div>
         <!-- 新增审核话术导入 -->
-        <div class="word-import" style="margin-top:10px;">
+        <!-- <div class="word-import" style="margin-top:10px;">
           <span class="word">审核话术：</span>
           <importBtn @click.native="importShow = true"/>
           <exportBtn @click.native="exportExcel"/>
-        </div>
+        </div>-->
         <div class="btnBox" style="margin-top:10px;">
           <Button class="btn lookDetail" type="default" @click="saveGroup">保存活动包</Button>
         </div>

@@ -384,21 +384,10 @@ export default {
     this.queryTeam();
   },
   methods: {
-    //获取userType
-    getUserType() {
-      return JSON.parse(window.sessionStorage.getItem("user")).userType;
-    },
     //查询团队
     queryTeam() {
-      let userType = this.getUserType();
       let api = "audit/queryAllTeam.json";
       let data = "";
-      // if (userType == "p") {
-      //   // api = "audit/queryAllTeam.json";
-      // } else {
-      //   // api = "audit/queryTeamByUser.json";
-      //   data = 666;
-      // }
       this.Global.doPostNoLoading(api, data, res => {
         this.teamList = res;
       });

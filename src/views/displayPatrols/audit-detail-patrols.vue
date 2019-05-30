@@ -299,308 +299,415 @@ footer {
 </style>
 
 <template>
-    <div id="Main">
-        <!-- <h2 class="Title">巡拍审核详情</h2> -->
-        <div class="box">
-            <!-- 店铺信息 -->
-            <Form :model="formData" label-position="left" :label-width="0">
-            <div class="form-title">店铺信息</div>
-            <div id="shopInfor">
-                <div class='child'>                     
-                         <Row>
-                            <Col span="6"> 
-                                <FormItem>
-                                    <span>手机号码 : </span><span>{{formData.phone | phoneFormat}}</span>
-                                </FormItem> 
-                                <FormItem>
-                                     <span>所属经销商 : </span><span>{{formData.merchantName}}</span>
-                                </FormItem>                                                             
-                            </Col>
-                            <Col span="6"  >
-                                <FormItem>  
-                                    <span>门店ID : </span><span>{{formData.storeId}}</span>
-                                </FormItem>
-                                <FormItem class="TextOverflow">
-                                    <span>地 址 : </span><span :title="formData.address" >{{formData.address}}</span>
-                                </FormItem> 
-                                                                                                                       
-                            </Col>
-                            <Col span="6">
-                                <FormItem>
-                                    <span>门店名称 : </span><span>{{formData.storeName}}</span>
-                                </FormItem>
-                                <FormItem>
-                                    <span>上传姓名 : </span><span>{{formData.workerName}}</span>
-                                </FormItem>  
-                                                                                               
-                            </Col>
-                            <Col span="6"  >
-                                <FormItem>  
-                                    <span>姓 名 : </span><span>{{formData.name}}</span>
-                                </FormItem>
-                                <FormItem>
-                                    <span>上传者ID : </span><span>{{formData.userId}}</span>
-                                </FormItem>                              
-                            </Col>                            
-                        </Row>                    
+  <div id="Main">
+    <!-- <h2 class="Title">巡拍审核详情</h2> -->
+    <div class="box">
+      <!-- 店铺信息 -->
+      <Form :model="formData" label-position="left" :label-width="0">
+        <div class="form-title">店铺信息</div>
+        <div id="shopInfor">
+          <div class="child">
+            <Row>
+              <Col span="6">
+                <FormItem>
+                  <span>手机号码 :</span>
+                  <span>{{formData.phone | phoneFormat}}</span>
+                </FormItem>
+                <FormItem>
+                  <span>所属经销商 :</span>
+                  <span>{{formData.merchantName}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <span>门店ID :</span>
+                  <span>{{formData.storeId}}</span>
+                </FormItem>
+                <FormItem class="TextOverflow">
+                  <span>地 址 :</span>
+                  <span :title="formData.address">{{formData.address}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <span>门店名称 :</span>
+                  <span>{{formData.storeName}}</span>
+                </FormItem>
+                <FormItem>
+                  <span>上传姓名 :</span>
+                  <span>{{formData.workerName}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <span>姓 名 :</span>
+                  <span>{{formData.name}}</span>
+                </FormItem>
+                <FormItem>
+                  <span>上传者ID :</span>
+                  <span>{{formData.userId}}</span>
+                </FormItem>
+              </Col>
+            </Row>
+          </div>
+        </div>
+        <!-- 陈列活动 -->
+        <div class="form-title">活动信息</div>
+        <div id="shopInfor">
+          <div class="child">
+            <Row>
+              <Col span="6">
+                <FormItem>
+                  <span>陈列活动 :</span>
+                  <span>{{formData.activityName}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <span>活动分组 :</span>
+                  <span class="displayGroupPrimary">{{formData.activityTag}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <span>上传周期 :</span>
+                  <span>{{formData.startTime | formatYearMonth}}至{{formData.endTime | formatYearMonth}}</span>
+                </FormItem>
+              </Col>
+            </Row>
+          </div>
+        </div>
+        <!-- 预警信息 -->
+        <div class="form-title">预警信息</div>
+        <div id="shopInfor">
+          <div class="child">
+            <Row>
+              <Col span="6">
+                <FormItem>
+                  <span>风险来源 :</span>
+                  <span>{{formData.riskSource | riskSourceFilter}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <span>风险类型 :</span>
+                  <span class="displayGroupPrimary">{{formData.riskType | riskTypeFilter}}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <span>风险描述 :</span>
+                  <span>{{ formData.riskDes }}</span>
+                </FormItem>
+              </Col>
+              <Col span="6">
+                <FormItem>
+                  <span>风险状态 :</span>
+                  <span>{{ formData.riskStatus | riskStatusFilter}}</span>
+                </FormItem>
+              </Col>
+            </Row>
+          </div>
+        </div>
+      </Form>
+      <!-- 地图预警 -->
+      <div class="form-title" style="margin-top:10px;">地图预警</div>
+      <div id="container"></div>
+      <!-- 视频信息 -->
+      <div class="videoInfor" style="margin-top:15px;overflow:hidden;">
+        <div class="form-title videoTitle fl-l">图片信息</div>
+        <div class="videoRecord fl-r">
+          累计上传
+          <span class="color-orange">{{ uploadCount }}</span>次,预警
+          <span class="color-orange">{{ riskCount }}</span>次
+          <span class="color-orange" @click="handleLookMore">{{isShowMore?'收起列表':'查看更多'}}>></span>
+        </div>
+      </div>
+      <div style="overflow:hidden;">
+        <Row>
+          <Col span="11" offset="1" v-if="firstRadio" style="margin-top:10px;height: 340px;">
+            <div class="storeGoods">
+              <Card>
+                <div class="goodsDetail" style="margin-top:15px;">
+                  <div class="showVideoPlay" v-if="firstRadio.fileType == 'radio'">
+                    <div class="radioBox">
+                      <video :src="firstRadio.radioUrl" controls></video>
+                      <img class="triangle" src="../../assets/image/triangle-first.jpg">
+                    </div>
+                  </div>
+                  <div class="showVideoPlay" v-else>
+                    <div class="radioBox">
+                      <img class="triangle" src="../../assets/image/triangle-first.jpg">
+                      <imageLook
+                        :key="firstRadio.image[0]"
+                        position="right"
+                        v-if="firstRadio.image"
+                        :imageList="firstRadio.image"
+                      />
+                    </div>
+                  </div>
+                  <div class="goodsInfor">
+                    <P>拍摄时间：{{firstRadio.uploadTime | formatYearMonth}}</P>
+                    <P>上传周期：{{firstRadio.uploadStartTime | formatYearMonth }}至{{firstRadio.uploadEndTime | formatYearMonth }}</P>
+                    <P>
+                      坐标预警：
+                      <span
+                        :class="{ 'colorError': firstRadio.locate == '异常'}"
+                      >{{firstRadio.riskLocate}}</span>
+                    </P>
+                    <p>状态预警：{{firstRadio.warningStatus | warningStatuFilter}}</p>
+                    <!-- 合格分项 -->
+                    <div class="qualified" v-if="firstRadio.isSku == 1&& firstRadio.skuScoreVO">
+                      <div class="left">合格分项:</div>
+                      <div class="right">
+                        <ul>
+                          <li>
+                            <img
+                              v-if="firstRadio.skuScoreVO.scoreStatus == 1"
+                              src="../../assets/image/SKU1.png"
+                              alt
+                            >
+                            <img
+                              v-if="firstRadio.skuScoreVO.scoreStatus == 2"
+                              src="../../assets/image/SKU3.png"
+                              alt
+                            >
+                            <span>必备包装合格</span>
+                          </li>
+                          <li>
+                            <img
+                              v-if="firstRadio.skuScoreVO.skuStatus == 1"
+                              src="../../assets/image/SKU1.png"
+                              alt
+                            >
+                            <img
+                              v-if="firstRadio.skuScoreVO.skuStatus == 2"
+                              src="../../assets/image/SKU3.png"
+                              alt
+                            >
+                            <span>全部SKU数合格</span>
+                          </li>
+                          <li>
+                            <img
+                              v-if="firstRadio.skuScoreVO.faceStatus == 1"
+                              src="../../assets/image/SKU1.png"
+                              alt
+                            >
+                            <img
+                              v-if="firstRadio.skuScoreVO.faceStatus == 2"
+                              src="../../assets/image/SKU3.png"
+                              alt
+                            >
+                            <span>货架排面数合格</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <p>审核状态：{{firstRadio.checkStatus | statusFilter }}</p>
+                    <p>审核意见：{{firstRadio.checkMessge}}</p>
+                  </div>
                 </div>
+              </Card>
             </div>
-            <!-- 陈列活动 -->
-            <div class="form-title">活动信息</div>
-            <div id="shopInfor">
-                <div class='child'>
-                    <Row>
-                        <Col span="6">
-                            <FormItem>
-                                <span>陈列活动 : </span><span>{{formData.activityName}}</span>
-                            </FormItem>                                                           
-                        </Col>
-                        <Col span="6">
-                            <FormItem>
-                                <span>活动分组 : </span><span class="displayGroupPrimary">{{formData.activityTag}}</span>
-                            </FormItem>                                                          
-                        </Col>
-                        <Col span="6">
-                            <FormItem>
-                             <span>上传周期 : </span><span>{{formData.startTime | formatYearMonth}}至{{formData.endTime | formatYearMonth}}</span>
-                            </FormItem>                                       
-                        </Col>
-                    </Row>
-                </div>
-            </div>
-            <!-- 预警信息 -->
-            <div class="form-title">预警信息</div>
-            <div id="shopInfor">
-                <div class='child'>
-                    <Row>
-                        <Col span="6">
-                            <FormItem>
-                                <span>风险来源 : </span><span>{{formData.riskSource | riskSourceFilter}}</span>
-                            </FormItem>                                                           
-                        </Col>
-                        <Col span="6">
-                            <FormItem>
-                                <span>风险类型 : </span><span class="displayGroupPrimary">{{formData.riskType | riskTypeFilter}}</span>
-                            </FormItem>                                                          
-                        </Col>
-                        <Col span="6">
-                            <FormItem>
-                              <span>风险描述 : </span><span>{{ formData.riskDes }}</span>
-                            </FormItem>
-                        </Col>
-                        <Col span="6">
-                            <FormItem>
-                              <span>风险状态 : </span><span>{{ formData.riskStatus | riskStatusFilter}}</span>
-                            </FormItem>                                       
-                        </Col>
-                    </Row>
-                </div>
-            </div>
-            </Form>
-            <!-- 地图预警 -->
-            <div class="form-title" style="margin-top:10px;">地图预警</div>
-            <div id="container"></div>
-            <!-- 视频信息 -->
-            <div class="videoInfor" style="margin-top:15px;overflow:hidden;">
-                <div class="form-title videoTitle fl-l">图片信息</div>
-                <div class="videoRecord fl-r">
-                    累计上传<span class="color-orange ">{{ uploadCount }}</span>次,预警<span class="color-orange">{{ riskCount }}</span>次 <span class="color-orange" @click="handleLookMore">{{isShowMore?'收起列表':'查看更多'}}>></span>
-                </div>
-            </div>
-            <div style="overflow:hidden;">
-                <Row>                   
-                    <Col span="11"  offset="1" v-if="firstRadio"   style="margin-top:10px;height: 340px;">
-                        <div class="storeGoods">
-                            <Card >                            
-                                <div class="goodsDetail" style="margin-top:15px;">
-                                    <div class="showVideoPlay" v-if="firstRadio.fileType == 'radio'">
-                                       <div class="radioBox">
-                                         <video :src="firstRadio.radioUrl" controls></video>
-                                         <img class="triangle" src="../../assets/image/triangle-first.jpg">  
-                                       </div>
-                                                                                                            
-                                    </div>      
-                                    <div class="showVideoPlay" v-else>
-                                      <div class="radioBox">
-                                        <img class="triangle" src="../../assets/image/triangle-first.jpg">  
-                                        <imageLook
-                                          :key="firstRadio.image[0]"
-                                          position="right"
-                                          v-if="firstRadio.image"
-                                          :imageList="firstRadio.image"
-                                        />  
-                                      </div>                                                                  
-                                    </div>                            
-                                    <div class="goodsInfor">
-                                        <P>拍摄时间：{{firstRadio.uploadTime | formatYearMonth}}</P>
-                                        <P>上传周期：{{firstRadio.uploadStartTime  | formatYearMonth }}至{{firstRadio.uploadEndTime | formatYearMonth }}</P>                                    
-                                        <P>坐标预警： <span  :class="{ 'colorError': firstRadio.locate == '异常'}">{{firstRadio.riskLocate}}</span></P>
-                                        <p>状态预警：{{firstRadio.warningStatus | warningStatuFilter}}</p>
-                                        <!-- 合格分项 -->
-                                        <div class="qualified" v-if="firstRadio.isSku == 1&& firstRadio.skuScoreVO">
-                                          <div class="left">合格分项:</div>
-                                          <div class="right" >
-                                            <ul>
-                                              <li>
-                                                <img v-if="firstRadio.skuScoreVO.scoreStatus == 1" src="../../assets/image/SKU1.png" alt="">
-                                                <img v-if="firstRadio.skuScoreVO.scoreStatus == 2" src="../../assets/image/SKU3.png" alt="">
-                                                <span>必备包装合格</span>
-                                              </li>
-                                              <li>
-                                                <img v-if="firstRadio.skuScoreVO.skuStatus == 1" src="../../assets/image/SKU1.png" alt="">
-                                                <img v-if="firstRadio.skuScoreVO.skuStatus == 2" src="../../assets/image/SKU3.png" alt="">
-                                                <span>全部SKU数合格</span>
-                                              </li>
-                                              <li>
-                                                <img v-if="firstRadio.skuScoreVO.faceStatus == 1" src="../../assets/image/SKU1.png" alt="">
-                                                <img v-if="firstRadio.skuScoreVO.faceStatus == 2" src="../../assets/image/SKU3.png" alt="">
-                                                <span>货架排面数合格</span>
-                                              </li>
-                                            </ul>
-                                          </div>
-                                        </div>
-                                        <p>审核状态：{{firstRadio.checkStatus | statusFilter }}</p>
-                                        <p>审核意见：{{firstRadio.checkMessge}}</p>
-                                    </div>                                
-                                </div>                              
-                            </Card>
-                        </div>
-                    </Col>
-                    <Col span="11"  offset="1" v-if="thisRadio"  style="margin-top:10px;height: 340px;">
-                        <div class="storeGoods">
-                            <Card >                            
-                                <div class="goodsDetail" style="margin-top:15px;">
-                                    <!-- <div class="showVideoPlay">
+          </Col>
+          <Col span="11" offset="1" v-if="thisRadio" style="margin-top:10px;height: 340px;">
+            <div class="storeGoods">
+              <Card>
+                <div class="goodsDetail" style="margin-top:15px;">
+                  <!-- <div class="showVideoPlay">
                                         <img :src="thisRadio.radioUrl" ref="playVideo" class="patrolsImg" />                                 
                                         <img class="triangle" src="../../assets/image/triangle-this.jpg">                                                                        
-                                    </div>    -->
-                                    <div class="showVideoPlay" v-if="thisRadio.fileType == 'radio'">
-                                      <div class="radioBox">
-                                        <video :src="thisRadio.radioUrl" controls></video>
-                                        <img class="triangle" src="../../assets/image/triangle-this.jpg">  
-                                      </div>                                                                    
-                                    </div>      
-                                    <div class="showVideoPlay" v-else>
-                                      <div class="radioBox">
-                                        <img class="triangle" src="../../assets/image/triangle-this.jpg">  
-                                        <imageLook
-                                          :key="thisRadio.image[0]"
-                                          :position="firstRadio ? 'left' : 'right'"
-                                          v-if="thisRadio.image"
-                                          :imageList="thisRadio.image"
-                                        />   
-                                      </div>                                                                 
-                                    </div>                              
-                                    <div class="goodsInfor">
-                                        <P>拍摄时间：{{thisRadio.uploadTime | formatYearMonth}}</P>
-                                        <P>上传周期：{{thisRadio.uploadStartTime  | formatYearMonth }}至{{thisRadio.uploadEndTime | formatYearMonth }}</P>                                    
-                                        <P>坐标预警： <span  :class="{ 'colorError': thisRadio.locate == '异常'}">{{thisRadio.riskLocate}}</span></P>
-                                        <p>状态预警：{{thisRadio.warningStatus | warningStatuFilter}}</p>
-                                        <!-- 合格分项 -->
-                                        
-                                        <div class="qualified" v-if="thisRadio.isSku == 1&&thisRadio.skuScoreVO">
-                                          <div class="left">合格分项:</div>
-                                          <div class="right">
-                                            <ul>
-                                              <li>
-                                                <img v-if="thisRadio.skuScoreVO.scoreStatus == 1" src="../../assets/image/SKU1.png" alt="">
-                                                <img v-if="thisRadio.skuScoreVO.scoreStatus == 2" src="../../assets/image/SKU3.png" alt="">
-                                                <span>必备包装合格</span>
-                                              </li>
-                                              <li>
-                                                <img v-if="thisRadio.skuScoreVO.skuStatus == 1" src="../../assets/image/SKU1.png" alt="">
-                                                <img v-if="thisRadio.skuScoreVO.skuStatus == 2" src="../../assets/image/SKU3.png" alt="">
-                                                <span>全部SKU数合格</span>
-                                              </li>
-                                              <li>
-                                                <img v-if="thisRadio.skuScoreVO.faceStatus == 1" src="../../assets/image/SKU1.png" alt="">
-                                                <img v-if="thisRadio.skuScoreVO.faceStatus == 2" src="../../assets/image/SKU3.png" alt="">
-                                                <span>货架排面数合格</span>
-                                              </li>
-                                            </ul>
-                                          </div>
-                                        </div>
-                                        <p>审核状态：{{thisRadio.checkStatus | statusFilter}}</p>
-                                        <p>审核意见：{{thisRadio.checkMessage}}</p>
-                                    </div>                                
-                                </div>                              
-                            </Card>
-                        </div>
-                    </Col>                                      
-                </Row>
-                <Row>                   
-                    <Col span="11"  offset="1" v-for="(item, index) in radioList" :key="index" v-show="isShowMore" style="margin-top:10px;height:310px;">
-                        <div class="storeGoods">
-                            <Card >                            
-                                <div class="goodsDetail">
-                                    <!-- <div class="showVideoPlay">
-                                        <img :src="item.radioUrl" :ref='"playVideo" + index' class="patrolsImg" />                                                                                                                
-                                    </div>  -->
-                                    <div class="showVideoPlay" v-if="item.fileType == 'radio'">
-                                        <video :src="item.radioUrl" controls></video>                                                              
-                                    </div>      
-                                    <div class="showVideoPlay" v-else>
-                                        <imageLook
-                                          :key="item.image[0]"
-                                          :position="getPosition(index)"
-                                          v-if="item.image"
-                                          :imageList="item.image"
-                                        />                                                                    
-                                    </div>                                 
-                                    <div class="goodsInfor">
-                                        <P>拍摄时间：{{item.uploadTime | formatYearMonth}}</P>
-                                        <P>上传周期：{{item.uploadStartTime  | formatYearMonth }}至{{item.uploadEndTime | formatYearMonth }}</P>                                    
-                                        <P>坐标预警： <span  :class="{ 'colorError': item.locate == '异常'}">{{item.riskLocate}}</span></P>
-                                        <p>状态预警：{{item.warningStatus | warningStatuFilter}}</p>
-                                        <!-- 合格分项 -->
-                                       
-                                        <div class="qualified" v-if="item.isSku == 1 && item.skuScoreVO">
-                                          <div class="left">合格分项:</div>
-                                          <div class="right">
-                                            <ul>
-                                              <li>
-                                                <img v-if="item.skuScoreVO.scoreStatus == 1" src="../../assets/image/SKU1.png" alt="">
-                                                <img v-else src="../../assets/image/SKU3.png" alt="">
-                                                <span>必备包装合格</span>
-                                              </li>
-                                              <li>
-                                                <img v-if="item.skuScoreVO.skuStatus == 1" src="../../assets/image/SKU1.png" alt="">
-                                                <img v-else src="../../assets/image/SKU3.png" alt="">
-                                                <span>全部SKU数合格</span>
-                                              </li>
-                                              <li>
-                                                <img v-if="item.skuScoreVO.faceStatus == 1" src="../../assets/image/SKU1.png" alt="">
-                                                <img v-else src="../../assets/image/SKU3.png" alt="">
-                                                <span>货架排面数合格</span>
-                                              </li>
-                                            </ul>
-                                          </div>
-                                        </div>
-                                        <p>审核状态：{{item.checkStatus | statusFilter}}</p>
-                                        <p>审核意见：{{item.checkMessage}}</p>                                                           
-                                    </div>                                
-                                </div>                              
-                            </Card>
-                        </div>
-                    </Col>                              
-                </Row>
-            </div> 
-            <!-- 操作日志  -->
-            <div class="form-title" style="margin-top:18px;" v-if=" !(displayActCategory == 'partake' && displayBackType == 'C' || displayActCategory == 'partake'&&displayBackType == 'D')">操作日志</div>
-            <div class="option-record" v-if=" !(displayActCategory == 'partake' && displayBackType == 'C' || displayActCategory == 'partake'&&displayBackType == 'D')">
-                <p style="margin-left:18px;" v-for="(item,index) in auditLogList" :key="index">{{index + 1}} , {{item.checkTime | formatYearMonth}} 由{{item.userId}}进行{{item.operateDesc}} ，审核状态为{{item.checkStatus | statusFilter}}<span v-if="item.checkMessage">, 原因为{{ item.checkMessage }}</span></p>
+                  </div>-->
+                  <div class="showVideoPlay" v-if="thisRadio.fileType == 'radio'">
+                    <div class="radioBox">
+                      <video :src="thisRadio.radioUrl" controls></video>
+                      <img class="triangle" src="../../assets/image/triangle-this.jpg">
+                    </div>
+                  </div>
+                  <div class="showVideoPlay" v-else>
+                    <div class="radioBox">
+                      <img class="triangle" src="../../assets/image/triangle-this.jpg">
+                      <imageLook
+                        :key="thisRadio.image[0]"
+                        :position="firstRadio ? 'left' : 'right'"
+                        v-if="thisRadio.image"
+                        :imageList="thisRadio.image"
+                      />
+                    </div>
+                  </div>
+                  <div class="goodsInfor">
+                    <P>拍摄时间：{{thisRadio.uploadTime | formatYearMonth}}</P>
+                    <P>上传周期：{{thisRadio.uploadStartTime | formatYearMonth }}至{{thisRadio.uploadEndTime | formatYearMonth }}</P>
+                    <P>
+                      坐标预警：
+                      <span
+                        :class="{ 'colorError': thisRadio.locate == '异常'}"
+                      >{{thisRadio.riskLocate}}</span>
+                    </P>
+                    <p>状态预警：{{thisRadio.warningStatus | warningStatuFilter}}</p>
+                    <!-- 合格分项 -->
+
+                    <div class="qualified" v-if="thisRadio.isSku == 1&&thisRadio.skuScoreVO">
+                      <div class="left">合格分项:</div>
+                      <div class="right">
+                        <ul>
+                          <li>
+                            <img
+                              v-if="thisRadio.skuScoreVO.scoreStatus == 1"
+                              src="../../assets/image/SKU1.png"
+                              alt
+                            >
+                            <img
+                              v-if="thisRadio.skuScoreVO.scoreStatus == 2"
+                              src="../../assets/image/SKU3.png"
+                              alt
+                            >
+                            <span>必备包装合格</span>
+                          </li>
+                          <li>
+                            <img
+                              v-if="thisRadio.skuScoreVO.skuStatus == 1"
+                              src="../../assets/image/SKU1.png"
+                              alt
+                            >
+                            <img
+                              v-if="thisRadio.skuScoreVO.skuStatus == 2"
+                              src="../../assets/image/SKU3.png"
+                              alt
+                            >
+                            <span>全部SKU数合格</span>
+                          </li>
+                          <li>
+                            <img
+                              v-if="thisRadio.skuScoreVO.faceStatus == 1"
+                              src="../../assets/image/SKU1.png"
+                              alt
+                            >
+                            <img
+                              v-if="thisRadio.skuScoreVO.faceStatus == 2"
+                              src="../../assets/image/SKU3.png"
+                              alt
+                            >
+                            <span>货架排面数合格</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <p>审核状态：{{thisRadio.checkStatus | statusFilter}}</p>
+                    <p>审核意见：{{thisRadio.checkMessage}}</p>
+                  </div>
+                </div>
+              </Card>
             </div>
-        </div>  
-        <footer v-if="displayActCategory == 'patrolsOne'" class="footerBottun" >
-            <Button type="success" class="btn-back" @click="handleOnelevelBack">返回</Button>
-        </footer>
-        <footer v-else-if="displayActCategory == 'patrolsTwo' "  class="footerBottun" >
-            <Button type="success" class="btn-back" @click="handleTwolevelBack">返回</Button>
-        </footer> 
-        <footer v-else-if="displayActCategory == 'partake' "  class="footerBottun" >
-            <Button type="success" class="btn-back" @click="handleMounitorBack">返回</Button>
-        </footer> 
+          </Col>
+        </Row>
+        <Row>
+          <Col
+            span="11"
+            offset="1"
+            v-for="(item, index) in radioList"
+            :key="index"
+            v-show="isShowMore"
+            style="margin-top:10px;height:310px;"
+          >
+            <div class="storeGoods">
+              <Card>
+                <div class="goodsDetail">
+                  <!-- <div class="showVideoPlay">
+                                        <img :src="item.radioUrl" :ref='"playVideo" + index' class="patrolsImg" />                                                                                                                
+                  </div>-->
+                  <div class="showVideoPlay" v-if="item.fileType == 'radio'">
+                    <video :src="item.radioUrl" controls></video>
+                  </div>
+                  <div class="showVideoPlay" v-else>
+                    <imageLook
+                      :key="item.image[0]"
+                      :position="getPosition(index)"
+                      v-if="item.image"
+                      :imageList="item.image"
+                    />
+                  </div>
+                  <div class="goodsInfor">
+                    <P>拍摄时间：{{item.uploadTime | formatYearMonth}}</P>
+                    <P>上传周期：{{item.uploadStartTime | formatYearMonth }}至{{item.uploadEndTime | formatYearMonth }}</P>
+                    <P>
+                      坐标预警：
+                      <span :class="{ 'colorError': item.locate == '异常'}">{{item.riskLocate}}</span>
+                    </P>
+                    <p>状态预警：{{item.warningStatus | warningStatuFilter}}</p>
+                    <!-- 合格分项 -->
+
+                    <div class="qualified" v-if="item.isSku == 1 && item.skuScoreVO">
+                      <div class="left">合格分项:</div>
+                      <div class="right">
+                        <ul>
+                          <li>
+                            <img
+                              v-if="item.skuScoreVO.scoreStatus == 1"
+                              src="../../assets/image/SKU1.png"
+                              alt
+                            >
+                            <img v-else src="../../assets/image/SKU3.png" alt>
+                            <span>必备包装合格</span>
+                          </li>
+                          <li>
+                            <img
+                              v-if="item.skuScoreVO.skuStatus == 1"
+                              src="../../assets/image/SKU1.png"
+                              alt
+                            >
+                            <img v-else src="../../assets/image/SKU3.png" alt>
+                            <span>全部SKU数合格</span>
+                          </li>
+                          <li>
+                            <img
+                              v-if="item.skuScoreVO.faceStatus == 1"
+                              src="../../assets/image/SKU1.png"
+                              alt
+                            >
+                            <img v-else src="../../assets/image/SKU3.png" alt>
+                            <span>货架排面数合格</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <p>审核状态：{{item.checkStatus | statusFilter}}</p>
+                    <p>审核意见：{{item.checkMessage}}</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </Col>
+        </Row>
+      </div>
+      <!-- 操作日志  -->
+      <div
+        class="form-title"
+        style="margin-top:18px;"
+        v-if=" !(displayActCategory == 'partake' && displayBackType == 'C' || displayActCategory == 'partake'&&displayBackType == 'D')"
+      >操作日志</div>
+      <div
+        class="option-record"
+        v-if=" !(displayActCategory == 'partake' && displayBackType == 'C' || displayActCategory == 'partake'&&displayBackType == 'D')"
+      >
+        <p style="margin-left:18px;" v-for="(item,index) in auditLogList" :key="index">
+          {{index + 1}} , {{item.checkTime | formatYearMonth}} 由{{item.userId}}进行{{item.operateDesc}} ，审核状态为{{item.checkStatus | statusFilter}}
+          <span
+            v-if="item.checkMessage"
+          >, 原因为{{ item.checkMessage }}</span>
+        </p>
+      </div>
     </div>
+    <footer v-if="displayActCategory == 'patrolsOne'" class="footerBottun">
+      <Button type="success" class="btn-back" @click="handleOnelevelBack">返回</Button>
+    </footer>
+    <footer v-else-if="displayActCategory == 'patrolsTwo' " class="footerBottun">
+      <Button type="success" class="btn-back" @click="handleTwolevelBack">返回</Button>
+    </footer>
+    <footer v-else-if="displayActCategory == 'partake' " class="footerBottun">
+      <Button type="success" class="btn-back" @click="handleMounitorBack">返回</Button>
+    </footer>
+  </div>
 </template>
 
 <script>
@@ -714,12 +821,9 @@ export default {
   },
   methods: {
     getPosition(index) {
-      if (!index) return "right";
-      if (index % 2 == 0) return "right";
-      else return "left";
+      return index % 2 == 0 ? "right" : "left";
     },
     mapLation(storeLocate, locateList, firstLocate, thisLocate) {
-      console.log("ceshi")
       var map = new BMap.Map("container"); // 创建地图实例
       var point = new BMap.Point(
         Number(storeLocate[0]),

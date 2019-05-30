@@ -309,12 +309,16 @@ export default {
                         data,
                         res => {
                           if (res && res != 0) {
-                            delete data["id"];
-                            data["teamId"] = teamId;
-                            this.$router.push({
-                              path: "/twiceAudit",
-                              query: data
-                            });
+                            if (this.judge()) {
+                              delete data["id"];
+                              data["teamId"] = teamId;
+                              this.$router.push({
+                                path: "/twiceAudit",
+                                query: data
+                              });
+                            } else {
+                              this.$Message.info("对不起，您没有权限操作!");
+                            }
                           } else {
                             params.row.finish = 0;
                             this.$Message.info("该条记录已处理");
@@ -368,6 +372,19 @@ export default {
           this.groupList = res;
         }
       );
+    },
+    judge() {
+      let resources = JSON.parse(window.sessionStorage.getItem("user"))
+        .resources;
+      let flag = false;
+      if (resources && resources.length) {
+        resources.forEach(item => {
+          if (item.resPage == "twiceAudit" && item.isHidden == 1) {
+            flag = true;
+          }
+        });
+      }
+      return flag;
     },
     getActivityList(val) {
       this.activityList = [];

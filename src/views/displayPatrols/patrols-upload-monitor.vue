@@ -373,11 +373,7 @@ import {
   queryActivityPresentVOByactivityId //根据活动ID获取陈列活动分组列表
 } from "@/api/common.js";
 import imageLook from "@/components/imgLook/img-look.vue";
-import {
-  EDFAULT_STARTTIME,
-  EDFAULT_ENDTIME,
-
-} from "@/util/index.js"; //搜索条件默认时间
+import { EDFAULT_STARTTIME, EDFAULT_ENDTIME } from "@/util/index.js"; //搜索条件默认时间
 import { displayParketCheckStatus } from "@/util/ENUMS.js";
 
 export default {
@@ -435,9 +431,7 @@ export default {
   },
   methods: {
     getPosition(index) {
-      if (!index) return "right";
-      if (index % 2 == 0) return "right";
-      else return "left";
+      return index % 2 == 0 ? "right" : "left";
     },
     getpresentList(value) {
       this.presentNameList = [];
